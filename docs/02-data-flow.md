@@ -123,7 +123,7 @@ class TaskResult(BaseModel):
 
 ```python
 class Document(BaseModel):
-    doc_id: str                             # "doc_" + sha1(url)[:10]
+    doc_id: str                             # "doc_" + sha1(normalize_url(url))[:10]  (03 §13)
     url: str
     title: str
     source_tier: Literal["primary_policy", "official_secondary", "professional", "trade", "web", "unknown"]
