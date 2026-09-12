@@ -1,7 +1,12 @@
 .env
-runs/
+# Run artifacts are local, except the example runs committed for reviewers without
+# API keys (docs/01 §10, docs/11 R8). Git cannot re-include a path under an excluded
+# directory, so exclude the contents and negate the one subdirectory.
+runs/*
+!runs/examples/
 .cache/
 node_modules/
 starter_agent.py
 __pycache__/
 .venv/
+.pytest_cache/

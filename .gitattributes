@@ -1,0 +1,12 @@
+# Normalize to LF in the repository. The Makefile and shell hooks must stay LF in
+# the working copy too: they are run by GNU make and bash, and this repo is built
+# on Windows but reviewed on macOS/Linux.
+* text=auto
+
+Makefile text eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.jsonl text eol=lf
+uv.lock text eol=lf

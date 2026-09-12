@@ -1,0 +1,64 @@
+[project]
+name = "prime-search"
+version = "0.1.0"
+description = "Agentic coverage-determination search over CMS/FDA policy sources (Tavily retrieval, Nebius models, LangGraph)"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+authors = [{ name = "Ujjwal Rajbhandari" }]
+classifiers = ["Private :: Do Not Upload"]
+
+# Majors pinned per docs/01 §7; minor floors are the oldest release carrying the
+# APIs this build uses.
+dependencies = [
+    "langchain>=1.0",
+    "langgraph>=1.0",
+    "langchain-core>=1.0",
+    "langchain-nebius>=0.1",
+    "langchain-tavily>=0.2",
+    "langsmith>=0.12",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "sse-starlette>=2.1",
+    "pydantic>=2",
+    "pydantic-settings>=2.5",
+    "structlog>=24.4",
+    "typer>=0.15",
+    "rich>=13.9",
+    "rank-bm25>=0.2.2",
+]
+
+[project.scripts]
+prime-search = "prime_search.cli:app"
+
+[dependency-groups]
+dev = ["pytest>=8.3", "pytest-asyncio>=0.24"]
+# Day 3 only (docs/05 §5). Isolated so a resolution failure in a Day-3 dependency
+# cannot block the Day-1 gate; `make setup` still installs it via --all-groups.
+gepa = ["gepa"]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+# src-less layout with two top-level packages (docs/01 §10). Both must be declared
+# explicitly: auto-detection would miss eval/, which `python -m eval.run_eval` needs.
+[tool.hatch.build.targets.wheel]
+packages = ["prime_search", "eval"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+# Single-quoted TOML literal so the embedded double quotes survive.
+# `-m "not live"` keeps the default run offline and green without API keys
+# (docs/11 R8: a reviewer without keys must be able to run the tests).
+# No -q here: the Makefile passes it, and doubling it hides the pass count.
+addopts = '--strict-markers --strict-config -m "not live"'
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "live: needs real API keys and network (Tavily/Nebius/LangSmith); run with -m live",
+    "slow: runs a full graph or a bench row",
+]
