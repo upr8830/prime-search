@@ -1,0 +1,111 @@
+12 candidates, probes: root_plan, critic_json, subagent_tool, judge_struct
+
+  ok  root_plan      nvidia/nemotron-3-super-120b-a12b        4.6s 6 branches
+  ok  root_plan      nvidia/nemotron-3-super-120b-a12b        4.4s 5 branches
+  ok  root_plan      nvidia/nemotron-3-super-120b-a12b        4.2s 5 branches
+  ok  root_plan      nvidia/nemotron-3-super-120b-a12b        3.8s 5 branches
+  ok  root_plan      nvidia/nemotron-3-super-120b-a12b        4.4s 5 branches
+  ok  root_plan      nvidia/Nemotron-3-Ultra-550b-a55b        4.8s 5 branches
+  ok  root_plan      nvidia/Nemotron-3-Ultra-550b-a55b        3.0s 5 branches
+  ok  root_plan      nvidia/Nemotron-3-Ultra-550b-a55b        5.5s 7 branches
+  ok  root_plan      nvidia/Nemotron-3-Ultra-550b-a55b        4.9s 5 branches
+  ok  root_plan      nvidia/Nemotron-3-Ultra-550b-a55b        3.1s 5 branches
+  ok  root_plan      moonshotai/Kimi-K3                      10.1s 6 branches
+  ok  root_plan      moonshotai/Kimi-K3                      44.2s 6 branches
+  ok  root_plan      moonshotai/Kimi-K3                      29.3s 6 branches
+  ok  root_plan      moonshotai/Kimi-K3                      22.3s 6 branches
+  ok  root_plan      moonshotai/Kimi-K3                      14.4s 6 branches
+  ok  root_plan      moonshotai/Kimi-K2.6                    42.7s 6 branches
+  ok  root_plan      moonshotai/Kimi-K2.6                    36.9s 5 branches
+  ok  root_plan      moonshotai/Kimi-K2.6                    26.1s 6 branches
+  ok  root_plan      moonshotai/Kimi-K2.6                    31.2s 5 branches
+  ok  root_plan      moonshotai/Kimi-K2.6                    21.0s 5 branches
+  ok  root_plan      Qwen/Qwen3.5-397B-A17B                  20.6s 5 branches
+  ok  root_plan      Qwen/Qwen3.5-397B-A17B                  33.6s 5 branches
+  ok  root_plan      Qwen/Qwen3.5-397B-A17B                  20.3s 5 branches
+  ok  root_plan      Qwen/Qwen3.5-397B-A17B                  21.9s 5 branches
+  ok  root_plan      Qwen/Qwen3.5-397B-A17B                  26.0s 5 branches
+  ok  root_plan      zai-org/GLM-5.3                         21.2s 6 branches
+  FAIL root_plan      zai-org/GLM-5.3                         33.8s no fenced python block
+  ok  root_plan      zai-org/GLM-5.3                         29.3s 6 branches
+  FAIL root_plan      zai-org/GLM-5.3                         36.0s no fenced python block
+  FAIL root_plan      zai-org/GLM-5.3                         35.0s no fenced python block
+  ok  root_plan      deepseek-ai/DeepSeek-V4-Pro              6.7s 6 branches
+  ok  root_plan      deepseek-ai/DeepSeek-V4-Pro              8.8s 7 branches
+  ok  root_plan      deepseek-ai/DeepSeek-V4-Pro              5.1s 6 branches
+  ok  root_plan      deepseek-ai/DeepSeek-V4-Pro              7.8s 6 branches
+  ok  root_plan      deepseek-ai/DeepSeek-V4-Pro              7.4s 6 branches
+  ok  critic_json    nvidia/nemotron-3-super-120b-a12b        3.4s flagged c1
+  ok  critic_json    nvidia/nemotron-3-super-120b-a12b        3.3s flagged c1
+  ok  critic_json    nvidia/nemotron-3-super-120b-a12b        3.3s flagged c1
+  ok  critic_json    nvidia/Nemotron-3-Ultra-550b-a55b        3.1s flagged c1
+  ok  critic_json    nvidia/Nemotron-3-Ultra-550b-a55b        3.1s flagged c1
+  ok  critic_json    nvidia/Nemotron-3-Ultra-550b-a55b        3.0s flagged c1
+  ok  critic_json    moonshotai/Kimi-K3                      69.8s flagged c1
+  ok  critic_json    moonshotai/Kimi-K3                      91.5s flagged c1
+  ok  critic_json    moonshotai/Kimi-K3                     222.1s flagged c1
+  ok  critic_json    moonshotai/Kimi-K2.6                    46.5s flagged c1
+  ok  critic_json    moonshotai/Kimi-K2.6                    26.8s flagged c1
+  ok  critic_json    moonshotai/Kimi-K2.6                    32.0s flagged c1
+  ok  critic_json    Qwen/Qwen3.5-397B-A17B                  23.2s flagged c1
+  ok  critic_json    Qwen/Qwen3.5-397B-A17B                  23.2s flagged c1
+  ok  critic_json    Qwen/Qwen3.5-397B-A17B                  23.4s flagged c1
+  ok  critic_json    zai-org/GLM-5.3                          8.0s flagged c1
+  FAIL critic_json    zai-org/GLM-5.3                         25.7s unparseable: ValueError
+  FAIL critic_json    zai-org/GLM-5.3                         29.1s unparseable: ValueError
+  ok  critic_json    deepseek-ai/DeepSeek-V4-Pro              3.0s flagged c1
+  ok  critic_json    deepseek-ai/DeepSeek-V4-Pro              2.2s flagged c1
+  ok  critic_json    deepseek-ai/DeepSeek-V4-Pro              2.5s flagged c1
+  ok  subagent_tool  moonshotai/Kimi-K2.6                     1.9s tavily_search(include_domains,query,search_depth)
+  ok  subagent_tool  moonshotai/Kimi-K2.6                     2.1s tavily_search(include_domains,query,search_depth)
+  ok  subagent_tool  moonshotai/Kimi-K2.6                     2.3s tavily_search(include_domains,query,search_depth)
+  ok  subagent_tool  moonshotai/Kimi-K2.6                     2.4s tavily_search(include_domains,query,search_depth)
+  ok  subagent_tool  moonshotai/Kimi-K2.6                     2.4s tavily_search(include_domains,query,search_depth)
+  ok  subagent_tool  deepseek-ai/DeepSeek-V4-Flash-0731       1.7s tavily_search(query,search_depth)
+  ok  subagent_tool  deepseek-ai/DeepSeek-V4-Flash-0731       1.7s tavily_search(query,search_depth)
+  ok  subagent_tool  deepseek-ai/DeepSeek-V4-Flash-0731       1.7s tavily_search(query,search_depth)
+  ok  subagent_tool  deepseek-ai/DeepSeek-V4-Flash-0731       1.8s tavily_search(query,search_depth)
+  ok  subagent_tool  deepseek-ai/DeepSeek-V4-Flash-0731       2.3s tavily_search(query,search_depth)
+  ok  subagent_tool  Qwen/Qwen3-30B-A3B-Instruct-2507         1.3s tavily_search(include_domains,query,search_depth,topic)
+  ok  subagent_tool  Qwen/Qwen3-30B-A3B-Instruct-2507         1.4s tavily_search(include_domains,query,search_depth,topic)
+  ok  subagent_tool  Qwen/Qwen3-30B-A3B-Instruct-2507         1.4s tavily_search(include_domains,query,search_depth,topic)
+  ok  subagent_tool  Qwen/Qwen3-30B-A3B-Instruct-2507         1.2s tavily_search(include_domains,query,search_depth,topic)
+  ok  subagent_tool  Qwen/Qwen3-30B-A3B-Instruct-2507         1.6s tavily_search(include_domains,query,search_depth,topic)
+  ok  subagent_tool  meta-llama/Llama-3.3-70B-Instruct       59.2s tavily_search(end_date,exclude_domains,include_domains)
+  ok  subagent_tool  meta-llama/Llama-3.3-70B-Instruct       35.4s tavily_search(end_date,exclude_domains,include_domains)
+  ok  subagent_tool  meta-llama/Llama-3.3-70B-Instruct       34.0s tavily_search(end_date,exclude_domains,include_domains)
+  ok  subagent_tool  meta-llama/Llama-3.3-70B-Instruct       17.1s tavily_search(end_date,exclude_domains,include_domains)
+  ok  subagent_tool  meta-llama/Llama-3.3-70B-Instruct      172.4s tavily_search(end_date,exclude_domains,include_domains)
+  ok  subagent_tool  nvidia/Nemotron-3_5-Lightning            1.5s tavily_search(query,search_depth,topic)
+  ok  subagent_tool  nvidia/Nemotron-3_5-Lightning            1.3s tavily_search(include_domains,query,search_depth,topic)
+  ok  subagent_tool  nvidia/Nemotron-3_5-Lightning            1.3s tavily_search(include_domains,query,search_depth)
+  ok  subagent_tool  nvidia/Nemotron-3_5-Lightning            1.5s tavily_search(query,search_depth,topic)
+  ok  subagent_tool  nvidia/Nemotron-3_5-Lightning            1.6s tavily_search(include_domains,query,search_depth)
+  ok  subagent_tool  zai-org/GLM-5.3-Flash                    2.2s tavily_search(query,search_depth)
+  ok  subagent_tool  zai-org/GLM-5.3-Flash                    3.1s tavily_search(query,search_depth)
+  ok  subagent_tool  zai-org/GLM-5.3-Flash                    2.4s tavily_search(query,search_depth)
+  ok  subagent_tool  zai-org/GLM-5.3-Flash                    2.5s tavily_search(query,search_depth)
+  ok  subagent_tool  zai-org/GLM-5.3-Flash                    2.6s tavily_search(query,search_depth)
+  ok  judge_struct   moonshotai/Kimi-K2.6                     1.6s Verdict
+  ok  judge_struct   moonshotai/Kimi-K2.6                     4.9s Verdict
+  FAIL judge_struct   moonshotai/Kimi-K2.6                     4.2s returned NoneType
+  ok  judge_struct   deepseek-ai/DeepSeek-V4-Flash-0731       1.9s Verdict
+  ok  judge_struct   deepseek-ai/DeepSeek-V4-Flash-0731       1.6s Verdict
+  ok  judge_struct   deepseek-ai/DeepSeek-V4-Flash-0731       1.6s Verdict
+  ok  judge_struct   Qwen/Qwen3-30B-A3B-Instruct-2507         2.1s Verdict
+  ok  judge_struct   Qwen/Qwen3-30B-A3B-Instruct-2507         1.7s Verdict
+  ok  judge_struct   Qwen/Qwen3-30B-A3B-Instruct-2507         1.9s Verdict
+  ok  judge_struct   meta-llama/Llama-3.3-70B-Instruct       13.7s Verdict
+  ok  judge_struct   meta-llama/Llama-3.3-70B-Instruct       49.2s Verdict
+  ok  judge_struct   meta-llama/Llama-3.3-70B-Instruct        2.1s Verdict
+  ok  judge_struct   nvidia/Nemotron-3_5-Lightning            3.4s Verdict
+  ok  judge_struct   nvidia/Nemotron-3_5-Lightning            2.0s Verdict
+  ok  judge_struct   nvidia/Nemotron-3_5-Lightning            2.8s Verdict
+  ok  judge_struct   zai-org/GLM-5.3-Flash                    4.2s Verdict
+  ok  judge_struct   zai-org/GLM-5.3-Flash                    2.6s Verdict
+  ok  judge_struct   zai-org/GLM-5.3-Flash                    2.5s Verdict
+
+total model calls: 104
+
+raw results -> reports\model-selection-raw.json
+measured cost (models with a published price): $0.4359

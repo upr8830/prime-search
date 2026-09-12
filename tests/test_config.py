@@ -86,3 +86,44 @@ def test_export_sdk_env_does_not_clobber_a_real_shell_value(env: pytest.MonkeyPa
     settings.export_sdk_env()
     assert os.environ["LANGSMITH_PROJECT"] == "already-set"
     assert os.environ["NEBIUS_API_KEY"] == "n" * 20
+
+
+# --- unknown PRIME_ overrides ------------------------------------------------------
+
+
+def test_a_mistyped_override_is_reported_with_the_name_it_meant(env: pytest.MonkeyPatch) -> None:
+    """`extra="ignore"` drops an unrecognized override in silence, which is how
+    PRIME_MODELS__SUB sat in a .env doing nothing while looking deliberate."""
+    from prime_search.config import unknown_overrides
+
+    env.setenv("PRIME_MODELS__SUB", "moonshotai/Kimi-K2.6")
+    found = unknown_overrides()
+    assert found["PRIME_MODELS__SUB"] == "PRIME_MODELS__SUBAGENT"
+
+
+def test_valid_overrides_are_not_reported(env: pytest.MonkeyPatch) -> None:
+    from prime_search.config import unknown_overrides
+
+    env.setenv("PRIME_MODELS__SUBAGENT", "x")
+    env.setenv("PRIME_BUDGET_DEEP__MAX_SEARCHES", "7")
+    env.setenv("PRIME_TAVILY_CACHE", "false")
+    assert unknown_overrides() == {}
+
+
+def test_get_settings_warns_rather_than_raising(env: pytest.MonkeyPatch) -> None:
+    """A stale variable in someone's shell should not stop a run, but it must not be
+    invisible either."""
+    import warnings
+
+    from prime_search.config import get_settings
+
+    get_settings.cache_clear()
+    env.setenv("PRIME_MODELS__SUB", "moonshotai/Kimi-K2.6")
+    try:
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            settings = get_settings()
+        assert settings.models.subagent == ModelRouting().subagent  # override had no effect
+        assert any("PRIME_MODELS__SUBAGENT" in str(w.message) for w in caught)
+    finally:
+        get_settings.cache_clear()

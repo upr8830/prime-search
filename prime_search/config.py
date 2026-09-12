@@ -9,7 +9,10 @@ alias, which is what lets both forms coexist.
 
 from __future__ import annotations
 
+import difflib
 import os
+import warnings
+from collections.abc import Mapping
 from functools import lru_cache
 
 from pydantic import AliasChoices, BaseModel, Field
@@ -95,9 +98,52 @@ class Settings(BaseSettings):
         return bool(self.langsmith_api_key)
 
 
+def _known_override_names() -> set[str]:
+    """Every PRIME_-prefixed variable this Settings actually reads."""
+    names = set()
+    for field, info in Settings.model_fields.items():
+        names.add(f"PRIME_{field}".upper())
+        annotation = info.annotation
+        nested = getattr(annotation, "model_fields", None)
+        if nested:  # ModelRouting, Budget -> PRIME_MODELS__ROOT, PRIME_BUDGET_DEEP__...
+            for sub in nested:
+                names.add(f"PRIME_{field}__{sub}".upper())
+    return names
+
+
+def unknown_overrides(environ: Mapping[str, str] | None = None) -> dict[str, str]:
+    """PRIME_-prefixed variables that match no field, with the nearest real name.
+
+    `extra="ignore"` means a mistyped override is dropped in silence — which is how
+    `PRIME_MODELS__SUB` sat in a .env doing nothing while looking deliberate. The
+    field is `subagent`, so the working name is `PRIME_MODELS__SUBAGENT`.
+    """
+    environ = os.environ if environ is None else environ
+    known = _known_override_names()
+    found: dict[str, str] = {}
+    for name in environ:
+        upper = name.upper()
+        if not upper.startswith("PRIME_") or upper in known:
+            continue
+        closest = difflib.get_close_matches(upper, sorted(known), n=1, cutoff=0.6)
+        found[name] = closest[0] if closest else ""
+    return found
+
+
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
-    """Process-wide settings. Raises on a missing required key, naming the field."""
+    """Process-wide settings. Raises on a missing required key, naming the field.
+
+    Warns rather than raises on an unrecognized PRIME_ override: a stale variable in
+    someone's shell should not stop a run, but it must not be invisible either.
+    """
+    for name, suggestion in unknown_overrides().items():
+        hint = f"; did you mean {suggestion}?" if suggestion else ""
+        warnings.warn(
+            f"{name} is set but matches no Settings field, so it has no effect{hint}",
+            RuntimeWarning,
+            stacklevel=2,
+        )
     settings = Settings()  # type: ignore[call-arg]  # values come from env/.env
     settings.export_sdk_env()
     return settings

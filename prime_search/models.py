@@ -29,19 +29,31 @@ from prime_search.prompts import render
 Role = Literal["root", "critic", "subagent", "judge", "extractor", "evaluator", "baseline"]
 _S = TypeVar("_S", bound=BaseModel)
 
-# docs/01 §4. Rule 1 names Kimi-K2.6 as root's fallback; the table names
-# DeepSeek-V3.2 as the fallback "for non-root roles", which is every other entry.
+# docs/01 §4 names `deepseek-ai/DeepSeek-V3.2` as the fallback for every non-root
+# role. **That model is no longer offered** — the live catalog moved to the V4 line
+# (checked 2026-09-12), so those five entries would have raised model-not-found the
+# first time anything needed them: a dead switch in the mechanism meant to rescue a
+# failing role. Replacements are the V4 models measured on each role's own call shape
+# in reports/model-selection.md, not picked from a leaderboard:
+#
+#   critic     V4-Pro    3/3 parseable fenced JSON, 2.5s
+#   subagent   V4-Flash  5/5 native tool calls, 1.7s
+#   judge etc. V4-Flash  3/3 valid Verdict from with_structured_output
+#
+# Root keeps rule 1's Kimi-K2.6, which is still offered and went 5/5 on code-as-action.
+# Each fallback is a different vendor line from the role's primary, so one vendor's
+# outage cannot take both down.
 #
 # `baseline` is deliberately absent: docs/01 §3 marks it "starter default; do not
 # change", and baseline parity is what the whole comparison rests on (CLAUDE.md).
 # A baseline that silently switched models would invalidate every bench row.
 FALLBACKS: dict[Role, str] = {
     "root": "moonshotai/Kimi-K2.6",
-    "critic": "deepseek-ai/DeepSeek-V3.2",
-    "subagent": "deepseek-ai/DeepSeek-V3.2",
-    "judge": "deepseek-ai/DeepSeek-V3.2",
-    "extractor": "deepseek-ai/DeepSeek-V3.2",
-    "evaluator": "deepseek-ai/DeepSeek-V3.2",
+    "critic": "deepseek-ai/DeepSeek-V4-Pro",
+    "subagent": "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "judge": "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "extractor": "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "evaluator": "deepseek-ai/DeepSeek-V4-Flash-0731",
 }
 
 # Keys a reasoning model may use for out-of-band reasoning text, in priority order.
