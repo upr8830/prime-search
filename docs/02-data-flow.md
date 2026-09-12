@@ -63,9 +63,20 @@ class RunRecord(BaseModel):
     critic_reports: list[CriticReport]
     answer: Answer | None
     usage: Usage
-    status: Literal["running", "completed", "budget_exhausted", "failed"]
+    status: Literal["running", "completed", "budget_exhausted", "failed"] = "running"
     error: str | None = None
 ```
+
+Every collection field above (`tasks`, `documents`, `evidence`, `claims`,
+`verdicts`, `critic_reports`, and the equivalents on `Claim`, `CriticReport`,
+`Answer` and `QueryUnderstanding`) defaults to empty, and `status` starts at
+`running`. A record is written once at the start of a run and again at the end
+(§5), so it must be constructible before any of those exist; `Workspace.to_record`
+supplies the terminal `status`, `finished_at` and `answer` as overrides.
+
+One model in this section lives elsewhere: `Budget` is defined in
+`prime_search/config.py` (01 §3), because the routing and budget defaults belong
+with the settings that override them. `schemas.py` imports it.
 
 ### 2.2 Query understanding and plan
 
