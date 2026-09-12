@@ -1,0 +1,7 @@
+.env
+runs/
+.cache/
+node_modules/
+starter_agent.py
+__pycache__/
+.venv/
