@@ -24,20 +24,24 @@ from langchain_nebius import ChatNebius
 from pydantic import BaseModel
 
 from prime_search.config import Settings, get_settings
+from prime_search.prompts import render
 
 Role = Literal["root", "critic", "subagent", "judge", "extractor", "evaluator", "baseline"]
 _S = TypeVar("_S", bound=BaseModel)
 
-# docs/01 §4. Root is a reasoning model, so its fallback is the known-good
-# tool-calling model rather than the non-root fallback.
+# docs/01 §4. Rule 1 names Kimi-K2.6 as root's fallback; the table names
+# DeepSeek-V3.2 as the fallback "for non-root roles", which is every other entry.
+#
+# `baseline` is deliberately absent: docs/01 §3 marks it "starter default; do not
+# change", and baseline parity is what the whole comparison rests on (CLAUDE.md).
+# A baseline that silently switched models would invalidate every bench row.
 FALLBACKS: dict[Role, str] = {
     "root": "moonshotai/Kimi-K2.6",
-    "critic": "moonshotai/Kimi-K2.6",
+    "critic": "deepseek-ai/DeepSeek-V3.2",
     "subagent": "deepseek-ai/DeepSeek-V3.2",
     "judge": "deepseek-ai/DeepSeek-V3.2",
     "extractor": "deepseek-ai/DeepSeek-V3.2",
     "evaluator": "deepseek-ai/DeepSeek-V3.2",
-    "baseline": "deepseek-ai/DeepSeek-V3.2",
 }
 
 # Keys a reasoning model may use for out-of-band reasoning text, in priority order.
@@ -79,6 +83,29 @@ class ReasoningNormalizedChatNebius(ChatNebius):
                 message.additional_kwargs.setdefault("reasoning_normalized", True)
         return result
 
+    def _convert_chunk_to_generation_chunk(
+        self, chunk: dict, default_chunk_class: type, base_generation_info: dict | None
+    ) -> Any:
+        """Same guarantee on the streaming path.
+
+        docs/01 §4 says callers *always* get text in `content`, and task 1.7 streams
+        the answer to the console and over SSE. Without this, a reasoning model's
+        stream would deliver empty content chunks and the fenced-block parsers would
+        see nothing.
+        """
+        generation_chunk = super()._convert_chunk_to_generation_chunk(
+            chunk, default_chunk_class, base_generation_info
+        )
+        if generation_chunk is None:
+            return None
+        message = generation_chunk.message
+        if not message.text:
+            recovered = _reasoning_text(message)
+            if recovered:
+                message.content = recovered
+                message.additional_kwargs.setdefault("reasoning_normalized", True)
+        return generation_chunk
+
 
 def _build(role: Role, settings: Settings | None = None, **overrides: Any) -> ChatNebius:
     settings = settings or get_settings()
@@ -115,18 +142,25 @@ def parse_fenced_json(text: str) -> Any:
 class StructuredCaller(Generic[_S]):
     """Structured output with the docs/01 §4 rule-3 ladder.
 
-    1. Native `with_structured_output`, retried `attempts` times. Kimi-K2.6 returns
-       None on roughly 15% of calls (measured over 20 calls, 2026-09-12), which a
-       retry clears; a hard switch to another model is not warranted for that.
+    1. Native `with_structured_output`, with `attempts` tries. Kimi-K2.6 returns
+       None on roughly 15% of calls (measured over 20 identical calls, 2026-09-12),
+       which a single repair attempt clears; docs/01 §9 allows "one repair attempt
+       with the same model", so the default is 2, not an unbounded retry.
     2. Fenced JSON from the same model, parsed by the harness.
 
-    Only if both fail does the caller consider `fallback_model(role)`, which is a
-    decision for a human (KICKOFF_PROMPT: ask before applying a model fallback).
-    `last_mode` records which rung produced the result, so `make smoke` and the
-    traces can show when the ladder was used.
+    An *exception* (bad key, model not found, timeout) is not flakiness, so it does
+    not consume further native attempts — it drops straight to the fenced rung and,
+    failing that, surfaces. Retrying a bad API key three times just costs round
+    trips.
+
+    docs/01 §4 rule 3 has a third rung, "then fallback model". It is deliberately
+    not automatic: KICKOFF_PROMPT requires asking a human before applying a model
+    fallback, so both rungs failing raises and the human decides. `last_mode`
+    records which rung answered, so smoke output and traces show when the ladder
+    was used.
     """
 
-    def __init__(self, role: Role, schema: type[_S], *, attempts: int = 3) -> None:
+    def __init__(self, role: Role, schema: type[_S], *, attempts: int = 2) -> None:
         self.role = role
         self.schema = schema
         self.attempts = attempts
@@ -144,11 +178,14 @@ class StructuredCaller(Generic[_S]):
                 errors.append(f"attempt {attempt}: returned {type(result).__name__}")
             except Exception as exc:
                 errors.append(f"attempt {attempt}: {type(exc).__name__}: {exc}")
+                break  # not flakiness; go straight to the fenced rung
 
-        schema_json = json.dumps(self.schema.model_json_schema(), indent=2)
         message = model.invoke(
-            f"{prompt}\n\nRespond with a single fenced JSON block matching this JSON "
-            f"Schema. No prose before or after it.\n\n```json\n{schema_json}\n```"
+            render(
+                "fenced_json",
+                prompt=prompt,
+                schema=json.dumps(self.schema.model_json_schema(), indent=2),
+            )
         )
         try:
             value = self.schema.model_validate(parse_fenced_json(message.text))
@@ -161,7 +198,7 @@ class StructuredCaller(Generic[_S]):
         return value
 
 
-def structured(role: Role, schema: type[_S], *, attempts: int = 3) -> StructuredCaller[_S]:
+def structured(role: Role, schema: type[_S], *, attempts: int = 2) -> StructuredCaller[_S]:
     """Structured output for a role, with the docs/01 §4 rule-3 fallback ladder."""
     return StructuredCaller(role, schema, attempts=attempts)
 
@@ -208,5 +245,13 @@ def baseline_model(**overrides: Any) -> ChatNebius:
 
 
 def fallback_model(role: Role, **overrides: Any) -> ChatNebius:
-    """The docs/01 §4 fallback for a role, for use when `make smoke` fails it."""
+    """The docs/01 §4 fallback for a role, for use when `make smoke` fails it.
+
+    Raises for `baseline`, which has no fallback: it must stay starter-equivalent.
+    """
+    if role not in FALLBACKS:
+        raise ValueError(
+            f"{role!r} has no fallback model: docs/01 §3 marks the baseline model "
+            "'do not change', and baseline parity is what the comparison rests on"
+        )
     return _build(role, model=FALLBACKS[role], **overrides)

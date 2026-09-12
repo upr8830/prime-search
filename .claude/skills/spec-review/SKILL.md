@@ -1,7 +1,7 @@
 ---
 name: spec-review
 description: Adversarial review of the current diff against its spec before a gate. Invoke with the task id, e.g. /spec-review 1.7
-disable-model-invocation: true
+#disable-model-invocation: true
 ---
 Task under review: $ARGUMENTS (a task id from docs/09-implementation-plan.md).
 

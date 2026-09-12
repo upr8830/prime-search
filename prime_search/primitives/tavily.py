@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from langchain_tavily import TavilyExtract, TavilySearch
 
+from prime_search.config import get_settings
+
 # docs/01 §5: primary-source domains. The authoritative tier mapping lands in
 # primitives/sources.py at task 1.3 and is shared with the evidence model.
 PRIMARY_DOMAINS = ["cms.gov", "fda.gov"]
@@ -24,12 +26,18 @@ def search_tool(
     max_results: int = 8,
     include_domains: list[str] | None = None,
     time_range: str | None = None,
+    api_key: str | None = None,
 ) -> TavilySearch:
-    """docs/01 §5: advanced depth, 8 results, raw content fetched separately."""
+    """docs/01 §5: advanced depth, 8 results, raw content fetched separately.
+
+    The key comes from Settings rather than the ambient environment, so a tool
+    built here never depends on whether export_sdk_env() has run yet.
+    """
     kwargs = {
         "max_results": max_results,
         "search_depth": "advanced",
         "include_raw_content": False,
+        "tavily_api_key": api_key or get_settings().tavily_api_key,
     }
     if include_domains:
         kwargs["include_domains"] = include_domains
@@ -38,6 +46,9 @@ def search_tool(
     return TavilySearch(**kwargs)
 
 
-def extract_tool(*, extract_depth: str = "advanced") -> TavilyExtract:
+def extract_tool(*, extract_depth: str = "advanced", api_key: str | None = None) -> TavilyExtract:
     """docs/01 §5: advanced extract depth; results are cached by the caller."""
-    return TavilyExtract(extract_depth=extract_depth)
+    return TavilyExtract(
+        extract_depth=extract_depth,
+        tavily_api_key=api_key or get_settings().tavily_api_key,
+    )

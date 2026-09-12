@@ -9,7 +9,7 @@ Built for the Tavily (Nebius) Head of Forward Deployed Engineering take-home: an
 starter Tavily + LangChain search agent, kept in the repo as `--mode baseline` so the two can be
 compared side by side on the same question.
 
-> **Status: Day 1 of 3 — scaffold.** `ask` and `smoke` are stubs until tasks 1.7 and 1.2.
+> **Status: Day 1 of 3 — in progress.** `make smoke` works; `make ask` lands at task 1.7.
 > The full quickstart below is the target interface; see `docs/09-implementation-plan.md` for
 > what is actually built.
 

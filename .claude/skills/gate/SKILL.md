@@ -1,7 +1,7 @@
 ---
 name: gate
 description: Assemble the evidence for a [G] gate in docs/09 and stop for user approval. Invoke as /gate 1.2
-disable-model-invocation: true
+#disable-model-invocation: true
 ---
 Gate: $ARGUMENTS
 

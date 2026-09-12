@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from typing import Callable
 
 from prime_search.config import get_settings
-from prime_search.models import FALLBACKS, Role, model_for, structured
+from prime_search.models import FALLBACKS, Role, model_for, parse_fenced_json, structured
 from prime_search.primitives.tavily import CGM_LCD_URL, PRIMARY_DOMAINS, extract_tool, search_tool
 from prime_search.prompts import render
 from prime_search.tracing import trace_run
@@ -59,8 +59,11 @@ def _run(probe: Probe, check: Callable[[], str]) -> Probe:
         probe.detail = check()
         probe.status = "PASS"
     except Exception as exc:  # a probe failure is data, not a crash
-        probe.status = "FALLBACK" if probe.role else "FAIL"
-        suffix = f" -> would switch to {FALLBACKS[probe.role]}" if probe.role else ""
+        fallback = FALLBACKS.get(probe.role) if probe.role else None
+        # No fallback exists for `baseline` (starter parity), so a baseline failure
+        # is a hard FAIL that needs a human, not a switchable role.
+        probe.status = "FALLBACK" if fallback else "FAIL"
+        suffix = f" -> would switch to {fallback}" if fallback else ""
         probe.detail = f"{type(exc).__name__}: {str(exc)[:200]}{suffix}"
     probe.seconds = time.monotonic() - started
     return probe
@@ -88,6 +91,25 @@ def _probe_code_as_action(role: Role) -> str:
     body = block.group(1).strip().splitlines()
     return (
         f"fenced python block, {len(body)} lines"
+        + (", recovered from reasoning_content" if normalized else "")
+    )
+
+
+def _probe_fenced_json(role: Role) -> str:
+    """The critic's production shape: fenced *JSON* in plain text (docs/01 §4).
+
+    Deliberately not the same probe as root's. Root emits fenced Python and critic
+    fenced JSON, so a shared probe would pass a model that could produce one and
+    not the other.
+    """
+    model = model_for(role)
+    message = model.invoke(render("smoke_critic", draft="Therapeutic CGMs are always covered."))
+    payload = parse_fenced_json(message.text)  # raises if the block is absent or invalid
+    if not isinstance(payload, dict):
+        raise AssertionError(f"expected a JSON object, got {type(payload).__name__}")
+    normalized = message.additional_kwargs.get("reasoning_normalized")
+    return (
+        f"fenced json object, keys={sorted(payload)[:4]}"
         + (", recovered from reasoning_content" if normalized else "")
     )
 
@@ -178,16 +200,22 @@ def run_smoke() -> list[Probe]:
     _TRACE_URLS.clear()
 
     probes = [
+        # One probe per role in ModelRouting (docs/09 §1.2: "for each role"), each
+        # in the call shape that role actually uses in production.
         _run(Probe("root: code-as-action -> fenced python", "root"),
              lambda: _probe_code_as_action("root")),
-        _run(Probe("critic: code-as-action -> fenced block", "critic"),
-             lambda: _probe_code_as_action("critic")),
+        _run(Probe("critic: code-as-action -> fenced json", "critic"),
+             lambda: _probe_fenced_json("critic")),
         _run(Probe("subagent: native tool call", "subagent"),
              lambda: _probe_native_tool_call("subagent")),
-        _run(Probe("judge: with_structured_output(Verdict)", "judge"),
+        _run(Probe("judge: structured output (Verdict)", "judge"),
              lambda: _probe_structured_output("judge")),
-        _run(Probe("extractor: with_structured_output(Verdict)", "extractor"),
+        _run(Probe("extractor: structured output (Verdict)", "extractor"),
              lambda: _probe_structured_output("extractor")),
+        _run(Probe("evaluator: structured output (Verdict)", "evaluator"),
+             lambda: _probe_structured_output("evaluator")),
+        _run(Probe("baseline: native tool call (starter shape)", "baseline"),
+             lambda: _probe_native_tool_call("baseline")),
         _run(Probe("tavily: search (cms.gov, fda.gov)"), _probe_tavily_search),
         _run(Probe("tavily: extract (CGM LCD L33822)"), _probe_tavily_extract),
         _run(Probe("langsmith: trace created"), _probe_langsmith),

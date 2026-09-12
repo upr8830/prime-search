@@ -11,6 +11,7 @@ from langchain_core.outputs import ChatGeneration, ChatResult
 from langchain_nebius import ChatNebius
 
 from prime_search.models import (
+    fallback_model,
     FALLBACKS,
     ReasoningNormalizedChatNebius,
     _reasoning_text,
@@ -81,9 +82,21 @@ def test_parse_fenced_json_rejects_empty_output() -> None:
         parse_fenced_json("")
 
 
-def test_root_falls_back_to_a_tool_calling_model_not_the_generic_fallback() -> None:
-    """docs/01 §4: DeepSeek-V3.2 is the fallback for non-root roles; root, being a
-    reasoning role, falls back to the starter's known-good model."""
+def test_fallback_table_matches_spec() -> None:
+    """docs/01 §4: rule 1 sends root to Kimi-K2.6; the table makes DeepSeek-V3.2 the
+    fallback for every non-root role."""
     assert FALLBACKS["root"] == "moonshotai/Kimi-K2.6"
-    assert FALLBACKS["critic"] == "moonshotai/Kimi-K2.6"
-    assert FALLBACKS["subagent"] == "deepseek-ai/DeepSeek-V3.2"
+    assert all(
+        model == "deepseek-ai/DeepSeek-V3.2"
+        for role, model in FALLBACKS.items()
+        if role != "root"
+    )
+
+
+def test_baseline_has_no_fallback() -> None:
+    """docs/01 §3 marks the baseline model "do not change" and CLAUDE.md rests the
+    whole comparison on baseline parity, so switching it must be impossible, not
+    merely discouraged."""
+    assert "baseline" not in FALLBACKS
+    with pytest.raises(ValueError, match="no fallback model"):
+        fallback_model("baseline")
