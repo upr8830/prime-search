@@ -14,6 +14,8 @@ import logging
 import os
 import re
 import sys
+from collections.abc import Iterator
+from contextlib import contextmanager
 from typing import Any
 
 import structlog
@@ -84,3 +86,62 @@ def configure_logging(level: str | None = None, json_logs: bool | None = None) -
 
 def get_logger(**initial: Any) -> Any:
     return structlog.get_logger(**initial)
+
+
+# --------------------------------------------------------------------------- tracing
+
+
+class TraceHandle:
+    """A live LangSmith trace. `url` is valid as soon as the block is entered, so it
+    can be streamed to the UI and stored on the RunRecord before the run finishes."""
+
+    __slots__ = ("run_tree", "url", "trace_id")
+
+    def __init__(self, run_tree: Any) -> None:
+        self.run_tree = run_tree
+        self.url: str = run_tree.get_url()
+        self.trace_id: str = str(run_tree.trace_id)
+
+
+@contextmanager
+def trace_run(
+    name: str,
+    *,
+    project_name: str | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, Any] | None = None,
+    inputs: dict[str, Any] | None = None,
+) -> Iterator[TraceHandle]:
+    """Open a LangSmith trace and yield a handle carrying its URL.
+
+    docs/01 §6 specifies tracing enabled programmatically so it does not depend on
+    env load order. It names langchain-core's `tracing_v2_enabled`, but under
+    langchain-core 1.6 that tracer never populates `latest_run`, so `get_run_url()`
+    always raises "No traced run found." An explicit RunTree parent is the working
+    equivalent and additionally makes the URL available *before* the run ends.
+
+    Everything invoked inside the block nests under this run.
+    """
+    from langsmith import RunTree, tracing_context
+
+    run_tree = RunTree(
+        name=name,
+        run_type="chain",
+        project_name=project_name or os.getenv("LANGSMITH_PROJECT", "prime-search"),
+        tags=tags or [],
+        extra={"metadata": metadata or {}},  # RunTree rejects extra=None
+        inputs=inputs or {},
+    )
+    run_tree.post()
+    handle = TraceHandle(run_tree)
+    try:
+        with tracing_context(enabled=True, parent=run_tree):
+            yield handle
+    except Exception as exc:
+        run_tree.end(error=f"{type(exc).__name__}: {exc}")
+        run_tree.patch()
+        raise
+    else:
+        if run_tree.end_time is None:
+            run_tree.end(outputs={})
+        run_tree.patch()

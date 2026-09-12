@@ -44,6 +44,43 @@ def ask(
 
 @app.command()
 def smoke() -> None:
-    """Verify each model role, Tavily search/extract, and LangSmith tracing. (Task 1.2.)"""
-    typer.secho("smoke: not implemented yet - task 1.2", fg=typer.colors.YELLOW, err=True)
-    raise typer.Exit(2)
+    """Verify each model role, Tavily search/extract, and LangSmith tracing.
+
+    Exits non-zero if any probe fails, so `make setup && make smoke && make ask`
+    stops at the first real problem (docs/01 §4, docs/09 §1.2).
+    """
+    from rich.console import Console
+    from rich.table import Table
+
+    from prime_search.smoke import run_smoke
+
+    console = Console()
+    probes = run_smoke()
+
+    table = Table(title="PRIME Search smoke", title_style="bold", show_lines=False)
+    table.add_column("check", no_wrap=True)
+    table.add_column("status", no_wrap=True)
+    table.add_column("s", justify="right", no_wrap=True)
+    table.add_column("detail", overflow="fold")
+    styles = {"PASS": "green", "FALLBACK": "yellow", "FAIL": "red"}
+    for probe in probes:
+        table.add_row(
+            probe.name,
+            f"[{styles.get(probe.status, 'white')}]{probe.status}[/]",
+            f"{probe.seconds:.1f}",
+            probe.detail,
+        )
+    console.print(table)
+    for probe in probes:
+        if probe.url:
+            console.print(f"  {probe.name.split(':')[0]} trace: [link]{probe.url}[/]")
+
+    failed = [p for p in probes if not p.ok]
+    if failed:
+        console.print(
+            f"[bold red]{len(failed)} of {len(probes)} checks did not pass.[/] "
+            "A FALLBACK is a finding, not a fix: repoint the role in config and record "
+            "it in the docs/11 decision log."
+        )
+        raise typer.Exit(1)
+    console.print(f"[bold green]all {len(probes)} checks passed[/]")
