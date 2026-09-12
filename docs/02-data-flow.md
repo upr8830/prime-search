@@ -127,15 +127,27 @@ class Document(BaseModel):
     url: str
     title: str
     source_tier: Literal["primary_policy", "official_secondary", "professional", "trade", "web", "unknown"]
-    publisher: str | None                   # "CMS", "Noridian", "FDA", ...
-    doc_type: str | None                    # "LCD", "Article", "NCD", "Fact sheet", "Label", "Press release", ...
-    document_id_external: str | None        # "L33822", "A52464"
-    effective_date: date | None
-    revision_date: date | None
+    publisher: str | None = None            # "CMS", "Noridian", "FDA", ...
+    doc_type: str | None = None             # "LCD", "Article", "NCD", "Fact sheet", "Label", "Press release", ...
+    document_id_external: str | None = None # "L33822", "A52464"
+    effective_date: date | None = None
+    revision_date: date | None = None
     retrieved_at: datetime
-    text_path: str                          # runs/<run_id>/docs/<doc_id>.txt
-    paragraph_count: int
+    text_path: str = ""                     # runs/<run_id>/docs/<doc_id>.txt; "" while snippet_only
+    paragraph_count: int = 0                # 0 while snippet_only
     fetch_method: Literal["extract", "raw_content", "snippet_only"]
+```
+
+A document created by `search` is `snippet_only` and has no text on disk, so
+`text_path` and `paragraph_count` carry `""`/`0` until it is fetched. Use
+`Document.is_fetched` (`fetch_method != "snippet_only"`) rather than testing those
+sentinels; evidence may only be drawn from a fetched document (04 §3 rule 1).
+
+Every nullable field above defaults to `None`: a partially-extracted document is
+normal (a policy page with no stated effective date is a critic finding, not a
+parse failure — 04 §2), so the model must be constructible without them.
+
+```python
 
 class Evidence(BaseModel):
     evidence_id: str

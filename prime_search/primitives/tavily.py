@@ -474,6 +474,17 @@ def _raw_content_text(
     return "", None, cached, f"raw-content fallback found no exact match for {wanted}"
 
 
+def _sections_from_sidecar(document: Document) -> list[str]:
+    """Section headings recorded at fetch time; empty if the sidecar is unreadable."""
+    sidecar = Path(document.text_path).with_suffix(".meta.json")
+    try:
+        payload = json.loads(sidecar.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    sections = payload.get("sections")
+    return sections if isinstance(sections, list) else []
+
+
 def _text_root(run_dir: Path | None) -> Path:
     """docs/04 §6 persists to `runs/<run_id>/docs/`.
 
@@ -501,7 +512,9 @@ def fetch(
     url, known = _resolve_target(target, docs)
     doc_id = known.doc_id if known else doc_id_for(url)
     if known is not None and known.is_fetched and Path(known.text_path).is_file():
-        return FetchResult(document=known, sections=[], cached=True)
+        # docs/03 §4: fetch returns section headings. The cached path must return the
+        # same shape as the first call, so read them back from the sidecar.
+        return FetchResult(document=known, sections=_sections_from_sidecar(known), cached=True)
 
     hint_title = title or (known.title if known else None)
     text_raw, extracted_title, cached, error = _extract_text(url, api_key)
@@ -518,7 +531,18 @@ def fetch(
         if len(alt_paragraphs) > len(paragraphs):
             text, paragraphs, method = alt_text, alt_paragraphs, "raw_content"
             extracted_title = alt_title or extracted_title
-            cached, error = cached and alt_cached, None
+            cached = cached and alt_cached
+            # Improved, but "better" is not the bar: R2's trigger is the threshold.
+            # Clearing `error` here whenever the fallback helped *at all* would hide a
+            # document that is still too thin to cite.
+            error = (
+                None
+                if len(alt_paragraphs) >= min_paragraphs
+                else (
+                    f"raw-content fallback improved this to {len(alt_paragraphs)} "
+                    f"paragraphs, still under {min_paragraphs}"
+                )
+            )
         else:
             # The fallback did not help. Say so: a document that stays under the
             # threshold is the R2 trigger the operator needs to see, and a silent

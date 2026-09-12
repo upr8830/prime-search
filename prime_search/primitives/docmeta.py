@@ -184,7 +184,9 @@ _DAY_FIRST = re.compile(r"\b(?P<d>\d{1,2})\s+(?P<mon>[A-Za-z]{3,9})\.?,?\s+(?P<y
 _SHORT_MDY = re.compile(r"\b(?P<m>\d{1,2})/(?P<d>\d{1,2})/(?P<yy>\d{2})\b")
 # Month-year only, the form FDA labels use ("Revised: 5/2026", "Revised: June/2026").
 # Resolved to the first of the month: a label revision has no finer granularity.
-_MONTH_YEAR_NUM = re.compile(r"\b(?P<m>\d{1,2})/(?P<y>\d{4})\b")
+# The lookbehind keeps document numbers out — "Pub 100-02/2024" is a manual
+# reference, not February 2024.
+_MONTH_YEAR_NUM = re.compile(r"(?<![\d\-/])(?P<m>\d{1,2})/(?P<y>\d{4})\b")
 _MONTH_YEAR_NAME = re.compile(r"\b(?P<mon>[A-Za-z]{3,9})[/ ](?P<y>\d{4})\b")
 
 # 1965 is Medicare's enactment; the upper bound leaves room for a future effective
@@ -207,36 +209,36 @@ def parse_date_token(token: str) -> date | None:
     form is tried before the two-digit-year form.
     """
     text = token or ""
+    # finditer, not search: the first match of a pattern is often not a date at all
+    # ("Chapter 15, 2024" matches the month-name shape), and abandoning the pattern
+    # there would miss the real date later in the same window.
     for pattern in (_NUMERIC_MDY, _ISO):
-        match = pattern.search(text)
-        if match:
+        for match in pattern.finditer(text):
             found = _build(int(match["y"]), int(match["m"]), int(match["d"]))
             if found:
                 return found
     for pattern in (_MONTH_FIRST, _DAY_FIRST):
-        match = pattern.search(text)
-        if match:
+        for match in pattern.finditer(text):
             month = _MONTHS.get(match["mon"][:3].lower())
             if month:
                 found = _build(int(match["y"]), month, int(match["d"]))
                 if found:
                     return found
-    match = _SHORT_MDY.search(text)
-    if match:
+    for match in _SHORT_MDY.finditer(text):
         found = _build(2000 + int(match["yy"]), int(match["m"]), int(match["d"]))
         if found:
             return found
     # Last resort: month-year, day defaulted to the 1st.
-    match = _MONTH_YEAR_NUM.search(text)
-    if match:
+    for match in _MONTH_YEAR_NUM.finditer(text):
         found = _build(int(match["y"]), int(match["m"]), 1)
         if found:
             return found
-    match = _MONTH_YEAR_NAME.search(text)
-    if match:
+    for match in _MONTH_YEAR_NAME.finditer(text):
         month = _MONTHS.get(match["mon"][:3].lower())
         if month:
-            return _build(int(match["y"]), month, 1)
+            found = _build(int(match["y"]), month, 1)
+            if found:
+                return found
     return None
 
 
@@ -270,6 +272,11 @@ _DATE_LABELS: tuple[tuple[str, str], ...] = (
     ("Revision Ending Date", "extra"),
     ("Retirement Date", "extra"),
     ("Date Received", "extra"),
+    # Not wanted for themselves, but they are real CMS LCD header fields and must be
+    # known so they terminate the previous label's window. Without them, an
+    # "Effective Date" with no value reaches across and takes this field's date.
+    ("Notice Period Start Date", "extra"),
+    ("Notice Period End Date", "extra"),
 )
 # Longest label first: plain `Effective Date` must not swallow `Revision Effective
 # Date`, and Python's alternation is first-match-wins.
@@ -281,6 +288,12 @@ _LABEL_RE = re.compile(
 )
 _LABEL_KIND = {label.lower(): kind for label, kind in _DATE_LABELS}
 _WINDOW = 140  # chars searched after a label for "the nearest date token" (docs/04 §2)
+# Weak labels are ordinary words, so they also occur mid-sentence: a revision-history
+# cell reading "Revised to add code A4239 effective 07/01/2018" would otherwise book
+# that date as the document's revision. A short window keeps "Revised: 5/2026" while
+# rejecting prose.
+_WINDOW_WEAK = 24
+_WEAK_KINDS = frozenset({"revision_weak", "effective_weak"})
 
 
 # A markdown table header line: the row above the `| --- | --- |` separator.
@@ -314,13 +327,14 @@ def _labelled_dates(text: str) -> tuple[dict[str, list[date]], dict[str, list[da
     for position, match in enumerate(matches):
         if any(start <= match.start() < end for start, end in header_spans):
             continue  # a column header, not a labelled value
+        label = match.group("label").lower()
+        span = _WINDOW_WEAK if _LABEL_KIND[label] in _WEAK_KINDS else _WINDOW
         next_start = matches[position + 1].start() if position + 1 < len(matches) else len(text)
-        window = text[match.end() : min(len(text), match.end() + _WINDOW, next_start)]
+        window = text[match.end() : min(len(text), match.end() + span, next_start)]
         if window.lstrip().startswith("](") or re.match(r"\s*N/?A\b", window, re.IGNORECASE):
             continue  # markdown link text, or an explicitly empty field
         parsed = parse_date_token(window)
         if parsed:
-            label = match.group("label").lower()
             by_kind.setdefault(_LABEL_KIND[label], []).append(parsed)
             by_label.setdefault(label, []).append(parsed)
     return by_kind, by_label

@@ -262,3 +262,66 @@ def test_event_payloads_match_the_sse_contract(cache_env, monkeypatch, tmp_path:
         "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=1", run_dir=tmp_path
     ).event("t1")
     assert set(fetch_event) == {"task_id", "doc_id", "url", "title", "tier", "effective_date"}
+
+
+# --- regressions found by the 1.3 spec review ------------------------------------
+
+
+def test_a_fallback_that_helps_but_stays_thin_still_reports_the_error(
+    cache_env, monkeypatch, tmp_path: Path
+) -> None:
+    """docs/11 R2's trigger is the threshold, not "did the fallback change anything".
+    Clearing `error` because the fallback improved matters would hide a document that
+    is still too thin to cite."""
+    url = "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=1"
+    six = "# Policy\n\n" + "\n\n".join(f"Para {i}." for i in range(6))
+    eleven = "# Policy\n\n" + "\n\n".join(f"Para {i}." for i in range(11))
+    monkeypatch.setattr(tavily, "extract_tool", lambda **_: _StubTool(_extract_response(six)))
+    monkeypatch.setattr(
+        tavily,
+        "search_tool",
+        lambda **_: _StubTool({"results": [{"url": url, "title": "t", "raw_content": eleven}]}),
+    )
+
+    result = tavily.fetch(url, run_dir=tmp_path)
+    assert result.document.fetch_method == "raw_content"  # it did take the better text
+    assert result.document.paragraph_count < tavily.MIN_PARAGRAPHS
+    assert result.error and "still under" in result.error
+
+
+def test_the_cached_fetch_path_returns_sections_too(cache_env, monkeypatch, tmp_path: Path) -> None:
+    """docs/03 §4: fetch returns section headings. The idempotent path must return the
+    same shape as the first call, not an empty list."""
+    monkeypatch.setattr(tavily, "extract_tool", lambda **_: _StubTool(_extract_response(PAGE)))
+    docs: dict[str, Document] = {}
+    url = "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=1"
+
+    first = tavily.fetch(url, docs=docs, run_dir=tmp_path)
+    second = tavily.fetch(first.document.doc_id, docs=docs, run_dir=tmp_path)
+
+    assert first.sections
+    assert second.sections == first.sections
+
+
+def test_refine_tier_runs_through_fetch(cache_env, monkeypatch, tmp_path: Path) -> None:
+    """A vendor page quoting an LCD must not come out of fetch as primary_policy."""
+    quoting = "# Coverage\n\nPer LCD L33822 a CGM is covered.\n\n" + "\n\n".join(
+        f"Para {i} about our product." for i in range(30)
+    )
+    monkeypatch.setattr(tavily, "extract_tool", lambda **_: _StubTool(_extract_response(quoting)))
+    result = tavily.fetch("https://www.dexcom.com/en-us/medicare", run_dir=tmp_path)
+    assert result.document.document_id_external == "L33822"  # it really did find the id
+    assert result.document.source_tier == "web"  # and still refused to promote
+
+
+def test_fetch_records_the_document_in_the_callers_mapping(
+    cache_env, monkeypatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(tavily, "extract_tool", lambda **_: _StubTool(_extract_response(PAGE)))
+    docs: dict[str, Document] = {}
+    result = tavily.fetch(
+        "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=1",
+        docs=docs,
+        run_dir=tmp_path,
+    )
+    assert docs[result.document.doc_id].is_fetched

@@ -138,3 +138,48 @@ def test_index_is_rebuilt_when_the_text_changes(document: Document) -> None:
     )
     hits = within.search_within(refreshed, "tirzepatide")
     assert hits and "tirzepatide" in hits[0].text
+
+
+# --- regressions found by the 1.3 spec review ------------------------------------
+
+
+def test_the_drift_guard_survives_a_warm_index(document: Document) -> None:
+    """The guard used to sit behind the index cache, so a document that had already
+    been searched once was served happily with a stale paragraph_count."""
+    within.search_within(document, "insulin")  # warms the index
+    stale = document.model_copy(update={"paragraph_count": document.paragraph_count + 5})
+    with pytest.raises(ValueError, match="paragraphs on disk"):
+        within.search_within(stale, "insulin")
+
+
+def test_a_text_rewritten_without_its_sidecar_is_refused(document: Document) -> None:
+    """The sidecar's text_sha1 is the only thing that catches offsets which moved
+    while the paragraph count stayed the same — every citation built on them would
+    point at the wrong words."""
+    import json
+
+    text_path = Path(document.text_path)
+    sidecar = text_path.with_suffix(".meta.json")
+    paragraphs = within.load_paragraphs(document)
+    sidecar.write_text(
+        json.dumps(
+            {
+                "text_sha1": "0" * 40,
+                "sections": [],
+                "paragraphs": [
+                    {
+                        "index": p.index,
+                        "char_start": p.char_start,
+                        "char_end": p.char_end,
+                        "section": p.section,
+                        "boilerplate": p.boilerplate,
+                    }
+                    for p in paragraphs
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    within.clear_index_cache()
+    with pytest.raises(ValueError, match="does not match the sidecar"):
+        within.search_within(document, "insulin")

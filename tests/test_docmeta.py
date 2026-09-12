@@ -177,3 +177,47 @@ def test_future_dated_revisions_do_not_outrank_the_current_one() -> None:
 )
 def test_tolerant_date_parser(token: str, expected: date | None) -> None:
     assert docmeta.parse_date_token(token) == expected
+
+
+# --- regressions found by the 1.3 spec review ------------------------------------
+
+
+def test_a_label_does_not_reach_across_an_empty_field_to_the_next_one() -> None:
+    """"Notice Period Start Date" is a real CMS LCD header field. An "Effective Date"
+    with no value must not borrow the next field's date."""
+    text = docmeta.normalize_text(
+        "Effective Date\n\nNotice Period Start Date\n\n10/01/2024\n\nRevision Effective Date\n\n02/01/2025\n"
+    )
+    meta = docmeta.extract_meta(url="https://www.cms.gov/x", title="t", text=text)
+    assert meta.effective_date is None
+    assert meta.revision_date == date(2025, 2, 1)
+
+
+def test_the_weak_revised_label_does_not_read_dates_out_of_prose() -> None:
+    """A revision-history cell reading "Revised to add code A4239 effective
+    07/01/2018" must not book that date as the document's revision."""
+    text = docmeta.normalize_text(
+        "| 01/15/2020 | Revised to add code A4239 effective 07/01/2018 |\n"
+    )
+    meta = docmeta.extract_meta(url="https://www.cms.gov/x", title="t", text=text)
+    assert meta.revision_date is None
+
+
+def test_the_weak_revised_label_still_reads_an_fda_label_date() -> None:
+    text = docmeta.normalize_text("Revised: 5/2026\n")
+    meta = docmeta.extract_meta(url="https://dailymed.nlm.nih.gov/x", title="t", text=text)
+    assert meta.revision_date == date(2026, 5, 1)
+
+
+@pytest.mark.parametrize(
+    ("token", "expected"),
+    [
+        # A non-month word matching the month-name shape must not abandon the search.
+        ("Chapter 15, 2024 revised April 16, 2023", date(2023, 4, 16)),
+        # A manual reference is not a month-year date.
+        ("Pub 100-02/2024", None),
+        ("CMS Pub. 100-04/2026 chapter 20", None),
+    ],
+)
+def test_date_parsing_regressions(token: str, expected: date | None) -> None:
+    assert docmeta.parse_date_token(token) == expected

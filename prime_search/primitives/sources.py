@@ -130,6 +130,9 @@ _OFFICIAL_HOSTS: frozenset[str] = frozenset(
 _SECONDARY_DOC_TYPES = frozenset({"Fact sheet", "Press release", "MLN Matters"})
 # Doc types that are the rule itself (docs/04 §2).
 _PRIMARY_DOC_TYPES = frozenset({"LCD", "Article", "NCD", "Label", "Approval", "510(k)"})
+# The subset docs/04 §1 calls out for FDA, and the hosts that serve them.
+_FDA_DOC_TYPES = frozenset({"Label", "Approval", "510(k)"})
+_FDA_HOSTS = frozenset({"fda.gov", "accessdata.fda.gov", "dailymed.nlm.nih.gov"})
 
 # Query parameters that change navigation, not identity (docs/03 §13). `ver` is
 # deliberately kept: a different LCD version is a different document, and docs/04
@@ -244,6 +247,13 @@ def refine_tier(
         return url_tier
     if doc_type in _PRIMARY_DOC_TYPES and document_id_external:
         return "primary_policy"
+    # docs/04 §1 makes "fda.gov labels and approvals" primary_policy. A label page
+    # often states no application number at all, so requiring an external id here
+    # would leave every FDA label stuck at official_secondary.
+    if doc_type in _FDA_DOC_TYPES and any(
+        _host_matches(host, fda_host) for fda_host in _FDA_HOSTS
+    ):
+        return "primary_policy"
     return url_tier
 
 
@@ -254,10 +264,15 @@ def domains_for(*tiers: Tier) -> list[str]:
     return sorted({rule.host for rule in RULES if rule.tier in wanted})
 
 
-# docs/01 §5's "domain allow-list for primary source filtering". Replaces the 1.2
-# placeholder ["cms.gov", "fda.gov"], which scored a CMS press release as primary
-# and omitted every MAC.
-PRIMARY_DOMAINS: list[str] = domains_for("primary_policy")
+# docs/01 §5's "domain allow-list for primary source filtering": cms.gov, *.cms.gov,
+# MAC domains, fda.gov. Replaces the 1.2 placeholder ["cms.gov", "fda.gov"], which
+# omitted every MAC.
+#
+# `fda.gov` is named by §5 and belongs here even though the host's *tier* is
+# official_secondary: an include-domain list says where to look, while the tier says
+# how much a document weighs. Excluding it would make FDA labels — which docs/04 §1
+# calls primary — unreachable by a primary-filtered search.
+PRIMARY_DOMAINS: list[str] = sorted({*domains_for("primary_policy"), "fda.gov"})
 OFFICIAL_DOMAINS: list[str] = domains_for("primary_policy", "official_secondary")
 
 # The three tables must stay in step; a new tier without a rank breaks at_least().

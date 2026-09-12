@@ -93,6 +93,18 @@ def load_paragraphs(document: Document) -> list[Paragraph]:
     sidecar = Path(document.text_path).with_suffix(".meta.json")
     if sidecar.is_file():
         payload = json.loads(sidecar.read_text(encoding="utf-8"))
+        # The sidecar records the sha1 of the text it was built from. Checking it is
+        # the only way to catch a text file that was rewritten while the sidecar was
+        # not: the paragraph count can match while every offset has moved, and every
+        # citation built on those offsets would point at the wrong words.
+        recorded = payload.get("text_sha1")
+        actual = hashlib.sha1(text.encode("utf-8")).hexdigest()
+        if recorded and recorded != actual:
+            raise ValueError(
+                f"{document.doc_id}: text on disk does not match the sidecar it was "
+                f"indexed from ({actual[:12]} vs {recorded[:12]}) — refetch, because "
+                "the paragraph offsets are stale (docs/04 §3)"
+            )
         paragraphs = [
             Paragraph(
                 index=row["index"],
@@ -138,13 +150,16 @@ _index_cache: dict[tuple[str, str], tuple[BM25Okapi, list[Passage], list[set[str
 def _index(document: Document) -> tuple[BM25Okapi, list[Passage], list[set[str]]]:
     text = load_text(document)
     key = (document.doc_id, hashlib.sha1(text.encode("utf-8")).hexdigest())
+    paragraphs = load_paragraphs(document)  # before the cache: the drift guard in
+    # load_paragraphs has to run on every call, or a Document whose paragraph_count
+    # no longer matches the file is served happily from a warm index.
     cached = _index_cache.get(key)
     if cached is not None:
         return cached
 
     passages: list[Passage] = []
     corpus: list[list[str]] = []
-    for paragraph in load_paragraphs(document):
+    for paragraph in paragraphs:
         if paragraph.boilerplate:
             continue  # nav, banners and the AMA/AHA license blocks are not content
         for start, end in _windows(paragraph):

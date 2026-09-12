@@ -92,14 +92,52 @@ def test_document_tier_literal_matches_the_sources_literal() -> None:
     assert set(get_args(field.annotation)) == set(get_args(sources.Tier))
 
 
-def test_primary_domains_replaced_the_placeholder() -> None:
-    """1.2 shipped ["cms.gov", "fda.gov"], which scored a CMS press release as
-    primary and omitted every MAC (docs/01 §5 names MAC domains explicitly)."""
-    assert sources.PRIMARY_DOMAINS != ["cms.gov", "fda.gov"]
-    for host in ("cms.gov", "noridianmedicare.com", "accessdata.fda.gov"):
+def test_primary_domains_covers_every_host_docs_01_5_names() -> None:
+    """docs/01 §5's allow-list is "cms.gov, *.cms.gov, MAC domains, fda.gov".
+
+    fda.gov belongs here even though its *tier* is official_secondary: an
+    include-domain list says where to look, the tier says how much a document
+    weighs. Leaving it out made FDA labels — primary per docs/04 §1 — unreachable
+    by a primary-filtered search.
+    """
+    assert sources.PRIMARY_DOMAINS != ["cms.gov", "fda.gov"]  # the 1.2 placeholder
+    for host in (
+        "cms.gov",
+        "fda.gov",
+        "accessdata.fda.gov",
+        "noridianmedicare.com",
+        "cgsmedicare.com",
+        "palmettogba.com",
+        "ngsmedicare.com",
+        "wpsgha.com",
+        "novitas-solutions.com",
+        "fcso.com",
+    ):
         assert host in sources.PRIMARY_DOMAINS
-    assert "fda.gov" not in sources.PRIMARY_DOMAINS  # primary only via accessdata
-    assert "fda.gov" in sources.OFFICIAL_DOMAINS
+
+
+def test_an_fda_label_reaches_primary_policy_after_fetch() -> None:
+    """docs/04 §1: "fda.gov labels and approvals" are primary_policy. A label page
+    often states no application number, so promotion cannot require an external id."""
+    assert (
+        sources.refine_tier(
+            "https://www.fda.gov/drugs/postmarket-drug-safety/ozempic-label",
+            "official_secondary",
+            doc_type="Label",
+            document_id_external=None,
+        )
+        == "primary_policy"
+    )
+    # A non-FDA host does not get that exemption.
+    assert (
+        sources.refine_tier(
+            "https://www.dexcom.com/label",
+            "web",
+            doc_type="Label",
+            document_id_external=None,
+        )
+        == "web"
+    )
 
 
 @pytest.mark.parametrize(
