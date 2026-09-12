@@ -129,3 +129,5 @@ Format: `YYYY-MM-DD — <decision> — <reason> — <spec affected>`
 - 2026-09-12 — `make smoke` = `uv run prime-search smoke` (a CLI subcommand) — keeps the file set inside the 01 §10 layout, which lists `cli.py` and no smoke module — 01 §10, 09 §1.2
 - 2026-09-12 — `.gitignore` `runs/` → `runs/*` plus `!runs/examples/` — git cannot re-include a path under an excluded directory, so the original line would have silently swallowed the example runs R8 requires committing — 11 R8, 01 §10
 - 2026-09-12 — Console-visible CLI strings are ASCII only — the Windows default codepage rendered an em dash in the Typer help as a replacement character — 03 §9
+- 2026-09-12 — `ui/` generated with `create-next-app@15` (pinned, not `@latest`) — 01 §7 and 07 specify Next.js 15 App Router; the current generator would have installed a later major — 01 §7, 07
+- 2026-09-12 — `ui/pnpm-workspace.yaml` sets `allowBuilds: unrs-resolver: true` — pnpm 12 aborts the install rather than running dependency build scripts, and this native resolver backs eslint-config-next; without it `pnpm install` fails outright — 09 §1.1
