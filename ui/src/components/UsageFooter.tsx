@@ -16,7 +16,7 @@ export function UsageFooter({
   view: RunView;
   record: RunRecord | null;
 }) {
-  const usage: Usage | null = record && record.status !== "running" ? record.usage : view.usage;
+  const usage: Usage | null = (record && record.status !== "running" ? record.usage : view.usage) ?? null;
   const traceUrl = view.traceUrl ?? record?.langsmith_run_url ?? null;
 
   const parts = usage
