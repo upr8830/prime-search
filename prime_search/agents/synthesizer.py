@@ -29,7 +29,7 @@ from prime_search.models import root_model, token_usage
 from prime_search.prompts import render
 from prime_search.schemas import Answer, Citation, Evidence
 from prime_search.tracing import get_logger
-from prime_search.workspace import RUN_LOCK, Workspace
+from prime_search.workspace import Workspace
 
 _log = get_logger(component="synthesize")
 
@@ -312,7 +312,7 @@ def _stream(
                 pieces.append(text)
                 emit(text)
         if last is not None:
-            _charge(ws, last)
+            ws.charge_tokens(last)
             estimated = token_usage(last)[2]
     except Exception as exc:  # noqa: BLE001 - see docstring
         _log.warning("synthesize.stream_failed", error=f"{type(exc).__name__}: {exc}")
@@ -321,7 +321,7 @@ def _stream(
         text = message.text
         emit(text)
         pieces.append(text)
-        _charge(ws, message)
+        ws.charge_tokens(message)
         estimated = token_usage(message)[2]
     return "".join(pieces).strip(), estimated
 
@@ -351,14 +351,6 @@ def safe_token_sink(on_token: Callable[[str], None] | None) -> Callable[[str], N
             _log.warning("synthesize.token_sink_failed", error=f"{type(exc).__name__}: {exc}")
 
     return emit
-
-
-def _charge(ws: Workspace, message: object) -> None:
-    input_tokens, output_tokens, estimated = token_usage(message)
-    with RUN_LOCK:
-        ws.usage.input_tokens += input_tokens
-        ws.usage.output_tokens += output_tokens
-        ws.tokens_estimated = ws.tokens_estimated or estimated
 
 
 # --- post-hoc validation -----------------------------------------------------------

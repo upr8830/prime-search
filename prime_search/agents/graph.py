@@ -71,6 +71,13 @@ DEPTH: dict[str, dict[str, int]] = {
 }
 
 
+def _merge_results(
+    left: dict[str, TaskResult] | None, right: dict[str, TaskResult] | None
+) -> dict[str, TaskResult]:
+    """Reducer for `results_by_task`: concurrent branches each add their own key."""
+    return {**(left or {}), **(right or {})}
+
+
 class PrimeState(TypedDict, total=False):
     """docs/03 §1, verbatim. `total=False` because a fan-out branch returns two keys."""
 
@@ -80,6 +87,10 @@ class PrimeState(TypedDict, total=False):
     store: EvidenceStore
     pending_tasks: list[SearchTask]
     task_results: Annotated[list[TaskResult], operator.add]
+    # Not in §1: keyed by task id, so `collect` pairs a result with the task that
+    # produced it. `task_results` accumulates across rounds, and zipping it against the
+    # tasks still running paired round-0 results with round-1 tasks.
+    results_by_task: Annotated[dict[str, TaskResult], _merge_results]
     round: int
     critic_rounds: int
     deadline: float
@@ -154,12 +165,16 @@ def _dispatch(state: PrimeState) -> dict[str, Any]:
         return {"pending_tasks": []}
 
     pending = list(state.get("pending_tasks") or [])
-    if not pending:  # round 0: the tasks are the plan's branches
+    # Round 0 only: the tasks are the plan's branches. Seeding whenever `pending_tasks`
+    # was empty would re-dispatch every branch the moment a later node routed back here.
+    if not pending and state.get("round", 0) == 0 and not ws.tasks:
         pending = _tasks_from_plan(state)
 
     remaining = ws.budget_remaining()
     depth = state.get("depth", "deep")
-    max_agents = min(remaining.max_agents, DEPTH[depth]["max_agents"])
+    # `max_agents` caps each round, not the run (docs/11). And a run with no searches
+    # left gets no agents: each would spend a model call discovering it cannot search.
+    max_agents = min(ws.budget.max_agents, DEPTH[depth]["max_agents"], remaining.max_searches)
     # Highest priority first, so truncation drops the branches the planner itself
     # ranked least important rather than whichever happened to be last.
     pending.sort(key=lambda task: _priority_of(ws, task))
@@ -202,6 +217,7 @@ def _fan_out(state: PrimeState) -> list[Send] | str:
                 "task": task,
                 "run_id": state["run_id"],
                 "budget": budget,
+                "deadline": state.get("deadline", float("inf")),
                 # Not in §1's payload; see the module docstring.
                 "ws": ws,
                 "store": store,
@@ -215,10 +231,15 @@ def _fan_out(state: PrimeState) -> list[Send] | str:
 
 
 def _search_agent(payload: dict[str, Any]) -> dict[str, Any]:
-    """One sub-agent (docs/03 §4). Returns **only** `task_results` and `events`."""
+    """One sub-agent (docs/03 §4). Returns **only** `task_results`, `results_by_task`
+    and `events` - never `ws` (see the module docstring)."""
     task: SearchTask = payload["task"]
     ws: Workspace = payload["ws"]
     depth = payload.get("depth", "deep")
+    # docs/01 §9: "a checked deadline at every node boundary". The sub-agent times only
+    # itself, so a task started after the run's deadline would otherwise run past it.
+    if time.time() >= payload.get("deadline", float("inf")):
+        return _failed_task(payload, task, "not started: run deadline reached")
     try:
         result = run_search_agent(
             task,
@@ -233,7 +254,7 @@ def _search_agent(payload: dict[str, Any]) -> dict[str, Any]:
         # `run_search_agent` emits its own docs/02 §4 `task.done` on every path it
         # controls, so this node does not emit a second one - two events per task made
         # the CLI print each branch twice, once with an empty payload.
-        return {"task_results": [result], "events": []}
+        return {"task_results": [result], "results_by_task": {task.task_id: result}, "events": []}
     except Exception as exc:  # noqa: BLE001 - one failed branch is not a failed run
         _log.warning("search_agent.failed", task=task.task_id, error=str(exc))
         events.emit(
@@ -241,28 +262,34 @@ def _search_agent(payload: dict[str, Any]) -> dict[str, Any]:
             "error",
             {"message": f"{task.task_id}: {type(exc).__name__}: {exc}"[:500], "node": "search_agent"},
         )
-        task.status = "failed"
-        result = TaskResult(
-            queries_issued=[],
-            documents_fetched=[],
-            evidence_ids=[],
-            summary="",
-            unresolved=f"this branch failed: {type(exc).__name__}: {exc}"[:500],
-            usage=_empty_usage(),
-        )
-        # The one path where nothing else will: the sub-agent never got far enough to
-        # report, so the task would otherwise vanish from the stream entirely.
-        record = events.emit(
-            payload["run_id"],
-            "task.done",
-            {
-                "task_id": task.task_id,
-                "branch_id": task.branch_id,
-                "evidence": 0,
-                "unresolved": result.unresolved,
-            },
-        )
-        return {"task_results": [result], "events": [record]}
+        return _failed_task(payload, task, f"this branch failed: {type(exc).__name__}: {exc}")
+
+
+def _failed_task(payload: dict[str, Any], task: SearchTask, unresolved: str) -> dict[str, Any]:
+    """A task that produced nothing: failed, with the reason as its unresolved note."""
+    task.status = "failed"
+    result = TaskResult(
+        queries_issued=[],
+        documents_fetched=[],
+        evidence_ids=[],
+        summary="",
+        unresolved=unresolved[:500],
+        usage=_empty_usage(),
+    )
+    task.result = result
+    # The one path where nothing else will: the sub-agent never got far enough to
+    # report, so the task would otherwise vanish from the stream entirely.
+    record = events.emit(
+        payload["run_id"],
+        "task.done",
+        {
+            "task_id": task.task_id,
+            "branch_id": task.branch_id,
+            "evidence": 0,
+            "unresolved": result.unresolved,
+        },
+    )
+    return {"task_results": [result], "results_by_task": {task.task_id: result}, "events": [record]}
 
 
 def _collect(state: PrimeState) -> dict[str, Any]:
@@ -274,7 +301,7 @@ def _collect(state: PrimeState) -> dict[str, Any]:
     cost column.
     """
     ws = state["ws"]
-    results = state.get("task_results") or []
+    by_task = state.get("results_by_task") or {}
 
     # The sub-agent sets its own task's status (docs/02 §2.3) - "done" when it
     # finished, "failed" when it aborted - so `collect` attaches the result and leaves
@@ -283,20 +310,22 @@ def _collect(state: PrimeState) -> dict[str, Any]:
     # `unresolved`: docs/03 §4 rule 6 asks every *successful* task to end with "any
     # unresolved items", so a branch that fetched the LCD and recorded five evidence
     # items was persisted as failed and would render as a failed node in the UI tree.
-    running = [task for task in ws.tasks if task.status == "running"]
-    for result, task in zip(results, running, strict=False):
-        task.result = result
-        if task.status == "running":
-            task.status = "done"
-    for task in ws.tasks:  # anything still running had no result at all
-        if task.status == "running":
-            task.status = "failed"
+    #
+    # Paired by task id. The sub-agent normally attaches its own result; this covers a
+    # task whose result reached only the state. A running task with no result at all
+    # failed.
+    for task in ws.tasks:
+        if task.status != "running":
+            continue
+        if task.result is None:
+            task.result = by_task.get(task.task_id)
+        task.status = "done" if task.result is not None else "failed"
 
     graph = build_claim_graph(ws.evidence, ws.documents)
     with RUN_LOCK:
         ws.claims = graph.claims
         ws.contradictions = [claim.claim_id for claim in graph.contested]
-        ws.unknowns = _unknowns(ws, results, state)
+        ws.unknowns = _unknowns(ws, state)
         ws.usage.rounds = state.get("round", 0) + 1
 
     # docs/02 §4: `usage` carries a `Usage` and drives the cost/latency footer. The
@@ -567,14 +596,15 @@ def _slice_budget(ws: Workspace, tasks: int, depth: str) -> Budget:
 
     Divided from what *remains*, not from the original budget: on round 2 the first
     round has already spent, and slicing the original would hand out budget that is
-    gone. At least one of each, so a task is never dispatched unable to act.
+    gone. At least one of each while any remains, so a task is never dispatched unable
+    to act - but never one that is not there.
     """
     remaining = ws.budget_remaining()
     share = max(1, tasks)
     return Budget(
-        max_searches=max(1, remaining.max_searches // share),
-        max_fetches=max(1, remaining.max_fetches // share),
-        max_deep_reads=max(1, remaining.max_deep_reads // share),
+        max_searches=_share(remaining.max_searches, share),
+        max_fetches=_share(remaining.max_fetches, share),
+        max_deep_reads=_share(remaining.max_deep_reads, share),
         max_agents=remaining.max_agents,
         max_rounds=remaining.max_rounds,
         max_tokens=remaining.max_tokens,
@@ -582,9 +612,14 @@ def _slice_budget(ws: Workspace, tasks: int, depth: str) -> Budget:
     )
 
 
-def _unknowns(ws: Workspace, results: list[TaskResult], state: PrimeState) -> list[str]:
+def _share(remaining: int, tasks: int) -> int:
+    """One task's slice: at least one while any remains, zero when none does."""
+    return max(min(1, remaining), remaining // tasks)
+
+
+def _unknowns(ws: Workspace, state: PrimeState) -> list[str]:
     """What to carry into the answer's "Unknowns / not verified" section."""
-    notes = [result.unresolved for result in results if result.unresolved]
+    notes = [task.result.unresolved for task in ws.tasks if task.result and task.result.unresolved]
     covered = {item.branch_id for item in ws.evidence}
     for branch in ws.plan.branches if ws.plan else []:
         if branch.branch_id not in covered:

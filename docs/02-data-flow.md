@@ -248,7 +248,8 @@ class Usage(BaseModel):
     fetches: int = 0
     deep_reads: int = 0
     agents: int = 0
-    rounds: int = 0
+    agents: int = 0                       # sub-agents dispatched over the whole run (the budget caps each round)
+    rounds: int = 0                       # search rounds completed, the initial one included
     input_tokens: int = 0
     output_tokens: int = 0
     wall_seconds: float = 0
@@ -268,6 +269,8 @@ ws.evidence: list[Evidence]
 ws.claims: list[Claim]
 ws.contradictions: list[str]
 ws.unknowns: list[str]
+ws.verdicts: list[Verdict]                # one per judge run; persisted as RunRecord.verdicts
+ws.critic_reports: list[CriticReport]     # one per critic run; persisted as RunRecord.critic_reports
 ws.search_tree: dict                      # branch_id -> {tasks, evidence_ids, status}
 ws.budget_remaining() -> Budget
 # helpers

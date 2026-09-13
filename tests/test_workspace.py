@@ -248,6 +248,14 @@ def test_budget_remaining_subtracts_usage_and_floors_at_zero(ws: Workspace) -> N
     assert remaining.max_fetches == 0
 
 
+def test_budget_remaining_does_not_spend_agents_run_wide(ws: Workspace) -> None:
+    """max_agents caps each round (docs/11): subtracting the agents already dispatched
+    left a deep run with a 6-branch plan no agents for any judge or critic re-search."""
+    ws.budget = Budget(max_agents=6)
+    ws.usage.agents = 6
+    assert ws.budget_remaining().max_agents == 6
+
+
 def test_search_tree_is_derived_from_tasks_and_evidence(ws: Workspace) -> None:
     ws.tasks = [
         SearchTask(task_id="t1", branch_id="b1", round=0, instruction="x", status="done"),
@@ -445,3 +453,26 @@ def test_new_workspace_takes_the_budget_for_the_depth(monkeypatch: pytest.Monkey
 def test_a_branch_with_evidence_but_no_task_is_not_stuck_pending(ws: Workspace) -> None:
     ws.evidence = [_evidence("e1", "b7")]
     assert ws.search_tree["b7"]["status"] == "resolved"
+
+
+def test_to_record_carries_verdicts_and_critic_reports(ws: Workspace) -> None:
+    from prime_search.schemas import CriticReport, RunRequest, Verdict
+
+    ws.verdicts.append(
+        Verdict(round=0, sufficient=False, coverage={"b1": "partial"}, missing=["dates"], reasoning="r")
+    )
+    ws.critic_reports.append(CriticReport(completion_probability=0.6, reasoning="r"))
+
+    record = ws.to_record(RunRequest(question=ws.objective))
+    assert record.verdicts[0].coverage == {"b1": "partial"}
+    assert record.critic_reports[0].completion_probability == 0.6
+
+
+def test_charge_tokens_adds_a_replys_usage(ws: Workspace) -> None:
+    from langchain_core.messages import AIMessage
+
+    message = AIMessage(
+        content="x", usage_metadata={"input_tokens": 10, "output_tokens": 4, "total_tokens": 14}
+    )
+    ws.charge_tokens(message)
+    assert (ws.usage.input_tokens, ws.usage.output_tokens) == (10, 4)

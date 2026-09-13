@@ -36,8 +36,8 @@ class Budget(BaseModel):
     max_searches: int = 30
     max_fetches: int = 20
     max_deep_reads: int = 10  # search_within calls
-    max_agents: int = 6
-    max_rounds: int = 3  # judge/critic-triggered re-search rounds
+    max_agents: int = 6  # sub-agents per round
+    max_rounds: int = 3  # all search rounds, the initial one included; the critic may add one
     max_tokens: int = 150_000
     max_seconds: int = 180
 

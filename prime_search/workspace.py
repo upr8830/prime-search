@@ -185,6 +185,10 @@ class Workspace:
     claims: list[Claim] = field(default_factory=list)
     contradictions: list[str] = field(default_factory=list)
     unknowns: list[str] = field(default_factory=list)
+    # docs/02 §2.1's RunRecord carries these. They live on the workspace rather than in
+    # graph state so every node-boundary write (`_persist`) records them.
+    verdicts: list[Verdict] = field(default_factory=list)
+    critic_reports: list[CriticReport] = field(default_factory=list)
     usage: Usage = field(default_factory=Usage)
     # Set by any site that had to estimate a reply's tokens (docs/06 section 5's
     # chars/4 heuristic). The root run is tagged `tokens:estimated` from it, because
@@ -241,11 +245,27 @@ class Workspace:
             max_searches=max(0, limit.max_searches - used.searches),
             max_fetches=max(0, limit.max_fetches - used.fetches),
             max_deep_reads=max(0, limit.max_deep_reads - used.deep_reads),
-            max_agents=max(0, limit.max_agents - used.agents),
+            # A per-round cap, not a run total (docs/11): subtracting `usage.agents`
+            # left a 6-branch deep run no agents for any judge or critic re-search.
+            max_agents=limit.max_agents,
             max_rounds=max(0, limit.max_rounds - used.rounds),
             max_tokens=max(0, limit.max_tokens - used.input_tokens - used.output_tokens),
             max_seconds=max(0, int(limit.max_seconds - used.wall_seconds)),
         )
+
+    def charge_tokens(self, message: object) -> None:
+        """Add one model reply's tokens to the run's usage (docs/06 section 5).
+
+        Shared by every node that calls a model outside a sub-agent - synthesis, the
+        judge and the critic - so the token budget sees all of them.
+        """
+        from prime_search.models import token_usage
+
+        input_tokens, output_tokens, estimated = token_usage(message)
+        with RUN_LOCK:
+            self.usage.input_tokens += input_tokens
+            self.usage.output_tokens += output_tokens
+            self.tokens_estimated = self.tokens_estimated or estimated
 
     # --- helpers the root calls from a cell -------------------------------------
 
@@ -354,9 +374,9 @@ class Workspace:
     def to_record(self, request: Any, **overrides: Any) -> Any:
         """Project the workspace into the persisted `RunRecord` (docs/02 §2.1, §5).
 
-        The workspace holds what the *search* produced; `verdicts`, `critic_reports`,
-        `answer`, `finished_at`, `langsmith_run_url` and the terminal `status` belong
-        to the graph around it and are passed as overrides. `started_at` comes from
+        The workspace holds what the *search* produced, including the judge's verdicts
+        and the critic's reports; `answer`, `finished_at`, `langsmith_run_url` and the
+        terminal `status` belong to the graph around it and are passed as overrides. `started_at` comes from
         the workspace rather than the clock: stamping it here would record the moment
         the record was written, which is the run's end.
 
@@ -373,6 +393,8 @@ class Workspace:
             "documents": self.documents,
             "evidence": self.evidence,
             "claims": self.claims,
+            "verdicts": self.verdicts,
+            "critic_reports": self.critic_reports,
             "usage": self.usage,
         }
         payload.update(overrides)

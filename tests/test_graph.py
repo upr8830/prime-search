@@ -131,7 +131,7 @@ def test_a_branch_returns_only_task_results_and_events(sandboxed_run, monkeypatc
             "run_id": ws.run_id,
         }
     )
-    assert set(update) == {"task_results", "events"}
+    assert set(update) == {"task_results", "results_by_task", "events"}
 
 
 def test_two_branches_fanning_out_do_not_collide(sandboxed_run, monkeypatch) -> None:
@@ -154,6 +154,7 @@ def test_two_branches_fanning_out_do_not_collide(sandboxed_run, monkeypatch) -> 
     final = build_graph().invoke(_state(ws))
     assert len(final["task_results"]) == 2
     assert {r.summary for r in final["task_results"]} == {"summary b1", "summary b2"}
+    assert set(final["results_by_task"]) == {"b1-r0", "b2-r0"}
 
 
 # --- accounting ---------------------------------------------------------------------
@@ -174,8 +175,9 @@ def test_collect_does_not_re_add_task_usage(sandboxed_run) -> None:
         )
     ]
 
-    graph_module._collect(_state(ws, task_results=results))
+    graph_module._collect(_state(ws, task_results=results, results_by_task={"b1-r0": results[0]}))
     assert ws.usage.searches == 4
+    assert ws.tasks[0].result is results[0]
 
 
 def test_collect_advances_the_round_and_clears_pending(sandboxed_run) -> None:
@@ -198,7 +200,8 @@ def test_unresolved_branches_become_unknowns(sandboxed_run) -> None:
             unresolved="could not find the revision date", usage=Usage(),
         )
     ]
-    graph_module._collect(_state(ws, task_results=results))
+    ws.tasks = [SearchTask(task_id="b1-r0", branch_id="b1", round=0, instruction="i", status="running")]
+    graph_module._collect(_state(ws, task_results=results, results_by_task={"b1-r0": results[0]}))
 
     assert "could not find the revision date" in ws.unknowns
     assert any("question 1" in note for note in ws.unknowns)
@@ -239,6 +242,16 @@ def test_a_slice_is_never_zero(sandboxed_run) -> None:
     ws.budget = Budget(max_searches=2)
     sliced = _slice_budget(ws, tasks=6, depth="deep")
     assert sliced.max_searches >= 1
+
+
+def test_a_slice_never_hands_out_budget_that_is_gone(sandboxed_run) -> None:
+    """At least one while any remains - but a spent budget slices to zero, not one."""
+    ws = sandboxed_run
+    ws.budget = Budget(max_searches=30, max_fetches=20)
+    ws.usage.searches = 30
+    sliced = _slice_budget(ws, tasks=2, depth="deep")
+    assert sliced.max_searches == 0
+    assert sliced.max_fetches == 10
 
 
 def test_fast_depth_narrows_agents_and_tool_calls() -> None:
@@ -421,3 +434,110 @@ def test_the_graph_run_is_not_named_like_the_root_run() -> None:
     source = inspect.getsource(graph_module.run_prime)
     assert '"run_name": "graph"' in source
     assert source.count('"run_name": "prime_search"') == 0
+
+
+# --- multi-round plumbing (task 2.2) ---------------------------------------------------
+
+
+def _task(task_id: str, branch_id: str, round_: int, status: str = "pending") -> SearchTask:
+    return SearchTask(
+        task_id=task_id, branch_id=branch_id, round=round_, instruction=f"find {branch_id}",
+        status=status,
+    )
+
+
+def _result(summary: str, unresolved: str | None = None) -> TaskResult:
+    return TaskResult(
+        queries_issued=[summary], documents_fetched=[], evidence_ids=[], summary=summary,
+        unresolved=unresolved, usage=Usage(),
+    )
+
+
+def test_dispatch_does_not_reseed_the_plan_after_round_zero(sandboxed_run) -> None:
+    """A later node routing back with nothing pending must not re-dispatch every
+    branch of the plan."""
+    ws = sandboxed_run
+    ws.understanding = _understanding()
+    _plan(ws, count=3)
+    ws.tasks = [_task(f"b{i}-r0", f"b{i}", 0, status="done") for i in (1, 2, 3)]
+
+    update = graph_module._dispatch(_state(ws, round=1, pending_tasks=[]))
+    assert update["pending_tasks"] == []
+    assert len(ws.tasks) == 3
+
+
+def test_a_later_round_gets_the_full_per_round_agent_cap(sandboxed_run) -> None:
+    """max_agents caps each round. As a run total, a 6-branch round 0 left none."""
+    ws = sandboxed_run
+    ws.budget = Budget(max_agents=6)
+    ws.understanding = _understanding()
+    _plan(ws, count=6)
+    ws.usage.agents = 6  # round 0 dispatched six
+
+    pending = [_task(f"b{i}-r1", f"b{i}", 1) for i in (1, 2, 3)]
+    update = graph_module._dispatch(_state(ws, round=1, pending_tasks=pending))
+    assert [t.task_id for t in update["pending_tasks"]] == ["b1-r1", "b2-r1", "b3-r1"]
+    assert ws.usage.agents == 9  # still counted for the record
+
+
+def test_no_searches_left_dispatches_nothing(sandboxed_run) -> None:
+    ws = sandboxed_run
+    ws.budget = Budget(max_searches=30)
+    ws.usage.searches = 30
+    ws.understanding = _understanding()
+    _plan(ws, count=2)
+    assert graph_module._dispatch(_state(ws))["pending_tasks"] == []
+
+
+def test_collect_pairs_results_by_task_id_across_rounds(sandboxed_run) -> None:
+    """`task_results` accumulates across rounds; zipping it against the running tasks
+    attached round-0 results to round-1 tasks."""
+    ws = sandboxed_run
+    _plan(ws, count=2)
+    r0 = _result("round zero")
+    r1 = _result("round one, b2")
+    ws.tasks = [
+        _task("b1-r0", "b1", 0, status="done"),
+        _task("b1-r1", "b1", 1, status="running"),
+        _task("b2-r1", "b2", 1, status="running"),
+    ]
+    ws.tasks[0].result = r0
+
+    graph_module._collect(
+        _state(ws, round=1, task_results=[r0, r1], results_by_task={"b1-r0": r0, "b2-r1": r1})
+    )
+    by_id = {task.task_id: task for task in ws.tasks}
+    assert by_id["b2-r1"].result is r1 and by_id["b2-r1"].status == "done"
+    assert by_id["b1-r1"].result is None and by_id["b1-r1"].status == "failed"
+    assert by_id["b1-r0"].result is r0
+
+
+def test_a_task_past_the_deadline_is_not_started(sandboxed_run, monkeypatch) -> None:
+    """docs/01 §9: a checked deadline at every node boundary, sub-agents included."""
+    def must_not_run(*args, **kwargs):  # noqa: ANN002, ANN003, ANN202
+        raise AssertionError("the sub-agent ran after the deadline")
+
+    monkeypatch.setattr(graph_module, "run_search_agent", must_not_run)
+    task = _task("b1-r1", "b1", 1, status="running")
+    update = graph_module._search_agent(
+        {
+            "task": task,
+            "ws": sandboxed_run,
+            "store": EvidenceStore(documents={}, items=[]),
+            "budget": sandboxed_run.budget,
+            "run_id": sandboxed_run.run_id,
+            "deadline": time.time() - 1,
+        }
+    )
+    assert "deadline" in update["results_by_task"]["b1-r1"].unresolved
+    assert task.status == "failed"
+
+
+def test_the_send_payload_carries_the_deadline(sandboxed_run) -> None:
+    ws = sandboxed_run
+    ws.understanding = _understanding()
+    _plan(ws, count=1)
+    deadline = time.time() + 999
+    state = _state(ws, deadline=deadline)
+    state.update(graph_module._dispatch(state))  # type: ignore[typeddict-item]
+    assert graph_module._fan_out(state)[0].arg["deadline"] == deadline
