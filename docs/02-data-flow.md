@@ -319,7 +319,7 @@ runs/<run_id>/
   events.jsonl
   docs/<doc_id>.txt   fetched document text
   answer.md
-  metrics.json        evaluator outputs if run under bench
+  metrics.json        bench scores: {experiment_name, experiment_url, question_id, split, scores, composite, evaluated_at, evaluator_git_sha}
 ```
 
 ## 6. Evaluation data flow
@@ -331,7 +331,7 @@ data/searchbench/searchbench_v0.jsonl
 LangSmith dataset "searchbench-v0" (splits: train/dev/holdout)
    │  eval/run_eval.py  → langsmith.evaluate(target=run_prime|run_baseline, evaluators=[...])
    ▼
-LangSmith experiment (one per mode × prompt_set)  +  reports/<timestamp>-<mode>.json
+LangSmith experiment (one per mode × prompt_set × split)  +  reports/bench/<experiment>.json
    │  eval/report.py
    ▼
 reports/final-report.md   (baseline vs prime vs prime+gepa table, per-tier breakdown, examples)

@@ -123,6 +123,8 @@ comparable and cheap; the report states whether cache was used.
 table, three worked examples (one easy, one contradiction, one out-of-scope) showing baseline vs
 prime answers side by side, and a cost/latency section.
 
+**As built (task 2.3), runner.** `eval/run_eval.py --mode --split [--prompt-set --depth --ids --concurrency --no-cache --dry-run --rescore FILE]`. It refuses to run when `sync.check` reports a problem, a selected key is unvalidated, or the LangSmith dataset differs from the jsonl. The experiment prefix is `<mode>-<prompt_set|none>-<split>-<yyyymmdd-hhmm>`, and LangSmith appends a random suffix; metadata adds `tavily_cache` (False for the baseline, uncached by construction), depth, split, dataset sha, evaluator model and a subset flag. Bench runs are traced in project `prime-search-bench` with `source:bench` and `bench:<split>`. Results go to `reports/bench/<experiment>.json` (records trimmed of tasks, verdicts and critic reports) and `runs/<run_id>/metrics.json`; `--rescore` re-scores saved records with the current evaluators, spending judge calls only, and leaves the LangSmith feedback of the original pass as it was.
+
 ## 4. Human feedback loop
 
 The UI's thumbs up/down and comment on any run:
