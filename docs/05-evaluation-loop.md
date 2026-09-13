@@ -97,8 +97,9 @@ report runs the holdout twice and reports mean ± spread.
   not ordered 0.5, undated 0, no change with a date 1, no change without one 0.5).
 - `answer_correctness` = 0.8 x must-weighted claims present + 0.2 x summary consistency (1 / 0.5 / 0); any
   asserted forbidden claim caps it at 0.25. `search_efficiency` is returned with it.
-- `citation_correctness` samples 8 evenly spaced cited sentences; a citation number with no passage is
-  unsupported without a judge call. The baseline scores 0 on it and on `evidence_recall` by construction: its
+- `citation_correctness` samples 8 evenly spaced cited sentences, skipping "Effective dates relied on"
+  (a bibliography, not claims); each passage reaches the judge under a `Document:` line with its source's
+  type, id, title, publisher and dates. A citation number with no passage is unsupported without a judge call. The baseline scores 0 on it and on `evidence_recall` by construction: its
   citations are URLs with no stored passage.
 - `citation_completeness` reads the whole answer when it has no Criteria / Codes sections (the baseline,
   whatever headings it uses), where a URL, markdown link or footnote marker (`[^1]`, `[^36130e-00^]`) counts

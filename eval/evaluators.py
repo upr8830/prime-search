@@ -245,6 +245,28 @@ def sentences(text: str) -> list[str]:
     return units
 
 
+def _claims_text(answer: Answer) -> str:
+    """The judge text without "Effective dates relied on": its lines are a bibliography
+    (`[4] CMS fact sheet - 2026-04-06`), not claims a passage states (docs/11)."""
+    text = _judge_text(answer)
+    match = re.search(r"^##+\s*Effective dates\b.*?(?=^##|\Z)", text, re.MULTILINE | re.DOTALL)
+    return text[: match.start()] + text[match.end():] if match else text
+
+
+def _document_header(document: Any) -> str:
+    """The source as recorded at fetch time. A passage rarely repeats its own document id
+    or revision date, so a sentence naming them is checked against this line (docs/11)."""
+    if document is None:
+        return "Document: (not recorded)"
+    parts = [document.doc_type, document.document_id_external, f'"{document.title}"', document.publisher]
+    found = [str(part) for part in parts if part]
+    if document.revision_date:
+        found.append(f"revision effective {document.revision_date.isoformat()}")
+    if document.effective_date:
+        found.append(f"effective {document.effective_date.isoformat()}")
+    return "Document: " + ", ".join(found)
+
+
 def _judge_text(answer: Answer) -> str:
     """The answer a judge reads: the body without its Sources list, else the summary."""
     body = answer.body_markdown or ""
@@ -379,6 +401,13 @@ def resolve_descriptor(descriptor: str, key: AnswerKey, *, doc_type: str | None 
     return target
 
 
+def _target_site(url: str) -> str:
+    """`_site`, reading DailyMed as FDA: it republishes FDA-approved labels, and a key's
+    "FDA Wegovy label" is the same document there (docs/11). Only that host, not nih.gov."""
+    host = (urlsplit(url).hostname or "").lower()
+    return "fda.gov" if host == "dailymed.nlm.nih.gov" else _site(url)
+
+
 def matches_target(url: str | None, doc_type: str | None, ext_id: str | None, target: Target) -> str | None:
     """The rung a document matched on: id, then normalized URL, then host + doc type -
     the last only when the key names no id (docs/05 §2's fallback)."""
@@ -390,7 +419,7 @@ def matches_target(url: str | None, doc_type: str | None, ext_id: str | None, ta
         not target.ext_id
         and url
         and target.hosts
-        and _site(url) in target.hosts
+        and _target_site(url) in target.hosts
         and doc_type_compatible(target.doc_type, doc_type)
     ):
         return "host+type"
@@ -780,7 +809,7 @@ def citation_correctness(record: RunRecord | None, bench: BenchRecord, *, judge:
     if _is_baseline(record):
         return Score(key, 0.0, "baseline: citations are URLs with no stored passage to check a sentence "
                      "against - 0 by construction")
-    cited = [unit for unit in sentences(_judge_text(answer)) if _CITATION.search(unit)]
+    cited = [unit for unit in sentences(_claims_text(answer)) if _CITATION.search(unit)]
     if not cited:
         return Score(key, 0.0, "no cited sentences")
 
@@ -795,7 +824,8 @@ def citation_correctness(record: RunRecord | None, bench: BenchRecord, *, judge:
             citation = by_number.get(number)
             item = evidence.get(citation.evidence_id) if citation is not None else None
             if item is not None:
-                passages.append(f"[{number}] {item.evidence_text}")
+                header = _document_header(record.documents.get(item.doc_id))
+                passages.append(f"[{number}] {header}\n{item.evidence_text}")
         if not passages:
             unmapped.add(position)
             continue

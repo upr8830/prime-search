@@ -11,7 +11,8 @@ them is ignored. Statements under "Unknowns / not verified" are not assertions.
 ## Items
 
 Each item is one sentence from the answer followed by the verbatim passages its citation numbers
-point to.
+point to. Each passage starts with a `Document:` line: the type, id, title, publisher and dates
+recorded for its source when it was fetched.
 
 <answer>
 {items}
@@ -23,7 +24,9 @@ For each item, `supported` is true when the passages, taken together, state what
 asserts, or what the sentence attributes to a source ("a guide claims X" is supported when the
 guide's passage says X).
 
-- Numbers, codes, dates and document ids in the sentence must appear in a passage.
+- Numbers, codes, dates and document ids in the sentence must appear in a passage or in its
+  `Document:` line. A sentence that names its source's id or revision date is supported on that
+  point when the `Document:` line shows them.
 - A passage about a related but different point does not support the sentence.
 - Background knowledge does not count.
 

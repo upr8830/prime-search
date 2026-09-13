@@ -439,6 +439,29 @@ def test_citation_correctness_samples_eight_evenly_spaced_sentences(judge) -> No
     assert judge.calls[0][1].prompts[0].count("Sentence: ") == 8
 
 
+def test_a_dailymed_label_matches_an_fda_label_target() -> None:
+    # Prime dev bench, glp1-path-002: the DailyMed Wegovy label was "not cited" against an fda.gov target.
+    target = evaluators.Target(descriptor="FDA Wegovy label", hosts={"fda.gov"})
+    dailymed = "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=f5e548d0"
+    assert evaluators.matches_target(dailymed, "Label", None, target) == "host+type"
+    assert evaluators.matches_target("https://pmc.ncbi.nlm.nih.gov/articles/PMC1/", None, None, target) is None
+
+
+def test_citation_correctness_skips_effective_dates_and_shows_each_passages_document(judge) -> None:
+    # Prime dev bench: "[1] LCD L33822 - 2024-10-01" lines were sampled, and a sentence naming
+    # L33822 failed because the paragraph never repeats its own document id.
+    judge.answers["CitationJudgment"] = CitationJudgment(items=[SentenceJudgment(index=0, supported=True)])
+    body = (
+        "## Criteria / Details\n\n- HCPCS A4271 descriptor revised (LCD L33822, 10/01/2024) [1].\n\n"
+        "## Effective dates relied on\n\n- [1] LCD L33822 - 2024-10-01\n\n## Unknowns / not verified\n\n- None.\n"
+    )
+    record = _record(body, citations=[_cite(1, "ev1", "doc_lcd")], documents=[_doc()], evidence=[_ev("ev1", "doc_lcd", "descriptor revised")])
+    score = evaluators.citation_correctness(record, _bench())
+    prompt = judge.calls[0][1].prompts[0]
+    assert score.score == 1.0 and prompt.count("Sentence: ") == 1
+    assert "Document: LCD, L33822" in prompt and "revision effective 2024-10-01" in prompt
+
+
 def test_a_citation_with_no_passage_is_unsupported_without_a_judge_call(judge) -> None:
     score = evaluators.citation_correctness(_record("## Answer\n\nCovered [9]."), _bench())
     assert score.score == 0.0
