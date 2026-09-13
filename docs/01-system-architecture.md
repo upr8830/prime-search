@@ -67,7 +67,7 @@ class ModelRouting(BaseModel):
     root: str = "nvidia/nemotron-3-super-120b-a12b"
     critic: str = "nvidia/nemotron-3-super-120b-a12b"
     subagent: str = "moonshotai/Kimi-K2.6"
-    judge: str = "moonshotai/Kimi-K2.6"
+    judge: str = "deepseek-ai/DeepSeek-V4-Flash-0731"
     extractor: str = "moonshotai/Kimi-K2.6"
     evaluator: str = "moonshotai/Kimi-K2.6"
     baseline: str = "moonshotai/Kimi-K2.6"      # starter default; do not change
@@ -104,7 +104,8 @@ Model IDs verified against Nebius Token Factory documentation on September 11, 2
 |---|---|---|
 | `nvidia/nemotron-3-super-120b-a12b` | root, critic | 120B hybrid MoE, 12B active, long context, positioned for tool calling and multi-agent planning. Reasoning model: responses may arrive in `reasoning_content` with empty `content`, and a May 2026 GitHub issue on `nebius/api` reported that reasoning models rejected native tool calls through the OpenAI-compatible endpoint. |
 | `deepseek-ai/DeepSeek-R1-0528` | optional root alternative | Reasoning model, same caveat. Selectable via `PRIME_MODELS__ROOT`. |
-| `moonshotai/Kimi-K2.6` | sub-agents, judge, extractor, evaluators, baseline | Starter default; native tool calling assumed working because the starter relies on it. |
+| `deepseek-ai/DeepSeek-V4-Flash-0731` | judge | Switched from Kimi-K2.6 on 2026-09-13: Kimi-K2.6 was the only candidate to fail native `with_structured_output(Verdict)` (2/3; 17/20 separately), V4-Flash went 3/3 at 1.6s median (`reports/model-selection.md`). Fallback `Qwen/Qwen3-30B-A3B-Instruct-2507`. |
+| `moonshotai/Kimi-K2.6` | sub-agents, extractor, evaluators, baseline | Starter default; native tool calling assumed working because the starter relies on it. |
 | `deepseek-ai/DeepSeek-V3.2` | fallback for non-root roles | Non-reasoning, tool calling documented as working. |
 
 **Design consequence.** The root RLM and the critic do not depend on native tool calling. They emit

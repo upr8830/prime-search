@@ -38,7 +38,11 @@ _S = TypeVar("_S", bound=BaseModel)
 #
 #   critic     V4-Pro    3/3 parseable fenced JSON, 2.5s
 #   subagent   V4-Flash  5/5 native tool calls, 1.7s
-#   judge etc. V4-Flash  3/3 valid Verdict from with_structured_output
+#   extractor, V4-Flash  3/3 valid Verdict from with_structured_output
+#   evaluator
+#   judge      Qwen3-30B 3/3 valid Verdict, 1.9s - the report's runner-up. V4-Flash became
+#              the judge's primary on 2026-09-13, and a fallback naming its own primary
+#              could never rescue anything.
 #
 # Root keeps rule 1's Kimi-K2.6, which is still offered and went 5/5 on code-as-action.
 # Each fallback is a different vendor line from the role's primary, so one vendor's
@@ -51,7 +55,7 @@ FALLBACKS: dict[Role, str] = {
     "root": "moonshotai/Kimi-K2.6",
     "critic": "deepseek-ai/DeepSeek-V4-Pro",
     "subagent": "deepseek-ai/DeepSeek-V4-Flash-0731",
-    "judge": "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "judge": "Qwen/Qwen3-30B-A3B-Instruct-2507",
     "extractor": "deepseek-ai/DeepSeek-V4-Flash-0731",
     "evaluator": "deepseek-ai/DeepSeek-V4-Flash-0731",
 }

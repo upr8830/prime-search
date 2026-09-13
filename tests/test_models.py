@@ -96,8 +96,11 @@ def test_fallback_table_departs_from_the_spec_only_where_the_model_is_gone() -> 
     assert FALLBACKS["root"] == "moonshotai/Kimi-K2.6"  # still offered, 5/5 measured
     assert "deepseek-ai/DeepSeek-V3.2" not in FALLBACKS.values()
     assert FALLBACKS["critic"] == "deepseek-ai/DeepSeek-V4-Pro"  # 3/3 fenced JSON
-    for role in ("subagent", "judge", "extractor", "evaluator"):
+    for role in ("subagent", "extractor", "evaluator"):
         assert FALLBACKS[role] == "deepseek-ai/DeepSeek-V4-Flash-0731"
+    # The judge moved to V4-Flash on 2026-09-13, so its fallback is the report's
+    # runner-up on structured output (3/3 valid Verdict, 1.9s).
+    assert FALLBACKS["judge"] == "Qwen/Qwen3-30B-A3B-Instruct-2507"
     # Every fallback is a different vendor line from its role's primary, so one
     # vendor's outage cannot take a role and its fallback down together.
     routing = ModelRouting()

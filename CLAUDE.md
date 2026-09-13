@@ -24,7 +24,7 @@ take-home. Specs live in `docs/`; the task list is `docs/09-implementation-plan.
 - Commits: `feat|fix|docs|eval|ui: <what>`, small and frequent.
 
 ## Model routing (defaults; fallbacks in `docs/01` §4)
-root/critic `nvidia/nemotron-3-super-120b-a12b` · sub-agents/judge/extractor/evaluators `moonshotai/Kimi-K2.6` · fallback `deepseek-ai/DeepSeek-V3.2`. `make smoke` decides; never switch silently.
+root/critic `nvidia/nemotron-3-super-120b-a12b` · judge `deepseek-ai/DeepSeek-V4-Flash-0731` · sub-agents/extractor/evaluators `moonshotai/Kimi-K2.6` · fallbacks per role in `models.FALLBACKS` (`DeepSeek-V3.2` is no longer offered). `make smoke` decides; never switch silently.
 
 ## Workflow rules
 - Every task ends with a check you can run (test, smoke, curl, bench row). Show the output, don't assert success.

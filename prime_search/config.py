@@ -26,7 +26,7 @@ class ModelRouting(BaseModel):
     root: str = "nvidia/nemotron-3-super-120b-a12b"
     critic: str = "nvidia/nemotron-3-super-120b-a12b"
     subagent: str = "moonshotai/Kimi-K2.6"
-    judge: str = "moonshotai/Kimi-K2.6"
+    judge: str = "deepseek-ai/DeepSeek-V4-Flash-0731"  # reports/model-selection.md; 2026-09-13
     extractor: str = "moonshotai/Kimi-K2.6"
     evaluator: str = "moonshotai/Kimi-K2.6"
     baseline: str = "moonshotai/Kimi-K2.6"  # starter default; do not change
