@@ -87,7 +87,7 @@ class Settings(BaseSettings):
     langsmith_api_key: str | None = None
     langsmith_project: str = "prime-search"
     models: ModelRouting = ModelRouting()
-    budget_deep: Budget = Budget()
+    budget_deep: Budget = Budget(max_tokens=400_000)   # round 0 alone spends ~175-195k (11, 2026-09-13)
     budget_fast: Budget = Budget(max_searches=3, max_fetches=2, max_agents=1, max_rounds=1, max_seconds=30)
     tavily_cache: bool = True         # cache search/extract by args (used in bench + GEPA)
     tavily_cache_dir: str = ".cache/tavily"
@@ -176,7 +176,9 @@ shared with the evidence model's source-tier logic.
   block"); then the node returns a structured failure and the graph proceeds (judge can mark the
   branch `unresolved`).
 - Budget exhausted → graph jumps to synthesis with whatever evidence exists; answer's "unknowns"
-  section states the budget was hit.
+  section states the budget was hit. *As built (2026-09-13, user decision):* an exhausted budget
+  starts no further search round, but the judge and critic still run once so the answer carries
+  their coverage gaps and contradictions (~20k tokens); only the deadline skips them.
 - Wall-clock exceeded → same as above, via a checked deadline at every node boundary.
 
 ## 10. Repository layout (target)

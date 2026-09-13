@@ -957,3 +957,39 @@ def test_a_real_critic_task_runs_through_dispatch_and_collect(sandboxed_run, mon
     task = ws.tasks[-1]
     assert (task.task_id, task.branch_id, task.round, task.status) == ("critic-r1-critic1", "critic", 1, "done")
     assert final["critic_rounds"] == 2 and len(ws.critic_reports) == 2
+
+
+def test_the_deep_budget_leaves_room_for_re_search(sandboxed_run) -> None:
+    """Round 0 alone spent ~175-195k tokens live (2026-09-13); at 150k no judge or
+    critic round could ever run. Fast keeps the smaller budget."""
+    from prime_search.config import get_settings
+
+    settings = get_settings()
+    assert settings.budget("deep").max_tokens == 400_000
+    assert settings.budget("fast").max_tokens == 150_000
+
+
+def test_with_the_token_budget_spent_the_judge_and_critic_review_but_start_no_round(
+    sandboxed_run, monkeypatch
+) -> None:
+    """docs/01 §9 as built (user decision): an exhausted budget starts no search round,
+    but the judge and critic still run once."""
+    ws = sandboxed_run
+    _plan(ws, count=2)
+    ws.usage.input_tokens = ws.budget.max_tokens
+    judged: dict = {}
+    monkeypatch.setattr(
+        graph_module, "run_judge", _recording_judge(_verdict(False, [_task("b1-r1", "b1", 1)]), judged)
+    )
+    calls: list = []
+    report = _report(0.2, [_task("b2-r1-critic1", "b2", 1)])
+    monkeypatch.setattr(graph_module, "run_critic", _recording_critic(CriticOutcome(report, "fenced_json"), calls))
+    state = _state(ws, round=1)
+
+    judge_update = graph_module._judge(state)
+    assert judged["max_new_tasks"] == 0 and judge_update["pending_tasks"] == []
+    assert graph_module._after_judge({**state, **judge_update}) == "critic"
+
+    critic_update = graph_module._critic({**state, **judge_update})
+    assert calls[0]["may_search"] is False and critic_update["pending_tasks"] == []
+    assert len(ws.verdicts) == 1 and len(ws.critic_reports) == 1

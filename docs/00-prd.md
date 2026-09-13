@@ -139,7 +139,9 @@ verified scope, offers what it can find with lower confidence, and does not fabr
 ## 8. Non-functional requirements
 
 - Latency: baseline ≤ 20 s; prime deep mode ≤ 3 min on scenario-class questions.
-- Cost: prime run ≤ 30 Tavily calls and ≤ 150k tokens by default budget.
+- Cost: prime run ≤ 30 Tavily calls and ≤ 400k tokens (deep; 150k fast) by default budget. Raised from
+  150k on 2026-09-13: round 0 alone measured ~175-195k, which left no budget for the judge's or critic's
+  re-search rounds (11).
 - Determinism where possible: temperature 0 for judge/critic/extractor; recorded fixtures for tests.
 - Reproducibility: `make bench` on the committed dataset reproduces the report within evaluator noise.
 - No PHI. Inputs are policy questions; the system refuses to reason about an individual patient's record.

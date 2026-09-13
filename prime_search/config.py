@@ -70,7 +70,9 @@ class Settings(BaseSettings):
     )
 
     models: ModelRouting = ModelRouting()
-    budget_deep: Budget = Budget()
+    # Round 0's sub-agents alone spend ~175-195k tokens on a deep question (measured
+    # live, 2026-09-13); 400k leaves room for a judge round and the critic's (docs/11).
+    budget_deep: Budget = Budget(max_tokens=400_000)
     budget_fast: Budget = Budget(
         max_searches=3, max_fetches=2, max_agents=1, max_rounds=1, max_seconds=30
     )

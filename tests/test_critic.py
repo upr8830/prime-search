@@ -278,3 +278,18 @@ def test_critic_tokens_are_charged_to_the_run(ws) -> None:
     )
     _critic(ws, [reply])
     assert (ws.usage.input_tokens, ws.usage.output_tokens) == (300, 50)
+
+
+def test_the_structured_fallbacks_replies_are_charged_too(ws, monkeypatch) -> None:
+    fallback = FakeCaller(CriticReport(**REPORT))
+    fallback.messages = [
+        AIMessage(content="", usage_metadata={"input_tokens": 400, "output_tokens": 60, "total_tokens": 460})
+    ]
+    monkeypatch.setattr(critic_module, "structured", lambda *a, **k: fallback)
+    outcome, _ = _critic(ws, [AIMessage(content="no"), AIMessage(content="still no")])
+
+    assert outcome.mode == "structured"
+    # The two unusable fenced replies carry no usage and are charged by estimate; the
+    # fallback's reply is charged exactly.
+    assert ws.usage.output_tokens >= 60
+    assert ws.usage.input_tokens >= 400
