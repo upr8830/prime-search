@@ -85,7 +85,7 @@ payload, `code` field) — this is where the RLM code-as-action is visible to a 
 
 Table from `GET /bench/summary` (reads `reports/latest.json`): rows = configs (baseline / prime base
 / prime optimized), columns = metrics from 05 §2, plus per-tier expander. Links to the LangSmith
-experiment URLs. If no report exists, show the `make bench` command.
+experiment URLs. If no report exists, show the `make bench` command. The latest.json shape is in 05 §3 (as built).
 
 ## 6. Document view (`/docs/[runId]/[docId]`)
 
