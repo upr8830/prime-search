@@ -175,7 +175,7 @@ def run_baseline(
         events.emit(
             ws.run_id,
             "run.finished",
-            {"status": status, "langsmith_run_url": trace_url},
+            {"status": status, "langsmith_run_url": trace_url, "usage": ws.usage},
         )
         if unsubscribe:
             unsubscribe()

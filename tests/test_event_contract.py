@@ -41,7 +41,7 @@ REQUIRED_KEYS = {
     "token": {"text"},
     "answer": {"summary", "body_markdown", "citations", "effective_dates", "unknowns"},
     "usage": {"searches", "fetches", "deep_reads", "agents", "rounds"},
-    "run.finished": {"status", "langsmith_run_url"},
+    "run.finished": {"status", "langsmith_run_url", "usage"},
     "error": {"message", "node"},
     "verdict": {"round", "sufficient", "coverage", "missing", "new_tasks", "reasoning"},
     "critique": {
@@ -230,6 +230,7 @@ def test_run_finished_carries_the_trace_url(sandboxed_run, monkeypatch) -> None:
     assert payloads[0]["langsmith_run_url"] == FakeHandle.url
     # 2.4: feedback targets the trace, so the record keeps its id (docs/05 §4).
     assert record.langsmith_trace_id == FakeHandle.trace_id
+    assert payloads[0]["usage"] == record.usage.model_dump(mode="json")  # docs/06 §5
 
 
 def test_the_baseline_emits_the_six_events_the_ui_needs(sandboxed_run, monkeypatch) -> None:
@@ -383,6 +384,14 @@ def test_a_prime_subscriber_receives_run_finished(sandboxed_run, monkeypatch) ->
     assert record.langsmith_trace_id == "trace-x"
     saved = json.loads((run_dir(record.run_id) / "state.json").read_text(encoding="utf-8"))
     assert saved["langsmith_trace_id"] == "trace-x"
+
+    # docs/06 §5: the stream ends with the run's totals, not the last round's.
+    records = _events(run_dir(record.run_id))
+    usages = [r for r in records if r["type"] == "usage"]
+    (finished,) = [r for r in records if r["type"] == "run.finished"]
+    assert usages[-1]["payload"] == record.usage.model_dump(mode="json")
+    assert finished["payload"]["usage"] == record.usage.model_dump(mode="json")
+    assert usages[-1]["seq"] < finished["seq"]
 
 
 class _FakeCaller:

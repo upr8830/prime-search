@@ -591,6 +591,9 @@ def run_prime(
             handle.add_tags(*final.get("fallback_tags", []))
             if state_tags := _usage_tags(workspace):
                 handle.add_tags(*state_tags)
+            # The run's totals, not the last round's: judge, critic and synthesis ran
+            # after the last collect set these (docs/06 §5).
+            workspace.usage.wall_seconds = round((datetime.now(UTC) - workspace.started_at).total_seconds(), 1)
             record = _write_record(
                 workspace,
                 request,
@@ -607,6 +610,7 @@ def run_prime(
             "error",
             {"message": f"{type(exc).__name__}: {exc}"[:500], "node": "run_prime"},
         )
+        workspace.usage.wall_seconds = round((datetime.now(UTC) - workspace.started_at).total_seconds(), 1)
         record = _write_record(
             workspace,
             request,
@@ -623,12 +627,18 @@ def run_prime(
         # natural point for an SSE client to close - so unsubscribing first delivered
         # the event to the JSONL and to nobody listening. The CLI hid it by taking the
         # URL from `run.started` and the answer from the returned record.
+        #
+        # docs/06 §5: `usage` and `run.finished` carry the run's totals. `usage` used to
+        # be emitted only per round in collect, so the judge, critic and synthesis
+        # tokens never reached the stream and a live footer undercounted.
+        events.emit(workspace.run_id, "usage", workspace.usage)
         events.emit(
             workspace.run_id,
             "run.finished",
             {
                 "status": record.status if record else "failed",
                 "langsmith_run_url": trace_url,
+                "usage": workspace.usage,
             },
         )
         if unsubscribe:

@@ -73,7 +73,8 @@ text), so a crashed run still has a partial record the UI can open.
 rounds), and the model wrapper (`models.py` reads `usage_metadata` from `AIMessage` when the Nebius
 wrapper provides it; otherwise estimates with a tokenizer heuristic and tags the run `tokens:estimated`).
 
-`usage` and `run.finished` events carry the totals; the UI shows them in the footer; the bench
+`usage` and `run.finished` events carry the totals (as built, task 2.5: prime also emits a final `usage` after
+synthesis, just before `run.finished`, so judge, critic and synthesis tokens are counted); the UI shows them in the footer; the bench
 reads them from `RunRecord`.
 
 ## 6. Debugging playbook (goes in README)

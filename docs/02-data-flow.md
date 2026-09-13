@@ -302,7 +302,7 @@ paragraph counts, and calls `search_within` to see specific paragraphs. This is 
 | `token` | `{text}` | streaming answer (synthesis only) |
 | `answer` | `Answer` | final answer panel |
 | `usage` | `Usage` | cost/latency footer |
-| `run.finished` | `{status, langsmith_run_url}` | footer link |
+| `run.finished` | `{status, langsmith_run_url, usage}` | footer link, final totals |
 | `error` | `{message, node}` | toast |
 
 Baseline mode emits `run.started`, `search` (per tool call), `token`, `answer`, `usage`,
