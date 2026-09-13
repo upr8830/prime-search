@@ -123,6 +123,9 @@ class ReasoningNormalizedChatNebius(ChatNebius):
         return generation_chunk
 
 
+EVALUATOR_MAX_OUTPUT_TOKENS = 32_000
+
+
 def _build(role: Role, settings: Settings | None = None, **overrides: Any) -> ChatNebius:
     settings = settings or get_settings()
     model = getattr(settings.models, role)
@@ -134,6 +137,10 @@ def _build(role: Role, settings: Settings | None = None, **overrides: Any) -> Ch
         "temperature": None if role == "baseline" else 0.0,
         "max_retries": 2,
         "timeout": 120,
+        # The provider's default output cap (8192) is spent on reasoning by the evaluator
+        # model: citation judgments came back `finish_reason=length` with empty content on
+        # 3 of 5 prime dev rows (docs/11). Other roles keep the provider default.
+        "max_tokens": EVALUATOR_MAX_OUTPUT_TOKENS if role == "evaluator" else None,
     }
     kwargs.update(overrides)
     return ReasoningNormalizedChatNebius(**{k: v for k, v in kwargs.items() if v is not None})
