@@ -172,13 +172,6 @@ def run_baseline(
         if body:
             events.emit(ws.run_id, "answer", answer)
         events.emit(ws.run_id, "usage", ws.usage)
-        events.emit(
-            ws.run_id,
-            "run.finished",
-            {"status": status, "langsmith_run_url": trace_url, "usage": ws.usage},
-        )
-        if unsubscribe:
-            unsubscribe()
         record = ws.to_record(
             request,
             started_at=started,
@@ -192,7 +185,16 @@ def run_baseline(
         # docs/02 §5's layout, same as a prime run. The baseline returned a record and
         # wrote nothing, so `runs/<run_id>/` held events but no state — and the Day 2
         # bench compares the two modes row by row from exactly these files.
+        # Written BEFORE `run.finished`: a client acts on that event (the UI opens
+        # feedback, and `POST /feedback` needs the record), so the record must exist.
         events.write_run_artifacts(record)
+        events.emit(
+            ws.run_id,
+            "run.finished",
+            {"status": status, "langsmith_run_url": trace_url, "usage": ws.usage},
+        )
+        if unsubscribe:
+            unsubscribe()
     return record
 
 

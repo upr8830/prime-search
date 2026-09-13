@@ -129,8 +129,12 @@ def _frame(record: dict[str, Any]) -> dict[str, Any]:
 def _interrupted(run_id: str) -> list[dict[str, Any]]:
     saved = runs.load_record(run_id)
     url = saved.langsmith_run_url if saved is not None else None
+    usage = saved.usage.model_dump(mode="json") if saved is not None else None
     # No `id`: these are not in the file, so they must not move a client's Last-Event-ID.
     return [
         {"event": "error", "data": json.dumps({"message": INTERRUPTED, "node": "api"})},
-        {"event": "run.finished", "data": json.dumps({"status": "failed", "langsmith_run_url": url})},
+        {
+            "event": "run.finished",
+            "data": json.dumps({"status": "failed", "langsmith_run_url": url, "usage": usage}),
+        },
     ]

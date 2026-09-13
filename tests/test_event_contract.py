@@ -277,6 +277,26 @@ def test_a_baseline_run_with_tracing_off_completes_without_a_trace(sandboxed_run
     assert finished and finished[0]["langsmith_run_url"] is None
 
 
+def test_the_baseline_record_exists_when_run_finished_is_emitted(sandboxed_run, monkeypatch) -> None:
+    """A client acts on `run.finished`: the UI opens feedback, and `POST /feedback` 404s
+    without a record. The baseline used to write its record after emitting it."""
+    from prime_search import baseline as module
+    from prime_search import tracing
+    from prime_search.events import run_dir
+
+    monkeypatch.setattr(tracing, "_tracing_on", lambda: False)
+    monkeypatch.setattr(module, "build_baseline_agent", lambda model=None: _FakeAgent())
+    seen: dict = {}
+
+    def on_event(record: dict) -> None:
+        if record["type"] == "run.finished":
+            path = run_dir(record["run_id"]) / "state.json"
+            seen["status"] = json.loads(path.read_text(encoding="utf-8"))["status"] if path.is_file() else None
+
+    module.run_baseline(RunRequest(question="q", mode="baseline"), on_event=on_event)
+    assert seen == {"status": "completed"}
+
+
 def _one_citation():
     from prime_search.schemas import Citation
 

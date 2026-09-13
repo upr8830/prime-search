@@ -161,6 +161,10 @@ def test_no_fenced_block_twice_falls_back_to_structured_output(ws, monkeypatch) 
 
     assert outcome.mode == "structured"
     assert outcome.fallback_tag == "fallback:plan_structured"
+    from prime_search import events as event_log
+
+    plans = [r["payload"] for r in event_log.replay(ws.run_id) if r["type"] == "plan"]
+    assert plans and plans[-1]["code"] is None  # docs/07 §4: a fallback plan has no cell
     assert ws.plan is plan
 
 
@@ -178,6 +182,10 @@ def test_both_rungs_failing_gives_the_default_two_branch_plan(ws, monkeypatch) -
 
     assert outcome.mode == "default"
     assert outcome.fallback_tag == "fallback:default_plan"
+    from prime_search import events as event_log
+
+    plans = [r["payload"] for r in event_log.replay(ws.run_id) if r["type"] == "plan"]
+    assert plans and plans[-1]["code"] is None  # docs/07 §4: a fallback plan has no cell
     assert len(outcome.plan.branches) == 2
     assert outcome.plan.branches[0].source_hint == "primary_policy"
     # The objective is substituted in, not left as a template hole.
