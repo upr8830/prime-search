@@ -59,3 +59,49 @@ def test_optimized_prompt_wins_when_present(tmp_path, monkeypatch: pytest.Monkey
     prompts.load.cache_clear()
     assert prompts.load("smoke_plan", prompt_set="optimized") == "OPTIMIZED"
     assert prompts.load("smoke_plan", prompt_set="base") == "BASE"
+
+
+def test_every_1_7_prompt_renders_with_no_placeholder_left(sandboxed_run) -> None:
+    """A prompt shipped with an unrendered {placeholder} sends the literal braces to the
+    model. Each call site's keyword set is pinned against the file's own placeholders."""
+    import re
+
+    from prime_search.prompts import load, render
+
+    call_sites = {
+        "understand": {"question"},
+        "plan": {
+            "objective", "understanding", "workspace_api", "strategy_card",
+            "min_branches", "max_branches", "budget",
+        },
+        "plan_repair": {"problem"},
+        "synthesize": {"question", "understanding", "evidence", "claims", "unresolved"},
+        "baseline": set(),
+    }
+    for name, keys in call_sites.items():
+        found = set(re.findall(r"\{([a-z_]+)\}", load(name)))
+        assert found == keys, f"{name}: file has {sorted(found)}, call site passes {sorted(keys)}"
+        rendered = render(name, "base", **dict.fromkeys(keys, "X"))
+        assert not re.search(r"\{[a-z_]+\}", rendered), f"{name} still has a placeholder"
+
+
+def test_the_synthesis_prompt_names_every_section_heading() -> None:
+    """docs/03 §8's order is the contract the gate and the completeness evaluator read;
+    if a heading is dropped from the prompt the model will not write it."""
+    from prime_search.agents.synthesizer import SECTION_HEADINGS
+    from prime_search.prompts import load
+
+    text = load("synthesize")
+    positions = [text.find(f"## {heading}") for heading in SECTION_HEADINGS]
+    assert all(position > 0 for position in positions), dict(zip(SECTION_HEADINGS, positions))
+    assert positions == sorted(positions)
+
+
+def test_the_plan_prompt_states_the_fenced_python_output_rule() -> None:
+    """docs/03 §11's seed checklist: "the fenced-Python output rule". Without it the
+    planner falls to the structured-output rung on every run."""
+    from prime_search.prompts import load
+
+    text = load("plan").lower()
+    assert "fenced python block" in text
+    assert "ws.plan" in text

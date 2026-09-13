@@ -131,3 +131,37 @@ def test_the_runs_root_is_absolute_so_a_chdir_cannot_orphan_a_run(tmp_path: Path
     assert events.runs_root().is_absolute()
     events.set_runs_root(tmp_path)
     assert events.runs_root().is_absolute()
+
+
+def test_concurrent_emits_do_not_tear_a_line(tmp_path) -> None:
+    """From 1.7 the graph fans sub-agents out with `Send` and they run concurrently in
+    one superstep. Append mode does not make a multi-KB write atomic: a live run
+    produced a torn line, which `replay()` drops - the UI loses an event silently
+    rather than visibly.
+    """
+    import json
+    import threading
+
+    from prime_search import events
+
+    events.set_runs_root(tmp_path)
+    try:
+        payload = {"blob": "x" * 4000}  # large enough to be split by the OS
+
+        def spam(n: int) -> None:
+            for i in range(25):
+                events.emit("run-concurrent", "search", {"worker": n, "i": i, **payload})
+
+        threads = [threading.Thread(target=spam, args=(n,)) for n in range(6)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+
+        path = tmp_path / "run-concurrent" / "events.jsonl"
+        lines = path.read_text(encoding="utf-8").splitlines()
+        assert len(lines) == 150
+        for line in lines:
+            json.loads(line)  # every line is a whole record
+    finally:
+        events.set_runs_root("runs")

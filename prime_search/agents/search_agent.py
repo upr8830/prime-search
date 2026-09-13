@@ -21,7 +21,6 @@ Three things decide the shape of this module:
 from __future__ import annotations
 
 import re
-import threading
 import time
 from contextlib import ExitStack
 from dataclasses import dataclass, field
@@ -42,7 +41,7 @@ from prime_search.primitives import tavily
 from prime_search.prompts import render
 from prime_search.schemas import SearchTask, TaskResult, Usage
 from prime_search.tracing import get_logger, trace_run
-from prime_search.workspace import DeepReadBudgetExceeded, Workspace
+from prime_search.workspace import RUN_LOCK, DeepReadBudgetExceeded, Workspace
 
 # docs/03 §13: "Sub-agent exceeds its tool-call cap (default 8)". A module constant
 # rather than a Budget field: Budget is serialized into SearchPlan, RunRequest and
@@ -71,10 +70,12 @@ SUMMARIZE_AFTER_CAP = (
 )
 
 _LIMITS = {"searches": "max_searches", "fetches": "max_fetches", "deep_reads": "max_deep_reads"}
-# One process-wide lock. `ws.usage` is shared by every task dispatched in the same
-# superstep, and a single AIMessage can carry several tool calls, so check-then-
-# increment has to be atomic on both the task and the run side.
-_LOCK = threading.RLock()
+# `ws.usage` is shared by every task dispatched in the same superstep, and a single
+# AIMessage can carry several tool calls, so check-then-increment has to be atomic on
+# both the task and the run side. The lock lives in workspace.py and is shared with
+# `Workspace.search_within`, which charges the other half of the deep-read counter —
+# a second lock here would leave that pair unsynchronized while looking guarded.
+_LOCK = RUN_LOCK
 
 _log = get_logger(component="search_agent")
 
@@ -794,6 +795,9 @@ def _count_tokens(messages: list[BaseMessage], ctx: ToolContext) -> bool:
     with _LOCK:  # the run-wide max_tokens budget is checked against ws.usage
         ctx.ws.usage.input_tokens += ctx.usage.input_tokens
         ctx.ws.usage.output_tokens += ctx.usage.output_tokens
+        # docs/06 section 2 puts `tokens:estimated` on the ROOT run, which only the
+        # graph can reach - so the finding is recorded here and tagged there.
+        ctx.ws.tokens_estimated = ctx.ws.tokens_estimated or estimated
     return estimated
 
 

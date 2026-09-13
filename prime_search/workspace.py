@@ -72,6 +72,17 @@ TRUNCATION_NOTE = "\n... [output truncated at {limit} chars]"
 # memory, so seconds are generous; small enough that a runaway loop costs nothing.
 DEFAULT_TIMEOUT_SECONDS = 5.0
 
+# The run's one lock. `dispatch` fans tasks out with `Send`, and LangGraph runs a
+# superstep's branches concurrently in a thread pool — so `ws.usage`, `ws.documents`
+# and the evidence store are all touched by several sub-agents at once.
+#
+# Deliberately *one* lock shared by workspace.py, agents/search_agent.py and
+# evidence/store.py rather than one per module: the deep-read counter is
+# check-then-incremented across two of them (`search_within` charges a success here,
+# `ToolContext.charge_run_deep_read` charges a failure there), and two locks would
+# make that pair non-atomic while looking guarded.
+RUN_LOCK = threading.RLock()
+
 # docs/03 §12: "Builtins reduced to a safe subset (no open, __import__, eval, exec)."
 # The allowlist is this build's (the spec names only the four denials). Everything
 # here is pure computation over objects the cell already has.
@@ -175,6 +186,11 @@ class Workspace:
     contradictions: list[str] = field(default_factory=list)
     unknowns: list[str] = field(default_factory=list)
     usage: Usage = field(default_factory=Usage)
+    # Set by any site that had to estimate a reply's tokens (docs/06 section 5's
+    # chars/4 heuristic). The root run is tagged `tokens:estimated` from it, because
+    # docs/06 section 2 puts tags on the root run and only the graph can reach it. Not
+    # serialized into RunRecord: the tag is where a reader looks for this.
+    tokens_estimated: bool = False
     run_id: str = field(default_factory=new_run_id)
     # Captured when the workspace is created, which is when the run begins. Timezone
     # aware, matching Document.retrieved_at.
@@ -233,6 +249,44 @@ class Workspace:
 
     # --- helpers the root calls from a cell -------------------------------------
 
+    def exhausted_limits(self) -> list[tuple[str, str]]:
+        """Which budgets have run out, each with the sentence the answer should say.
+
+        docs/01 §9: "Budget exhausted -> graph jumps to synthesis with whatever evidence
+        exists; answer's 'unknowns' section states the budget was hit." Lives on the
+        workspace because two nodes need it and neither owns it: `collect` turns it into
+        `unknowns` and the run's terminal status, and `synthesize` checks the finished
+        body actually says so. Everything it reads - budget, usage, `started_at` - is
+        here already.
+        """
+        remaining = self.budget_remaining()
+        hit: list[tuple[str, str]] = []
+        elapsed = (datetime.now(UTC) - self.started_at).total_seconds()
+        if elapsed >= self.budget.max_seconds:
+            hit.append((
+                "max_seconds",
+                f"The run reached its {self.budget.max_seconds}s time limit; the answer "
+                "above is based only on what had been gathered by then.",
+            ))
+        for limit, label in (
+            ("max_searches", "searches"),
+            ("max_fetches", "document fetches"),
+            ("max_deep_reads", "in-document reads"),
+        ):
+            if getattr(remaining, limit) <= 0:
+                hit.append((
+                    limit,
+                    f"The run used its full budget of {getattr(self.budget, limit)} "
+                    f"{label}; further lines of enquiry were not pursued.",
+                ))
+        if self.usage.input_tokens + self.usage.output_tokens >= self.budget.max_tokens:
+            hit.append((
+                "max_tokens",
+                f"The run reached its {self.budget.max_tokens} token budget; further "
+                "lines of enquiry were not pursued.",
+            ))
+        return hit
+
     def evidence_for(self, branch_id: str) -> list[Evidence]:
         """docs/02 §3."""
         return [item for item in self.evidence if item.branch_id == branch_id]
@@ -278,17 +332,20 @@ class Workspace:
         document = self.documents.get(doc_id)
         if document is None:
             raise KeyError(f"no document {doc_id!r} in the workspace; search first")
-        remaining = self.budget_remaining().max_deep_reads
-        if remaining <= 0:
-            raise DeepReadBudgetExceeded(
-                f"deep-read budget exhausted ({self.budget.max_deep_reads} used); "
-                "answer from the evidence already gathered"
-            )
-        # Charged here, before any work: docs/01 §9 counts a call that fails, and
-        # every failure below this line (an unreadable path, a missing text file,
-        # offsets that drifted) is a call that was really made. Only the two raises
-        # above happen without spending anything.
-        self.usage.deep_reads += 1
+        # Check-and-charge under the run lock, or two fanned-out sub-agents both read
+        # the last remaining deep read and both spend it.
+        with RUN_LOCK:
+            remaining = self.budget_remaining().max_deep_reads
+            if remaining <= 0:
+                raise DeepReadBudgetExceeded(
+                    f"deep-read budget exhausted ({self.budget.max_deep_reads} used); "
+                    "answer from the evidence already gathered"
+                )
+            # Charged here, before any work: docs/01 §9 counts a call that fails, and
+            # every failure below this line (an unreadable path, a missing text file,
+            # offsets that drifted) is a call that was really made. Only the two raises
+            # above happen without spending anything.
+            self.usage.deep_reads += 1
         _assert_readable(document.text_path)
         return [passage.as_dict() for passage in within.search_within(document, query, k=k)]
 

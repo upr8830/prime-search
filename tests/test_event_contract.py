@@ -1,0 +1,389 @@
+"""The docs/02 §4 event contract.
+
+`GET /run/{run_id}/events` streams `event: <type>`, `data: <json>`, and the table in §4
+is what an SSE client types against. Nothing tested that table until now, which is why
+four payloads drifted from it unnoticed through 1.7: `plan` carried a branch *count*,
+`evidence` carried round totals, `task.started` was emitted as an aggregate, and
+`run.finished` had no `langsmith_run_url`.
+
+These tests read the emitted payloads, not the emitting code, so they keep working when
+the emitter moves.
+"""
+
+from __future__ import annotations
+
+import json
+import time
+
+import pytest
+from langchain_core.messages import AIMessage
+
+from prime_search.agents import graph as graph_module
+from prime_search.evidence.store import EvidenceStore
+from prime_search.schemas import (
+    Branch,
+    QueryUnderstanding,
+    RunRequest,
+    SearchPlan,
+)
+
+from conftest import ScriptedChatModel
+
+# docs/02 §4's table, as a contract: event type -> keys the payload must carry.
+REQUIRED_KEYS = {
+    "run.started": {"run_id", "mode", "depth", "question"},
+    "understanding": {"normalized_question", "domain", "question_type", "time_sensitivity"},
+    "plan": {"understanding", "branches", "stop_criteria", "budget"},
+    "task.started": {"task_id", "branch_id", "round", "instruction"},
+    "search": {"task_id", "query", "n_results", "cached"},
+    "fetch": {"task_id", "doc_id", "url", "title", "tier", "effective_date"},
+    "task.done": {"task_id", "result"},
+    "token": {"text"},
+    "answer": {"summary", "body_markdown", "citations", "effective_dates", "unknowns"},
+    "usage": {"searches", "fetches", "deep_reads", "agents", "rounds"},
+    "run.finished": {"status", "langsmith_run_url"},
+    "error": {"message", "node"},
+}
+
+
+def _events(run_dir_path) -> list[dict]:
+    path = run_dir_path / "events.jsonl"
+    if not path.is_file():
+        return []
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def _by_type(records: list[dict], type_: str) -> list[dict]:
+    return [record["payload"] for record in records if record["type"] == type_]
+
+
+def _understanding() -> QueryUnderstanding:
+    return QueryUnderstanding(
+        normalized_question="q", domain="cgm", question_type="eligibility",
+        time_sensitivity="high",
+    )
+
+
+def _state(ws, **overrides):
+    state = {
+        "run_id": ws.run_id,
+        "request": RunRequest(question=ws.objective),
+        "ws": ws,
+        "store": EvidenceStore(documents=ws.documents, items=ws.evidence),
+        "pending_tasks": [],
+        "task_results": [],
+        "round": 0,
+        "critic_rounds": 0,
+        "deadline": time.time() + 300,
+        "events": [],
+        "depth": "deep",
+        "prompt_set": "base",
+        "models": {},
+        "fallback_tags": [],
+        "trace_url": "https://smith.langchain.com/x",
+    }
+    state.update(overrides)
+    return state
+
+
+@pytest.fixture
+def planned(sandboxed_run):
+    ws = sandboxed_run
+    ws.understanding = _understanding()
+    ws.plan = SearchPlan(
+        understanding=ws.understanding,
+        branches=[
+            Branch(branch_id="b1", question="criteria?", rationale="r",
+                   source_hint="primary_policy", priority=1),
+        ],
+        stop_criteria="cited",
+        budget=ws.budget,
+    )
+    return ws
+
+
+def test_the_plan_event_carries_a_search_plan(sandboxed_run) -> None:
+    """docs/02 §4: `plan | SearchPlan | search tree skeleton`. A branch *count* cannot
+    build a tree skeleton - the ids and questions have to be in the stream, or the UI
+    can only draw the plan by reading the record file."""
+    from prime_search.agents.root import plan_run
+    from prime_search.events import run_dir
+
+    sandboxed_run.understanding = _understanding()
+    cell = """```python
+ws.plan = SearchPlan(
+    understanding=ws.understanding,
+    branches=[
+        Branch(branch_id="b1", question="What are the criteria?", rationale="r",
+               source_hint="primary_policy", priority=1),
+        Branch(branch_id="b2", question="Do they cover this case?", rationale="r",
+               source_hint="primary_policy", priority=1),
+        Branch(branch_id="b3", question="What is current?", rationale="r",
+               source_hint="primary_policy", priority=2),
+    ],
+    stop_criteria="Each criterion cited.",
+    budget=ws.budget,
+)
+```"""
+    plan_run(sandboxed_run, model=ScriptedChatModel(script=[AIMessage(content=cell)]))
+
+    payloads = _by_type(_events(run_dir(sandboxed_run.run_id)), "plan")
+    assert len(payloads) == 1, "exactly one plan event per planning pass"
+    payload = payloads[0]
+    assert REQUIRED_KEYS["plan"] <= set(payload)
+    assert [branch["branch_id"] for branch in payload["branches"]] == ["b1", "b2", "b3"]
+    assert payload["branches"][0]["question"] == "What are the criteria?"
+
+
+def test_dispatch_does_not_emit_plan_or_task_started(planned) -> None:
+    """Both names are taken by payloads of a different shape. An aggregate under either
+    is unreadable to a client that types the event."""
+    from prime_search.events import run_dir
+
+    graph_module._dispatch(_state(planned))
+    records = _events(run_dir(planned.run_id))
+    assert _by_type(records, "plan") == []
+    assert _by_type(records, "task.started") == []
+
+
+def test_collect_emits_usage_not_a_second_evidence_shape(planned) -> None:
+    """docs/02 §4: `evidence | Evidence`. Round totals under that name made the CLI
+    disambiguate by sniffing for a key."""
+    from prime_search.events import run_dir
+
+    graph_module._collect(_state(planned, task_results=[]))
+    records = _events(run_dir(planned.run_id))
+
+    usage = _by_type(records, "usage")
+    assert usage and REQUIRED_KEYS["usage"] <= set(usage[-1])
+    for payload in _by_type(records, "evidence"):
+        assert "evidence_id" in payload, "an `evidence` event must carry an Evidence"
+
+
+def test_the_answer_event_carries_the_whole_answer(sandboxed_run) -> None:
+    """docs/02 §4: `answer | Answer | final answer panel`. A summary dict left the
+    replay without the body, the citations or the dates."""
+    from prime_search.agents.synthesizer import synthesize
+    from prime_search.events import run_dir
+
+    sandboxed_run.understanding = _understanding()
+    synthesize(sandboxed_run, unresolved=["nothing found"])  # no evidence path
+
+    payloads = _by_type(_events(run_dir(sandboxed_run.run_id)), "answer")
+    assert payloads and REQUIRED_KEYS["answer"] <= set(payloads[0])
+
+
+def test_synthesis_emits_token_events(sandboxed_run, monkeypatch) -> None:
+    """docs/02 §4: `token | {text} | streaming answer (synthesis only)`. Without these
+    `events.jsonl` holds no answer text at all and 2.4 cannot replay a streamed run."""
+    from prime_search.agents import synthesizer
+    from prime_search.events import run_dir
+
+    sandboxed_run.understanding = _understanding()
+    monkeypatch.setattr(
+        synthesizer, "build_citations", lambda evidence, documents: _one_citation()
+    )
+    monkeypatch.setattr(synthesizer, "_render_evidence", lambda ws, citations: "[1] x")
+    synthesizer.synthesize(
+        sandboxed_run,
+        model=ScriptedChatModel(script=[AIMessage(content="## Answer\n\nCovered [1].")]),
+    )
+
+    tokens = _by_type(_events(run_dir(sandboxed_run.run_id)), "token")
+    assert tokens, "no token events were emitted"
+    assert all(REQUIRED_KEYS["token"] <= set(payload) for payload in tokens)
+    assert "Covered [1]." in "".join(payload["text"] for payload in tokens)
+
+
+def test_run_finished_carries_the_trace_url(sandboxed_run, monkeypatch) -> None:
+    """docs/02 §4: `run.finished | {status, langsmith_run_url} | footer link`. The URL
+    was only in `run.started`, so a client that joined late could not reach the trace."""
+    from prime_search.baseline import run_baseline
+    from prime_search.events import run_dir
+
+    class FakeHandle:
+        url = "https://smith.langchain.com/o/x/trace/y"
+
+    from contextlib import contextmanager
+
+    @contextmanager
+    def fake_trace(name, **kwargs):
+        yield FakeHandle()
+
+    from prime_search import baseline as module
+
+    monkeypatch.setattr(module, "trace_run", fake_trace)
+    monkeypatch.setattr(module, "build_baseline_agent", lambda model=None: _FakeAgent())
+    record = run_baseline(RunRequest(question="q", mode="baseline"))
+
+    payloads = _by_type(_events(run_dir(record.run_id)), "run.finished")
+    assert payloads and REQUIRED_KEYS["run.finished"] <= set(payloads[0])
+    assert payloads[0]["langsmith_run_url"] == FakeHandle.url
+
+
+def test_the_baseline_emits_the_six_events_the_ui_needs(sandboxed_run, monkeypatch) -> None:
+    """docs/02 §4: "Baseline mode emits `run.started`, `search` (per tool call),
+    `token`, `answer`, `usage`, `run.finished` so the two panes share one renderer"."""
+    from contextlib import contextmanager
+
+    from prime_search import baseline as module
+    from prime_search.events import run_dir
+
+    @contextmanager
+    def fake_trace(name, **kwargs):
+        class Handle:
+            url = "https://smith.langchain.com/x"
+
+        yield Handle()
+
+    monkeypatch.setattr(module, "trace_run", fake_trace)
+    monkeypatch.setattr(module, "build_baseline_agent", lambda model=None: _FakeAgent())
+    record = module.run_baseline(RunRequest(question="q", mode="baseline"))
+
+    seen = {r["type"] for r in _events(run_dir(record.run_id))}
+    assert {"run.started", "token", "answer", "usage", "run.finished"} <= seen
+
+
+def _one_citation():
+    from prime_search.schemas import Citation
+
+    return [Citation(n=1, evidence_id="ev1", doc_id="d1", url="https://x", label="L")]
+
+
+class _FakeAgent:
+    def stream(self, *args, **kwargs):  # type: ignore[no-untyped-def]
+        from langchain_core.messages import AIMessageChunk
+
+        yield "messages", (AIMessageChunk(content="Covered when insulin-treated."), {})
+
+
+# --- order and delivery, not just payload keys ---------------------------------------
+
+
+def test_a_subscriber_receives_the_terminal_events(sandboxed_run, monkeypatch) -> None:
+    """docs/06 section 4 has `emit()` push to the in-process subscriber queue, and
+    docs/02 section 4 makes `run.finished` the footer link - the point an SSE client
+    closes on. Emitting it after `unsubscribe()` delivered it to the JSONL and to nobody
+    listening, and the CLI hid that by taking the URL from `run.started` and the answer
+    from the returned record. Payload-key tests cannot catch this.
+    """
+    from contextlib import contextmanager
+
+    from prime_search import baseline as module
+
+    @contextmanager
+    def fake_trace(name, **kwargs):
+        class Handle:
+            url = "https://smith.langchain.com/x"
+
+        yield Handle()
+
+    monkeypatch.setattr(module, "trace_run", fake_trace)
+    monkeypatch.setattr(module, "build_baseline_agent", lambda model=None: _FakeAgent())
+
+    seen: list[str] = []
+    module.run_baseline(
+        RunRequest(question="q", mode="baseline"),
+        on_event=lambda record: seen.append(record["type"]),
+    )
+
+    assert "answer" in seen, "a live subscriber never received the answer"
+    assert "usage" in seen
+    assert seen[-1] == "run.finished", f"run.finished must be last, got {seen}"
+
+
+def test_the_answer_precedes_run_finished_in_the_log(sandboxed_run, monkeypatch) -> None:
+    """A replay that reads `events.jsonl` in order must not see the run end before the
+    answer it produced."""
+    from contextlib import contextmanager
+
+    from prime_search import baseline as module
+    from prime_search.events import run_dir
+
+    @contextmanager
+    def fake_trace(name, **kwargs):
+        class Handle:
+            url = "https://smith.langchain.com/x"
+
+        yield Handle()
+
+    monkeypatch.setattr(module, "trace_run", fake_trace)
+    monkeypatch.setattr(module, "build_baseline_agent", lambda model=None: _FakeAgent())
+    record = module.run_baseline(RunRequest(question="q", mode="baseline"))
+
+    order = [r["type"] for r in _events(run_dir(record.run_id))]
+    assert order.index("answer") < order.index("run.finished")
+    assert order.index("usage") < order.index("run.finished")
+
+
+def test_a_prime_subscriber_receives_run_finished(sandboxed_run, monkeypatch) -> None:
+    from contextlib import contextmanager
+
+    from prime_search.agents import graph as module
+
+    @contextmanager
+    def fake_trace(name, **kwargs):
+        class Handle:
+            url = "https://smith.langchain.com/x"
+
+            def add_tags(self, *tags):  # noqa: ANN001, ANN201
+                return None
+
+        yield Handle()
+
+    monkeypatch.setattr(module, "trace_run", fake_trace)
+    monkeypatch.setattr(module, "structured", lambda *a, **k: _FakeCaller(_understanding()))
+    monkeypatch.setattr(module, "plan_run", lambda ws, **k: _FakeOutcome(_plan_for(ws)))
+    monkeypatch.setattr(module, "run_search_agent", lambda task, **k: _empty_result())
+    monkeypatch.setattr(module, "synthesize", lambda ws, **k: _blank_answer())
+
+    seen: list[str] = []
+    module.run_prime(RunRequest(question="q"), on_event=lambda r: seen.append(r["type"]))
+    assert seen and seen[-1] == "run.finished", f"got {seen}"
+
+
+class _FakeCaller:
+    def __init__(self, value) -> None:  # noqa: ANN001
+        self.value = value
+
+    def invoke(self, prompt):  # noqa: ANN001, ANN201
+        return self.value
+
+
+class _FakeOutcome:
+    def __init__(self, plan) -> None:  # noqa: ANN001
+        self.plan = plan
+        self.mode = "code"
+        self.fallback_tag = None
+        self.repairs = 0
+
+
+def _plan_for(ws):  # noqa: ANN001, ANN202
+    ws.plan = SearchPlan(
+        understanding=_understanding(),
+        branches=[
+            Branch(branch_id="b1", question="criteria?", rationale="r",
+                   source_hint="primary_policy", priority=1),
+        ],
+        stop_criteria="cited",
+        budget=ws.budget,
+    )
+    return ws.plan
+
+
+def _empty_result():
+    from prime_search.schemas import TaskResult, Usage
+
+    return TaskResult(
+        queries_issued=[], documents_fetched=[], evidence_ids=[], summary="s",
+        unresolved=None, usage=Usage(),
+    )
+
+
+def _blank_answer():
+    from prime_search.schemas import Answer
+
+    return Answer(
+        summary="s", body_markdown="## Answer\n\ns", claims=[], citations=[],
+        effective_dates=[], contradictions=[], unknowns=[], confidence=0.1,
+    )

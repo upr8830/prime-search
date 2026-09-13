@@ -25,6 +25,7 @@ from datetime import date
 
 from prime_search.primitives import sources, within
 from prime_search.schemas import Document, Evidence, Location
+from prime_search.workspace import RUN_LOCK
 
 MAX_EVIDENCE_CHARS = 600  # docs/02 §2.4
 MAX_CLAIM_CHARS = 200  # docs/04 §3 rule 3
@@ -184,12 +185,16 @@ class EvidenceStore:
         )
 
         # Two agents quoting the same passage for the same branch is one finding, not
-        # two, and double-counting it would inflate a claim's support.
-        existing = self._by_id.get(item.evidence_id)
-        if existing is not None:
-            return existing
-        self._by_id[item.evidence_id] = item
-        self.items.append(item)
+        # two, and double-counting it would inflate a claim's support. Under the
+        # `Send` fan-out those two agents run concurrently, so the de-duplicating
+        # check and the two appends have to be one atomic step or the same passage
+        # lands in `items` twice with one entry in `_by_id`.
+        with RUN_LOCK:
+            existing = self._by_id.get(item.evidence_id)
+            if existing is not None:
+                return existing
+            self._by_id[item.evidence_id] = item
+            self.items.append(item)
         return item
 
     def for_branch(self, branch_id: str) -> list[Evidence]:

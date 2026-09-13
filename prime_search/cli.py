@@ -1,7 +1,12 @@
-"""Console entry point: `prime-search` (docs/01 §7, §2; docs/03 §9).
+"""Console entry point: `prime-search` (docs/01 §7, §2; docs/03 §8, §9).
 
-At task 1.1 this exists to make the console script real. `ask` is implemented in
-task 1.7 with Rich rendering modeled on the starter; `smoke` in task 1.2.
+`ask` renders a run as it happens, modeled on the starter's console output: the
+question in a panel, a rule before the stream, tool activity in yellow, the answer
+in green, the trace URL last and from a `finally` so a crash still prints it.
+
+Everything it shows comes from `events.subscribe` rather than from reaching into
+the graph, so task 2.4's SSE stream renders the same run from the same events
+without a second rendering path.
 """
 
 from __future__ import annotations
@@ -36,10 +41,24 @@ def ask(
     question: str = typer.Argument(..., help="The coverage question to investigate."),
     mode: str = typer.Option("prime", "--mode", help="prime | baseline"),
     depth: str = typer.Option("deep", "--depth", help="deep | fast"),
+    prompt_set: str = typer.Option("base", "--prompt-set", help="base | optimized"),
+    show_events: bool = typer.Option(True, "--events/--no-events", help="Render progress."),
 ) -> None:
-    """Run one investigation and print a cited answer. (Task 1.7.)"""
-    typer.secho("ask: not implemented yet - task 1.7", fg=typer.colors.YELLOW, err=True)
-    raise typer.Exit(2)
+    """Run one investigation and print a cited answer (docs/03 §8, §9)."""
+    from prime_search.render import render_ask
+
+    if mode not in {"prime", "baseline"}:
+        typer.secho(f"unknown mode {mode!r}: use prime or baseline", fg=typer.colors.RED, err=True)
+        raise typer.Exit(2)
+    if depth not in {"deep", "fast"}:
+        typer.secho(f"unknown depth {depth!r}: use deep or fast", fg=typer.colors.RED, err=True)
+        raise typer.Exit(2)
+
+    raise typer.Exit(
+        render_ask(
+            question=question, mode=mode, depth=depth, prompt_set=prompt_set, show_events=show_events
+        )
+    )
 
 
 @app.command()

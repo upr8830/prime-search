@@ -102,6 +102,26 @@ class TraceHandle:
         self.url: str = run_tree.get_url()
         self.trace_id: str = str(run_tree.trace_id)
 
+    def add_tags(self, *tags: str) -> None:
+        """Add tags to the live root run.
+
+        docs/06 §2 puts `domain:` and `qtype:` on the *root* run, but they are only
+        known once `understand` has run — by which time the trace is already open and
+        its tags already posted. Patching is the only way to get them onto the run the
+        filter query actually looks at; adding them to the `understand` child instead
+        would make "all cgm runs" unfindable.
+
+        Never raises: a tracing failure must not end a run that is otherwise fine.
+        """
+        new = [tag for tag in tags if tag and tag not in (self.run_tree.tags or [])]
+        if not new:
+            return
+        try:
+            self.run_tree.tags = list(self.run_tree.tags or []) + new
+            self.run_tree.patch()
+        except Exception as exc:  # noqa: BLE001 - see docstring
+            get_logger(component="tracing").warning("trace.add_tags_failed", error=str(exc))
+
 
 @contextmanager
 def trace_run(

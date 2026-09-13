@@ -62,6 +62,7 @@ __all__ = [
     "runs_root",
     "set_runs_root",
     "subscribe",
+    "write_run_artifacts",
 ]
 
 
@@ -93,6 +94,37 @@ def run_dir(run_id: str) -> Path:
     except OSError as exc:  # read-only FS: the run still works, it is just not replayable
         _log.warning("events.run_dir_failed", run_id=run_id, error=str(exc))
     return directory
+
+
+def write_run_artifacts(record: Any) -> None:
+    """Write docs/02 §5's run layout: `request.json`, `state.json`, `answer.md`.
+
+    The names are the spec's. An earlier build wrote a single `run.json`, which no
+    consumer written to the spec would find — docs/01 §2 and docs/06 §7's
+    `prime-search diff` both name `state.json`, and the UI's "open a past run" reads
+    `answer.md`.
+
+    Lives here because this module already owns `run_dir()`, and docs/02 §5 is the
+    layout `events.jsonl` sits inside. Called at every node boundary (docs/06 §4), so
+    a killed run still has a partial record; never raises, for the same reason `emit`
+    does not.
+    """
+    try:
+        directory = run_dir(record.run_id)
+        (directory / "state.json").write_text(
+            record.model_dump_json(indent=2), encoding="utf-8", newline="\n"
+        )
+        (directory / "request.json").write_text(
+            record.request.model_dump_json(indent=2), encoding="utf-8", newline="\n"
+        )
+        if record.answer is not None:
+            (directory / "answer.md").write_text(
+                record.answer.body_markdown or record.answer.summary,
+                encoding="utf-8",
+                newline="\n",
+            )
+    except (OSError, ValueError, TypeError) as exc:
+        _log.warning("events.record_write_failed", run_id=record.run_id, error=str(exc))
 
 
 def emit(run_id: str, type: str, payload: Any) -> dict[str, Any]:
@@ -177,7 +209,12 @@ def _append(run_id: str, record: dict[str, Any]) -> None:
     try:
         line = json.dumps(record, ensure_ascii=False, default=str)
         path = run_dir(run_id) / "events.jsonl"
-        with path.open("a", encoding="utf-8", newline="\n") as handle:
+        # Serialized: from 1.7 the graph fans sub-agents out with `Send` and they run
+        # concurrently in one superstep, all emitting into this file. Append mode does
+        # not make a multi-KB write atomic, and two interleaved writes produced a torn
+        # line in a live run - `replay()` drops it, so the UI would have lost an event
+        # silently rather than visibly.
+        with _lock, path.open("a", encoding="utf-8", newline="\n") as handle:
             handle.write(line + "\n")
     except (OSError, ValueError, TypeError, RecursionError) as exc:
         _log.warning(
