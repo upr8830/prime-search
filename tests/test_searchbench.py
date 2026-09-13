@@ -252,7 +252,7 @@ def test_a_question_carrying_patient_detail_is_flagged() -> None:
     name, a date of birth and a lab value."""
     from eval.searchbench.fetch_sources import _patient_details
 
-    assert _patient_details("My patient John, DOB 3/4/1961, A1c 8.2, on metformin only")
+    assert _patient_details("My patient Placeholder, DOB 1/1/1900, A1c 9.9, on metformin")
     # A policy population is not a patient, and must not be flagged.
     assert _patient_details("Is a CGM covered for a type 2 diabetic not on insulin?") == []
     assert _patient_details("What A1c threshold applies to CGM coverage?") == []
@@ -595,8 +595,11 @@ def test_patient_detail_is_redacted_before_it_reaches_an_artifact() -> None:
     CLAUDE.md forbids across three files instead of one."""
     from eval.searchbench.fetch_sources import redact
 
-    out = redact("My patient John, DOB 3/4/1961, A1c 8.2, on metformin only")
-    assert "John" not in out and "3/4/1961" not in out and "8.2" not in out
+    # Deliberately NOT the dataset's own string. Copying `oos-002`'s question into a
+    # test to prove it gets redacted would put the record in a third committed file —
+    # the mistake this function exists to stop. The shape is what matters.
+    out = redact("My patient Placeholder, DOB 1/1/1900, A1c 9.9, on metformin only")
+    assert "Placeholder" not in out and "1/1/1900" not in out and "9.9" not in out
     assert "redacted" in out
     # A policy question is passed through untouched.
     plain = "Is a CGM covered for a type 2 diabetic not on insulin?"

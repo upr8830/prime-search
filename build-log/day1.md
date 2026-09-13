@@ -6,8 +6,8 @@ Day 1 built the retrieval and agent layers and ended at the **1.7 `[G]` gate**: 
 question now becomes a cited answer from primary sources, and the same question run through the
 starter-equivalent baseline produces its answer, both traced.
 
-**Task 1.8 (SearchBench sources fetch) was not started.** It is Day 1's last item in `docs/09`
-and carries over to tomorrow.
+All eight Day 1 tasks are complete. `docs/09` marks 1.8 "[start; finish Day 2 morning]"; it
+finished today, so Day 2 opens on task **2.1**, the SearchBench validation gate.
 
 ## Tasks completed
 
@@ -21,9 +21,9 @@ and carries over to tomorrow.
 | 1.5 Evidence store and graph | `c412955` | contested, supersession, citation labels → 47 tests |
 | 1.6 Search sub-agent | `c743ad8`, fixes `10f90fc` | 3 verbatim evidence items on L33822 |
 | 1.7 Root plan, graph, synthesis **[G]** | `1fe2390`, fix `d9e9526` | both gate answers + traces, below |
-| 1.8 SearchBench sources fetch | — | **not started** |
+| 1.8 SearchBench sources fetch | `51ff4fc` | 14 documents fetched; 47 drift flags across 23 of 30 records, below |
 
-Suite at end of day: `make test` → **366 passed, 8 deselected** (the 8 are `live`-marked).
+Suite at end of day: `make test` → **405 passed, 10 deselected** (the 10 are `live`-marked).
 `uv run ruff check prime_search/ tests/` → clean.
 
 ## Gates passed
@@ -114,9 +114,6 @@ rather than its delivery.
    2025-02-18, §CODING GUIDELINES") because `citation.label` already contained it - and a live
    answer copied that shape straight into its Sources list.
 
-`tests/test_event_contract.py` was written in response to 5: it pins the docs/02 §4 table by
-reading emitted payloads, and asserts subscriber delivery and ordering, not just payload keys.
-
 8. **The trace looked empty.** The root run and LangGraph's own graph run were both named
    `prime_search`, so the trace's only visible child was an identically named row and
    `understand`/`plan`/`synthesize` sat a level below it. The graph run is now named `graph`:
@@ -140,6 +137,64 @@ reading emitted payloads, and asserts subscriber delivery and ordering, not just
    cannot be suppressed, so the trace is one level deeper than the diagram. `search_agent:bN`
    likewise hangs under its LangGraph node run rather than sitting beside `collect`.
 
+`tests/test_event_contract.py` was written in response to 5: it pins the docs/02 §4 table by
+reading emitted payloads, and asserts subscriber delivery and ordering, not just payload keys.
+
+## 1.8 — SearchBench source drift
+
+`uv run --env-file .env python -m eval.searchbench.fetch_sources` (`docs/08` §2 step 2). Full
+report: `reports/searchbench-drift.md`. Per-record worksheets for the task 2.1 validation pass:
+`data/searchbench/review/<record_id>.md`.
+
+**14 governing documents fetched, 47 flags across 23 of 30 records.** The dataset is untouched —
+a test asserts the `.jsonl` is byte-identical after every check runs, because `docs/08` §1 makes
+answer keys data with provenance and correcting them is task 2.1's job.
+
+The finding `docs/08` §2 predicted, and then some:
+
+- **L33822 is on 2024-10-01, A52464 on 2025-02-18**; the drafts assert 2023-04-16. Reported as a
+  currency note rather than as drift, because a claim *about* the 2023 revision is still correct —
+  that row is in the revision history.
+- `cgm-elig-002` requires **"level 2"/"level 3" from L33822; neither phrase is in the LCD**, which
+  defers the hypoglycemia definition to article A52464.
+- `cgm-code-001` calls **K0553/K0554 retired; they appear 19 and 16 times** in the live A52464.
+- The Wegovy label uses **MACE**, not the spelled-out phrase the key requires.
+- **12 of the 14 documents have no canonical id** — they are prose descriptors like "CMS/HHS 2025
+  announcements", which resolved to a CMS newsletter index. Every one is marked a search guess.
+
+Two findings about the dataset itself, both for task 2.1:
+
+- **Six records break `docs/08` §4–§5 authoring rules**: `oos-002` and `oos-003` carry
+  `required_evidence` (forbidden for out-of-scope), `oos-003` has no `expected_scope_warning` and
+  one required claim where §5 wants 2–6, and two change-detection keys date nothing.
+- **`oos-002`'s question embeds a synthetic patient record** — a first name, a date of birth and
+  an A1c. CLAUDE.md is unconditional ("no patient records, not even synthetic") and `docs/08` §8
+  excludes patient-level inputs. The record's purpose — testing that the system declines
+  individual questions — survives rephrasing at policy level. The question is redacted wherever
+  this task writes it, and rewriting it is 2.1's.
+
+### Six checks that were wrong before they were right
+
+A drift check that reports drift where there is none is worse than no check: the human acting on
+it edits a correct answer key into a wrong one. Most of these came from `/spec-review 1.8`.
+
+1. **Flags computed against another record's document.** `_resolution_for` looked the evidence up
+   in the run-wide map, so `glp1-path-001` was told "medically accepted indication" — the correct
+   statutory term — was missing from a fact sheet it never names.
+2. **A correct claim reported as drift.** "The non-insulin pathway was added by the revision
+   effective April 16, 2023" is right; the flag said "draft expected 2023-04-16".
+3. **Month-precision dates invisible.** All three date patterns required a day, so "the November
+   2024 proposed rule" read as dateless and the date check skipped the highest-risk records.
+4. **`forbidden_claims` silently inert for 9 of 10 records** — they are plain sentences with
+   nothing quotable — while the report's legend implied the category had been evaluated.
+5. **Revision-history matches read as live text.** CMS quotes what it removes, so "three or more"
+   appears in an LCD that no longer requires it. Then the mirror: scoping to "anything before the
+   match on this line" treated text the same row *added* as retired.
+6. **Patient detail copied into two new committed files** while being flagged in a third.
+
+`reports/searchbench-drift.md` now separates "this key is wrong" from "we could not find the
+document" and from "this could not be checked automatically — verify by hand".
+
 ## Two findings from Day 1 worth carrying forward
 
 **`docs/01` §4's fallback ladder pointed at models that no longer exist.** Five of six
@@ -162,15 +217,11 @@ and deep reads were at 8 of 10. `MAX_TOOL_CALLS` stays at 8; `max_tokens` and
 `max_deep_reads` are the numbers to look at when the judge starts requesting second rounds
 at 2.2.
 
-## Answer-key drift confirmed (for task 2.1)
-
-L33822's current revision is **10/01/2024 (R16)**. The draft answer keys still expect
-2023-04-16 (R12). `docs/08` §2 anticipated this; task 2.1 has to correct the keys.
-
 ## Decisions made today
 
-The full log is `docs/11-assumptions-and-approach.md` — **160 dated entries**, 40 of them from
-1.7. These are the ones that change how the code should be read; everything else there is detail.
+The full log is `docs/11-assumptions-and-approach.md` — **184 dated entries**, 64 of them from
+1.7 and 1.8. These are the ones that change how the code should be read; everything else there is
+detail.
 
 **Where the implementation deviates from a spec, deliberately**
 
@@ -229,17 +280,28 @@ The full log is `docs/11-assumptions-and-approach.md` — **160 dated entries**,
    recommends `deepseek-ai/DeepSeek-V4-Flash-0731` for these three roles; it was not applied
    because it needs your approval. Decide before the Day 2 bench, so the numbers are measured on
    one routing.
-3. **Answer-key drift.** L33822 is on R16 (10/01/2024); the draft keys say 2023-04-16. Task 2.1.
-4. **Judge and critic are pass-through stubs.** `docs/09` §1.7 specifies this, but it means
+3. **The draft answer keys are not usable yet.** 47 flags across 23 of 30 records; see the 1.8
+   section and `reports/searchbench-drift.md`. Task 2.1 corrects them. Until `validated_by` and
+   `as_of` are set, a bench run measures the author's memory rather than the system — the
+   `AnswerKey.is_validated` property exists so the 2.6 runner can refuse.
+4. **`oos-002` carries a synthetic patient record** in its question text, against CLAUDE.md's
+   "not even synthetic" and `docs/08` §8. Rewrite it at policy level during 2.1; the record's
+   purpose survives. It is redacted everywhere 1.8 writes it, but the dataset still holds it.
+5. **Six records break `docs/08` §4–§5 authoring rules** (out-of-scope records with
+   `required_evidence`, a missing scope warning, a 1-claim key, two dateless change-detection
+   keys). All reported, none fixed — 1.8 may not edit the dataset.
+6. **`docs/05` §1 says `domain` is `cgm | glp1 | cross | out_of_scope`; the data uses `other`.**
+   The model follows the data. Settle it in one place during 2.1, before 2.2's evaluators read it.
+7. **Judge and critic are pass-through stubs.** `docs/09` §1.7 specifies this, but it means
    `max_rounds` is never exercised and every run is a single round until 2.2/2.3.
-5. **The deep-read budget is the binding constraint, not the tool-call cap.** The gate run spent 8
+8. **The deep-read budget is the binding constraint, not the tool-call cap.** The gate run spent 8
    of 10 deep reads and hit the 150k token budget before the search budget. Worth revisiting the
    `fast`/`deep` budgets once the judge can request a second round.
-6. **`Read(../starter_agent.py)` in `.claude/settings.json` is a relative pattern** and does not
+9. **`Read(../starter_agent.py)` in `.claude/settings.json` is a relative pattern** and does not
    match an absolute path. Widen to `Read(**/starter_agent.py)` if a hard block was intended. The
    file is not tracked and nothing was copied from it beyond the three-line prompt and the
    constructor arguments `docs/03` §9 requires.
-7. **`extract(doc_id, paragraph_indices, schema)`** (`docs/04` §3) is still deferred — twice now.
+10. **`extract(doc_id, paragraph_indices, schema)`** (`docs/04` §3) is still deferred — twice now.
    Consequence: rule 6's extractor-set `relevance` is unreachable and every item keeps the 0.8
    agent-authored default, which rule 6 sanctions. Revisit at 2.2 or move to the cut list.
 
@@ -271,13 +333,19 @@ cd C:/Users/ujjwa/Claude/Projects/tavily/prime-search
 
 make setup                 # if the venv is cold
 make smoke                 # confirm all 10 probes still pass before trusting a bench number
-make test                  # expect 366 passed, 8 deselected
+make test                  # expect 405 passed, 10 deselected
 
-# pick up here — Day 1's last task, finishes Day 2 morning per docs/09
-#   1.8  SearchBench sources fetch  (eval/searchbench/fetch_sources.py, docs/08 §2 steps 1-2)
-
-# then task 2.1, which you must gate yourself:
-#   /validate-bench        # yours to invoke; 2.1 corrects the answer keys (see Open issues 3)
+# Day 1 is complete. Start at 2.1 - a [G] gate, and the one task that is yours:
+#   /validate-bench        # yours to invoke
+#
+# 2.1 is docs/08 §2 step 3: read each worksheet, correct the key, set as_of and
+# validated_by, then `uv run python -m eval.searchbench.sync` (which 2.1 also builds).
+#   worksheets: data/searchbench/review/<record_id>.md      (30, one per record)
+#   what to fix: reports/searchbench-drift.md               (47 flags, high risk first)
+#   re-run the fetch after editing keys, to confirm the flags clear:
+uv run --env-file .env python -m eval.searchbench.fetch_sources
+uv run --env-file .env python -m eval.searchbench.fetch_sources --only cgm  # one domain
+uv run python -m eval.searchbench.fetch_sources --offline                   # no network, no writes
 
 # the servers, once 2.4/2.5 exist:
 make dev-api               # FastAPI + SSE   (task 2.4)
@@ -288,4 +356,5 @@ make ask Q="Is a therapeutic CGM covered under Medicare for a type 2 diabetic no
 make ask Q="..." ARGS="--mode baseline"
 ```
 
-**Next task id: 1.8.** Tell me when 2.1 starts — `/validate-bench` is yours to run.
+**Next task id: 2.1** — `docs/09` §2.1, a `[G]` gate: 30 records validated, splits assigned.
+`/validate-bench` is yours to invoke; tell me when you start and I will pick up 2.2 behind it.
