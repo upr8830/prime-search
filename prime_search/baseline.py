@@ -112,6 +112,7 @@ def run_baseline(
     status = "completed"
     error: str | None = None
     trace_url: str | None = None
+    trace_id: str | None = None
 
     try:
         with trace_run(
@@ -130,7 +131,7 @@ def run_baseline(
             },
             inputs={"question": request.question},
         ) as handle:
-            trace_url = handle.url
+            trace_url, trace_id = handle.url, handle.trace_id
             events.emit(
                 ws.run_id,
                 "run.started",
@@ -183,6 +184,7 @@ def run_baseline(
             started_at=started,
             finished_at=datetime.now(UTC),
             langsmith_run_url=trace_url,
+            langsmith_trace_id=trace_id,
             answer=answer if body else None,
             status=status,
             error=error,

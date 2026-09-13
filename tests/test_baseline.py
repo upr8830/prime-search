@@ -202,6 +202,7 @@ def test_the_baseline_trace_carries_the_source_project_and_cache_flag(sandboxed_
 
         class Handle:
             url = "https://smith.langchain.com/x"
+            trace_id = "trace-x"
 
         yield Handle()
 

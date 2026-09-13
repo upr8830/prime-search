@@ -271,6 +271,9 @@ class RunRecord(BaseModel):
     started_at: datetime
     finished_at: datetime | None = None
     langsmith_run_url: str | None = None
+    # The root run's trace id, which `POST /feedback` sends to LangSmith (docs/05 §4).
+    # The URL alone is not a reliable source: it has more than one format.
+    langsmith_trace_id: str | None = None
     plan: SearchPlan | None = None
     tasks: list[SearchTask] = []
     documents: dict[str, Document] = {}  # doc_id -> Document

@@ -54,6 +54,7 @@ class RunRecord(BaseModel):
     started_at: datetime
     finished_at: datetime | None
     langsmith_run_url: str | None
+    langsmith_trace_id: str | None = None   # root trace id; feedback targets it (05 §4). None with tracing off
     plan: SearchPlan | None
     tasks: list[SearchTask]
     documents: dict[str, Document]          # doc_id -> Document (text stored on disk, not inline)

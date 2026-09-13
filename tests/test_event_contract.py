@@ -209,6 +209,7 @@ def test_run_finished_carries_the_trace_url(sandboxed_run, monkeypatch) -> None:
 
     class FakeHandle:
         url = "https://smith.langchain.com/o/x/trace/y"
+        trace_id = "0b9e6a1e-trace"
 
     from contextlib import contextmanager
 
@@ -225,6 +226,8 @@ def test_run_finished_carries_the_trace_url(sandboxed_run, monkeypatch) -> None:
     payloads = _by_type(_events(run_dir(record.run_id)), "run.finished")
     assert payloads and REQUIRED_KEYS["run.finished"] <= set(payloads[0])
     assert payloads[0]["langsmith_run_url"] == FakeHandle.url
+    # 2.4: feedback targets the trace, so the record keeps its id (docs/05 §4).
+    assert record.langsmith_trace_id == FakeHandle.trace_id
 
 
 def test_the_baseline_emits_the_six_events_the_ui_needs(sandboxed_run, monkeypatch) -> None:
@@ -239,6 +242,7 @@ def test_the_baseline_emits_the_six_events_the_ui_needs(sandboxed_run, monkeypat
     def fake_trace(name, **kwargs):
         class Handle:
             url = "https://smith.langchain.com/x"
+            trace_id = "trace-x"
 
         yield Handle()
 
@@ -284,6 +288,7 @@ def test_a_subscriber_receives_the_terminal_events(sandboxed_run, monkeypatch) -
     def fake_trace(name, **kwargs):
         class Handle:
             url = "https://smith.langchain.com/x"
+            trace_id = "trace-x"
 
         yield Handle()
 
@@ -313,6 +318,7 @@ def test_the_answer_precedes_run_finished_in_the_log(sandboxed_run, monkeypatch)
     def fake_trace(name, **kwargs):
         class Handle:
             url = "https://smith.langchain.com/x"
+            trace_id = "trace-x"
 
         yield Handle()
 
@@ -334,6 +340,7 @@ def test_a_prime_subscriber_receives_run_finished(sandboxed_run, monkeypatch) ->
     def fake_trace(name, **kwargs):
         class Handle:
             url = "https://smith.langchain.com/x"
+            trace_id = "trace-x"
 
             def add_tags(self, *tags):  # noqa: ANN001, ANN201
                 return None
@@ -349,8 +356,14 @@ def test_a_prime_subscriber_receives_run_finished(sandboxed_run, monkeypatch) ->
     monkeypatch.setattr(module, "run_critic", _passing_critic)
 
     seen: list[str] = []
-    module.run_prime(RunRequest(question="q"), on_event=lambda r: seen.append(r["type"]))
+    record = module.run_prime(RunRequest(question="q"), on_event=lambda r: seen.append(r["type"]))
     assert seen and seen[-1] == "run.finished", f"got {seen}"
+    # 2.4: feedback targets the trace, so the persisted record keeps its id (docs/05 §4).
+    from prime_search.events import run_dir
+
+    assert record.langsmith_trace_id == "trace-x"
+    saved = json.loads((run_dir(record.run_id) / "state.json").read_text(encoding="utf-8"))
+    assert saved["langsmith_trace_id"] == "trace-x"
 
 
 class _FakeCaller:

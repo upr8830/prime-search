@@ -119,6 +119,7 @@ class PrimeState(TypedDict, total=False):
     models: dict[str, Any]
     fallback_tags: Annotated[list[str], operator.add]
     trace_url: str | None
+    trace_id: str | None
 
 
 # --- nodes -------------------------------------------------------------------------
@@ -533,6 +534,7 @@ def run_prime(
         "models": node_models,
         "fallback_tags": [],
         "trace_url": None,
+        "trace_id": None,
     }
 
     tags, metadata = _trace_tags(
@@ -540,6 +542,7 @@ def run_prime(
     )
     record: RunRecord | None = None
     trace_url: str | None = None
+    trace_id: str | None = None
     try:
         with trace_run(
             "prime_search",
@@ -548,8 +551,9 @@ def run_prime(
             metadata=metadata,
             inputs={"question": request.question},
         ) as handle:
-            trace_url = handle.url
+            trace_url, trace_id = handle.url, handle.trace_id
             state["trace_url"] = handle.url  # so every node boundary records it
+            state["trace_id"] = handle.trace_id
             events.emit(
                 workspace.run_id,
                 "run.started",
@@ -561,7 +565,9 @@ def run_prime(
                     "trace_url": handle.url,
                 },
             )
-            _write_record(workspace, request, started, handle.url, status="running")
+            _write_record(
+                workspace, request, started, handle.url, status="running", trace_id=trace_id
+            )
             final = build_graph().invoke(
                 state,
                 config={
@@ -592,6 +598,7 @@ def run_prime(
                 handle.url,
                 status=_terminal_status(workspace, state),
                 answer=final.get("answer"),
+                trace_id=trace_id,
             )
     except Exception as exc:
         _log.warning("run.failed", error=f"{type(exc).__name__}: {exc}")
@@ -601,7 +608,13 @@ def run_prime(
             {"message": f"{type(exc).__name__}: {exc}"[:500], "node": "run_prime"},
         )
         record = _write_record(
-            workspace, request, started, None, status="failed", error=f"{type(exc).__name__}: {exc}"
+            workspace,
+            request,
+            started,
+            None,
+            status="failed",
+            error=f"{type(exc).__name__}: {exc}",
+            trace_id=trace_id,
         )
         raise
     finally:
@@ -895,6 +908,7 @@ def _write_record(
     status: str,
     answer: Answer | None = None,
     error: str | None = None,
+    trace_id: str | None = None,
 ) -> RunRecord:
     """Build the `RunRecord` and write docs/02 §5's run layout.
 
@@ -908,6 +922,7 @@ def _write_record(
         started_at=started,
         finished_at=None if status == "running" else datetime.now(UTC),
         langsmith_run_url=trace_url,
+        langsmith_trace_id=trace_id,
         answer=answer,
         status=status,
         error=error,
@@ -932,4 +947,5 @@ def _persist(state: PrimeState, *, answer: Answer | None = None) -> None:
         state.get("trace_url"),
         status="running",
         answer=answer,
+        trace_id=state.get("trace_id"),
     )
