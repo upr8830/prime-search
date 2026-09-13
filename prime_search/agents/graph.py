@@ -504,6 +504,7 @@ def run_prime(
     source: str = "cli",
     extra_tags: Sequence[str] = (),
     project_name: str | None = None,
+    prompt_set: str | None = None,
 ) -> RunRecord:
     """Run one PRIME investigation end to end and return its `RunRecord`.
 
@@ -513,6 +514,10 @@ def run_prime(
 
     `source`, `extra_tags` and `project_name` label the root trace (docs/06 §2): the
     bench passes `source="bench"`, `bench:<split>` and its own LangSmith project.
+
+    `prompt_set` overrides `request.prompt_set` with a registered in-memory set: GEPA's
+    candidates (docs/05 §5). The record's request keeps the set it was given; the trace
+    is tagged with the one that ran.
     """
     settings = get_settings()
     budget = request.budget_override or settings.budget(request.depth)
@@ -537,7 +542,7 @@ def run_prime(
         "deadline": time.time() + budget.max_seconds,
         "events": [],
         "depth": request.depth,
-        "prompt_set": request.prompt_set,
+        "prompt_set": prompt_set or request.prompt_set,
         "models": node_models,
         "fallback_tags": [],
         "trace_url": None,
@@ -545,7 +550,8 @@ def run_prime(
     }
 
     tags, metadata = _trace_tags(
-        request, settings, workspace, source=source, extra_tags=extra_tags
+        request, settings, workspace, source=source, extra_tags=extra_tags,
+        prompt_set=prompt_set or request.prompt_set,
     )
     record: RunRecord | None = None
     trace_url: str | None = None
@@ -879,13 +885,14 @@ def _trace_tags(
     *,
     source: str = "cli",
     extra_tags: Sequence[str] = (),
+    prompt_set: str | None = None,
 ) -> tuple[list[str], dict[str, Any]]:
     """docs/06 §2's root-run tags and metadata. `domain:`/`qtype:` are added later —
     they do not exist until `understand` has run."""
     tags = [
         f"mode:{request.mode}",
         f"depth:{request.depth}",
-        f"prompt_set:{request.prompt_set}",
+        f"prompt_set:{prompt_set or request.prompt_set}",
         f"model:{settings.models.root}",
         f"subagent:{settings.models.subagent}",
         f"source:{source}",

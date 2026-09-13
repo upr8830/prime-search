@@ -438,6 +438,32 @@ def test_a_prime_subscriber_receives_run_finished(sandboxed_run, monkeypatch) ->
     assert finished["payload"]["status"] == "completed" and finished["payload"]["limits_reached"] == []
 
 
+def test_run_prime_runs_an_injected_prompt_set(sandboxed_run, monkeypatch) -> None:
+    """GEPA passes each candidate's registered set (docs/05 §5)."""
+    from prime_search.agents import graph as module
+
+    _stub_prime_nodes(monkeypatch)
+    seen: dict = {}
+
+    def plan(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        seen["prompt_set"] = kwargs.get("prompt_set")
+        return _FakeOutcome(_plan_for(ws))
+
+    real_tags = module._trace_tags
+
+    def spy(*args, **kwargs):  # noqa: ANN002, ANN003, ANN202
+        tags, metadata = real_tags(*args, **kwargs)
+        seen["tags"] = tags
+        return tags, metadata
+
+    monkeypatch.setattr(module, "plan_run", plan)
+    monkeypatch.setattr(module, "_trace_tags", spy)
+    record = module.run_prime(RunRequest(question="q"), prompt_set="gepa-abc")
+    assert seen["prompt_set"] == "gepa-abc"
+    assert "prompt_set:gepa-abc" in seen["tags"]
+    assert record.request.prompt_set == "base"
+
+
 def test_run_finished_names_the_limits_a_run_reached(sandboxed_run, monkeypatch) -> None:
     """docs/02 §4: the UI says which limit was reached in plain words (07 §9), so the
     event names it; the status stays `budget_exhausted` for the bench."""
