@@ -40,6 +40,7 @@ from pathlib import Path
 
 from eval.searchbench.schema import DATASET, AnswerKey, BenchRecord, load_records
 from prime_search.config import get_settings
+from prime_search.phi import patient_details
 from prime_search.primitives import sources, tavily, within
 from prime_search.schemas import Document
 from prime_search.tracing import configure_logging, get_logger
@@ -1104,20 +1105,9 @@ def _to_date(groups: tuple[str, ...]) -> date | None:
         return None
 
 
-# Patient-level detail in a question. Deliberately narrow: a question may say "a type 2
-# diabetic not on insulin" — that is a policy population, not a person. What is caught is
-# an identified individual (a named patient, a date of birth, a specific lab value).
-_PATIENT_PATTERNS = (
-    ("a date of birth", re.compile(r"\bDOB\b|\bdate of birth\b", re.IGNORECASE)),
-    ("a named patient", re.compile(r"\b(?:my|the)\s+patient\s+[A-Z][a-z]+\b")),
-    ("a lab value", re.compile(r"\bA1c\s*[:=]?\s*\d", re.IGNORECASE)),
-    ("a medical record number", re.compile(r"\b(?:MRN|member id|policy no)\b", re.IGNORECASE)),
-)
-
-
-def _patient_details(question: str) -> list[str]:
-    """Which patient-level identifiers a question carries, if any."""
-    return [label for label, pattern in _PATIENT_PATTERNS if pattern.search(question)]
+# Patient-level detail in a question. The patterns live in prime_search/phi.py, shared
+# with the API's input guard (docs/01 §8); the dataset checks keep the lab-value rule.
+_patient_details = patient_details
 
 
 def redact(question: str) -> str:
