@@ -449,7 +449,13 @@ def run_prime(
             final = build_graph().invoke(
                 state,
                 config={
-                    "run_name": "prime_search",
+                    # NOT "prime_search". `trace_run` above already opened a root run
+                    # by that name (docs/06 §1), and LangGraph always adds its own run
+                    # for the compiled graph - so naming both the same produced a trace
+                    # whose only visible child was an identically named row, with
+                    # understand/plan/synthesize hidden one level below it. Two rows
+                    # called `prime_search` read as a rendering glitch, not a hierarchy.
+                    "run_name": "graph",
                     "recursion_limit": 50,
                     "metadata": {"run_id": workspace.run_id},
                 },

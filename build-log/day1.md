@@ -69,7 +69,7 @@ The baseline reaches a similar conclusion faster and cites AARP, DiaTribe, TCOYD
 medicare.org - no primary document, no passage behind any citation, no date on any source. That
 contrast is the thing the Day 2 bench measures, and it is visible in one run each.
 
-## Seven defects the live 1.7 runs found that the tests did not
+## Eight defects the live 1.7 runs found that the tests did not
 
 Every one of these passed a green offline suite first. They are listed because the pattern matters
 more than the individual bugs: each was invisible to a test that checked the shape of a value
@@ -98,6 +98,29 @@ rather than its delivery.
 
 `tests/test_event_contract.py` was written in response to 5: it pins the docs/02 §4 table by
 reading emitted payloads, and asserts subscriber delivery and ordering, not just payload keys.
+
+8. **The trace looked empty.** The root run and LangGraph's own graph run were both named
+   `prime_search`, so the trace's only visible child was an identically named row and
+   `understand`/`plan`/`synthesize` sat a level below it. The graph run is now named `graph`:
+
+   ```
+   prime_search          <- root run, carries the docs/06 §2 tags and metadata
+   └── graph             <- LangGraph's run for the compiled graph
+       ├── understand
+       ├── plan
+       ├── dispatch
+       │   └── _fan_out
+       ├── search_agent
+       │   └── search_agent:b1
+       ├── collect
+       ├── judge
+       ├── critic
+       └── synthesize
+   ```
+
+   docs/06 §1 draws the nodes directly under the root; the `graph` level is LangGraph's and
+   cannot be suppressed, so the trace is one level deeper than the diagram. `search_agent:bN`
+   likewise hangs under its LangGraph node run rather than sitting beside `collect`.
 
 ## Two findings from Day 1 worth carrying forward
 

@@ -409,3 +409,15 @@ def _answer():
         summary="the answer", body_markdown="## Answer\n\nthe answer", claims=[], citations=[],
         effective_dates=[], contradictions=[], unknowns=[], confidence=0.5,
     )
+
+
+def test_the_graph_run_is_not_named_like_the_root_run() -> None:
+    """docs/06 §1 names the root run `prime_search`. LangGraph always adds its own run
+    for the compiled graph, so naming both the same produced a trace whose only visible
+    child was an identically named row, with understand/plan/synthesize hidden a level
+    below it - two `prime_search` rows read as a rendering glitch, not a hierarchy."""
+    import inspect
+
+    source = inspect.getsource(graph_module.run_prime)
+    assert '"run_name": "graph"' in source
+    assert source.count('"run_name": "prime_search"') == 0
