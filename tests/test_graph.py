@@ -901,3 +901,59 @@ def test_synthesis_is_given_the_latest_critic_report(sandboxed_run, monkeypatch)
     monkeypatch.setattr(graph_module, "synthesize", fake_synthesize)
     graph_module._synthesize(_state(ws))
     assert received["review"] is last
+
+
+def test_a_verdict_never_lists_more_tasks_than_the_round_can_dispatch(sandboxed_run, monkeypatch) -> None:
+    """docs/02 §2.6: `new_tasks` holds only tasks the graph dispatches. With one search
+    left, dispatch keeps one agent, so the judge may propose only one."""
+    ws = sandboxed_run
+    ws.budget = Budget(max_searches=30)
+    ws.usage.searches = 29
+    _plan(ws, count=3)
+    seen: dict = {}
+    monkeypatch.setattr(graph_module, "run_judge", _recording_judge(_verdict(False), seen))
+    graph_module._judge(_state(ws, round=1))
+    assert seen["max_new_tasks"] == 1
+
+
+def test_a_critics_dispatch_is_held_to_the_rounds_agent_count(sandboxed_run, monkeypatch) -> None:
+    ws = sandboxed_run
+    ws.budget = Budget(max_searches=30)
+    ws.usage.searches = 29
+    _plan(ws, count=3)
+    tasks = [_task(f"b{i}-r1-critic{i}", f"b{i}", 1) for i in (1, 2, 3)]
+    outcome = CriticOutcome(_report(0.3, tasks), "fenced_json")
+    monkeypatch.setattr(graph_module, "run_critic", _recording_critic(outcome, []))
+
+    update = graph_module._critic(_state(ws, round=1))
+    assert len(update["pending_tasks"]) == 1
+    assert len(ws.critic_reports[0].recommended_searches) == 3  # the report keeps them all
+
+
+def test_a_real_critic_task_runs_through_dispatch_and_collect(sandboxed_run, monkeypatch) -> None:
+    """Not stubbed at `run_critic`: the scripted root model answers in fenced JSON, the
+    recommendation names no plan branch, and the resulting `critic` task goes through
+    dispatch, a sub-agent and collect, then back to the judge and a second critic run."""
+    from conftest import ScriptedChatModel
+    from langchain_core.messages import AIMessage
+
+    ws = sandboxed_run
+    _offline_graph(ws, monkeypatch)
+    monkeypatch.setattr(graph_module, "run_judge", _sufficient_judge)
+    first = {
+        "weak_claims": [], "missing_interpretations": [], "source_independence_issues": [],
+        "secondary_when_primary_exists": [], "outdated_sources": [], "contradictions": [],
+        "recommended_searches": [
+            {"instruction": "Fetch the billing article that accompanies the LCD", "queries_hint": ["billing article"]}
+        ],
+        "completion_probability": 0.3, "reasoning": "the article was not fetched",
+    }
+    second = {**first, "recommended_searches": [], "completion_probability": 0.9}
+    critic = ScriptedChatModel(
+        script=[AIMessage(content=f"```json\n{json.dumps(payload)}\n```") for payload in (first, second)]
+    )
+
+    final = build_graph().invoke(_state(ws, models={"critic": critic}))
+    task = ws.tasks[-1]
+    assert (task.task_id, task.branch_id, task.round, task.status) == ("critic-r1-critic1", "critic", 1, "done")
+    assert final["critic_rounds"] == 2 and len(ws.critic_reports) == 2

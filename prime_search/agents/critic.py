@@ -24,7 +24,15 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import HumanMessage
 
 from prime_search import events
-from prime_search.agents.judge import _branch_ids, _dedupe, _hosts, _issued, _repeats, _squash
+from prime_search.agents.judge import (
+    _branch_ids,
+    _charge,
+    _dedupe,
+    _hosts,
+    _issued,
+    _repeats,
+    _squash,
+)
 from prime_search.evidence.graph import supersession_edges
 from prime_search.models import critic_model, parse_fenced_json, structured
 from prime_search.prompts import render
@@ -111,17 +119,17 @@ def run_critic(
     except Exception as exc:  # noqa: BLE001 - an endpoint error or an unusable repair
         first = f"{type(exc).__name__}: {exc}"[:300]
         _log.warning("critic.fenced_failed", run_id=ws.run_id, error=first)
+        caller = structured("judge", CriticReport)
         try:
-            caller = structured("judge", CriticReport)
             report = caller.invoke(prompt)
-            ws.charge_tokens(caller.last_message, prompt)
             mode, tag = "structured", STRUCTURED_TAG
         except Exception as fallback:  # noqa: BLE001 - no report is not a failed run
             error = f"{first}; then {type(fallback).__name__}: {fallback}"[:500]
             _log.warning("critic.skipped", run_id=ws.run_id, error=error)
             events.emit(ws.run_id, "error", {"message": f"critic: {error}", "node": "critic"})
-            ws.charge_tokens(None, prompt)
+            _charge(ws, caller, prompt)
             return CriticOutcome(None, "skipped", SKIPPED_TAG, error)
+        _charge(ws, caller, prompt)
     return CriticOutcome(normalize_report(report, ws, state_round=state_round), mode, tag)
 
 

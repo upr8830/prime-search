@@ -186,11 +186,8 @@ def _dispatch(state: PrimeState) -> dict[str, Any]:
     if not pending and state.get("round", 0) == 0 and not ws.tasks:
         pending = _tasks_from_plan(state)
 
-    remaining = ws.budget_remaining()
     depth = state.get("depth", "deep")
-    # `max_agents` caps each round, not the run (docs/11). And a run with no searches
-    # left gets no agents: each would spend a model call discovering it cannot search.
-    max_agents = min(ws.budget.max_agents, DEPTH[depth]["max_agents"], remaining.max_searches)
+    max_agents = _agents_this_round(ws, depth)
     # Highest priority first, so truncation drops the branches the planner itself
     # ranked least important rather than whichever happened to be last.
     pending.sort(key=lambda task: _priority_of(ws, task))
@@ -381,7 +378,7 @@ def _judge(state: PrimeState) -> dict[str, Any]:
     depth = state.get("depth", "deep")
     current = state.get("round", 0)
     may_search = depth != "fast" and current < _max_rounds(state) and _can_search(ws, state)
-    per_round = min(ws.budget.max_agents, DEPTH[depth]["max_agents"])
+    per_round = _agents_this_round(ws, depth)
     outcome = run_judge(
         ws,
         judged_round=max(0, current - 1),
@@ -439,7 +436,9 @@ def _critic(state: PrimeState) -> dict[str, Any]:
             ws.critic_reports.append(report)
         update["events"] = [events.emit(ws.run_id, "critique", report)]
         if may_search and report.completion_probability < CRITIC_THRESHOLD:
-            update["pending_tasks"] = list(report.recommended_searches)
+            # Held to what the round can dispatch; the report keeps every recommendation.
+            per_round = _agents_this_round(ws, state.get("depth", "deep"))
+            update["pending_tasks"] = list(report.recommended_searches)[:per_round]
     _persist(state)
     return update
 
@@ -734,6 +733,19 @@ def _usage_tags(ws: Workspace) -> list[str]:
     from prime_search.models import TOKENS_ESTIMATED_TAG
 
     return [TOKENS_ESTIMATED_TAG] if ws.tokens_estimated else []
+
+
+def _agents_this_round(ws: Workspace, depth: str) -> int:
+    """Sub-agents one round may dispatch.
+
+    `max_agents` caps each round, not the run (docs/11), and a run with no searches left
+    gets none: each would spend a model call discovering it cannot search. The judge and
+    the critic are held to the same number, so a recorded verdict never lists a task
+    that dispatch then drops (docs/02 §2.6).
+    """
+    return max(
+        0, min(ws.budget.max_agents, DEPTH[depth]["max_agents"], ws.budget_remaining().max_searches)
+    )
 
 
 def _max_rounds(state: PrimeState) -> int:

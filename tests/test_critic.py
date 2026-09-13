@@ -58,6 +58,7 @@ class FakeCaller:
         self.error = error
         self.last_mode = "native"
         self.last_message = None
+        self.messages: list = []
 
     def invoke(self, prompt: str):  # noqa: ANN201
         if self.error is not None:
@@ -268,3 +269,12 @@ def test_the_prompt_shows_evidence_tiers_dates_documents_and_searches(ws) -> Non
 def test_the_final_review_says_no_more_searches_will_run(ws) -> None:
     assert "final review" in build_prompt(ws, may_search=False)
     assert "final review" not in build_prompt(ws, may_search=True)
+
+
+def test_critic_tokens_are_charged_to_the_run(ws) -> None:
+    reply = AIMessage(
+        content=_fenced(REPORT).content,
+        usage_metadata={"input_tokens": 300, "output_tokens": 50, "total_tokens": 350},
+    )
+    _critic(ws, [reply])
+    assert (ws.usage.input_tokens, ws.usage.output_tokens) == (300, 50)

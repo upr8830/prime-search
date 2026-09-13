@@ -146,7 +146,7 @@ def synthesize(
     warning = ws.understanding.scope_warning if ws.understanding else None
     body = _ensure_scope_warning(body, warning)
     contradictions = contradiction_lines(ws, review)
-    body = _ensure_contradictions_section(body, contradictions)
+    body = _ensure_contradictions_section(body, _cited_contradiction_lines(ws, citations))
     # docs/03 §8 derives the answer's fields "from the streamed body plus the claim
     # graph". Keeping every gathered passage in `citations` overstated what the answer
     # rested on - the CLI footer counted them and the docs/04 §7 citation evaluator
@@ -191,19 +191,10 @@ def contradiction_lines(ws: Workspace, review: CriticReport | None = None) -> li
     about a cross-branch conflict verbatim, and a claim id it flagged that the graph did
     not mark contested as a "Reviewer" line.
     """
-    evidence = {item.evidence_id: item for item in ws.evidence}
     claims = {claim.claim_id: claim for claim in ws.claims}
-    lines: list[str] = []
-    covered: set[str] = set()
-    for claim in ws.claims:
-        if claim.status != "contested":
-            continue
-        support = _strongest(claim.supported_by, evidence)
-        against = _strongest(claim.contradicted_by, evidence)
-        if support is None or against is None:
-            continue
-        covered.add(claim.claim_id)
-        lines.append(_contradiction_line(claim, support, against, ws))
+    contested = _contested(ws)
+    lines = [_contradiction_line(claim, support, against, ws) for claim, support, against in contested]
+    covered = {claim.claim_id for claim, _, _ in contested}
 
     for entry in review.contradictions if review else []:
         if entry in covered:
@@ -221,6 +212,36 @@ def contradiction_lines(ws: Workspace, review: CriticReport | None = None) -> li
         if line not in unique:
             unique.append(line)
     return unique
+
+
+def _contested(ws: Workspace) -> list[tuple[Claim, Evidence, Evidence]]:
+    """Each contested claim with its strongest supporting and contradicting passage."""
+    evidence = {item.evidence_id: item for item in ws.evidence}
+    found: list[tuple[Claim, Evidence, Evidence]] = []
+    for claim in ws.claims:
+        if claim.status != "contested":
+            continue
+        support = _strongest(claim.supported_by, evidence)
+        against = _strongest(claim.contradicted_by, evidence)
+        if support is not None and against is not None:
+            found.append((claim, support, against))
+    return found
+
+
+def _cited_contradiction_lines(ws: Workspace, citations: list[Citation]) -> list[str]:
+    """The lines written into the body: contested claims only, each carrying the
+    citations of both passages. docs/03 §8: "Every factual sentence carries a `[n]`
+    citation". The critic's own sentences stay in `Answer.contradictions` and the
+    prompt's notes, not the body - no passage stands behind them."""
+    numbers = {citation.evidence_id: citation.n for citation in citations}
+    lines: list[str] = []
+    for claim, support, against in _contested(ws):
+        cites = "".join(
+            f"[{numbers[item.evidence_id]}]" for item in (support, against) if item.evidence_id in numbers
+        )
+        if cites:
+            lines.append(f"{_contradiction_line(claim, support, against, ws)} {cites}")
+    return lines
 
 
 def _strongest(evidence_ids: list[str], evidence: dict[str, Evidence]) -> Evidence | None:

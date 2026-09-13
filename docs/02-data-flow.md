@@ -247,7 +247,6 @@ class Usage(BaseModel):
     searches: int = 0
     fetches: int = 0
     deep_reads: int = 0
-    agents: int = 0
     agents: int = 0                       # sub-agents dispatched over the whole run (the budget caps each round)
     rounds: int = 0                       # search rounds completed, the initial one included
     input_tokens: int = 0

@@ -34,11 +34,12 @@ from prime_search.schemas import (
 
 
 class FakeCaller:
-    def __init__(self, value=None, *, error=None, message=None) -> None:  # noqa: ANN001
+    def __init__(self, value=None, *, error=None, message=None, mode="native") -> None:  # noqa: ANN001
         self.value = value
         self.error = error
-        self.last_mode = "native"
+        self.last_mode = mode
         self.last_message = message
+        self.messages = [message] if message is not None else []
         self.prompts: list[str] = []
 
     def invoke(self, prompt: str):  # noqa: ANN201
@@ -122,8 +123,8 @@ def _raw(sufficient: bool = False, tasks=(), coverage=None) -> Verdict:  # noqa:
     )
 
 
-def _judge(ws, monkeypatch, value=None, *, error=None, message=None, **params):  # noqa: ANN001, ANN003, ANN202
-    caller = FakeCaller(value, error=error, message=message)
+def _judge(ws, monkeypatch, value=None, *, error=None, message=None, mode="native", **params):  # noqa: ANN001, ANN003, ANN202
+    caller = FakeCaller(value, error=error, message=message, mode=mode)
     monkeypatch.setattr(judge_module, "structured", lambda *a, **k: caller)
     arguments = {"judged_round": 0, "max_new_tasks": 3, "rounds_left": 2}
     arguments.update(params)
@@ -253,3 +254,23 @@ def test_a_reply_with_no_usage_is_charged_by_estimate(ws, monkeypatch) -> None:
     _judge(ws, monkeypatch, _raw(), message=None)
     assert ws.usage.input_tokens > 0
     assert ws.tokens_estimated is True
+
+
+def test_a_fenced_json_answer_is_tagged_as_a_fallback(ws, monkeypatch) -> None:
+    """docs/06 §2: "`fallback:<...>` when any fallback fires"; docs/01 §4 rule 3 makes
+    fenced JSON the judge's fallback."""
+    outcome, _ = _judge(ws, monkeypatch, _raw(), mode="fenced_json")
+    assert outcome.fallback_tag == "fallback:judge_fenced_json"
+
+
+def test_every_reply_the_ladder_received_is_charged(ws, monkeypatch) -> None:
+    """A failed native attempt spent tokens too; charging only the reply that worked
+    undercounts `max_tokens` exactly when the fallback fires."""
+    caller = FakeCaller(_raw())
+    caller.messages = [
+        AIMessage(content="", usage_metadata={"input_tokens": 100, "output_tokens": 0, "total_tokens": 100}),
+        AIMessage(content="", usage_metadata={"input_tokens": 110, "output_tokens": 40, "total_tokens": 150}),
+    ]
+    monkeypatch.setattr(judge_module, "structured", lambda *a, **k: caller)
+    run_judge(ws, judged_round=0, max_new_tasks=3, rounds_left=2)
+    assert (ws.usage.input_tokens, ws.usage.output_tokens) == (210, 40)

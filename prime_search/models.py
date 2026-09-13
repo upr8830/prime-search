@@ -178,6 +178,8 @@ class StructuredCaller(Generic[_S]):
     `last_message` is the reply the value came from, so a caller can charge its tokens:
     the native rung asks for `include_raw`, because a bare parsed object carries no
     usage metadata and an uncharged judge call would never count against `max_tokens`.
+    `messages` keeps every reply the ladder received, failed attempts included, because
+    those tokens were spent too.
     """
 
     def __init__(self, role: Role, schema: type[_S], *, attempts: int = 2) -> None:
@@ -186,9 +188,12 @@ class StructuredCaller(Generic[_S]):
         self.attempts = attempts
         self.last_mode: str = "unused"
         self.last_message: AIMessage | None = None
+        self.messages: list[AIMessage] = []
 
     def invoke(self, prompt: str) -> _S:
         model = _build(self.role)
+        self.messages = []
+        self.last_message = None
         errors: list[str] = []
         for attempt in range(self.attempts):
             try:
@@ -196,6 +201,8 @@ class StructuredCaller(Generic[_S]):
                 raw = None
                 if isinstance(result, dict):  # include_raw: {"raw", "parsed", "parsing_error"}
                     raw, result = result.get("raw"), result.get("parsed")
+                if isinstance(raw, AIMessage):
+                    self.messages.append(raw)
                 if isinstance(result, self.schema):
                     self.last_mode = "native" if attempt == 0 else f"native_retry_{attempt}"
                     self.last_message = raw if isinstance(raw, AIMessage) else None
@@ -213,6 +220,8 @@ class StructuredCaller(Generic[_S]):
             )
         )
         self.last_message = message if isinstance(message, AIMessage) else None
+        if self.last_message is not None:
+            self.messages.append(self.last_message)
         try:
             value = self.schema.model_validate(parse_fenced_json(message.text))
         except Exception as exc:

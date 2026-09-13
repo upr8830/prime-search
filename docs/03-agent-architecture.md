@@ -217,7 +217,9 @@ Prompt `prompts/synthesize.md` — rules:
   notes to address, never evidence - and `Answer.contradictions` is computed: one line per contested
   claim (its strongest supporting against its strongest contradicting passage; the higher source tier
   governs, then the later date) plus the critic's own contradictions. When there are any and the model
-  wrote "None found." or no section, those lines are written into "Contradictions and caveats".
+  wrote "None found." or no section, the contested-claim lines are written into "Contradictions and
+  caveats", each carrying the citations of both passages; the critic's own sentences stay out of the
+  body, because no passage stands behind them.
 - Carry `scope_warning` from understanding into the answer verbatim.
 - Never adjudicate an individual patient; if the question implies one, answer at the policy level and
   say so.

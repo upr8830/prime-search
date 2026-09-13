@@ -138,3 +138,13 @@ def test_the_fenced_reply_is_kept_too(stub) -> None:
     caller.invoke("judge this")
     assert caller.last_mode == "fenced_json"
     assert caller.last_message is not None and caller.last_message.content.startswith("```json")
+
+
+def test_failed_native_replies_are_kept_for_charging_too(stub) -> None:
+    usage = {"input_tokens": 5, "output_tokens": 1, "total_tokens": 6}
+    failed = {"raw": AIMessage(content="", usage_metadata=usage), "parsed": None, "parsing_error": None}
+    stub([failed, dict(failed)], text=f"```json\n{json.dumps(VALID)}\n```")
+    caller = models.structured("judge", Verdict)
+    caller.invoke("judge this")
+    assert caller.last_mode == "fenced_json"
+    assert len(caller.messages) == 3

@@ -163,7 +163,7 @@ class CriticReport(BaseModel):
     # elsewhere in the same answer
     secondary_when_primary_exists: list[str] = []
     outdated_sources: list[str] = []  # doc ids
-    contradictions: list[str] = []  # claim ids
+    contradictions: list[str] = []  # claim ids, or one sentence for a contradiction no claim captures
     recommended_searches: list[SearchTask] = []
     completion_probability: float  # 0-1
     reasoning: str

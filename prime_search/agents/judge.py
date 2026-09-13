@@ -32,6 +32,7 @@ _log = get_logger(component="judge")
 
 __all__ = [
     "FAILED_TAG",
+    "FENCED_TAG",
     "MAX_NEW_TASKS",
     "JudgeOutcome",
     "build_prompt",
@@ -46,6 +47,9 @@ MAX_QUERIES = 3
 MAX_CLAIMS_PER_BRANCH = 12
 MAX_MISSING = 8
 FAILED_TAG = "fallback:judge_failed"
+# docs/01 §4 rule 3 makes fenced JSON the judge's fallback, and docs/06 §2 tags a run
+# "`fallback:<...>` when any fallback fires".
+FENCED_TAG = "fallback:judge_fenced_json"
 _TIME_RANGES = {"year", "month"}
 
 
@@ -81,7 +85,7 @@ def run_judge(
         rounds_left=rounds_left,
         prompt_set=prompt_set,
     )
-    message = None
+    caller = None
     try:
         if model is not None:
             raw = model.with_structured_output(Verdict).invoke(prompt)
@@ -89,23 +93,32 @@ def run_judge(
         else:
             caller = structured("judge", Verdict)
             raw = caller.invoke(prompt)
-            mode, message = caller.last_mode, caller.last_message
+            mode = caller.last_mode
         if not isinstance(raw, Verdict):
             raw = Verdict.model_validate(raw)
     except Exception as exc:  # noqa: BLE001 - a failed judge must not fail the run
         error = f"{type(exc).__name__}: {exc}"[:500]
         _log.warning("judge.failed", run_id=ws.run_id, error=error)
         events.emit(ws.run_id, "error", {"message": f"judge: {error}", "node": "judge"})
-        ws.charge_tokens(None, prompt)
+        _charge(ws, caller, prompt)
         return JudgeOutcome(failed_verdict(ws, judged_round, error), "failed", FAILED_TAG, error)
 
-    ws.charge_tokens(message, prompt)
+    _charge(ws, caller, prompt)
     verdict, dropped = normalize_verdict(
         raw, ws, judged_round=judged_round, max_new_tasks=max_new_tasks
     )
     if dropped:
         _log.info("judge.tasks_dropped", run_id=ws.run_id, dropped=dropped)
-    return JudgeOutcome(verdict, mode, dropped_tasks=dropped)
+    return JudgeOutcome(verdict, mode, FENCED_TAG if mode == "fenced_json" else None, dropped_tasks=dropped)
+
+
+def _charge(ws: Workspace, caller: object, prompt: str) -> None:
+    """Every reply a structured-output ladder received, failed attempts included. With
+    no visible reply (an injected model, or a call that raised before answering) the
+    prompt is charged by estimate."""
+    replies = list(getattr(caller, "messages", None) or [])
+    for reply in replies or [None]:
+        ws.charge_tokens(reply, prompt)
 
 
 def build_prompt(

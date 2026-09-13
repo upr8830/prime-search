@@ -563,3 +563,24 @@ def test_no_review_says_so_in_the_prompt(populated) -> None:
     model = ScriptedChatModel(script=[AIMessage(content=BODY)])
     synthesize(populated, model=model)
     assert "(no review was run)" in "\n".join(str(m.content) for m in model.seen[0])
+
+
+def test_inserted_contradiction_bullets_carry_their_citations(populated) -> None:
+    """docs/03 §8: "Every factual sentence carries a `[n]` citation"."""
+    import re
+
+    ws = _contested(populated)
+    answer = synthesize(ws, model=ScriptedChatModel(script=[AIMessage(content=BODY)]))
+    section = answer.body_markdown.split("## Contradictions and caveats")[1].split("## Unknowns")[0]
+    assert re.search(r"governs \(primary policy over web page\) \[\d+\]\[\d+\]", section), section
+
+
+def test_the_critics_uncited_sentences_stay_out_of_the_body(populated) -> None:
+    """They reach `Answer.contradictions`, but no passage stands behind them."""
+    description = "A web guide says every diabetic qualifies; the LCD governs"
+    review = CriticReport(contradictions=[description], completion_probability=0.5, reasoning="r")
+    answer = synthesize(populated, model=ScriptedChatModel(script=[AIMessage(content=BODY)]), review=review)
+
+    assert answer.contradictions == [description]
+    section = answer.body_markdown.split("## Contradictions and caveats")[1].split("## Unknowns")[0]
+    assert section.strip() == "None found."
