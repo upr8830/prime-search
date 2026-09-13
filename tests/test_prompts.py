@@ -162,8 +162,9 @@ def test_the_plan_prompt_asks_for_a_secondary_source_branch_on_contradiction_que
     primary-policy branches, so that conflict was never gathered."""
     from prime_search.prompts import load
 
-    text = load("plan")
-    assert "`question_type` is `contradiction`" in text
+    text = " ".join(load("plan").split())
+    assert "`eligibility`, `coverage_pathway` or `contradiction`" in text
+    assert "no more than two branches" in text
     assert 'source_hint="any"' in text
 
 

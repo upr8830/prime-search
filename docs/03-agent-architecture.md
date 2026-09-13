@@ -79,8 +79,9 @@ The root is given:
 - the planning contract: 3–7 branches; each has a sub-question, optional hypothesis, source hint,
   priority; a `stop_criteria` string; and a rule that change-detection questions must include a
   branch with `time_range="year"`.
-- *As built (task 2.2):* a contradiction question (`question_type="contradiction"`, or a question
-  repeating a claim to check) must include one branch with `source_hint="any"` asking what secondary
+- *As built (task 2.2):* a coverage question (`question_type` `eligibility`, `coverage_pathway` or `contradiction`, or a
+  question repeating a claim to check) must include, when more than two branches are allowed, one
+  branch with `source_hint="any"` asking what secondary
   sources claim, and the sub-agent on such a branch records the secondary page's own passage as
   evidence rather than treating it as a pointer (§4 rule 1). Without it the "secondary sources
   overstate coverage" conflict the adversarial SearchBench records expect was never gathered.
