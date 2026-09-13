@@ -268,7 +268,7 @@ def test_token_usage_is_charged_to_the_run(populated) -> None:
 
 def test_confidence_is_the_mean_of_supported_claims(populated) -> None:
     """docs/02 §2.7 defines no derivation; this one is authored and logged so the
-    docs/05 §2 calibration evaluator scores against something written down."""
+    number is written down rather than chosen by a model."""
     assert confidence_for(populated) == pytest.approx(0.9)
 
 

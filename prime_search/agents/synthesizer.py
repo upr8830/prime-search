@@ -301,7 +301,7 @@ def confidence_for(ws: Workspace) -> float:
     """`Answer.confidence` (docs/02 §2.7), by the formula documented at the top.
 
     Deliberately not asked of a model: a number a model picks for its own answer is
-    not a measurement, and this one feeds the docs/05 §2 calibration evaluator.
+    not a measurement.
     """
     supported = [claim for claim in ws.claims if claim.status == "supported"]
     if not supported:
