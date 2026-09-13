@@ -278,7 +278,10 @@ def _search_agent(payload: dict[str, Any]) -> dict[str, Any]:
             "error",
             {"message": f"{task.task_id}: {type(exc).__name__}: {exc}"[:500], "node": "search_agent"},
         )
-        return _failed_task(payload, task, f"this branch failed: {type(exc).__name__}: {exc}")
+        # The exception is in the log and the error event; the answer gets plain words (docs/11).
+        return _failed_task(
+            payload, task, "This line of research could not be completed because of a technical problem."
+        )
 
 
 def _failed_task(payload: dict[str, Any], task: SearchTask, unresolved: str) -> dict[str, Any]:

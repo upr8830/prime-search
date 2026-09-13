@@ -227,7 +227,8 @@ def test_the_tool_call_cap_ends_the_loop_and_sets_unresolved(sandboxed_run, monk
 
     assert result.usage.searches == MAX_TOOL_CALLS  # eight ran; the ninth never did
     assert len(result.queries_issued) == MAX_TOOL_CALLS
-    assert "tool-call cap" in result.unresolved
+    assert "This line of research stopped before it was finished." in result.unresolved
+    assert "tool-call cap" not in result.unresolved  # plain words in the answer (docs/11)
     assert result.summary == "Partial."  # from the summarize-what-you-have call
     # That call must not carry a tool call with no result, or the endpoint 400s.
     final_prompt = model.seen[-1]
@@ -396,7 +397,7 @@ def test_an_exhausted_run_budget_ends_the_agent(sandboxed_run, monkeypatch) -> N
     )
     result = run_search_agent(_task(), ws=sandboxed_run, model=model)
     assert result.usage.searches == 0
-    assert "max_searches" in result.unresolved
+    assert "This line of research stopped before it was finished." in result.unresolved and "max_searches" not in result.unresolved
 
 
 # --- events (docs/02 §4, docs/06 §4) -----------------------------------------------
@@ -575,7 +576,8 @@ def test_an_unexpected_error_still_returns_a_failed_task_result(
     result = run_search_agent(task, ws=sandboxed_run, model=Exploding())
 
     assert result is not None
-    assert "nebius 503" in result.unresolved
+    assert "stopped early because of a technical problem" in result.unresolved
+    assert "nebius 503" not in result.unresolved  # the exception stays in the log
     assert task.status == "done"  # the node completed, even though the model did not
     assert task.result is result
     types = [event["type"] for event in events.replay(sandboxed_run.run_id)]
@@ -763,7 +765,8 @@ def test_a_failed_summarize_call_does_not_fail_the_task(sandboxed_run, monkeypat
     )
     result = run_search_agent(_task(), ws=sandboxed_run, model=model)
 
-    assert "tool-call cap" in result.unresolved
+    assert "This line of research stopped before it was finished." in result.unresolved
+    assert "tool-call cap" not in result.unresolved  # plain words in the answer (docs/11)
     assert result.summary  # the deterministic fallback stood in
     assert "8 queries" in result.summary
 
@@ -788,7 +791,7 @@ def test_the_deep_read_budget_race_becomes_budget_exceeded(sandboxed_run, monkey
         ]
     )
     result = run_search_agent(_task(), ws=sandboxed_run, model=model)
-    assert "deep-read budget exhausted" in result.unresolved
+    assert "This line of research stopped before it was finished." in result.unresolved and "budget" not in result.unresolved
 
 
 def test_another_value_error_is_not_mistaken_for_the_budget(sandboxed_run, monkeypatch) -> None:

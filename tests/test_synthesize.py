@@ -407,13 +407,13 @@ def test_a_budget_note_is_added_to_the_unknowns_section(populated) -> None:
     answer = synthesize(populated, model=model)
 
     section = answer.body_markdown.split("## Unknowns / not verified", 1)[1]
-    assert "token budget" in section.split("## Sources")[0]
+    assert "processing limit" in section.split("## Sources")[0]
 
 
 def test_no_budget_note_when_nothing_was_exhausted(populated) -> None:
     model = ScriptedChatModel(script=[AIMessage(content=BODY)])
     answer = synthesize(populated, model=model)
-    assert "token budget" not in answer.body_markdown
+    assert "processing limit" not in answer.body_markdown
     assert "time limit" not in answer.body_markdown
 
 

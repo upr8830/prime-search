@@ -166,6 +166,19 @@ class ExecResult:
         return self.stdout or "(no output)"
 
 
+# The sentences a reader of the answer sees when a research limit was reached (docs/01 §9).
+# Plain language on purpose: no numbers, no "budget" or "tokens", no internal limit names -
+# the answer is read by people deciding on coverage, not by the engineers who set the
+# limits (user decision, docs/11). `synthesize` matches them exactly, so change them here.
+LIMIT_NOTES: dict[str, str] = {
+    "max_seconds": "The research stopped at its time limit, so this answer uses only the sources found by then.",
+    "max_searches": "The research used all of its allowed web searches, so some leads were not followed up.",
+    "max_fetches": "The research opened as many pages as it is allowed to, so some sources were not read.",
+    "max_deep_reads": "The research reached its limit on looking inside documents, so some passages were not checked.",
+    "max_tokens": "The research reached its processing limit, so some leads were not followed up.",
+}
+
+
 @dataclass
 class Workspace:
     """Everything one run knows (docs/02 §3).
@@ -292,25 +305,15 @@ class Workspace:
         if elapsed >= self.budget.max_seconds:
             hit.append((
                 "max_seconds",
-                f"The run reached its {self.budget.max_seconds}s time limit; the answer "
-                "above is based only on what had been gathered by then.",
+                LIMIT_NOTES["max_seconds"],
             ))
-        for limit, label in (
-            ("max_searches", "searches"),
-            ("max_fetches", "document fetches"),
-            ("max_deep_reads", "in-document reads"),
-        ):
+        for limit in ("max_searches", "max_fetches", "max_deep_reads"):
             if getattr(remaining, limit) <= 0:
-                hit.append((
-                    limit,
-                    f"The run used its full budget of {getattr(self.budget, limit)} "
-                    f"{label}; further lines of enquiry were not pursued.",
-                ))
+                hit.append((limit, LIMIT_NOTES[limit]))
         if self.usage.input_tokens + self.usage.output_tokens >= self.budget.max_tokens:
             hit.append((
                 "max_tokens",
-                f"The run reached its {self.budget.max_tokens} token budget; further "
-                "lines of enquiry were not pursued.",
+                LIMIT_NOTES["max_tokens"],
             ))
         return hit
 

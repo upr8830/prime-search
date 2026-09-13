@@ -348,7 +348,8 @@ def test_one_failing_branch_does_not_fail_the_run(sandboxed_run, monkeypatch) ->
         }
     )
     result = update["task_results"][0]
-    assert "tavily down" in result.unresolved
+    assert "because of a technical problem" in result.unresolved
+    assert "tavily down" not in result.unresolved  # the exception stays in the log (docs/11)
     assert result.evidence_ids == []
 
 

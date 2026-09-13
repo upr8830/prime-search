@@ -476,3 +476,25 @@ def test_charge_tokens_adds_a_replys_usage(ws: Workspace) -> None:
     )
     ws.charge_tokens(message)
     assert (ws.usage.input_tokens, ws.usage.output_tokens) == (10, 4)
+
+
+def test_limit_notes_are_plain_language() -> None:
+    """The answer's Unknowns are read by people deciding on coverage: no numbers, no
+    "budget" or "tokens", no internal limit names (user decision, docs/11)."""
+    import re
+    from datetime import UTC, datetime, timedelta
+
+    from prime_search.config import Budget
+
+    run = Workspace(
+        objective="q",
+        budget=Budget(max_searches=1, max_fetches=1, max_deep_reads=1, max_tokens=10, max_seconds=1),
+    )
+    run.usage.searches = run.usage.fetches = run.usage.deep_reads = 1
+    run.usage.input_tokens = 10
+    run.started_at = datetime.now(UTC) - timedelta(seconds=5)
+
+    limits = dict(run.exhausted_limits())
+    assert set(limits) == {"max_seconds", "max_searches", "max_fetches", "max_deep_reads", "max_tokens"}
+    for note in limits.values():
+        assert not re.search(r"budget|token|max_|\d", note, re.IGNORECASE), note

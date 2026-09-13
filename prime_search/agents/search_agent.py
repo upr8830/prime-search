@@ -572,7 +572,11 @@ def run_search_agent(
             },
         )
         if cap_reason is not None:
-            ctx.unresolved.append(f"stopped early: {cap_reason}")
+            # The raw reason ("tool-call cap reached (8 calls) at fetch()", "the run's
+            # max_searches budget is exhausted") goes to the log and the summarize turn;
+            # the answer's Unknowns get a sentence a reader can use (docs/11).
+            _log.info("search_agent.stopped", task_id=task.task_id, reason=cap_reason)
+            ctx.unresolved.append(plain_stop_note(cap_reason))
             # docs/03 §13: request the final message with "summarize what you have".
             # Only when there is something to summarize: with no trajectory the model
             # would be inventing, and `_fallback_summary` states the facts instead.
@@ -598,6 +602,16 @@ def run_search_agent(
         trace_url=trace_url,
     )
     return result
+
+
+STOPPED_NOTE = "This line of research stopped before it was finished."
+STOPPED_ON_ERROR_NOTE = "This line of research stopped early because of a technical problem."
+
+
+def plain_stop_note(reason: str) -> str:
+    """The Unknowns line for a task that stopped early, without tool calls, budgets or
+    exception text (those stay in the log and the trace)."""
+    return STOPPED_ON_ERROR_NOTE if reason.startswith("the agent stopped on an error") else STOPPED_NOTE
 
 
 def _drive(
