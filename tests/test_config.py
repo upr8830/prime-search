@@ -127,3 +127,12 @@ def test_get_settings_warns_rather_than_raising(env: pytest.MonkeyPatch) -> None
         assert any("PRIME_MODELS__SUBAGENT" in str(w.message) for w in caught)
     finally:
         get_settings.cache_clear()
+
+
+def test_deep_budget_is_raised_for_re_search_and_fast_is_unchanged(env: pytest.MonkeyPatch) -> None:
+    """Task 2.2 decisions (docs/11): a deep run's round 0 spends ~175-195k tokens and all
+    ten deep reads, which left the judge and critic nothing to re-search with."""
+    settings = Settings(_env_file=None)
+    deep, fast = settings.budget("deep"), settings.budget("fast")
+    assert (deep.max_tokens, deep.max_deep_reads) == (400_000, 30)
+    assert (fast.max_tokens, fast.max_deep_reads) == (150_000, 10)

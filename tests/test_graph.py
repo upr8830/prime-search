@@ -1016,3 +1016,38 @@ def test_no_deep_reads_left_adds_no_round(sandboxed_run, monkeypatch) -> None:
     assert graph_module._critic(state)["pending_tasks"] == []
     assert calls[0]["may_search"] is False
     assert graph_module._dispatch(_state(ws, round=1, pending_tasks=[_task("b1-r1", "b1", 1)]))["pending_tasks"] == []
+
+
+def test_round_zero_dispatches_every_branch_while_reads_remain(sandboxed_run) -> None:
+    """The deep-reads term in the per-round agent count must not thin round 0."""
+    ws = sandboxed_run
+    ws.budget = Budget(max_deep_reads=30)
+    ws.understanding = _understanding()
+    _plan(ws, count=6)
+
+    update = graph_module._dispatch(_state(ws))
+    assert [task.branch_id for task in update["pending_tasks"]] == [f"b{i}" for i in range(1, 7)]
+
+
+def test_a_partial_deep_reads_balance_yields_that_many_agents(sandboxed_run) -> None:
+    ws = sandboxed_run
+    ws.budget = Budget(max_deep_reads=30)
+    ws.usage.deep_reads = 27
+    ws.understanding = _understanding()
+    _plan(ws, count=6)
+
+    assert graph_module._agents_this_round(ws, "deep") == 3
+    update = graph_module._dispatch(_state(ws))
+    assert [task.branch_id for task in update["pending_tasks"]] == ["b1", "b2", "b3"]
+
+
+def test_a_later_round_is_held_to_the_reads_left(sandboxed_run) -> None:
+    ws = sandboxed_run
+    ws.budget = Budget(max_deep_reads=30)
+    ws.usage.deep_reads = 28
+    _plan(ws, count=3)
+    ws.tasks = [_task(f"b{i}-r0", f"b{i}", 0, status="done") for i in (1, 2, 3)]
+
+    pending = [_task(f"b{i}-r1", f"b{i}", 1) for i in (1, 2, 3)]
+    update = graph_module._dispatch(_state(ws, round=1, pending_tasks=pending))
+    assert len(update["pending_tasks"]) == 2
