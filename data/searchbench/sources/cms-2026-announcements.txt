@@ -1,0 +1,287 @@
+This site displays a prototype of a "Web 2.0" version of the daily
+Federal Register. It is not an official legal edition of the Federal
+Register, and does not replace the official print version or the official
+electronic version on GPO's govinfo.gov.
+
+The documents posted on this site are XML renditions of published Federal
+Register documents. Each document posted on the site includes a link to the
+corresponding official PDF file on govinfo.gov. This prototype edition of the
+daily Federal Register on FederalRegister.gov will remain an unofficial
+informational resource until the Administrative Committee of the Federal
+Register (ACFR) issues a regulation granting it official legal status.
+For complete information about, and access to, our official publications
+and services, go to
+[About the Federal Register](https://www.archives.gov/federal-register/the-federal-register/about.html "About the Federal Register")
+on NARA's archives.gov.
+
+The OFR/GPO partnership is committed to presenting accurate and reliable
+regulatory information on FederalRegister.gov with the objective of
+establishing the XML-based Federal Register as an ACFR-sanctioned
+publication in the future. While every effort has been made to ensure that
+the material on FederalRegister.gov is accurately displayed, consistent with
+the official SGML-based PDF version on govinfo.gov, those relying on it for
+legal research should verify their results against an official edition of
+the Federal Register. Until the ACFR grants it official status, the XML
+rendition of the daily Federal Register on FederalRegister.gov does not
+provide legal notice to the public or judicial notice to the courts.
+
+# 2026 Federal Register Index
+
+Enter a search term or FR citation e.g.
+88 FR 382
+30 FR 7878
+2024-13208
+USDA
+09/05/24
+RULE
+0503-AA39
+SORN
+
+Choosing an item from
+full text search results
+will bring you to those results. Pressing enter in the search box
+will also bring you to search results.
+Choosing an item from
+suggestions
+will bring you directly to the content.
+
+Background and more details are available in the
+*[Search & Navigation](/reader-aids/recent-updates/2024/10/combined-search-and-navigation-omni-box)*
+guide.
+
+# [Centers for Medicare & Medicaid Services](/agencies/centers-for-medicare-medicaid-services)
+
+As of
+**September 8, 2026**
+the
+Centers for Medicare & Medicaid Services has published
+178 documents
+in 2026.
+
+| Document Type | Documents Published | Subjects Covered |
+| --- | --- | --- |
+|  |  |  |
+| --- | --- | --- |
+| [Rule](#rule-centers-for-medicare-medicaid-services) | 20 | 7 |
+| [Proposed Rule](#proposed-rule-centers-for-medicare-medicaid-services) | 22 | 7 |
+| [Notice](#notice-centers-for-medicare-medicaid-services) | 136 | 14 |
+
+This index provides descriptive entries and Federal Register page numbers for documents published by Centers for Medicare & Medicaid Services in the daily Federal Register. It includes entries, with select metadata for all documents published in the 2026 calendar year.
+
+### Rules
+
+#### [Managed Care; CFR Correction](#) 1
+
+#### Medicaid Program:
+
+##### [Community Engagement Requirement for Certain Individuals](#) 2
+
+##### [Preserving Medicaid Funding for Vulnerable Populations - Closing a Health Care-Related Tax Loophole](#) 1
+
+##### [Prohibition on Federal Medicaid and Children's Health Insurance Program Funding for Sex-Rejecting Procedures Furnished to Children](#) 1
+
+#### Medicare Program:
+
+##### [Alternative Payment Model Updates and the Increasing Organ Transplant Access Model](#) 1
+
+##### [Contract Year 2027 and Certain Contract Year 2026 Policy and Technical Changes to the Medicare Advantage Program, Medicare Prescription Drug Benefit Program, and Medicare Cost Plan Program](#) 1
+
+##### [FY 2027 Inpatient Psychiatric Facilities Prospective Payment System - Rate Update](#) 1
+
+##### [Fiscal Year 2027 Hospice Wage Index and Payment Rate Update and Hospice Quality Reporting Program Requirements](#) 1
+
+##### [Hospital Inpatient Prospective Payment Systems for Acute Care Hospitals and the Long Term Care Hospital Prospective Payment System and Policy Changes and Fiscal Year 2027 Rates; etc.](#) 1
+
+##### [Hospital Outpatient Prospective Payment and Ambulatory Surgical Center Payment Systems; Quality Reporting Programs; Overall Hospital Quality Star Rating; etc.; Correction](#) 1
+
+##### [Inpatient Rehabilitation Facility Prospective Payment System for Federal Fiscal Year 2027 and Updates to the IRF Quality Reporting Program](#) 1
+
+##### [Prospective Payment System and Consolidated Billing for Skilled Nursing Facilities; Updates to the Quality Reporting Program for Federal Fiscal Year 2027](#) 1
+
+##### [Strengthening Oversight of Accrediting Organizations and Preventing AO Conflicts of Interest, and Related Provisions](#) 1
+
+##### [Updates to the Master List of Items Potentially Subject to Face to Face Encounter and Written Order Prior to Delivery and/or Prior Authorization Requirements; etc.](#) 1
+
+##### [Updates to the Master List of Items Potentially Subject to Face-to-Face Encounter and Written Order Prior to Delivery and/or Prior Authorization Requirements; etc.](#) 1
+
+#### Medicare and Medicaid Programs:
+
+##### [Calendar Year 2026 Payment Policies under the Physician Fee Schedule and Other Changes to Part B Payment and Coverage Policies; Medicare Shared Savings Program Requirements; and Medicare Prescription Drug Inflation Rebate Program; Correction](#) 1
+
+#### [Patient Protection and Affordable Care Act, HHS Notice of Benefit and Payment Parameters for 2027; and Basic Health Program; Correction](#) 1
+
+#### Patient Protection and Affordable Care Act:
+
+##### [Department of Health and Human Services Notice of Benefit and Payment Parameters for 2027; and Basic Health Program](#) 1
+
+#### [Vacatur Regarding Certain Provisions of the 2024 Nondiscrimination in Health Programs and Activities Final Rule](#) 1
+
+### Proposed Rules
+
+#### [Calendar Year 2027 Home Health Prospective Payment System Rate Update; etc.](#) 1
+
+#### Medicaid Program:
+
+##### [Indirect Hold Harmless Threshold of Health Care-Related Taxes](#) 1
+
+##### [Medicaid Managed Care State Directed Payments and Medicaid Fee-for-Service Targeted Medicaid Practitioner Payments](#) 1
+
+#### Medicare Program:
+
+##### [Calendar Year 2027 Changes to the End-Stage Renal Disease Prospective Payment System, Acute Kidney Injury Dialysis Payment, and ESRD Quality Incentive Program](#) 1
+
+##### [Ensuring Safety through Domestic Security with Made in America Personal Protective Equipment and Essential Medicine Procurement by Medicare Participating Hospitals](#) 1
+
+##### [Fiscal Year 2027 Hospice Wage Index and Payment Rate Update and Hospice Quality Reporting Program Requirements](#) 1
+
+##### [Fiscal Year 2027 Inpatient Psychiatric Facilities Prospective Payment System -- Rate Update](#) 1
+
+##### [Hospital Inpatient Prospective Payment Systems for Acute Care Hospitals and the Long Term Care Hospital Prospective Payment System and Policy Changes and Fiscal Year 2027 Rates; Requirements for Quality Programs; and Other Policy Changes](#) 1
+
+##### [Hospital Inpatient Prospective Payment Systems for Acute Care Hospitals and the Long Term Care Hospital Prospective Payment System and Policy Changes and Fiscal Year 2027 Rates; Requirements for Quality Programs; and Other Policy Changes; Correction](#) 2
+
+##### [Hospital Outpatient Prospective Payment and Ambulatory Surgical Center Payment Systems; and Quality Reporting Programs; etc.](#) 1
+
+##### [Inpatient Rehabilitation Facility Prospective Payment System for Federal Fiscal Year 2027 and Updates to the IRF Quality Reporting Program](#) 1
+
+##### [Medicare Drug Price Negotiation Program and Medicare Prescription Drug Benefit Program](#) 1
+
+##### [Prospective Payment System and Consolidated Billing for Skilled Nursing Facilities; Updates to the Quality Reporting Program for Federal Fiscal Year 2027](#) 1
+
+#### Medicare and Medicaid Programs:
+
+##### [Calendar Year 2027 Payment Policies under the Physician Fee Schedule and Other Changes to Part B Payment and Coverage Policies; Medicare Shared Savings Program Requirements; and Medicare Prescription Drug Inflation Rebate Program](#) 1
+
+##### [Organ Procurement Organizations Conditions for Coverage: Revisions to the Conditions for Coverage](#) 1
+
+##### [Patient Protection and Affordable Care Act; Interoperability Standards and Prior Authorization for Drugs for Medicare Advantage Organizations, Medicaid Managed Care Plans, etc.](#) 1
+
+#### [Patient Protection and Affordable Care Act, Benefit and Payment Parameters for 2027 and Basic Health Program](#) 1
+
+#### [Patient Protection and Affordable Care Act, HHS Notice of Benefit and Payment Parameters for 2027; and Basic Health Program; Correction](#) 1
+
+#### Request for Information:
+
+##### [Clinical Laboratory Improvement Amendments of 1988 Regulations](#) 1
+
+##### [Comprehensive Regulations to Uncover Suspicious Healthcare](#) 1
+
+##### [Pharmacy Benefit Manager Compensation and Data Collection](#) 1
+
+### Notices
+
+#### [Agency Information Collection Activities; Proposals, Submissions, and Approvals](#) 83
+
+#### Agency Information Collection Activities; Proposals, Submissions, and Approvals:
+
+##### [Medicaid and Children's Health Insurance Program](#) 5
+
+#### [Approval of COLA as an Accreditation Organization for the Specialty of Histocompatibility under the Clinical Laboratory Improvement Amendments](#) 1
+
+#### [Delegation of Authority](#) 1
+
+#### Hearings, Meetings, Proceedings, etc.:
+
+##### [Compliance of Minnesota State Plan Provisions Concerning Program Integrity and Fraud, Waste, and Abuse with Title XIX (Medicaid) of the Social Security Act](#) 1
+
+##### [Healthcare Advisory Committee](#) 1
+
+##### [Healthcare Advisory Committee; Fiscal Year 2026-2027](#) 1
+
+##### [Medicare Program: Rechartering, Membership, and Meeting Announcement for the Medicare Advisory Panel on Clinical Diagnostic Laboratory Tests](#) 1
+
+##### [Medicare Program; Advisory Panel on Hospital Outpatient Payment](#) 1
+
+##### [Medicare Program; Fiscal Year 2028 Applications for New Technology Add-On Payments](#) 1
+
+##### [Medicare Program; Medicare Advisory Panel on Clinical Diagnostic Laboratory Tests](#) 1
+
+##### [Medicare Program; New Revisions to the Healthcare Common Procedure Coding System Level II Coding](#) 1
+
+##### [Medicare Program; New and Reconsidered Clinical Diagnostic Laboratory Test Codes for the Clinical Laboratory Fee Schedule for Calendar Year 2027](#) 1
+
+#### Medicaid Program:
+
+##### [2028 Medicaid Home and Community-Based Services Quality Measure Set](#) 1
+
+#### Medicare Program:
+
+##### [Alternative Payment Model Incentive Payment Advisory for Clinicians - Request for Current Billing Information for Qualifying Alternative Payment Model Participants](#) 1
+
+##### [Approved Renewal of Deeming Authority of the National Committee for Quality Assurance for Medicare Advantage Health Maintenance Organizations and Preferred Provider Organizations](#) 1
+
+##### [Delayed Implementation of Certain Prior Authorization for Select Services for the Wasteful and Inappropriate Services Reduction Model](#) 1
+
+##### [Implementation of Prior Authorization for Select Services for the Wasteful and Inappropriate Services Reduction Model; Correction](#) 1
+
+##### [Inflation Reduction Act of 2022 Medicare Drug Price Negotiation Program Draft Guidance](#) 1
+
+##### [Regulatory Alignment for Predictable and Immediate Device Coverage Pathway](#) 1
+
+##### [Request for Renewal of Deeming Authority of the National Committee for Quality Assurance for Medicare Advantage Health Maintenance Organizations and Preferred Provider Organizations](#) 1
+
+#### Medicare and Medicaid Programs:
+
+##### [Announcement of Application from a Hospital Requesting Waiver for Organ Procurement Service Area (Hugh Chatham Memorial Hospital, Inc.)](#) 1
+
+##### [Announcement of Application from a Hospital Requesting Waiver for Organ Procurement Service Area (Lexington Medical Center)](#) 1
+
+##### [Announcement of Applications from 12 Hospitals Requesting Waivers for Organ Procurement Service Area](#) 1
+
+##### [Application from DNV Healthcare USA Inc. for Continued CMS-Approval of its Hospital Accreditation Program](#) 1
+
+##### [Application from Joint Commission for Continued Approval of its Home Health Agency Accreditation Program](#) 1
+
+##### [Application from The Joint Commission for Continued Centers for Medicare and Medicaid Services Approval of its Home Health Agency Accreditation Program](#) 1
+
+##### [Application from a Hospital Requesting Waiver for Organ Procurement Service Area (Alleghany County Memorial Hospital, Inc.)](#) 1
+
+##### [Application from a Hospital Requesting Waiver for Organ Procurement Service Area (High Point Regional Health)](#) 1
+
+##### [Application from a Hospital Requesting Waiver for Organ Procurement Service Area (WRMC Hospital Operating Corp.)](#) 1
+
+##### [Application from the Accreditation Commission for Health Care Inc. for Continued Approval of its Critical Access Hospital Accreditation Program](#) 1
+
+##### [Application from the American Association for Accreditation of Ambulatory Surgery Facilities for Continued Centers for Medicare and Medicaid Services-Approval of its Rural Health Clinic Accreditation Program](#) 1
+
+##### [Approval of Application by the Accreditation Commission for Health Care Inc. for Continued CMS-Approval of its Hospice Accreditation Program](#) 1
+
+##### [Quarterly Listing of Program Issuances - April through June 2026](#) 1
+
+##### [Quarterly Listing of Program Issuances - January through March 2026](#) 1
+
+##### [Quarterly Listing of Program Issuances - October through December 2025](#) 1
+
+#### Medicare, Medicaid, and Children's Health Insurance Programs:
+
+##### [Announcement of Nationwide Temporary Moratoria on Enrollment of Home Health Agencies](#) 1
+
+##### [Announcement of Nationwide Temporary Moratorium on Enrollment of Hospices](#) 1
+
+##### [Nationwide Temporary Moratoria on Enrollment of Durable Medical Equipment, Prosthetics, Orthotics, and Supplies Supplier Medical Supply Companies](#) 1
+
+#### [Privacy Act; Matching Program](#) 6
+
+#### [Privacy Act; Systems of Records](#) 1
+
+#### [Public Data Asset Release under the Open, Public, Electronic, and Necessary Government Data Act](#) 2
+
+#### Secretarial Comments on the Consensus-Based Entity's (Battelle Memorial Institute) 2025 Activities:
+
+##### [Report to Congress and the Secretary of the Department of Health and Human Services](#) 1
+
+#### [Statement of Organization, Functions, and Delegations of Authority](#) 1
+
+## Home
+
+## Sections
+
+## Browse
+
+## Search
+
+## Reader Aids
+
+## My FR
+
+## Information

@@ -1,0 +1,87 @@
+![CMS.gov](/themes/custom/cms_evo/logo.svg)
+
+## [CMS Newsroom](/about-cms/contact/newsroom)
+
+## Search the Newsroom
+
+## [Newsroom](/about-cms/contact/newsroom)
+
+## Newsroom Menu
+
+# Draft CY 2025 Part D Redesign Program Instructions Fact Sheet
+
+Share
+
+Today, the Centers for Medicare & Medicaid Services (CMS) released the Draft Calendar Year (CY) 2025 Part D Redesign Program Instructions concurrently with the Advance Notice of Methodological Changes for CY 2025 for Medicare Advantage (MA) Capitation Rates and Part C and Part D Payment Policies (the Advance Notice). CMS will accept comments on the Draft CY 2025 Part D Redesign Program Instructions through 6:00 PM Eastern Time on Friday, March 1, 2024, before publishing the final program instructions no later than April 1, 2024.
+
+The purpose of the Draft CY 2025 Part D Redesign Program Instructions is to provide interested parties with draft guidance for CY 2025 regarding the implementation of section 11201 of the Inflation Reduction Act of 2022 (IRA) (P.L. 117-169), signed into law on August 16, 2022, which made several amendments and additions to the Social Security Act ("the Act") that affect the structure of the defined standard Part D drug benefit. We invite interested parties to comment on the draft guidance.
+
+The draft program instructions contain a detailed description of and guidance related to changes newly in place for CY 2025 made by the IRA, as well as guidance for CY 2023 Medical Loss Ratio (MLR) reporting related to the Inflation Reduction Act Subsidy Amount (IRASA). The draft program instructions are being published concurrently with the CY 2025 Advance Notice that, among other things, announces updates to Part D parameters, some of which are impacted by provisions in the draft program instructions.
+
+**Overview of Changes to the Part D Benefit:**
+In CY 2025, the structure of the Part D benefit will be updated to reflect provisions of the IRA that become effective on January 1, 2025. The CY 2025 updates include the following:
+
+**Summary of Key Policies in the Draft Guidance:**
+
+**Costs Counted Toward True Out-of-Pocket Costs (TrOOP)**
+TrOOP is the portion of spending on covered Part D drugs made by the beneficiary or on their behalf by certain third parties. The IRA updates which categories of payments count toward TrOOP spending. TrOOP is the spending that determines when a beneficiary enters the initial coverage phase, becomes an applicable beneficiary for the Discount Program, reaches the annual OOP threshold, and subsequently enters the catastrophic coverage phase. In addition to the third-party arrangements that already count toward TrOOP, the IRA specifically amends the definition of incurred costs that count toward TrOOP for CY 2025 to *include* payments for previously excluded supplemental benefits provided by Part D sponsors andEmployer Group Waiver Plans (EGWPs) and *exclude* payments under the new Manufacturer Discount Program.
+
+**Policy for Drugs Not Subject to Defined Standard Deductible**
+In CY 2025, the IRA eliminates the coverage gap phase and the related CGDP and, in its place, establishes the new Discount Program. The IRA also alters the defined standard benefit to exempt certain drugs (certain insulins and vaccines) from the deductible. For CY 2025, if a beneficiary has not satisfied their plan deductible but has incurred sufficient TrOOP-eligible costs to satisfy the defined standard deductible, they will be both an applicable beneficiary under the Discount Program and deemed to have satisfied their plan deductible. If the beneficiary satisfies the plan's deductible or utilizes a drug not subject to the deductible but is not eligible for Discount Program discounts because they have not incurred TrOOP-eligible costs to satisfy the defined standard deductible amount, then the plan will be required to cover the portion of costs a manufacturer would have owed had Discount Program discounts begun.
+
+**Government Reinsurance Methodology**
+The IRA changes the government reinsurance calculation methodology for CY 2025 to be dependent on drug type. CY 2025 changes to the reinsurance payment amount require CMS to revise the Direct and Indirect Remuneration (DIR) allocation methodology. Specifically, since the reinsurance amount must be calculated differently for different types of drugs, the DIR allocation methodology must correspondingly vary for different types of drugs in CY 2025. We propose that CMS will calculate the reinsurance subsidy separately for applicable and non-applicable drugs and allocate the share of DIR for applicable and non-applicable drugs based on their respective share of gross covered prescription drug costs that fall in the catastrophic phase.
+
+**EGWP Prospective Reinsurance Amount**
+Because the Part D redesign reduces the reinsurance percentage in CY 2025, using the existing methodology for Part D Calendar Year, EGWP prospective reinsurance payments would result in CMS prospectively paying significantly more than necessary for CY 2025. CMS would then need to recover sizable funds from EGWPs during the Part D payment reconciliation process. Therefore, for CY 2025, CMS is updating the methodology to ensure that Part D Calendar Year EGWPs are paid a more appropriate prospective reinsurance amount in CY 2025. As discussed in the program instructions, CMS will calculate the prospective reinsurance payments to all Part D Calendar Year EGWP sponsors using the weighted average of per-member-per-month (PMPM) prospective reinsurance amounts submitted by Part D sponsors for Enhanced Alternative (EA) plans as part of the Part D bid submissions for the payment year in question (for example, CMS would use CY 2025 Part D bids submitted in June 2024 to calculate prospective reinsurance payments for Calendar Year EGWPs for CY 2025).
+
+**Definition of EA Benefit Design**
+In CY 2025, the Part D benefit redesign provisions under the IRA limit the available options for sponsors to enhance their benefits to offer an EA plan to the following:
+
+Because the Part D benefit redesign reduces available options for EA plan design, CMS reconsidered what constitutes a permissible EA benefit design. The draft program instructions establish a process for ensuring that individuals receive value relative to the defined standard benefit when they enroll in an EA plan. Specifically, for CY 2025, CMS will use the Part D Out-of-Pocket Costs (OOPC) model to estimate the value of EA plans relative to the value of the defined standard benefit.
+
+**For more details on the updated structure of the defined standard Part D drug benefit, please see the notes and the graphic below.**
+
+**Part D Benefit in CY 2025 and Past Years (Non-Low Income Subsidy Beneficiary)**
+
+![Part D Benefit in CY 2025 and Past Years (Non-Low Income Subsidy Beneficiary)](/sites/default/files/styles/desktop_width/public/2024-01/Part%20D%20Benefit%20in%20CY%202025%20and%20Past%20Years.jpg?itok=Q5aZMAFK "Part D Benefit in CY 2025 and Past Years (Non-Low Income Subsidy Beneficiary)")
+
+\*The IRA Manufacturer Discount is phased-in for certain drugs of qualifying drug manufacturers during the initial coverage phase from 2025 through 2028 and in the catastrophic phase from 2025 through 2030. For drugs subject to the phase-in, plans will be responsible for the additional cost that would have otherwise been covered by the manufacturer discount.
+
+**For more information about topics related to the Part D Benefit Redesign, please go to** [https://www.cms.gov/inflation-reduction-act-and-medicare/part-d-improvements](/priorities/medicare-prescription-drug-affordability/overview/medicare-part-d-improvements):
+
+**To submit comments:**
+CMS is voluntarily soliciting comment on the draft program instructions. CMS will accept comments on the Draft CY 2025 Part D Redesign Program Instructions through 6:00 PM Eastern Time on Friday, March 1, 2024, before publishing the Final CY 2025 Part D Redesign Program Instructions no later than April 1, 2024.
+
+Please send comments about the draft program instructions to PartDRedesignPI@cms.hhs.gov with the subject line "Draft CY 2025 Part D Redesign Program Instructions."
+
+As noted above, CMS will accept comments on the proposals set forth in the Advance Notice through 6:00 PM Eastern Time on Friday March 1, 2024. The 2025 Rate Announcement will be published no later than Monday, April 1, 2024.
+
+To submit comments or questions on the Advance Notice electronically, go to [www.regulations.gov](http://www.regulations.gov), enter the docket number "CMS-2024-0006" in the "search" field, and follow the instructions for ''submitting a comment.''
+
+The 2025 Advance Notice may be viewed by going to: [https://www.cms.gov/Medicare/Health-Plans/MedicareAdvtgSpecRateStats/Announcements-and-Documents](/medicare/payment/medicare-advantage-rates-statistics/announcements-and-documents) and selecting "2025 Advance Notice."
+
+Section 11201(f) of the IRA directs the Secretary to implement section 11201 of the IRA for 2024, 2025, and 2026 by program instruction or other forms of program guidance, and section 11406(d) of the IRA directs the Secretary to implement section 11406 of the IRA for 2023, 2024, and 2025 by program instruction or other forms of program guidance. In accordance with the law, CMS is issuing these draft program instructions for implementation of section 11201 of the IRA for 2025 and for implementation of MLR reporting instructions related to the IRASA for 2023. In the final program instructions, CMS may change any policies, including policies on which CMS has not expressly solicited comment, based on the agency's further consideration of the relevant issues. Other than the IRASA MLR reporting instructions for CY 2023, policies established in the final program instructions are for CY 2025 and are subject to change in subsequent years.
+
+## Related Releases
+
+## Contact us
+
+CMS News and Media Group
+Catherine Howden, Director
+
+[Media Inquiries Form](https://www.cms.gov/newsroom/media-inquiries)
+202-690-6145
+
+## Get email updates
+
+Sign up to get the latest information about your choice of CMS topics. You can decide how often to receive updates.
+
+![CMS.gov](/themes/custom/cms_evo/logo.svg)
+![HHS Logo](/themes/custom/cms_evo/images/hhslogo.png)
+
+## Connect with CMS
+
+A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services.
+
+7500 Security Boulevard, Baltimore, MD 21244

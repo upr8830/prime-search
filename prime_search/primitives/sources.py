@@ -62,6 +62,16 @@ RULES: tuple[SourceRule, ...] = (
     SourceRule("federalregister.gov", "/", "primary_policy", "Federal Register"),
     SourceRule("govinfo.gov", "/", "primary_policy", "U.S. GPO"),
     SourceRule("ecfr.gov", "/", "primary_policy", "eCFR"),
+    # The Social Security Act itself, which is where Part D's statutory exclusions live
+    # (1860D-2(e)(2) -> 1927(d)(2)) — two SearchBench records name 1927(d)(2)(A) as
+    # their governing document and the compilation on ssa.gov is the operative text.
+    #
+    # This classifies the host; it deliberately does NOT reach `PRIMARY_DOMAINS` below,
+    # which docs/01 §5 pins and every production search uses as its `include_domains`.
+    # A document found on ssa.gov weighs what the statute weighs; where the agent is
+    # told to look is a separate decision, and not one this rule should make.
+    SourceRule("ssa.gov", "/OP_Home", "primary_policy", "SSA"),
+    SourceRule("ssa.gov", "/", "official_secondary", "SSA"),
     # FDA: primary only where the page *is* the approval, clearance or label record.
     SourceRule("accessdata.fda.gov", "/", "primary_policy", "FDA"),
     SourceRule("dailymed.nlm.nih.gov", "/", "primary_policy", "NLM DailyMed"),
@@ -272,7 +282,12 @@ def domains_for(*tiers: Tier) -> list[str]:
 # official_secondary: an include-domain list says where to look, while the tier says
 # how much a document weighs. Excluding it would make FDA labels — which docs/04 §1
 # calls primary — unreachable by a primary-filtered search.
-PRIMARY_DOMAINS: list[str] = sorted({*domains_for("primary_policy"), "fda.gov"})
+# `ssa.gov` is excluded: the rule above classifies the statute correctly, but §5's list
+# is cms.gov + MACs + fda.gov and a caller that wants the Act asks for it explicitly
+# (`eval/searchbench/fetch_sources.py` does).
+PRIMARY_DOMAINS: list[str] = sorted(
+    {*domains_for("primary_policy"), "fda.gov"} - {"ssa.gov"}
+)
 OFFICIAL_DOMAINS: list[str] = domains_for("primary_policy", "official_secondary")
 
 # The three tables must stay in step; a new tier without a rank breaks at_least().

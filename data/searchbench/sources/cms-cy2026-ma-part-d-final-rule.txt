@@ -1,0 +1,74 @@
+![CMS.gov](/themes/custom/cms_evo/logo.svg)
+
+## [CMS Newsroom](/about-cms/contact/newsroom)
+
+## Search the Newsroom
+
+## [Newsroom](/about-cms/contact/newsroom)
+
+## Newsroom Menu
+
+# Contract Year 2027 Medicare Advantage and Part D Final Rule
+
+Share
+
+**Contract Year 2027 Policy and Technical Changes to the Medicare Advantage Program, Medicare Prescription Drug Benefit Program, and Medicare Cost Plan Program (CMS-4208-F3/CMS-4212-F)**
+
+**Background**
+
+On April 2, 2026, the Centers for Medicare & Medicaid Services (CMS) issued a final rule revising the Medicare Advantage (MA) Program, Medicare Prescription Drug Benefit Program (Part D), and Medicare Cost Plan Program. The Contract Year (CY) 2027 MA and Part D final rule aims to improve quality and access to care for people enrolled in these programs by finalizing updates to MA and Part D Star Ratings quality measurements and streamlining certain enrollment processes.
+
+**Updates to Star Ratings**
+
+The Star Ratings system helps Medicare beneficiaries compare health and drug plan quality. Star Ratings also determine Quality Bonus Payments and impact rebates for MA contracts, currently rating MA-PD contracts on up to 43 measures, MA-only contracts on up to 33 measures, and Part D plans on up to 12 measures across five categories: outcomes, intermediate outcomes, process, patient experience, and access.
+
+CMS is finalizing two sets of major changes to the Part C and Part D Star Ratings system. First, for the 2027 Star Ratings, CMS is not implementing the Excellent Health Outcomes for All reward (previously called the Health Equity Index reward) that was developed to incentivize improved performance for a subset of enrollees and will continue the historical reward factor that encourages consistently high performance for all enrollees across all quality measures. Second, CMS is streamlining and refocusing the measure set by removing 11 measures focused on administrative processes and areas where beneficiaries cannot distinguish performance between plans due to high performance and little variation. Additionally, CMS is adding a new Part C Depression Screening and Follow-Up measure to address behavioral health gaps starting with the 2027 measurement year and 2029 Star Ratings. CMS is also finalizing a technical clarification from the CY 2026 MA and Part D proposed rule related to contract consolidations.
+
+These changes refocus the program on clinical care, outcomes, and patient experience where meaningful performance differences exist across contracts and reduce administrative burden by removing measures that provide little meaningful distinction between plans.
+
+**Implementing Certain Provisions of the Inflation Reduction Act (IRA) of 2022**
+
+The IRA of 2022 made major changes to the Medicare Part D prescription drug benefit and directed CMS to implement these changes through 2026 via program instructions. With this program instruction authority expiring, CMS is codifying these changes for 2027 and beyond, including eliminating the coverage gap phase, establishing a reduced annual out-of-pocket threshold, removing cost sharing for enrollees in the catastrophic phase, and incorporating the Manufacturer Discount Program that replaced the Coverage Gap Discount Program on January 1, 2025. CMS is also codifying additional operational changes including updates to True Out-Of-Pocket cost calculations, specialty-tier rules, reinsurance payment methodologies, and implementation of the Selected Drug Subsidy.
+
+**Revise List of Non-Allowable Special Supplemental Benefits for the Chronically Ill (SSBCI)**
+
+CMS is refining its regulations regarding cannabis products by amending current regulatory language to state more precisely that cannabis products that are illegal under applicable State or Federal law, are not allowable as SSBCI. This clarification aligns MA benefit policies with current federal law while maintaining safeguards.
+
+**Provisions Related to Supplemental Benefits Being Finalized from the CY 2026 Proposed Rule**
+
+CMS is finalizing two supplemental benefit policies that were proposed in the CY 2026 rule: (1) strengthening SSBCI administration by clarifying eligibility requirements, and increasing transparency by requiring plans to publicly post their plan-developed SSBCI eligibility criteria; and (2) codifying and clarifying requirements for administering supplemental benefits through debit cards, including that debit cards be electronically linked to plan-covered items and services through a real-time identification mechanism to verify eligibility of plan-covered benefits (products) at the point of sale; and that debit cards be limited to the specific plan year.
+
+**Reducing Regulatory Burden and Costs in Accordance with Executive Order 14192**
+
+CMS is finalizing several changes to remove duplicative and burdensome regulatory requirements that have limited beneficiary choice, hindered innovation and increased costs:
+
+**Requests for Information**
+
+In the proposed rule CMS included a number of requests for information pertaining to a variety of topics ranging from future directions for the MA program, modernizing marketing oversight and agent/broker regulations, the significant growth in dually eligible individual enrollment in chronic condition special needs plans, supporting well-being and nutrition policy in MA, and opportunities to streamline Medicare regulations. While CMS does not respond to specific comments in the final regulation, feedback will be considered for future rulemaking.
+
+View the final rule on the Federal Register at: <https://www.federalregister.gov/public-inspection/2026-06600/medicare-program-contract-year-2027-and-certain-contract-year-2026-policy-and-technical-changes-to>.
+
+###
+
+## Related Releases
+
+## Contact us
+
+CMS News and Media Group
+Catherine Howden, Director
+
+[Media Inquiries Form](https://www.cms.gov/newsroom/media-inquiries)
+202-690-6145
+
+## Get email updates
+
+Sign up to get the latest information about your choice of CMS topics. You can decide how often to receive updates.
+
+![CMS.gov](/themes/custom/cms_evo/logo.svg)
+![HHS Logo](/themes/custom/cms_evo/images/hhslogo.png)
+
+## Connect with CMS
+
+A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services.
+
+7500 Security Boulevard, Baltimore, MD 21244

@@ -1,0 +1,238 @@
+[Skip to main content](https://www.cms.gov/newsroom/fact-sheets/cms-releases-2024-projected-medicare-part-d-premium-and-bid-information?B_Premiums_and_Deductibles_2024_Medicare_Part_D_Income-Related_Monthly_Adjustment_Amounts=&cmdf=2024+Medicare+Parts+A+#skipNavTarget)
+
+An official website of the United States government
+
+Here's how you know
+
+Here's how you know
+
+**Official websites use .gov**
+
+A **.gov**website belongs to an official government organization in the United States.
+
+**Secure .gov websites use HTTPS**
+
+A **lock**() or**https://**means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.
+
+[![Image 1: CMS.gov](https://www.cms.gov/themes/custom/cms_evo/logo.svg)](https://www.cms.gov/)
+
+ Centers for Medicare & Medicaid Services
+
+## [CMS Newsroom](https://www.cms.gov/about-cms/contact/newsroom)
+
+CMS Global Secondary Menu
+*   [About CMS](https://www.cms.gov/about-cms)
+*   [Newsroom](https://www.cms.gov/about-cms/contact/newsroom)
+*   [Data & Research](https://www.cms.gov/data-research)
+
+## Search the Newsroom
+
+Search
+
+Search
+
+## [Newsroom](https://www.cms.gov/about-cms/contact/newsroom)
+
+## Newsroom Menu
+
+*   [Newsroom](https://www.cms.gov/about-cms/contact/newsroom)
+*   [Press Kit](https://www.cms.gov/newsroom/press-kit)
+*   [Data](https://www.cms.gov/newsroom/data "CMS Data")
+*   [Contact](https://www.cms.gov/newsroom/press-contacts)
+*   [CMS.gov Home](https://www.cms.gov/)
+*   [About CMS](https://www.cms.gov/about-cms)
+*   [Data & Research](https://www.cms.gov/data-research)
+
+*   [Newsroom](https://www.cms.gov/about-cms/contact/newsroom)
+*   [Press Kit](https://www.cms.gov/newsroom/press-kit)
+*   [Data](https://www.cms.gov/newsroom/data "CMS Data")
+*   [Contact](https://www.cms.gov/newsroom/press-contacts)
+*   [CMS.gov Home](https://www.cms.gov/)
+*   [About CMS](https://www.cms.gov/about-cms)
+*   [Data & Research](https://www.cms.gov/data-research)
+
+Search
+
+Search
+
+*   [](https://www.cms.gov/ "CMS Home")
+*   [Newsroom Homepage](https://www.cms.gov/about-cms/contact/newsroom)
+*    Fact Sheets
+*    CMS Releases 2024 Projected Medicare Part D Premium and Bid Information
+
+Fact Sheets Jul 31, 2023
+
+# CMS Releases 2024 Projected Medicare Part D Premium and Bid Information
+
+[Medicare Part D](https://www.cms.gov/newsroom/search?about%5B%5D=66&keys=)
+
+Share
+
+[](https://www.facebook.com/sharer/sharer.php?u=https://www.cms.gov/newsroom/fact-sheets/cms-releases-2024-projected-medicare-part-d-premium-bid-information)[](https://twitter.com/intent/tweet?text=https://www.cms.gov/newsroom/fact-sheets/cms-releases-2024-projected-medicare-part-d-premium-bid-information)[](https://www.linkedin.com/uas/login?session_redirect=https://www.cms.gov/newsroom/fact-sheets/cms-releases-2024-projected-medicare-part-d-premium-bid-information)[](javascript:window.print())
+
+_New Drug Law Enhances Part D Prescription Drug Benefit and Keeps Part D Premiums Stable for 2024_
+
+The Centers for Medicare & Medicaid Services (CMS) released Calendar Year (CY) 2024 Medicare Part D premium and bid information. This annual release provides information to help Part D plan sponsors finalize their offerings and individuals understand overall Part D premium trends ahead of Medicare Open Enrollment. The average total monthly Part D premium is projected to decrease from $56.49 in 2023 to $55.50 in 2024. Stable premiums for Medicare prescription drug coverage in 2024 are supported by improvements to the Part D program in the Inflation Reduction Act (IRA), or the prescription drug law, that allow people with Medicare to benefit from reduced costs.
+
+Average 2024 Medicare Advantage (MA) premiums and deductibles, among other key information, are released annually in September with the MA & Part D Landscape.
+
+**_Lower Average Total Part D Premiums in 2024_**
+
+The projected average total Part D beneficiary premium is projected to decrease by 1.8% in 2024, from $56.49 in 2023 to $55.50 in 2024. The average total Part D premium is the sum of the average basic premium and the average supplementa l premium for plans with enhanced coverage and is the most accurate current projection of what people will pay in 2024 for Part D premiums.
+
+Overall, the average total Part D premium is projected to decline largely for two reasons:
+
+*   Premium Stabilization: Beginning in 2024, the IRA provides a mechanism to limit premium increases for people enrolled in Part D. Specifically, the law limits the growth in the base beneficiary premium (used to calculate the plan-specific basic premium) to a 6% annual increase. As explained below, by capping the base beneficiary premium, the IRA's premium stabilization provision has moderated the growth in the average basic premium, which, when taken with a lower average supplemental premium, results in a lower average total premium.
+*   Improved Basic Part D Benefit: The IRA caps annual out-of-pocket costs, limits cost-sharing for covered insulin products, and eliminates cost-sharing for recommended adult vaccines in 2024. Additionally, CMS' recent rulemaking [1]requires Part D plans to apply the price concessions they receive from pharmacies to lower the price the beneficiary pays at the point of sale beginning in 2024. These changes enhance the basic Part D benefit for 2024, resulting in better coverage available to all Part D beneficiaries while reducing premiums for supplemental Part D coverage.
+
+The projected decrease in supplemental premiums in 2024, due in large part to policies that lower beneficiary costs at the pharmacy counter under the basic Part D benefit, combined with moderate projected growth in basic premiums due to the IRA's premium stabilization provision, means that, on average, beneficiaries will pay less in total Part D premiums in 2024. (See below for further details.)
+
+**The chart below shows average total and supplemental Part D premiums are projected to decrease in 2024:**
+
+![Image 2: Part D Fact Sheet Chart](https://www.cms.gov/sites/default/files/styles/desktop_width/public/2023-07/7-31-23%20Part%20D%20Fact%20Sheet%20chart.png?itok=DpdvXMiy)
+
+Source: CMS Part D bid and enrollment data, 2020-2024
+
+**Background on Part D Premiums**
+
+Key elements related to understanding Part D premiums are the base beneficiary premium, average basic Part D premium, average supplemental Part D premium, and average total Part D premium.
+
+**Base Beneficiary Premium:**
+
+The national base beneficiary premium is the starting point for calculating a plan-specific basic Part D premium. This value is calculated per a statutory formula, using a percentage of bids and estimates of reinsurance costs submitted by certain Part D plans for the statutory minimum level of coverage Part D plans are required to provide (known as the "basic" benefit). Beginning in 2024, the annual increase in the base beneficiary premium is capped by the prescription drug law's premium stabilization provision, not to exceed 6% per year. In 2024, the premium stabilization provision reduced the increase in the base beneficiary premium by 14 percentage points; the base beneficiary premium will increase by 6% in 2024 to $34.70. Without premium stabilization, the 2024 base beneficiary premium would have been $39.35, or $4.65 higher.
+
+**Average Basic Part D Premium:**
+
+The base beneficiary premium is used to calculate a plan-specific monthly premium for the basic benefit offered by each Part D plan, called the basic Part D premium. Specifically, the plan-specific basic Part D premium is calculated as the sum of the base beneficiary premium and the difference between the plan's monthly bid and the national average monthly bid amount. Thus, the plan-specific basic premium can be higher or lower than the base beneficiary premium, depending on if the plan's bid is higher or lower than the national average monthly bid amount. These plan-specific basic premiums across all plans that submit bids are then averaged together to calculate the average basic Part D premium. Part D enrollees pay the basic premium themselves unless they are eligible for a premium subsidy through the Low-Income Subsidy (LIS) Program or enrolled in a MA plan with Part D (MA-PD plan) that applies MA rebates toward lowering the beneficiary's Part D premium obligation.
+
+With a premium stabilization-capped 2024 base beneficiary premium of $34.70, the average basic Part D premium is projected to increase from $32.09 in 2023 to $34.50 in 2024, a 7.5% increase.[2]Had the 2024 base beneficiary premium not been capped in accordance with the IRA's premium stabilization provision, the average basic Part D premium would have increased from $32.09 in 2023 to $39.00 in 2024, a 21.5% increase.
+
+**Average Supplemental Part D Premium:**
+
+Many Part D plans provide a richer benefit than the basic Part D benefit (for instance, through lower cost-sharing than required under the basic benefit, coverage of certain non-Part D drugs, etc.); such plans are called "enhanced alternative" plans. The supplemental coverage provided by an enhanced alternative plan is paid for with an additional monthly "supplemental premium." Roughly 75% of beneficiaries are enrolled in enhanced plans in 2023.
+
+*   The program-wide average supplemental Part D premium is projected to decrease from $24.40 in 2023 to $21.00 in 2024.
+*   The reduction in the average supplemental premium is largely driven by the enhancements described below to the 2024 Part D basic benefit mandated by the IRA and CMS' recent rulemaking on pharmacy price concessions. These basic benefit enhancements reduce the need for additional benefit enhancements traditionally offered by enhanced alternative Part D plans, resulting in a lower supplemental premium.
+
+**Average Total Part D Monthly Premium:**
+
+As discussed above, the average total Part D premium is the sum of the average basic premium and the average supplemental premium for plans with enhanced coverage and is the most accurate projection of what people with Part D are likely to pay on average in premiums, before subsidies and the application of MA rebates are considered.
+
+*   The program-wide average total Part D premium is projected to decrease from $56.49 in 2023 to $55.50 in 2024.
+*   The final total Part D premiums that beneficiaries will pay for Part D coverage may change and will be announced in September, prior to open enrollment.
+
+**Changes Impacting Part D Premiums in 2024**
+
+**_The Prescription Drug Law Lowers Beneficiaries' Out-of-Pocket Prescription Drug Costs_**
+
+In addition to maintaining stability in Part D beneficiary premiums, the prescription drug law made several improvements to the basic Part D drug benefit. According to a [new report](https://aspe.hhs.gov/reports/medicare-prescription-drugs) by the Office of the Assistant Secretary for Planning and Evaluation, these IRA-mandated changes to the Part D basic benefit are projected to [save beneficiaries an average of 15% in annual out-of-pocket prescription drug costs in 2024](https://aspe.hhs.gov/sites/default/files/documents/93a68f3c5ca949dcf331aa0ec24dd046/aspe-part-d-oop.pdf). This will result in a decrease of approximately $3.6 billion in out-of-pocket prescription drug spending for Part D beneficiaries in 2024.
+
+Before the prescription drug law, more than 5 million people with Medicare struggled to afford their prescription drugs. People with lower incomes and those under age 65 also are more likely to skip the medicine they need because of high costs. [3] The new drug law makes changes to Medicare so that millions of people with Medicare will spend less on their prescriptions.
+
+Part D benefit-related updates that will be in place for 2024 include the following:
+
+*   Cost-sharing for Part D drugs will be eliminated for beneficiaries in the catastrophic phase of coverage.
+*   The LIS, or the Extra Help, program, will be expanded so that beneficiaries who earn between 135% and 150% of the federal poverty level and meet statutory resource limit requirements will receive the full LIS that, prior to 2024, were available only to beneficiaries earning less than 135% of the federal poverty level; these subsidies provide for $0 premiums and low-cost, fixed copayments for covered prescription drugs.
+*   Part D plans must not apply the deductible to any Part D covered insulin product and must charge no more than $35 per month's supply of each covered insulin product in the initial coverage phase and the coverage gap phase.
+*   Part D plans must not apply the deductible to an adult vaccine recommended by the Advisory Committee on Immunization Practices and must charge no cost-sharing at any point in the benefit for such vaccines.
+
+Additional enhancements to the Part D program begin in 2025 including a $2,000 out-of-pocket cap for Part D prescription drugs and the option for those with Medicare Part D coverage to pay out-of-pocket costs in monthly amounts spread over the year.
+
+Additional information about the IRA and Medicare can be found [here](https://www.cms.gov/priorities/medicare-prescription-drug-affordability/medicare-prescription-drug-affordability).
+
+**_Lower Beneficiary Cost-Sharing at the Pharmacy Counter in 2024_**
+
+The [Part D pharmacy price concessions policy](https://www.federalregister.gov/documents/2022/05/09/2022-09375/medicare-program-contract-year-2023-policy-and-technical-changes-to-the-medicare-advantage-and) will also be implemented in 2024. This change will also lower beneficiary out-of-pocket prescription drug costs. The policy finalized by CMS will apply across all phases of the Part D benefit and is expected to reduce beneficiary out-of-pocket costs and improve price transparency and market competition in the Part D program.
+
+I n recent years, more Part D plans have been entering into arrangements with pharmacies where the Part D plans may pay less money for dispensed drugs if pharmacies do not meet certain criteria. The negotiated price for a drug is the price reported to CMS at the point of sale, which is used to calculate beneficiary cost-sharing and generally adjudicate the Part D benefit. With the emergence of these payment arrangements, the negotiated price is frequently higher than the final payment to pharmacies. Higher negotiated prices lead to higher beneficiary cost-sharing.
+
+In 2022, CMS finalized a policy that requires Part D plans to apply all price concessions they receive from network pharmacies to the negotiated price at the point of sale, so that the beneficiary can also share in the savings at the pharmacy. This change is projected to decrease Part D beneficiary out-of-pocket costs by $2.62 billion in 2024.
+
+For more information on the 2024 Part D national average bid amount and other Part C & D bid information, visit: [https://www.cms.gov/medicare/health-plans/medicareadvtgspecratestats/ratebooks-and-supporting-data/655541402/2024](https://www.cms.gov/medicare/health-plans/medicareadvtgspecratestats/ratebooks-and-supporting-data/655541402/2024).
+
+* * *
+
+[1] https://www.cms.gov/newsroom/fact-sheets/cy-2023-medicare-advantage-and-part-d-final-rule-cms-4192-f.
+
+[2]The IRA's premium stabilization provision caps the increase in the base beneficiary premium, which is the starting point for calculating the plan-specific basic Part D premium. The plan-specific basic premium can be higher or lower than the base beneficiary premium depending on if the plan's bid is higher or lower than the national average bid. Moreover, the base beneficiary premium is calculated across certain plans that submit bids, as specified by statute, while the average basic premium is calculated across all plans that submit bids.
+
+[3][Prescription Drug Affordability among Medicare Beneficiaries](https://aspe.hhs.gov/reports/medicare-prescription-drugs).HHS Office of the Assistant Secretary for Planning and Evaluation. See at: [https://aspe.hhs.gov/reports/medicare-prescription-drugs](https://aspe.hhs.gov/reports/medicare-prescription-drugs%20%C2%A0)
+
+*   [Previous Newsroom Article](https://www.cms.gov/newsroom/fact-sheets/fiscal-year-fy-2024-skilled-nursing-facility-perspective-payment-system-final-rule-cms-1779-f)
+*   [Next Newsroom Article](https://www.cms.gov/newsroom/news-alert/cms-releases-2024-projected-medicare-part-d-premium-bid-information)
+
+## Related Releases
+
+*   Press Releases Jul 01, 2026  [CMS Launches Medicare GLP-1 Bridge, Expanding Access to GLP-1 Medications](https://www.cms.gov/newsroom/press-releases/cms-launches-medicare-glp-1-bridge-expanding-access-glp-1-medications)
+*   Press Releases Apr 06, 2026  [CMS Finalizes 2027 Medicare Advantage and Part D Payment Policies that Strengthen Accountability and Long-Term Sustainability](https://www.cms.gov/newsroom/press-releases/cms-finalizes-2027-medicare-advantage-part-d-payment-policies-strengthen-accountability-long-term)
+*   Press Releases Apr 02, 2026  [Medicare Beneficiaries to See Simpler and More Flexible Plan Choices, Better Drug Coverage, Higher Quality and Lower Costs in 2027](https://www.cms.gov/newsroom/press-releases/medicare-beneficiaries-see-simpler-more-flexible-plan-choices-better-drug-coverage-higher-quality)
+*   Press Releases Jan 26, 2026  [CMS Proposes 2027 Medicare Advantage and Part D Payment Policies to Improve Payment Accuracy and Sustainability](https://www.cms.gov/newsroom/press-releases/cms-proposes-2027-medicare-advantage-part-d-payment-policies-improve-payment-accuracy-sustainability)
+
+## Contact us
+
+CMS News and Media Group
+
+ Catherine Howden, Director
+
+[Media Inquiries Form](https://www.cms.gov/newsroom/media-inquiries)
+
+ 202-690-6145
+
+## Get email updates
+
+Sign up to get the latest information about your choice of CMS topics. You can decide how often to receive updates.
+
+Email
+
+Sign up - opens in a new window Sign up
+
+CMS & HHS Websites CMS & HHS Websites
+
+*   [Medicare.gov](https://www.medicare.gov/ "Medicare.gov")
+*   [Medicaid.gov](https://www.medicaid.gov/ "Medicaid.gov")
+*   [InsureKidsNow.gov](https://www.insurekidsnow.gov/ "InsureKidsNow.gov")
+*   [HealthCare.gov](https://www.healthcare.gov/ "HealthCare.gov")
+*   [HHS.gov](https://www.hhs.gov/ "HHS.gov")
+*   [HHS.gov/Open](https://www.hhs.gov/open/index.html "HHS.gov/Open")
+
+About CMS About CMS
+
+*   [About Us](https://www.cms.gov/about-cms "About CMS")
+*   [Careers](https://www.cms.gov/about-cms/work-with-us/careers)
+*   [Newsroom](https://www.cms.gov/about-cms/contact/newsroom "Newsroom")
+
+Tools Tools
+
+*   [Acronyms](https://www.cms.gov/acronyms "Acronyms")
+*   [Archive](https://www.cms.gov/about-cms/web-policies-important-links/about-website/archive "Archive")
+*   [Contacts](https://www.cms.gov/about-cms/contact/directory "Contacts")
+*   [Glossary](https://www.cms.gov/glossary "Glossary")
+
+Helpful Links Helpful Links
+
+*   [Privacy Policy](https://www.cms.gov/about-cms/web-policies-important-links/web-policies/privacy)
+*   [Plain Language](https://www.medicare.gov/about-us/plain-writing "Plain Language")
+*   [Privacy Settings](https://www.cms.gov/newsroom/fact-sheets/cms-releases-2024-projected-medicare-part-d-premium-and-bid-information?B_Premiums_and_Deductibles_2024_Medicare_Part_D_Income-Related_Monthly_Adjustment_Amounts=&cmdf=2024+Medicare+Parts+A+ "Privacy settings")
+*   [Nondiscrimination & Accessibility](https://www.cms.gov/about-cms/web-policies-important-links/accessibility-nondiscrimination-disabilities-notice "Nondiscrimination/Accessibility")
+*   [Developer Information](https://developer.cms.gov/ "For Developers")
+*   [Vulnerability Disclosure Policy](https://www.cms.gov/about-cms/information-systems/privacy/vulnerability-disclosure-policy "Vulnerability Disclosure Policy")
+
+USA Government Sites USA Government Sites
+
+*   [Freedom of Information Act](https://www.cms.gov/freedom-information-act-foia-service-center "Freedom of Information Act")
+*   [No Fear Act](https://www.cms.gov/about-cms/web-policies-important-links/no-fear-act "No Fear Act")
+*   [Inspector General](https://www.oig.hhs.gov/ "Inspector General")
+*   [USA.gov](https://www.usa.gov/ "USA.gov")
+
+[![Image 3: CMS.gov](https://www.cms.gov/themes/custom/cms_evo/logo.svg)](https://www.cms.gov/)[![Image 4: HHS Logo](https://www.cms.gov/themes/custom/cms_evo/images/hhslogo.png)](http://www.hhs.gov/)
+
+## Connect with CMS
+
+*   [Linkedin link](https://www.linkedin.com/company/centers-for-medicare-&-medicaid-services/)
+*   [Youtube link](https://www.youtube.com/user/CMSHHSgov)
+*   [Facebook link](https://www.facebook.com/medicare)
+*   [Twitter link](https://twitter.com/cmsgov)
+
+A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services.
+
+7500 Security Boulevard, Baltimore, MD 21244

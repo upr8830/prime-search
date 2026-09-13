@@ -1,0 +1,860 @@
+[Skip to main content](http://www.cms.gov/Medicare/Coverage/CoverageGenInfo/index.html#skipNavTarget)
+
+An official website of the United States government
+
+Here's how you know
+
+Here's how you know
+
+**Official websites use .gov**
+
+A **.gov**website belongs to an official government organization in the United States.
+
+**Secure .gov websites use HTTPS**
+
+A **lock**() or**https://**means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.
+
+[![Image 1: CMS.gov](http://www.cms.gov/themes/custom/cms_evo/logo.svg)](http://www.cms.gov/)
+
+ Centers for Medicare & Medicaid Services
+
+## [CMS Newsroom](http://www.cms.gov/about-cms/contact/newsroom)
+
+CMS Global Secondary Menu
+*   [About CMS](http://www.cms.gov/about-cms)
+*   [Newsroom](http://www.cms.gov/about-cms/contact/newsroom)
+*   [Data & Research](http://www.cms.gov/data-research)
+
+## Search CMS.gov
+
+Search Search
+
+Popular terms
+*   Physician Fee Schedule
+*   Local Coverage Determination
+*   Medically Unlikely Edits
+*   Telehealth
+*   Covid-19
+*   Agents and Brokers
+
+## CMS.gov main menu
+
+*   Medicare
+
+Back to main menu
+## Medicare
+    *   Enrollment & renewal
+
+Back to  menu
+### Enrollment & renewal
+
+        *   [Original Medicare (Part A and B) Eligibility and Enrollment](http://www.cms.gov/medicare/enrollment-renewal/original-part-a-b)
+        *   [Annual Medicare Participation Announcement](http://www.cms.gov/medicare-participation)
+        *   [Providers & suppliers](http://www.cms.gov/medicare/enrollment-renewal/providers-suppliers)
+        *   [Medicare Managed Care Eligibility and Enrollment](http://www.cms.gov/medicare/enrollment-renewal/managed-care-eligibility-enrollment)
+        *   [Part D Eligibility and Enrollment](http://www.cms.gov/medicare/enrollment-renewal/part-d-enrollment-eligibility)
+        *   [Health plans](http://www.cms.gov/medicare/enrollment-renewal/health-plans)
+
+    *   Coverage
+
+Back to  menu
+### Coverage
+
+        *   [Coverage Determination Process](http://www.cms.gov/medicare/coverage/determination-process)
+        *   [Medicare Coverage Database](https://www.cms.gov/medicare-coverage-database/search.aspx)
+        *   [Approved facilities, trials, & registries](http://www.cms.gov/medicare/coverage/approved-facilities-trials-registries)
+        *   [Telehealth](http://www.cms.gov/medicare/coverage/telehealth)
+        *   [Medicare Summary Notice](http://www.cms.gov/medicare/coverage/summary-notice)
+        *   [Prescription Drug Coverage Contracting Resources](http://www.cms.gov/medicare/coverage/prescription_drug_coverage_contracting_resources)
+        *   [Coverage with evidence development](http://www.cms.gov/medicare/coverage/evidence)
+        *   [Investigational device exemption studies](http://www.cms.gov/medicare/coverage/investigational-device-exemption-ide-studies)
+        *   [Prescription drug coverage](http://www.cms.gov/medicare/coverage/prescription-drug-coverage)
+        *   [Drug coverage claims data](http://www.cms.gov/medicare/coverage/prescription-drug-claims-data)
+        *   [Dental coverage](http://www.cms.gov/medicare/coverage/dental "_inextricably")
+        *   [Preventive Services](http://www.cms.gov/medicare/coverage/preventive-services-coverage)
+        *   [Medicare Coverage Center](http://www.cms.gov/medicare/coverage/center)
+
+    *   Regulations & guidance
+
+Back to  menu
+### Regulations & guidance
+
+        *   [Manuals](http://www.cms.gov/medicare/regulations-guidance/manuals)
+        *   [Transmittals](http://www.cms.gov/medicare/regulations-guidance/transmittals)
+        *   [CMS Records Schedule](http://www.cms.gov/medicare/regulations-guidance/guidance)
+        *   [Original Medicare Payment Regulations](http://www.cms.gov/medicare/regulations-guidance/original-medicare-payment-regulations)
+        *   [National Provider Identifier Standard (NPI)](http://www.cms.gov/regulations-and-guidance/administrative-simplification/nationalprovidentstand)
+        *   [Advisory committees](http://www.cms.gov/medicare/regulations-guidance/advisory-committees)
+        *   [Legislation](http://www.cms.gov/medicare/regulations-guidance/legislation)
+        *   [Promoting Interoperability Programs](http://www.cms.gov/medicare/regulations-guidance/promoting-interoperability-programs)
+        *   [CMS rulemaking](http://www.cms.gov/medicare/regulations-guidance/cms-rulemaking)
+        *   [CMS Hearing Officer](http://www.cms.gov/medicare/regulations-guidance/cms-hearing-officer)
+        *   [Office of the Attorney Advisor (OAA)](http://www.cms.gov/medicare/regulations-guidance/office-attorney-advisor)
+        *   [Provider Reimbursement Review Board (PRRB)](http://www.cms.gov/medicare/regulations-guidance/provider-reimbursement-review-board)
+        *   [Medicare Geographic Classification Review Board (MGCRB)](http://www.cms.gov/medicare/regulations-guidance/geographic-classification-review-board)
+        *   [Physician Self-Referral](http://www.cms.gov/medicare/regulations-guidance/physician-self-referral)
+        *   [Quarterly provider updates](http://www.cms.gov/files/document/medqtrlycompnlarchive072019003pdf)
+        *   [E-Prescribing](http://www.cms.gov/medicare/regulations-guidance/electronic-prescribing)
+
+    *   Coding & billing
+
+Back to  menu
+### Coding & billing
+
+        *   [Place of service codes](http://www.cms.gov/medicare/coding-billing/place-of-service-codes)
+        *   [ICD-10 codes](http://www.cms.gov/medicare/coding-billing/icd-10-codes)
+        *   [Healthcare Common Procedure Coding System (HCPCS)](http://www.cms.gov/medicare/coding-billing/healthcare-common-procedure-system)
+        *   [Integrated Outpatient Code Editor](http://www.cms.gov/medicare/coding-billing/outpatient-code-editor)
+        *   [National Correct Coding Initiative (NCCI) edits](http://www.cms.gov/medicare/coding-billing/national-correct-coding-initiative-ncci-edits)
+        *   [NCCI for Medicaid](http://www.cms.gov/medicare/coding-billing/ncci-medicaid)
+        *   [Electronic billing](http://www.cms.gov/medicare/coding-billing/electronic-billing)
+        *   [Medicare Administrative Contractors (MACs)](http://www.cms.gov/medicare/coding-billing/medicare-administrative-contractors-macs)
+        *   [Provider Customer Service Program](http://www.cms.gov/medicare/coding-billing/provider-customer-service-program)
+        *   [Skilled Nursing Facility (SNF) consolidated billing](http://www.cms.gov/medicare/coding-billing/skilled-nursing-facility-snf-consolidated-billing)
+        *   [Roster billing](http://www.cms.gov/roster-billing)
+        *   [Therapy services](http://www.cms.gov/medicare/coding-billing/therapy-services)
+        *   [Medicare claims & public health emergencies](http://www.cms.gov/medicare/coding-billing/claims-public-health-emergencies)
+        *   [Guide for Medical Technology Companies and Other Interested Parties](http://www.cms.gov/medicare/coding-billing/guide-medical-technology-companies-other-interested-parties)
+        *   [Medicare Fee-for-Service 5010 - D0](http://www.cms.gov/medicare/coding-billing/medicare-fee-service-5010-d0)
+
+    *   Payment
+
+Back to  menu
+### Payment
+
+        *   [Medicare Part B Drug Average Sales Price](http://www.cms.gov/medicare/payment/fee-for-service-providers/part-b-drugs/average-drug-sales-price)
+        *   [Fee schedules](http://www.cms.gov/medicare/payment/fee-schedules)
+        *   [Prospective Payment Systems](http://www.cms.gov/medicare/payment/prospective-payment-systems)
+        *   [Opioid Treatment Programs (OTP)](http://www.cms.gov/medicare/payment/opioid-treatment-program)
+        *   [Shared Savings Program](http://www.cms.gov/medicare/payment/shared-savings-program)
+        *   [Covid-19 Vaccine Toolkit](http://www.cms.gov/covidvax-provider)
+        *   [Hospital-Acquired Conditions (HAC)](http://www.cms.gov/medicare/payment/hospital-acquired-conditions-hac)
+        *   [Physician bonuses in Health Professional Shortage Areas (HPSAs)](http://www.cms.gov/medicare/payment/physician-bonuses-health-professional-shortage-areas-hpsas)
+        *   [Bankruptcy](http://www.cms.gov/medicare/payment/bankruptcy)
+        *   [Sustainable Growth Rates & Conversion Factors](http://www.cms.gov/medicare/payment/sustainable-growth-rates-conversion-factors)
+        *   [Competitive acquisition](http://www.cms.gov/medicare/payment/competitive-acquisition)
+        *   [Medicare Advantage Rates & Statistics](http://www.cms.gov/medicare/payment/medicare-advantage-rates-statistics)
+
+    *   Medicare-Medicaid coordination
+
+Back to  menu
+### Medicare-Medicaid coordination
+
+        *   [Qualified Medicare beneficiary program](http://www.cms.gov/medicare/medicaid-coordination/about)
+        *   [Resources](http://www.cms.gov/medicare/medicaid-coordination/center-program-integrity/resources)
+        *   [Qualified Medicare beneficiary program](http://www.cms.gov/medicare/medicaid-coordination/about/qualified-medicare-beneficiary-program)
+        *   [Spotlight](http://www.cms.gov/medicare/medicaid-coordination/center-program-integrity/spotlight)
+        *   [Events](http://www.cms.gov/medicare/medicaid-coordination/center-program-integrity/events)
+        *   [Financial alignment initiative](http://www.cms.gov/medicaid-chip/medicare-coordination/financial-alignment)
+        *   [Initiative to reduce avoidable hospitalizations](http://www.cms.gov/medicaid-chip/medicare-coordination/avoidable-hospitalizations)
+        *   [Reports & Guidance](http://www.cms.gov/medicare/medicaid-coordination/center-program-integrity/reports-guidance)
+        *   [Program of All-Inclusive Care for the Elderly (PACE)](http://www.cms.gov/medicare/medicaid-coordination/pace)
+        *   [Reporting Fraud](http://www.cms.gov/medicare/medicaid-coordination/center-program-integrity/reporting-fraud)
+        *   [Resources for Medicare-Medicaid plans](http://www.cms.gov/medicare/medicaid-coordination/plans)
+        *   [Resources for State Medicaid Agencies](http://www.cms.gov/medicare/medicaid-coordination/states)
+        *   [Healthcare Fraud Prevention Partnership](http://www.cms.gov/medicare/medicaid-coordination/healthcare-fraud-prevention-partnership)
+        *   [Clinical Templates](http://www.cms.gov/about-cms/information-systems/clinical-templates)
+
+    *   Appeals & grievances
+
+Back to  menu
+### Appeals & grievances
+
+        *   [Original Medicare appeals](http://www.cms.gov/medicare/appeals-grievances/fee-for-service)
+        *   [Managed Care appeals & grievances](http://www.cms.gov/medicare/appeals-grievances/managed-care)
+        *   [Medicare Prescription drug appeals & grievances](http://www.cms.gov/medicare/appeals-grievances/prescription-drug)
+        *   [Ombudsman Center](http://www.cms.gov/medicare/appeals-grievances/ombudsman-center)
+        *   [Appeals Decision Search (Part C & Part D)](http://www.cms.gov/medicare/appeals-grievances/appeals-decision-search-part-c-d)
+
+    *   Quality
+
+Back to  menu
+### Quality
+
+        *   [Value-based programs](http://www.cms.gov/medicare/quality/value-based-programs)
+        *   [Person & Family Engagement](http://www.cms.gov/medicare/quality/initiatives/hospital-quality-initiative/person-family-engagement)
+        *   [Quality Improvement Programs](http://www.cms.gov/medicare/quality/quality-improvement-organizations)
+        *   [Nursing home quality improvement](http://www.cms.gov/medicare/quality/nursing-home-improvement)
+        *   [Inpatient Rehabilitation Facility (IRF) Quality Reporting Program (QRP)](http://www.cms.gov/medicare/quality/inpatient-rehabilitation-facility)
+        *   [Home Health Quality Reporting Program](http://www.cms.gov/medicare/quality/home-health)
+        *   [ESRD Quality Incentive Program](http://www.cms.gov/medicare/quality/end-stage-renal-disease-esrd-quality-incentive-program)
+        *   [CMS National Quality Strategy](http://www.cms.gov/medicare/quality/meaningful-measures-initiative/cms-quality-strategy)
+        *   [Hospice Quality Reporting Program](http://www.cms.gov/medicare/quality/hospice)
+        *   [Long-Term Care Hospital (LTCH) Quality Reporting Program (QRP)](http://www.cms.gov/medicare/quality/long-term-care-hospital)
+        *   [Appropriate Use Criteria Program](http://www.cms.gov/medicare/quality/appropriate-use-criteria-program)
+        *   [Quality measures](http://www.cms.gov/medicare/quality/measures)
+        *   [Medicare Advantage quality improvement program](http://www.cms.gov/medicare/advantage-quality-improvement-program)
+        *   [Physician compare initiative](http://www.cms.gov/medicare/quality/physician-compare-initiative)
+        *   [Quality initiatives](http://www.cms.gov/medicare/quality/initiatives)
+        *   [Part C and D Performance Data](http://www.cms.gov/medicare/health-drug-plans/part-c-d-performance-data)
+        *   [Skilled Nursing Facility (SNF) Quality Reporting Program (QRP)](http://www.cms.gov/medicare/quality/snf-quality-reporting-program)
+
+    *   Health & safety standards
+
+Back to  menu
+### Health & safety standards
+
+        *   [Quality, Safety & Oversight Group (QSOG)](http://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-group-qsog)
+        *   [Quality, safety & oversight general information](http://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information)
+        *   [Certification & compliance](http://www.cms.gov/medicare/health-safety-standards/certification-compliance)
+        *   [Emergency preparedness](http://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-emergency-preparedness)
+        *   [Clinical Laboratory Improvement Amendments (CLIA)](http://www.cms.gov/medicare/quality/clinical-laboratory-improvement-amendments)
+        *   [Accreditation programs](http://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/accrediting-organizations-aos)
+        *   [Conditions for coverage & participation](http://www.cms.gov/medicare/health-safety-standards/conditions-coverage-participation)
+        *   [Home Health Agencies](http://www.cms.gov/medicare/health-safety-standards/guidance-for-laws-regulations/home-health-agencies)
+
+    *   Employers & plan sponsors
+
+Back to  menu
+### Employers & plan sponsors
+
+        *   [Creditable coverage](http://www.cms.gov/medicare/employers-plan-sponsors/creditable-coverage)
+
+    *   Innovation Center
+
+Back to  menu
+### Innovation Center
+
+        *   [Overview](http://www.cms.gov/priorities/innovation/overview)
+
+    *   Audits & Compliance
+
+Back to  menu
+### Audits & Compliance
+
+        *   [Part A cost report audit](http://www.cms.gov/medicare/audits-compliance/part-a-cost-report)
+        *   [Part C/Part D compliance & audits](http://www.cms.gov/medicare/audits-compliance/part-c-d)
+
+    *   Forms & notices
+
+Back to  menu
+### Forms & notices
+
+        *   [CMS forms](http://www.cms.gov/medicare/forms-notices/cms-forms)
+        *   [CMS forms list](http://www.cms.gov/medicare/forms-notices/cms-forms-list)
+        *   [Beneficiary Notices Initiative (BNI)](http://www.cms.gov/medicare/forms-notices/beneficiary-notices-initiative)
+
+    *   Health & drug plans
+
+Back to  menu
+### Health & drug plans
+
+        *   [Plan payment](http://www.cms.gov/medicare/health-drug-plans/plan-payment)
+        *   [Plan payment data](http://www.cms.gov/medicare/health-drug-plans/plan-payment-data)
+        *   [Medical loss ratio](http://www.cms.gov/medicare/health-drug-plans/medical-loss-ratio)
+        *   [Managed care marketing](http://www.cms.gov/medicare/health-drug-plans/managed-care-marketing)
+        *   [Medicare Advantage application](http://www.cms.gov/medicare/health-drug-plans/medicare-advantage-application)
+        *   [Medigap (Medicare supplement health insurance)](http://www.cms.gov/medicare/health-drug-plans/medigap)
+        *   [Medical Savings Account (MSA)](http://www.cms.gov/medicare/health-drug-plans/medical-savings-account)
+        *   [Private Fee-for-Service Plans](http://www.cms.gov/medicare/health-drug-plans/private-fee-for-service-plans)
+        *   [Health Care Prepayment Plans (HCPPs)](http://www.cms.gov/medicare/enrollment-renewal/health-plans/prepayment)
+        *   [Cost plans](http://www.cms.gov/medicare/enrollment-renewal/health-plans/cost)
+        *   [Special needs plans](http://www.cms.gov/medicare/enrollment-renewal/special-needs-plans)
+        *   [Network adequacy](http://www.cms.gov/medicare/health-drug-plans/network-adequacy)
+        *   [Report a provider complaint about an MA plan](http://www.cms.gov/medicare/health-drug-plans/provider-complaints-form)
+        *   [Medicare Prescription Payment Plan](http://www.cms.gov/medicare/health-drug-plans/medicare-prescription-payment-plan)
+
+    *   Coordination of benefits & recovery
+
+Back to  menu
+### Coordination of benefits & recovery
+
+        *   [Overview](http://www.cms.gov/medicare/coordination-benefits-recovery/overview)
+        *   [Mandatory Insurer Reporting for Group Health Plans (GHP)](http://www.cms.gov/medicare/coordination-benefits-recovery/mandatory-insurer-reporting-group-health-plans)
+        *   [Mandatory insurer reporting (NGHP)](http://www.cms.gov/medicare/coordination-benefits-recovery/mandatory-insurer-reporting)
+        *   [Workers' comp Medicare set aside arrangements](http://www.cms.gov/medicare/coordination-benefits-recovery/workers-comp-set-aside-arrangements)
+        *   [Attorney services](http://www.cms.gov/medicare/coordination-benefits-recovery/attorney-services)
+        *   [Beneficiary services](http://www.cms.gov/medicare/coordination-benefits-recovery/beneficiary-services)
+        *   [COBA Trading Partners](http://www.cms.gov/medicare/coordination-benefits-recovery/coba-trading-partners)
+        *   [Employer services](http://www.cms.gov/medicare/coordination-benefits-recovery/employer-services)
+        *   [Insurer services](http://www.cms.gov/medicare/coordination-benefits-recovery/insurer-services)
+        *   [Prescription drug assistance programs](http://www.cms.gov/medicare/coordination-benefits-recovery/prescription-drug-assistance-programs)
+        *   [Provider services](http://www.cms.gov/medicare/coordination-benefits-recovery/provider-services)
+
+    *   Settlements
+
+Back to  menu
+### Settlements
+
+        *   [Jimmo Settlement](http://www.cms.gov/medicare/settlements/jimmo)
+        *   [Ryan Settlement](http://www.cms.gov/medicare/settlements/ryan)
+
+Close this menu
+
+*   Medicaid/CHIP
+
+Back to main menu
+## Medicaid/CHIP
+    *   What is Medicaid?
+
+Back to  menu
+### What is Medicaid?
+
+        *   [Visit Medicaid.gov](https://www.medicaid.gov/)
+        *   [View Medicaid maps](https://www.medicaid.gov/about-us/beneficiary-resources/index.html#statemenu)
+        *   [Visit CHIP.gov](http://www.medicaid.gov/chip/index.html)
+
+    *   Medicare-Medicaid Coordination
+
+Back to  menu
+### Medicare-Medicaid Coordination
+
+        *   [Integrated care resources](http://www.cms.gov/medicaid-chip/medicare-coordination/integrated-care-resources)
+        *   [Initiative to reduce avoidable hospitalizations](http://www.cms.gov/medicaid-chip/medicare-coordination/avoidable-hospitalizations)
+        *   [Financial alignment initiative](http://www.cms.gov/medicaid-chip/medicare-coordination/financial-alignment)
+        *   [Medicaid Integrity Institute](http://www.cms.gov/medicaid-chip/medicare-coordination/integrity-institute)
+
+    *   Regulations & guidance
+
+Back to  menu
+### Regulations & guidance
+
+        *   [Manuals](http://www.cms.gov/medicare/regulations-guidance/manuals)
+        *   [Transmittals](http://www.cms.gov/medicare/regulations-guidance/transmittals)
+        *   [CMS Records Schedule](http://www.cms.gov/medicare/regulations-guidance/guidance)
+        *   [Original Medicare Payment Regulations](http://www.cms.gov/medicare/regulations-guidance/original-medicare-payment-regulations)
+        *   [National Provider Identifier Standard (NPI)](http://www.cms.gov/regulations-and-guidance/administrative-simplification/nationalprovidentstand)
+        *   [Advisory committees](http://www.cms.gov/medicare/regulations-guidance/advisory-committees)
+        *   [Legislation](http://www.cms.gov/medicare/regulations-guidance/legislation)
+        *   [Promoting Interoperability Programs](http://www.cms.gov/medicare/regulations-guidance/promoting-interoperability-programs)
+        *   [CMS rulemaking](http://www.cms.gov/medicare/regulations-guidance/cms-rulemaking)
+        *   [CMS Hearing Officer](http://www.cms.gov/medicare/regulations-guidance/cms-hearing-officer)
+        *   [Office of the Attorney Advisor (OAA)](http://www.cms.gov/medicare/regulations-guidance/office-attorney-advisor)
+        *   [Provider Reimbursement Review Board (PRRB)](http://www.cms.gov/medicare/regulations-guidance/provider-reimbursement-review-board)
+        *   [Medicare Geographic Classification Review Board (MGCRB)](http://www.cms.gov/medicare/regulations-guidance/geographic-classification-review-board)
+        *   [Physician Self-Referral](http://www.cms.gov/medicare/regulations-guidance/physician-self-referral)
+        *   [Quarterly provider updates](http://www.cms.gov/files/document/medqtrlycompnlarchive072019003pdf)
+        *   [E-Prescribing](http://www.cms.gov/medicare/regulations-guidance/electronic-prescribing)
+
+    *   Innovation Center
+
+Back to  menu
+### Innovation Center
+
+        *   [Overview](http://www.cms.gov/priorities/innovation/overview)
+
+    *   Community engagement support
+
+Back to  menu
+### Community engagement support
+
+        *   [Eligibility made easy (Emmy)](http://www.cms.gov/medicaid-chip/community-engagement-support/eligibility-made-easy)
+
+Close this menu
+
+*   Marketplace & Private Insurance
+
+Back to main menu
+## Marketplace & Private Insurance
+    *   About the Marketplace
+
+Back to  menu
+### About the Marketplace
+
+        *   [Marketplace oversight](http://www.cms.gov/marketplace/about/oversight)
+        *   [Affordable Care Act](http://www.cms.gov/marketplace/about/affordable-care-act)
+        *   [Overview of the exchanges](http://www.cms.gov/marketplace/about/overview-exchanges)
+        *   [Exchange coverage maps](http://www.cms.gov/marketplace/about/exchange-coverage-maps)
+        *   [Medicare and the Marketplace](http://www.cms.gov/marketplace/about/medicare)
+        *   [Health Insurance Marketplace quality initiatives](http://www.cms.gov/marketplace/about/health-insurance-marketplace-quality-initiatives)
+
+    *   Private Health Insurance
+
+Back to  menu
+### Private Health Insurance
+
+        *   [Patient's Bill of Rights](http://www.cms.gov/marketplace/private-health-insurance/patient-bill-of-rights)
+        *   [Medical loss ratio](http://www.cms.gov/marketplace/private-health-insurance/medical-loss-ratio)
+        *   [Annual limits](http://www.cms.gov/marketplace/private-health-insurance/annual-limits)
+        *   [Review of insurance rates](http://www.cms.gov/marketplace/private-health-insurance/review-insurance-rates)
+        *   [Market rating](http://www.cms.gov/marketplace/private-health-insurance/market-rating-reforms)
+        *   [Self-funded, non-federal governmental plans](http://www.cms.gov/marketplace/private-health-insurance/self-funded-non-federal-governmental-plans)
+        *   [Grandfathered plans](http://www.cms.gov/marketplace/private-health-insurance/grandfathered-plans)
+        *   [Health Reimbursement Arrangements](http://www.cms.gov/marketplace/private-health-insurance/health-reimbursement-arrangements)
+        *   [Coverage for young adults](http://www.cms.gov/marketplace/private-health-insurance/coverage-young-adults)
+        *   [Student health plans](http://www.cms.gov/marketplace/private-health-insurance/student-health-plans)
+        *   [Mental health parity and addiction equity](http://www.cms.gov/marketplace/private-health-insurance/mental-health-parity-addiction-equity)
+        *   [Prevention](http://www.cms.gov/marketplace/private-health-insurance/prevention)
+        *   [Consumer protections & enforcement](http://www.cms.gov/marketplace/private-health-insurance/consumer-protections-enforcement)
+        *   [Pre-existing condition insurance plan](http://www.cms.gov/marketplace/private-health-insurance/pre-existing-condition-plan)
+        *   [Qualifying Health Coverage (QHC)](https://www.healthcare.gov/glossary/qualifying-health-coverage)
+
+    *   Regulations & guidance
+
+Back to  menu
+### Regulations & guidance
+
+        *   [CCIIO Regulations & Guidance](http://www.cms.gov/marketplace/resources/regulations-guidance)
+        *   [Manuals](http://www.cms.gov/medicare/regulations-guidance/manuals)
+        *   [Transmittals](http://www.cms.gov/medicare/regulations-guidance/transmittals)
+        *   [CMS Records Schedule](http://www.cms.gov/medicare/regulations-guidance/guidance)
+        *   [Original Medicare Payment Regulations](http://www.cms.gov/medicare/regulations-guidance/original-medicare-payment-regulations)
+        *   [National Provider Identifier Standard (NPI)](http://www.cms.gov/regulations-and-guidance/administrative-simplification/nationalprovidentstand)
+        *   [Advisory committees](http://www.cms.gov/medicare/regulations-guidance/advisory-committees)
+        *   [Legislation](http://www.cms.gov/medicare/regulations-guidance/legislation)
+        *   [Promoting Interoperability Programs](http://www.cms.gov/medicare/regulations-guidance/promoting-interoperability-programs)
+        *   [CMS rulemaking](http://www.cms.gov/medicare/regulations-guidance/cms-rulemaking)
+        *   [CMS Hearing Officer](http://www.cms.gov/medicare/regulations-guidance/cms-hearing-officer)
+        *   [Office of the Attorney Advisor (OAA)](http://www.cms.gov/medicare/regulations-guidance/office-attorney-advisor)
+        *   [Provider Reimbursement Review Board (PRRB)](http://www.cms.gov/medicare/regulations-guidance/provider-reimbursement-review-board)
+        *   [Medicare Geographic Classification Review Board (MGCRB)](http://www.cms.gov/medicare/regulations-guidance/geographic-classification-review-board)
+        *   [Physician Self-Referral](http://www.cms.gov/medicare/regulations-guidance/physician-self-referral)
+        *   [Quarterly provider updates](http://www.cms.gov/files/document/medqtrlycompnlarchive072019003pdf)
+        *   [E-Prescribing](http://www.cms.gov/medicare/regulations-guidance/electronic-prescribing)
+
+    *   In-person assisters
+
+Back to  menu
+### In-person assisters
+
+        *   [Information for Partners](http://www.cms.gov/marketplace/in-person-assisters/information-partners)
+        *   [Assister outreach & education](http://www.cms.gov/marketplace/in-person-assisters/outreach-education)
+        *   [Applications, forms, & notices](http://www.cms.gov/marketplace/in-person-assisters/applications-forms-notices)
+        *   [Assister programs & procedures](http://www.cms.gov/marketplace/in-person-assisters/programs-procedures)
+        *   [Assister technical resources](http://www.cms.gov/marketplace/in-person-assisters/technical-resources)
+        *   [Assister training & webinars](http://www.cms.gov/marketplace/in-person-assisters/training-webinars)
+        *   [Assister Support Hub](https://assisters.cms.gov/)
+
+    *   Agents & Brokers
+
+Back to  menu
+### Agents & Brokers
+
+        *   [Resources for Agent & Brokers](http://www.cms.gov/marketplace/agents-brokers/resources)
+        *   [Registration & training](http://www.cms.gov/marketplace/agents-brokers/registration-training)
+        *   [Open enrollment](http://www.cms.gov/marketplace/agents-brokers/open-enrollment)
+        *   [Direct enrollment partners](http://www.cms.gov/marketplace-private-insurance/agents-brokers/direct-enrollment-partners)
+        *   [General resources](http://www.cms.gov/marketplace/agents-brokers/general-resources)
+        *   [Video Learning Center](https://www.youtube.com/playlist?list=PLaV7m2-zFKpgUK9AqdbnOdW69-WwodvRj)
+        *   [Agent & Broker FAQ](https://www.agentbrokerfaq.cms.gov/s/)
+        *   [Marketplace help desk & call centers](http://www.cms.gov/files/document/agent/broker-help-desks.pdf)
+        *   [Registration Completion List](https://data.healthcare.gov/ffm_ab_registration_lists)
+        *   [Marketplace Registration Tracker](https://data.healthcare.gov/ab-registration-tracker/)
+        *   [AB Suspension & Termination List](https://data.healthcare.gov/ab-suspension-and-termination-list)
+        *   [Find local help](https://localhelp.healthcare.gov/)
+        *   [Issuer and direct enrollment partner directory](https://data.healthcare.gov/issuer-partner-lookup)
+        *   [Help on demand](http://www.cms.gov/marketplace/agents-brokers/help-on-demand)
+        *   [SHOP Resources](http://www.cms.gov/marketplace/agents-brokers/shop-resources)
+
+    *   Health Plans & Issuers
+
+Back to  menu
+### Health Plans & Issuers
+
+        *   [Qualified health plan certification](http://www.cms.gov/marketplace/health-plans-issuers/qualified-health-plan-certification)
+        *   [Summary of benefits & coverage](http://www.cms.gov/marketplace/health-plans-issuers/summary-benefits-coverage)
+        *   [Insurance programs](http://www.cms.gov/marketplace/health-plans-issuers/insurance-programs)
+        *   [Premium stabilization programs](http://www.cms.gov/marketplace/health-plans-issuers/premium-stabilization-programs)
+        *   [Health insurance market reforms](http://www.cms.gov/marketplace/health-plans-issuers/insurance-market-reforms)
+        *   [Minimum essential coverage](http://www.cms.gov/marketplace/health-plans-issuers/minimum-essential-coverage)
+        *   [Drug Data, Pricing & Rebate Review](http://www.cms.gov/marketplace-private-insurance/health-plans-issuers/drug-data-pricing-rebate-review)
+
+    *   Employers & sponsors
+
+Back to  menu
+### Employers & sponsors
+
+        *   [Coverage](https://www.healthcare.gov/small-businesses/other-coverage)
+        *   [Regulation & guidance](https://www.healthcare.gov/small-businesses/choose-and-enroll/shop-marketplace-overview)
+        *   [Small business tax credit & premium assistance](https://www.healthcare.gov/small-businesses/choose-and-enroll/qualify-for-shop-marketplace)
+        *   [Appeals](https://www.healthcare.gov/small-businesses/choose-and-enroll/appeal-a-shop-decision)
+        *   [Small Business Health Options Program (SHOP)](http://www.cms.gov/marketplace/employers-sponsors/small-business-health-options-program-shop)
+        *   [Early retiree reinsurance program](http://www.cms.gov/marketplace/employers-sponsors/early-retiree-reinsurance-program)
+        *   [Employer initiatives](http://www.cms.gov/marketplace/employer-initiatives)
+
+    *   States
+
+Back to  menu
+### States
+
+        *   [Planning & establishing a Marketplace](http://www.cms.gov/marketplace/states/state-marketplace-resources)
+        *   [Territory cooperative agreements](http://www.cms.gov/marketplace/states/territory-cooperative-agreements)
+        *   [Early innovator program](http://www.cms.gov/marketplace/states/early-innovator-program)
+        *   [State flexibility to stabilize the Market](http://www.cms.gov/marketplace/states/state-flexibility-stabilize-market)
+        *   [Exchange establishment grants](http://www.cms.gov/marketplace/states/creating-competitive-marketplace)
+        *   [Pre-existing condition insurance plan](https://www.healthcare.gov/coverage/pre-existing-conditions)
+
+    *   Resources
+
+Back to  menu
+### Resources
+
+        *   [About Us](http://www.cms.gov/marketplace/resources/about-us)
+        *   [Data resources](http://www.cms.gov/marketplace-private-insurance/resources/data-resources)
+        *   [Letters](http://www.cms.gov/marketplace/resources/letters)
+        *   [Regulations & Guidance](http://www.cms.gov/marketplace/resources/regulations-guidance)
+        *   [Training resources](http://www.cms.gov/marketplace/resources/training)
+        *   [Marketplace Coverage Transitions](http://www.cms.gov/marketplace-private-insurance/resources/marketplace-coverage-transitions)
+
+Close this menu
+
+*   Initiatives
+
+Back to main menu
+## Initiatives
+    *   Burden Reduction
+
+Back to  menu
+### Burden Reduction
+
+        *   [Overview](http://www.cms.gov/priorities/key-initiatives/burden-reduction)
+
+    *   Crushing Fraud, Waste, & Abuse
+
+Back to  menu
+### Crushing Fraud, Waste, & Abuse
+
+        *   [Overview](http://www.cms.gov/fraud)
+
+    *   E-health
+
+Back to  menu
+### E-health
+
+        *   [Overview](http://www.cms.gov/priorities/key-initiatives/e-health)
+
+    *   Electronic Prior Authorization
+
+Back to  menu
+### Electronic Prior Authorization
+
+        *   [Overview](http://www.cms.gov/priorities/electronic-prior-authorization/overview)
+
+    *   Flu
+
+Back to  menu
+### Flu
+
+        *   [Overview](http://www.cms.gov/priorities/key-initiativess/flu)
+
+    *   Health Equity
+
+Back to  menu
+### Health Equity
+
+        *   [Coverage to Care](http://www.cms.gov/priorities/health-equity/c2c)
+        *   [Cobertura de atención](http://www.cms.gov/priorities/health-equity/c2c/es)
+        *   [Grants & awards](http://www.cms.gov/priorities/health-equity/grants-awards)
+
+    *   Health Technology Ecosystem
+
+Back to  menu
+### Health Technology Ecosystem
+
+        *   [Overview](http://www.cms.gov/initiatives/health-technology-ecosystem/overview)
+
+    *   Healthcare Advisory Committee
+
+Back to  menu
+### Healthcare Advisory Committee
+
+        *   [Overview](http://www.cms.gov/initiatives/healthcare-advisory-committee/overview)
+
+    *   Healthplan price transparency
+
+Back to  menu
+### Healthplan price transparency
+
+        *   [Overview](http://www.cms.gov/priorities/healthplan-price-transparency/health-plan-price-transparency)
+
+    *   Hospital price transparency
+
+Back to  menu
+### Hospital price transparency
+
+        *   [Overview](http://www.cms.gov/priorities/key-initiatives/hospital-price-transparency)
+
+    *   Innovation Center
+
+Back to  menu
+### Innovation Center
+
+        *   [Overview](http://www.cms.gov/priorities/innovation/overview)
+        *   [About](http://www.cms.gov/priorities/innovation/about)
+        *   [Key Concepts](http://www.cms.gov/priorities/innovation/key-concepts)
+        *   [Model Data](http://www.cms.gov/priorities/innovation-center/model-data)
+        *   [Value-Based Care Spotlight](http://www.cms.gov/priorities/innovation-center/value-based-care-spotlight)
+        *   [Innovation Models](http://www.cms.gov/priorities/innovation/models)
+        *   [Where Innovation is Happening](http://www.cms.gov/priorities/innovation/where-innovation-happening)
+        *   [Evaluations & Research Reports](http://www.cms.gov/priorities/innovation/evaluation-research-reports)
+
+    *   Lookup tools
+
+Back to  menu
+### Lookup tools
+
+        *   [Overview](http://www.cms.gov/medicare/quality/value-based-programs/quality-payment-program/lookup-tools)
+
+    *   Make Hospital Food Healthier Pledge
+
+Back to  menu
+### Make Hospital Food Healthier Pledge
+
+        *   [Overview](http://www.cms.gov/priorities/make-hospital-food-healthier-pledge/overview)
+
+    *   Marketplace Open Enrollment
+
+Back to  menu
+### Marketplace Open Enrollment
+
+        *   [Overview](https://www.healthcare.gov/quick-guide/dates-and-deadlines)
+
+    *   Maternal Health
+
+Back to  menu
+### Maternal Health
+
+        *   [Overview](http://www.cms.gov/maternal-health)
+
+    *   Medicare OE partner resources
+
+Back to  menu
+### Medicare OE partner resources
+
+        *   [Overview](http://www.cms.gov/outreach-and-education/reach-out/find-tools-to-help-you-help-others/open-enrollment-outreach-and-media-materials)
+
+    *   Medicare Open Enrollment
+
+Back to  menu
+### Medicare Open Enrollment
+
+        *   [Overview](http://www.cms.gov/priorities/key-initiatives/medicare-open-enrollment-partner-resources)
+
+    *   Medicare Prescription Drug Affordability
+
+Back to  menu
+### Medicare Prescription Drug Affordability
+
+        *   [Overview](http://www.cms.gov/priorities/medicare-prescription-drug-affordability/medicare-prescription-drug-affordability)
+
+    *   No Surprise Billing
+
+Back to  menu
+### No Surprise Billing
+
+        *   [Overview](http://www.cms.gov/nosurprises)
+
+    *   Nursing Home Careers
+
+Back to  menu
+### Nursing Home Careers
+
+        *   [Overview](http://www.cms.gov/priorities/nursing-home-careers/overview)
+        *   [Get up to $40,000 in student loan repayment](http://www.cms.gov/priorities/nursing-home-careers/get-up-40000-student-loan-repayment)
+
+    *   Open Payments
+
+Back to  menu
+### Open Payments
+
+        *   [Overview](http://www.cms.gov/priorities/key-initiatives/open-payments)
+
+    *   Opioids
+
+Back to  menu
+### Opioids
+
+        *   [Overview](http://www.cms.gov/priorities/key-initiatives/opioids)
+
+    *   Your Patient Rights
+
+Back to  menu
+### Your Patient Rights
+
+        *   [Emergency Room Rights](http://www.cms.gov/priorities/your-patient-rights/emergency-room-rights)
+        *   [Medical bill rights](http://www.cms.gov/medical-bill-rights)
+
+Close this menu
+
+*   Training & Education
+
+Back to main menu
+## Training & Education
+    *   Medicare Training
+
+Back to  menu
+### Medicare Training
+
+        *   [General resources](http://www.cms.gov/training-education/medicare/general-resources)
+        *   [Open Enrollment resources](http://www.cms.gov/priorities/key-initiatives/medicare-open-enrollment-partner-resources)
+
+    *   Partner outreach resources
+
+Back to  menu
+### Partner outreach resources
+
+        *   [Partner with CMS](http://www.cms.gov/training-education/partner-outreach-resources/partner-with-cms)
+        *   [National Medicare Education Program (NMEP)](http://www.cms.gov/training-education/partner-outreach-resources/national-medicare-education-program-nmep)
+        *   [Low-Income Subsidy (LIS) outreach](http://www.cms.gov/training-education/partner-outreach-resources/low-income-subsidy-lis)
+        *   [Faith-Based Partners](http://www.cms.gov/training-education/partner-outreach-resources/faith-based)
+        *   [Rural Health Partners](http://www.cms.gov/training-education/partner-outreach-resources/rural-health)
+        *   [American Indian/Alaska Native](http://www.cms.gov/training-education/partner-outreach-resources/american-indian-alaska-native)
+        *   [Partnering with CMS Center](http://www.cms.gov/training-education/partner-outreach-resources/center)
+
+    *   Medicare Learning Network® (MLN)
+
+Back to  menu
+### Medicare Learning Network® (MLN)
+
+        *   [Resources & training](http://www.cms.gov/training-education/medicare-learning-networkr-mln/resources-training)
+        *   [Newsletter](http://www.cms.gov/training-education/medicare-learning-network/newsletter)
+        *   [Partnerships](http://www.cms.gov/training-education/medicare-learning-network/partnerships)
+        *   [Compliance](http://www.cms.gov/training-education/medicare-learning-networkr-mln/compliance)
+
+    *   CMS Open Door Forums
+
+Back to  menu
+### CMS Open Door Forums
+
+        *   [About Open Door Forums](http://www.cms.gov/training-education/open-door-forums/about)
+        *   [Ambulance](http://www.cms.gov/training-education/open-door-forums/ambulance "The Ambulance Open Door Forum (ODF) addresses issues related to the payment, billing, coverage and delivery of services in the ambulance industry.")
+        *   [End-Stage Renal Disease (ESRD) Dialysis Facility Care Compare](http://www.cms.gov/training-education/cms-open-door-forums/end-stage-renal-disease-esrd-dialysis-facility-care-compare)
+        *   [Home Health, Hospice & Durable Medical Equipment (DME)](http://www.cms.gov/training-education/open-door-forums/home-health-hospice-durable-medical-equipment-dme)
+        *   [Hospital](http://www.cms.gov/training-education/open-door-forums/hospitals)
+        *   [Long-Term Services & Supports](http://www.cms.gov/training-education/open-door-forums/long-term-services-supports)
+        *   [Physicians, Nurses and Allied Health Professionals](http://www.cms.gov/training-education/open-door-forums/physicians-nurses-allied-health-professionals)
+        *   [Rural Health](http://www.cms.gov/training-education/open-door-forums/rural-health)
+        *   [Skilled Nursing Facilities (SNFs)/Long-Term Care](http://www.cms.gov/training-education/open-door-forums/skilled-nursing-facilities-snf)
+        *   [Special Open Door forums](http://www.cms.gov/training-education/open-door-forums/special)
+
+    *   Look up topics
+
+Back to  menu
+### Look up topics
+
+        *   [Medicare](http://www.cms.gov/training-education/partner-outreach-resources/medicare)
+        *   [Medicaid](http://www.cms.gov/training-education/partner-outreach-resources/medicaid)
+        *   [CHIP](http://www.cms.gov/training-education/partner-outreach-resources/chip)
+        *   [American Indian/Alaska Native Center](http://www.cms.gov/training-education/look-up-topics/american-indian-alaska-native-center)
+        *   [Quality of care](http://www.cms.gov/training-education/partner-outreach-resources/quality-of-care)
+        *   [Special populations](http://www.cms.gov/training-education/partner-outreach-resources/special-populations)
+        *   [Fraud & abuse](http://www.cms.gov/training-education/partner-outreach-resources/fraud-abuse)
+        *   [States](http://www.cms.gov/training-education/partner-outreach-resources/states)
+        *   [Privacy](http://www.cms.gov/training-education/partner-outreach-resources/privacy)
+        *   [Health conditions & campaigns](http://www.cms.gov/training-education/partner-outreach-resources/health-conditions-campaigns)
+        *   [New Medicare Card](http://www.cms.gov/training-education/partner-outreach-resources/new-medicare-card)
+        *   [HIPAA Administrative Simplification](http://www.cms.gov/training-education/look-up-topics/hipaa-administrative-simplification)
+
+    *   Learn More
+
+Back to  menu
+### Learn More
+
+        *   [Attend events](http://www.cms.gov/training-education/learn/attend-events)
+        *   [Find resources](http://www.cms.gov/training-education/learn/find-resources)
+        *   [Get training](http://www.cms.gov/training-education/learn/get-training)
+        *   [Find tools to help you help others](http://www.cms.gov/training-education/learn/find-tools-to-help-you-help-others)
+        *   [Get digital media](http://www.cms.gov/training-education/learn/get-digital-media)
+
+    *   Find your provider type
+
+Back to  menu
+### Find your provider type
+
+        *   [Physicians & other health professionals](http://www.cms.gov/training-education/find-provider-type/physicians-other-health-professionals)
+        *   [Facilities](http://www.cms.gov/training-education/find-provider-type/facilities)
+        *   [Health & drug plans](http://www.cms.gov/training-education/find-provider-type/health-drug-plans)
+        *   [Employers & unions](http://www.cms.gov/training-education/find-provider-type/employers-unions)
+
+Close this menu
+
+*   [](http://www.cms.gov/ "CMS Home")
+*    Medicare
+*    Coverage
+*   [Coverage Determination Process](http://www.cms.gov/medicare/coverage/determination-process)
+*    Medicare coverage
+
+## Pages in this section
+
+*       *           *   [Coverage Determination Process](http://www.cms.gov/medicare/coverage/determination-process)
+        *               *   [Local Coverage Determinations](http://www.cms.gov/medicare/coverage/determination-process/local)
+            *   [How to Request an NCD](http://www.cms.gov/medicare/coverage/determination-process/request)
+            *   [Contact CAG](http://www.cms.gov/medicare/coverage/determination-process/contact)
+            *   [Listserv](http://www.cms.gov/medicare/coverage/determination-process/listserv)
+            *   [Medicare Coverage Guidance Documents](http://www.cms.gov/medicare/coverage/determination-process/guidance)
+            *   [Public Comments](http://www.cms.gov/medicare/coverage/determination-process/public-comments)
+            *   [Reports](http://www.cms.gov/medicare/coverage/determination-process/reports)
+            *   [Medicare coverage](http://www.cms.gov/medicare/coverage/determination-process/basics)
+            *                   *   [Compendia 1861 (t)(2) - Anti-cancer](http://www.cms.gov/medicare/coverage/determination-process/basics/compendia-1861-t2-anti-cancer)
+                *   [Erythropoietin Stimulating Agents Policies](http://www.cms.gov/medicare/coverage/determination-process/basics/erythropoietin-stimulating-agents-policies)
+                *   [ICD-10](http://www.cms.gov/medicare/coverage/determination-process/basics/icd-10)
+                *   [Lab NCDs - ICD-9](http://www.cms.gov/medicare/coverage/determination-process/basics/lab-ncds-icd-9)
+                *   [Lab NCDs - ICD-10](http://www.cms.gov/medicare/coverage/determination-process/basics/lab-ncds-icd-10)
+
+            *   [Technology & innovation](http://www.cms.gov/medicare/coverage/determination-process/technology-innovation)
+
+# Medicare Coverage - General Information
+
+Medicare provides coverage for items and services for over 55 million beneficiaries. The vast majority of coverage is provided on a local level and developed by clinicians at the contractors that pay Medicare claims. However, in certain cases, Medicare deems it appropriate to develop a National Coverage Determination (NCD) for an item or service to be applied on a national basis for all Medicare beneficiaries meeting the criteria for coverage. This page provides general information on various parts of that NCD process, resources of both a general and historical nature, and summaries and support documents concerning several miscellaneous NCDs.
+
+**People with Medicare, family members, and caregivers should visit [Medicare.gov](http://www.medicare.gov/), the Official U.S. Government Site for People with Medicare, for the latest information on Medicare enrollment, benefits, and other helpful tools.**
+
+## Related Links
+
+*   [Medicare Coverage Determination Process](http://www.cms.gov/medicare/coverage/determination-process)
+*   [Search the Medicare Coverage Database](https://www.cms.gov/medicare-coverage-database/new-search/search.aspx)
+*   [Medicare Coverage Center](http://www.cms.gov/medicare/coverage/center)
+*   [Contact CAG](http://www.cms.gov/medicare/coverage/determination-process/contact)
+
+Page Last Modified:
+
+09/10/2024 06:04 PM
+
+## Get email updates
+
+Sign up to get the latest information about your choice of CMS topics. You can decide how often to receive updates.
+
+Email
+
+Sign up - opens in a new window Sign up
+
+CMS & HHS Websites CMS & HHS Websites
+
+*   [Medicare.gov](https://www.medicare.gov/ "Medicare.gov")
+*   [Medicaid.gov](https://www.medicaid.gov/ "Medicaid.gov")
+*   [InsureKidsNow.gov](https://www.insurekidsnow.gov/ "InsureKidsNow.gov")
+*   [HealthCare.gov](https://www.healthcare.gov/ "HealthCare.gov")
+*   [HHS.gov](https://www.hhs.gov/ "HHS.gov")
+*   [HHS.gov/Open](https://www.hhs.gov/open/index.html "HHS.gov/Open")
+
+About CMS About CMS
+
+*   [About Us](http://www.cms.gov/about-cms "About CMS")
+*   [Careers](http://www.cms.gov/about-cms/work-with-us/careers)
+*   [Newsroom](http://www.cms.gov/about-cms/contact/newsroom "Newsroom")
+
+Tools Tools
+
+*   [Acronyms](http://www.cms.gov/acronyms "Acronyms")
+*   [Archive](http://www.cms.gov/about-cms/web-policies-important-links/about-website/archive "Archive")
+*   [Contacts](http://www.cms.gov/about-cms/contact/directory "Contacts")
+*   [Glossary](http://www.cms.gov/glossary "Glossary")
+
+Helpful Links Helpful Links
+
+*   [Privacy Policy](http://www.cms.gov/about-cms/web-policies-important-links/web-policies/privacy)
+*   [Plain Language](https://www.medicare.gov/about-us/plain-writing "Plain Language")
+*   [Privacy Settings](http://www.cms.gov/Medicare/Coverage/CoverageGenInfo/index.html "Privacy settings")
+*   [Nondiscrimination & Accessibility](http://www.cms.gov/about-cms/web-policies-important-links/accessibility-nondiscrimination-disabilities-notice "Nondiscrimination/Accessibility")
+*   [Developer Information](https://developer.cms.gov/ "For Developers")
+*   [Vulnerability Disclosure Policy](http://www.cms.gov/about-cms/information-systems/privacy/vulnerability-disclosure-policy "Vulnerability Disclosure Policy")
+
+USA Government Sites USA Government Sites
+
+*   [Freedom of Information Act](https://www.cms.gov/freedom-information-act-foia-service-center "Freedom of Information Act")
+*   [No Fear Act](http://www.cms.gov/about-cms/web-policies-important-links/no-fear-act "No Fear Act")
+*   [Inspector General](https://www.oig.hhs.gov/ "Inspector General")
+*   [USA.gov](https://www.usa.gov/ "USA.gov")
+
+[![Image 2: CMS.gov](http://www.cms.gov/themes/custom/cms_evo/logo.svg)](http://www.cms.gov/)[![Image 3: HHS Logo](http://www.cms.gov/themes/custom/cms_evo/images/hhslogo.png)](http://www.hhs.gov/)
+
+## Connect with CMS
+
+*   [Linkedin link](https://www.linkedin.com/company/centers-for-medicare-&-medicaid-services/)
+*   [Youtube link](https://www.youtube.com/user/CMSHHSgov)
+*   [Facebook link](https://www.facebook.com/medicare)
+*   [Twitter link](https://twitter.com/cmsgov)
+
+A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services.
+
+7500 Security Boulevard, Baltimore, MD 21244

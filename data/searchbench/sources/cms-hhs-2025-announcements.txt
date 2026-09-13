@@ -1,0 +1,353 @@
+![CMS.gov](/themes/custom/cms_evo/logo.svg)
+
+## [CMS Newsroom](/about-cms/contact/newsroom)
+
+## Search CMS.gov
+
+## CMS.gov main menu
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+# MLN Connects® Newsletter
+
+![MLN Connects Newsletter logo](/sites/default/files/styles/desktop_width/public/2025-08/2025-mln-connects-landing-page-header-1200x120.png?itok=Fx_nQiwL)
+
+The weekly MLN Connects® newsletter from the Medicare Learning Network® is your single source for national Fee-for-Service news for health care providers, suppliers, billers, and coders. [Subscribe now](https://public.govdelivery.com/accounts/USCMS/subscriber/new?pop=t&topic_id=USCMS_7819) and [check out the archive](#Archive) to get:
+
+## MLN Connects Newsletter Archive
+
+| Date | Title |
+| --- | --- |
+| Date [2026-06-18](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-june-18-2026) | Title In This Edition: Medicare Drug Price Negotiation Program | Hospital Reports | Compliance Conference |
+| Date [2026-06-11](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-june-11-2026) | Title In This Edition: Medicare Shared Savings Program | DMEPOS Competitive Bidding | ICD-10 Codes |
+| Date [2026-06-04](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-june-4-2026) | Title In This Edition: No Surprises Act | GLP-1 Bridge | Facility Reports |
+| Date [2026-05-28](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-may-28-2026) | Title In This Edition: Facility Reports | Laboratory Reporting | DMEPOS Benefit Categories |
+| Date [2026-05-21](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-may-21-2026) | Title In This Edition: Critical Access Hospitals | Clinical Laboratory Fee Schedule | Physical Fitness |
+| Date [2026-05-14](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-may-14-2026) | Title In This Edition: Electronic Prior Authorization | Home Health & Hospice Moratoria | Mental Health | Hantavirus Health Advisor... |
+| Date [2026-05-07](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-may-7-2026) | Title In This Edition: Electronic Prior Authorization | GLP-1 Bridge |
+| Date [2026-05-06](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-may-6-2026) | Title Special Edition: Moving Prior Authorization into the 21st Century |
+| Date [2026-04-30](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-april-30-2026) | Title In This Edition: Lab Reporting | Physical Activity & Nutrition | Fix Death Date Errors |
+| Date [2026-04-23](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-april-23-2026) | Title In This Edition: Interoperability Rule Resources | Behavioral Health Strategy |
+| Date [2026-04-16](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-april-16-2026) | Title In This Edition: HealthTech Ecosystem Tools | HETS Access |
+| Date [2026-04-15](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-april-15-2026) | Title Special Edition: Overview of the CMS Interoperability Standards & Prior Authorization for Drugs Proposed Rule Webinar - Apr... |
+| Date [2026-04-13](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-april-13-2026) | Title Special Edition: IPPS & LTCH PPS Payment | Interoperability Standards & Prior Authorization for Drugs |
+| Date [2026-04-09](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-april-9-2026) | Title In This Edition: FY 2027 Proposed Payment Rules | Lab Reporting |
+| Date [2026-04-02](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-april-2-2026) | Title In This Edition: LEAD & ASPIRE Models | Hospitals |
+| Date [2026-03-26](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-march-26-2026) | Title In This Edition: Electronic Transactions | Hospitals | National Nutrition Month |
+| Date [2026-03-19](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-march-19-2026) | Title In This Edition: Medicare Drug Price | Hospitals | Updated Forms |
+| Date [2026-03-12](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-march-12-2026) | Title In This Edition: Hospital Price Transparency | Lab Reporting | Payment System Updates |
+| Date [2026-03-05](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-march-5-2026) | Title In This Edition: DMEPOS | GENEROUS Model | Opioid Use Disorder |
+| Date [2026-02-26](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-february-26-2026) | Title In This Edition: DMEPOS | Clinical Laboratory | Therapy Services |
+| Date [2026-02-19](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-february-19-2026) | Title In This Edition: Federally Qualified Health Center | OPPS Drug Acquisition Cost Survey | Compliance Tips |
+| Date [2026-02-12](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-february-12-2026) | Title In This Edition: Global Surgery | Burden Reduction Conference |
+| Date [2026-02-05](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-february-5-2026) | Title In This Edition: OPPS Drug Acquisition Cost Survey | Skilled Nursing Facilities |
+| Date [2026-01-29](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-january-29-2026) | Title In This Edition: PPE & Essential Medicines | DMEPOS | Hospital Price Transparency |
+| Date [2026-01-22](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-january-22-2026) | Title In This Edition: DMEPOS | Medicare Wellness Visits |
+| Date [2026-01-15](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-january-15-2026) | Title In This Edition: Remote Patient Monitoring | Revised Publications |
+| Date [2026-01-08](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-january-8-2026) | Title In This Edition: Rural Health | 4 New Models | Price Transparency |
+| Date [2025-12-18](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-december-18-2025) | Title In This Edition: New Model | Payment System Updates | Compliance Tips |
+| Date [2025-12-11](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-december-11-2025) | Title In This Edition: DMEPOS Accreditation | PEPPER Relaunch | CY 2026 Updates |
+| Date [2025-12-04](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-december-4-2025) | Title In This Edition: OPPS Drug Acquisition Cost Survey | Chronic Care Model & Resources |
+| Date [2025-12-03](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-december-3-2025) | Title Special Edition: 2026 Medicare Participation Announcement | Home Health Final Rule |
+| Date [2025-11-26](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-november-26-2025) | Title In This Edition: Home Health & Hospice Resources | Fraud |
+| Date [2025-11-24](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-november-24-2025) | Title Special Edition: OPPS/ASC Final Payment Rule |
+| Date [2025-11-21](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-november-21-2025) | Title Special Edition: Claims Processing Update | ESRD Final Payment Rule |
+| Date [2025-11-20](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-november-20-2025) | Title In This Edition: 2026 Premiums & Deductibles | Rural Health |
+| Date [2025-11-14](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-november-14-2025) | Title Special Edition: Medicare Participation Announcement for CY 2026: Decide by December 31 |
+| Date [2025-11-07](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-november-7-2025) | Title Special Edition: Update on Processing of Telehealth and Acute Hospital Care at Home Claims |
+| Date [2025-11-03](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-november-3-2025) | Title Special Edition: CMS Modernizes Payment Accuracy and Significantly Cuts Spending Waste |
+| Date [2025-10-21](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-october-21-2025) | Title Special Edition: Claims Hold Update |
+| Date [2025-10-15](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-october-15-2025) | Title Special Edition: Claims Hold Update | Vaccine Administration Edit |
+| Date [2025-10-01](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-october-1-2025) | Title Special Edition: Update on Medicare Operations: Telehealth, Claims Processing, and Medicare Administrative Contractors Status... |
+| Date [2025-09-25](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-september-25-2025) | Title In This Edition: Outpatient Therapy Services | Cognitive Assessment | FY 2026 Updates |
+| Date [2025-09-18](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-september-18-2025) | Title In This Edition: Cancer Screening | Revised E/M Publication |
+| Date [2025-09-11](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-september-11-2025) | Title In This Edition: CMS IDea Challenge | Drug Pricing | New Gene Therapy Drug |
+| Date [2025-09-04](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-september-4-2025) | Title In This Edition: Ambulatory Surgical Center Demo | Skilled Nursing Facility Model |
+| Date [2025-08-28](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-august-28-2025) | Title In This Edition: Federal Healthcare Advisory Committee | National Coverage Determinations |
+| Date [2025-08-21](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-august-21-2025) | Title In This Edition: Flu Vaccine Pricing | CAHs Prevent Claim Denials |
+| Date [2025-08-14](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-august-14-2025) | Title In This Edition: Method II Critical Access Hospitals | Preventative Services Tool Revised |
+| Date [2025-08-07](/training-education/medicare-learning-network/newsletter/mln-connects-newsletter-august-7-2025) | Title In This Edition: CMS Listening Session | Fraud | E/M Services |
+| Date [2025-08-04](/training-education/medicare-learning-network/newsletter/2025-08-04-oce) | Title 5 FY 2026 Final Payment Rules |
+| Date [2025-07-31](/training-education/medicare-learning-network/newsletter/2025-07-31-mlnc) | Title Weekly Edition |
+| Date [2025-07-24](/training-education/medicare-learning-network/newsletter/2025-07-24-mlnc) | Title Weekly Edition |
+| Date [2025-07-17](/training-education/medicare-learning-network/newsletter/2025-07-17-mlnc) | Title Weekly Edition |
+| Date [2025-07-16](/training-education/medicare-learning-network/newsletter/2025-07-16-oce) | Title OPPS and ASC CY 2026 Proposed Payment Rule & Gene Therapies |
+| Date [2025-07-15](/training-education/medicare-learning-network/newsletter/2025-07-15-oce) | Title CMS Proposes Physician Payment Rule to Significantly Cut Spending Waste, Enhance Quality Measures, and Improve Chronic Diseas... |
+| Date [2025-07-10](/training-education/medicare-learning-network/newsletter/2025-07-10-mlnc) | Title Weekly Edition |
+| Date [2025-07-03](/training-education/medicare-learning-network/newsletter/2025-07-03-mlnc) | Title Weekly Edition |
+| Date [2025-06-26](/training-education/medicare-learning-network/newsletter/2025-06-26-mlnc) | Title Weekly Edition |
+| Date [2025-06-18](/training-education/medicare-learning-network/newsletter/2025-06-18-mlnc) | Title Weekly Edition |
+| Date [2025-06-12](/training-education/medicare-learning-network/newsletter/2025-06-12-mlnc) | Title Weekly Edition |
+| Date [2025-06-05](/training-education/medicare-learning-network/newsletter/2025-06-05-mlnc) | Title Weekly Edition |
+| Date [2025-05-29](/training-education/medicare-learning-network/newsletter/2025-05-29-mlnc) | Title Weekly Edition |
+| Date [2025-05-22](/training-education/medicare-learning-network/newsletter/2025-05-22-oce) | Title Departments of Labor, Health and Human Services, Treasury Announce Move to Strengthen Healthcare Price Transparency |
+| Date [2025-05-22](/training-education/medicare-learning-network/newsletter/2025-05-22-mlnc) | Title Weekly Edition |
+| Date [2025-05-15](/training-education/medicare-learning-network/newsletter/2025-05-15-mlnc) | Title Weekly Edition |
+| Date [2025-05-13](/training-education/medicare-learning-network/newsletter/2025-05-13-oce) | Title CMS Seeks Public Input on Improving Technology to Empower Medicare Beneficiaries |
+| Date [2025-05-08](/training-education/medicare-learning-network/newsletter/2025-05-08-mlnc) | Title Weekly Edition |
+| Date [2025-05-01](/training-education/medicare-learning-network/newsletter/2025-05-01-mlnc) | Title Weekly Edition |
+| Date [2025-04-24](/training-education/medicare-learning-network/newsletter/2025-04-24-mlnc) | Title Weekly Edition |
+| Date [2025-04-17](/training-education/medicare-learning-network/newsletter/2025-04-17-mlnc) | Title Weekly Edition |
+| Date [2025-04-14](/training-education/medicare-learning-network/newsletter/2025-04-14-oce) | Title 5 FY 2026 Proposed Payment Rules |
+| Date [2025-04-11](/training-education/medicare-learning-network/newsletter/2025-04-11-mlnc) | Title Dr. Mehmet Oz Shares Vision for CMS |
+| Date [2025-04-03](/training-education/medicare-learning-network/newsletter/2025-04-03-mlnc) | Title Weekly Edition |
+| Date [2025-03-27](/training-education/medicare-learning-network/newsletter/2025-03-27-mlnc) | Title Weekly Edition |
+| Date [2025-03-25](/training-education/medicare-learning-network/newsletter/2025-03-25-mlnc) | Title Weekly Edition |
+| Date [2025-03-13](/training-education/medicare-learning-network/newsletter/2025-03-13-mlnc) | Title Weekly Edition |
+| Date [2025-03-06](/training-education/medicare-learning-network/newsletter/2025-03-06-mlnc) | Title Weekly Edition |
+| Date [2025-02-28](/training-education/medicare-learning-network/newsletter/2025-02-28-oce) | Title Hospitals: Actions to Make Healthcare Prices Transparent |
+| Date [2025-02-24](/training-education/medicare-learning-network/newsletter/2025-02-24-mlnc) | Title Weekly Edition |
+| Date [2025-02-14](/training-education/medicare-learning-network/newsletter/2025-02-14-mlnc) | Title Weekly Edition |
+| Date [2025-01-16](/training-education/medicare-learning-network/newsletter/2025-01-16-mlnc) | Title Weekly Edition |
+| Date [2025-01-08](/training-education/medicare-learning-network/newsletter/2025-01-08-mlnc) | Title Weekly Edition |
+| Date [2024-12-19](/training-education/medicare-learning-network/newsletter/2024-12-19-mlnc) | Title Weekly Edition |
+| Date [2024-12-12](/training-education/medicare-learning-network/newsletter/2024-12-12-mlnc) | Title Weekly Edition |
+| Date [2024-12-05](/training-education/medicare-learning-network/newsletter/2024-12-05-mlnc) | Title Weekly Edition |
+| Date [2024-11-27](/training-education/medicare-learning-network/newsletter/2024-11-27-mlnc) | Title Weekly Edition |
+| Date [2024-11-21](/training-education/medicare-learning-network/newsletter/2024-11-21-mlnc) | Title Weekly Edition |
+| Date [2024-11-14](/training-education/medicare-learning-network/newsletter/2024-11-14-mlnc) | Title Weekly Edition |
+| Date [2024-11-07](/training-education/medicare-learning-network/newsletter/2024-11-07-mlnc) | Title Weekly Edition |
+| Date [2024-10-31](/training-education/medicare-learning-network/newsletter/2024-10-31-mlnc) | Title Weekly Edition |
+| Date [2024-10-24](/training-education/medicare-learning-network/newsletter/2024-10-24-mlnc) | Title Weekly Edition |
+| Date [2024-10-17](/training-education/medicare-learning-network/newsletter/2024-10-17-mlnc) | Title Weekly Edition |
+| Date [2024-10-10](/training-education/medicare-learning-network/newsletter/2024-10-10-mlnc) | Title Weekly Edition |
+| Date [2024-10-03](/training-education/medicare-learning-network/newsletter/2024-10-03-mlnc) | Title Weekly Edition |
+| Date [2024-09-26](/training-education/medicare-learning-network/newsletter/2024-09-26-mlnc) | Title Weekly Edition |
+| Date [2024-09-19](/training-education/medicare-learning-network/newsletter/2024-09-19-mlnc) | Title Weekly Edition |
+| Date [2024-09-12](/training-education/medicare-learning-network/newsletter/2024-09-12-mlnc) | Title Weekly Edition |
+| Date [2024-09-05](/training-education/medicare-learning-network/newsletter/2024-09-05-mlnc) | Title Weekly Edition |
+| Date [2024-08-29](/training-education/medicare-learning-network/newsletter/2024-08-29-mlnc) | Title Weekly Edition |
+| Date [2024-08-22](/training-education/medicare-learning-network/newsletter/2024-08-22-mlnc) | Title Weekly Edition |
+| Date [2024-08-15](/training-education/medicare-learning-network/newsletter/2024-08-15-mlnc) | Title Weekly Edition |
+| Date [2024-08-08](/training-education/medicare-learning-network/newsletter/2024-08-08-mlnc) | Title Weekly Edition |
+| Date [2024-08-01](/training-education/medicare-learning-network/newsletter/2024-08-01-mlnc) | Title Weekly Edition |
+| Date [2024-07-25](/training-education/medicare-learning-network/newsletter/2024-07-25-mlnc) | Title Weekly Edition |
+| Date [2024-07-18](/training-education/medicare-learning-network/newsletter/2024-07-18-mlnc) | Title Weekly Edition |
+| Date [2024-07-11](/training-education/medicare-learning-network/newsletter/2024-07-11-mlnc) | Title Weekly Edition |
+| Date [2024-07-03](/training-education/medicare-learning-network/newsletter/2024-07-03-mlnc) | Title Weekly Edition |
+| Date [2024-06-27](/training-education/medicare-learning-network/newsletter/2024-06-27-mlnc) | Title Weekly Edition |
+| Date [2024-06-20](/training-education/medicare-learning-network/newsletter/2024-06-20-mlnc) | Title Weekly Edition |
+| Date [2024-06-13](/training-education/medicare-learning-network/newsletter/2024-06-13-mlnc) | Title Weekly Edition |
+| Date [2024-06-06](/training-education/medicare-learning-network/newsletter/2024-06-06-mlnc) | Title Weekly Edition |
+| Date [2024-05-30](/training-education/medicare-learning-network/newsletter/2024-05-30-mlnc) | Title Weekly Edition |
+| Date [2024-05-23](/training-education/medicare-learning-network/newsletter/2024-05-23-mlnc) | Title Weekly Edition |
+| Date [2024-05-16](/training-education/medicare-learning-network/newsletter/2024-05-16-mlnc) | Title Weekly Edition |
+| Date [2024-05-09](/training-education/medicare-learning-network/newsletter/2024-05-09-mlnc) | Title Weekly Edition |
+| Date [2024-05-02](/training-education/medicare-learning-network/newsletter/2024-05-02-mlnc) | Title Weekly Edition |
+| Date [2024-04-25](/training-education/medicare-learning-network/newsletter/2024-04-25-mlnc) | Title Weekly Edition - UPDATE |
+| Date [2024-04-18](/training-education/medicare-learning-network/newsletter/2024-04-18-mlnc) | Title Weekly Edition |
+| Date [2024-04-11](/training-education/medicare-learning-network/newsletter/2024-04-11-mlnc) | Title Weekly Edition |
+| Date [2024-04-04](/training-education/medicare-learning-network/newsletter/2024-03-04-mlnc) | Title Weekly Edition |
+| Date [2024-03-28](/training-education/medicare-learning-network/newsletter/2024-03-28-mlnc) | Title Weekly Edition |
+| Date [2024-03-21](/training-education/medicare-learning-network/newsletter/2024-03-21-mlnc) | Title Weekly Edition |
+| Date [2024-03-14](/training-education/medicare-learning-network/newsletter/2024-03-14-mlnc) | Title Weekly Edition |
+| Date [2024-03-07](/training-education/medicare-learning-network/newsletter/2024-03-07-mlnc) | Title Weekly Edition |
+| Date [2024-02-29](/training-education/medicare-learning-network/newsletter/2024-02-29-mlnc) | Title Weekly Edition |
+| Date [2024-02-22](/training-education/medicare-learning-network/newsletter/2024-02-22-mlnc) | Title Weekly Edition |
+| Date [2024-02-15](/training-education/medicare-learning-network/newsletter/2024-02-15-mlnc) | Title Weekly Edition |
+| Date [2024-02-08](/training-education/medicare-learning-network/newsletter/2024-02-08-mlnc) | Title Weekly Edition |
+| Date [2024-02-01](/training-education/medicare-learning-network/newsletter/2024-02-01-mlnc) | Title Weekly Edition |
+| Date [2024-01-25](/training-education/medicare-learning-network/newsletter/2024-01-25-mlnc) | Title Weekly Edition |
+| Date [2024-01-18](/training-education/medicare-learning-network/newsletter/2024-01-18) | Title Weekly Edition |
+| Date [2024-01-11](/training-education/medicare-learning-network/newsletter/2024-01-11-mlnc) | Title Weekly Edition |
+| Date [2024-01-04](/training-education/medicare-learning-network/newsletter/2024-01-04-mlnc) | Title Weekly Edition |
+| Date [2023-12-21](/training-education/medicare-learning-network/newsletter/2023-12-21-mlnc) | Title Weekly Edition |
+| Date [2023-12-14](/training-education/medicare-learning-network/newsletter/2023-12-14-mlnc) | Title Weekly Edition |
+| Date [2023-12-07](/training-education/medicare-learning-network/newsletter/2023-12-07-mlnc) | Title Weekly Edition |
+| Date [2023-11-30](/training-education/medicare-learning-network/newsletter/2023-11-30-mlnc) | Title Weekly Edition |
+| Date [2023-11-22](/training-education/medicare-learning-network/newsletter/2023-11-22-mlnc) | Title Weekly Edition |
+| Date [2023-11-16](/training-education/medicare-learning-network/newsletter/2023-11-16-mlnc) | Title Weekly Edition |
+| Date [2023-11-09](/training-education/medicare-learning-network/newsletter/2023-11-09-mlnc) | Title Weekly Edition |
+| Date [2023-11-02](/training-education/medicare-learning-network/newsletter/2023-11-02-mlnc) | Title Weekly Edition |
+| Date [2023-11-02](/training-education/medicare-learning-network/newsletter/2023-11-02-oce) | Title PFS, OPPS/ASC, & OPPS 340B-Acquired Drug Final Rules |
+| Date [2023-11-01](/training-education/medicare-learning-network/newsletter/2023-11-01-oce) | Title Take Our Provider Survey Today |
+| Date [2023-10-26](/training-education/medicare-learning-network/newsletter/2023-10-26-mlnc) | Title Weekly Edition |
+| Date [2023-10-19](/training-education/medicare-learning-network/newsletter/2023-10-19-mlnc) | Title Weekly Edition |
+| Date [2023-10-12](/training-education/medicare-learning-network/newsletter/2023-10-12-mlnc) | Title Weekly Edition |
+| Date [2023-10-06](/training-education/medicare-learning-network/newsletter/2023-10-06-oce) | Title COVID-19: Updated Novavax COVID-19 Vaccine, Adjuvanted for Patients 12 & Older |
+| Date [2023-10-05](/training-education/medicare-learning-network/newsletter/2023-10-05-mlnc) | Title Weekly Edition |
+| Date [2023-09-28](/training-education/medicare-learning-network/newsletter/2023-09-28-mlnc) | Title Weekly Edition |
+| Date [2023-09-21](/training-education/medicare-learning-network/newsletter/2023-09-21-mlnc) | Title Weekly Edition |
+| Date [2023-09-14](/training-education/medicare-learning-network/newsletter/2023-09-14-mlnc) | Title Weekly Edition |
+| Date [2023-09-14](/training-education/medicare-learning-network/newsletter/2023-09-14-oce) | Title COVID-19: Updated mRNA Vaccines for Patients 6 Months & Older |
+| Date [2023-09-07](/training-education/medicare-learning-network/newsletter/2023-09-07-mlnc) | Title Weekly Edition |
+| Date [2023-08-31](/training-education/medicare-learning-network/newsletter/2023-08-31-mlnc) | Title Weekly Edition |
+| Date [2023-08-24](/training-education/medicare-learning-network/newsletter/2023-08-24-mlnc) | Title Weekly Edition |
+| Date [2023-08-17](/training-education/medicare-learning-network/newsletter/2023-08-17-mlnc) | Title Weekly Edition |
+| Date [2023-08-10](/training-education/medicare-learning-network/newsletter/2023-08-10-mlnc) | Title Weekly Edition |
+| Date [2023-08-03](/training-education/medicare-learning-network/newsletter/2023-08-03-mlnc) | Title Weekly Edition |
+| Date [2023-08-01](/training-education/medicare-learning-network/newsletter/2023-08-01-oce) | Title 5 Final FY 2024 Payment Rules |
+| Date [2023-07-27](/training-education/medicare-learning-network/newsletter/2023-07-27-mlnc) | Title Weekly Edition |
+| Date [2023-07-20](/training-education/medicare-learning-network/newsletter/2023-07-20-mlnc) | Title Weekly Edition |
+| Date [2023-07-13](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-07-13-mlnc) | Title Weekly Edition |
+| Date [2023-07-13](/training-education/medicare-learning-network/newsletter/2023-07-13-oce) | Title PFS & OPPS/ASC Proposed Payment Rules |
+| Date [2023-07-07](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-07-07-oce) | Title Broader Medicare Coverage of Leqembi Available Following FDA Traditional Approval |
+| Date [2023-07-06](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-07-06-mlnc) | Title Weekly Edition |
+| Date [2023-06-29](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-06-29-mlnc) | Title Weekly Edition |
+| Date [2023-06-22](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-06-22-mlnc) | Title Weekly Edition |
+| Date [2023-06-15](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-06-15-mlnc) | Title Weekly Edition |
+| Date [2023-06-08](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-06-08-mlnc) | Title Weekly Edition |
+| Date [2023-06-01](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-06-01-mlnc) | Title Weekly Edition |
+| Date [2023-05-25](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-05-25-mlnc) | Title Weekly Edition |
+| Date [2023-05-18](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-05-18-mlnc) | Title Weekly Edition |
+| Date [2023-05-11](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-05-11-mlnc) | Title Weekly Edition |
+| Date [2023-05-04](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-05-04) | Title Weekly Edition |
+| Date [2023-04-27](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-04-27-mlnc) | Title Weekly Edition |
+| Date [2023-04-20](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-04-20-mlnc) | Title Weekly Edition |
+| Date [2023-04-13](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-04-13-mlnc) | Title Weekly Edition |
+| Date [2023-04-10](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-04-10-oce) | Title CMS Proposes Policies to Improve Patient Safety and Promote Health Equity |
+| Date [2023-04-06](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-04-06-mlnc) | Title Weekly Edition |
+| Date [2023-04-04](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-04-04-oce) | Title 4 Proposed FY 2024 Payment Rules |
+| Date [2023-03-30](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-03-30-mlnc) | Title Weekly Edition |
+| Date [2023-03-23](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-03-23-mlnc) | Title Weekly Edition |
+| Date [2023-03-16](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-03-16-mlnc) | Title Weekly Edition |
+| Date [2023-03-15](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-03-15-oce) | Title Inflation Reduction Act Tamps Down on Prescription Drug Price Increases Above Inflation |
+| Date [2023-03-09](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-03-09-mlnc) | Title Weekly Edition |
+| Date [2023-03-02](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-03-02-mlnc) | Title Weekly Edition |
+| Date [2023-02-27](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-02-27-oce) | Title COVID-19 Public Health Emergency (PHE) New Overview Fact Sheet |
+| Date [2023-02-23](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-02-23-mlnc) | Title Weekly Edition |
+| Date [2023-02-23](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-02-23-oce) | Title Public Health Emergency (PHE) 1135 Waivers: Updated Guidance for Providers |
+| Date [2023-02-16](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-02-16-mlnc) | Title Weekly Edition |
+| Date [2023-02-09](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-02-09-oce) | Title Prescription Drug Inflation Rebate Program Guidance |
+| Date [2023-02-09](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-02-09-mlnc) | Title Weekly Edition |
+| Date [2023-02-02](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-02-02-mlnc) | Title Weekly Edition |
+| Date [2023-01-26](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-01-26-mlnc) | Title Weekly Edition |
+| Date [2023-01-19](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-01-19-mlnc) | Title Weekly Edition |
+| Date [2023-01-12](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-01-12-mlnc) | Title Weekly Edition |
+| Date [2023-01-09](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-01-09-mlnc) | Title CMS Awards 200 New Medicare-funded Residency Slots to Hospitals Serving Underserved Communities |
+| Date [2023-01-05](/outreach-and-education/outreach/ffsprovpartprog/provider-partnership-email-archive/2023-01-05-mlnc) | Title Weekly Edition |
+
+## Get email updates
+
+Sign up to get the latest information about your choice of CMS topics. You can decide how often to receive updates.
+
+![CMS.gov](/themes/custom/cms_evo/logo.svg)
+![HHS Logo](/themes/custom/cms_evo/images/hhslogo.png)
+
+## Connect with CMS
+
+A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services.
+
+7500 Security Boulevard, Baltimore, MD 21244

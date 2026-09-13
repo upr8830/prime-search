@@ -10,3 +10,10 @@ Makefile text eol=lf
 *.toml text eol=lf
 *.jsonl text eol=lf
 uv.lock text eol=lf
+
+# Fetched source documents are evidence, not source code. docs/08 §2 step 4 commits
+# them "so the report is reproducible", and an answer key is validated against exact
+# passages — so these must round-trip byte for byte, with whatever line endings the
+# document actually had. Any rewriting here would shift the character offsets a
+# citation points at.
+data/searchbench/sources/** -text
