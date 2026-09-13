@@ -51,6 +51,12 @@ do not.
 - If the question is about what changed or what is current, one branch must be about
   recency — say so in that branch's `question` (e.g. "most recent revision",
   "changes since ...") so the dispatcher gives it a time-filtered search.
+- If the classifier's `question_type` is `contradiction`, or the question repeats a claim
+  it wants checked ("I read that ...", "... right?"), one branch must find what secondary
+  sources say (beneficiary guides, supplier and news pages), with `source_hint="any"` and
+  a question like "What do non-CMS sources claim about ...?". The claim a top-ranked
+  secondary page makes is exactly what the answer has to set against the primary policy,
+  and a plan that searches only CMS never finds it.
 
 ## How to plan well
 

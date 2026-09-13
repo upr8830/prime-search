@@ -79,6 +79,11 @@ The root is given:
 - the planning contract: 3–7 branches; each has a sub-question, optional hypothesis, source hint,
   priority; a `stop_criteria` string; and a rule that change-detection questions must include a
   branch with `time_range="year"`.
+- *As built (task 2.2):* a contradiction question (`question_type="contradiction"`, or a question
+  repeating a claim to check) must include one branch with `source_hint="any"` asking what secondary
+  sources claim, and the sub-agent on such a branch records the secondary page's own passage as
+  evidence rather than treating it as a pointer (§4 rule 1). Without it the "secondary sources
+  overstate coverage" conflict the adversarial SearchBench records expect was never gathered.
 
 Code-as-action: the model responds with
 
@@ -123,6 +128,8 @@ Prompt `prompts/search_agent.md` — the agent receives the task instruction, th
 source hint, and remaining per-task budget. Rules:
 
 1. Prefer primary sources for `primary_policy` and `coding_article` hints; pass `include_domains`.
+   On an `any`/`news` branch asked what secondary sources claim, the secondary passage itself is the
+   evidence (task 2.2).
 2. Do not add evidence from a snippet; fetch first. Evidence must be a verbatim passage.
 3. One claim per evidence item; atomic; include dates when the passage has them.
 4. Look for the revision/effective date of every policy document and add it as `context` evidence.

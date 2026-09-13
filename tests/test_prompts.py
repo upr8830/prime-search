@@ -154,3 +154,23 @@ def test_the_critic_prompt_asks_for_contradictions_a_reader_can_follow() -> None
     text = load("critic")
     assert "never sees claim ids" in text
     assert "revision history listing its earlier revision dates" in text
+
+
+def test_the_plan_prompt_asks_for_a_secondary_source_branch_on_contradiction_questions() -> None:
+    """The contradiction SearchBench's adversarial records expect is "secondary sources
+    overstate coverage vs the LCD". Three live runs of adv-cgm-001 planned only
+    primary-policy branches, so that conflict was never gathered."""
+    from prime_search.prompts import load
+
+    text = load("plan")
+    assert "`question_type` is `contradiction`" in text
+    assert 'source_hint="any"' in text
+
+
+def test_the_search_agent_records_what_a_secondary_page_claims_when_asked_to() -> None:
+    """Rule 1 made every secondary page a pointer only, which left a secondary-source
+    branch with nothing it was allowed to record."""
+    from prime_search.prompts import load
+
+    text = " ".join(load("search_agent").split())
+    assert "the secondary page's own passage *is* the evidence" in text
