@@ -1,8 +1,13 @@
 # Day 1 — retrieval, workspace, agents
 
-Interim log. `/session-end 1` writes the full session record; this file exists now
-because `docs/09` §1.6 asks for a trace URL to be recorded in the build log, and a
-trace URL is worth nothing once the terminal scrolls.
+Session record for Day 1 of the `docs/09` plan. Written by `/session-end 1`.
+
+Day 1 built the retrieval and agent layers and ended at the **1.7 `[G]` gate**: a coverage
+question now becomes a cited answer from primary sources, and the same question run through the
+starter-equivalent baseline produces its answer, both traced.
+
+**Task 1.8 (SearchBench sources fetch) was not started.** It is Day 1's last item in `docs/09`
+and carries over to tomorrow.
 
 ## Tasks completed
 
@@ -15,7 +20,20 @@ trace URL is worth nothing once the terminal scrolls.
 | (side) Model selection | `9cdbc3e` | `reports/model-selection.md`, 104 calls, $0.44 |
 | 1.5 Evidence store and graph | `c412955` | contested, supersession, citation labels → 47 tests |
 | 1.6 Search sub-agent | `c743ad8`, fixes `10f90fc` | 3 verbatim evidence items on L33822 |
-| 1.7 Root plan, graph, synthesis **[G]** | this commit | below |
+| 1.7 Root plan, graph, synthesis **[G]** | `1fe2390`, fix `d9e9526` | both gate answers + traces, below |
+| 1.8 SearchBench sources fetch | — | **not started** |
+
+Suite at end of day: `make test` → **366 passed, 8 deselected** (the 8 are `live`-marked).
+`uv run ruff check prime_search/ tests/` → clean.
+
+## Gates passed
+
+**1.2 `[G]` — config and models.** `make smoke`, all 10 probes green, no fallback applied. The
+gate also produced the finding that `docs/01` §4's fallback ladder named a model the live catalog
+no longer offers (see Findings below).
+
+**1.7 `[G]` — end-to-end answer.** Evidence in the two sections below: both answers in full, both
+LangSmith traces, and the run directories they wrote.
 
 ## 1.6 — LangSmith traces
 
@@ -137,7 +155,137 @@ separately. The cap is left at the spec's default — in the real graph `dispatc
 up to 6 sub-agents each with their own 8 calls — but `MAX_TOOL_CALLS` is a decision worth
 revisiting at 1.7 once `dispatch` divides the budget for real.
 
+**Revisited at 1.7, and the cap is not the binding constraint.** With four sub-agents each
+holding 8 calls, the gate run recorded 12 evidence items across 13 documents. What ran out
+first was the *run's* 150k token budget (status `budget_exhausted` at 58s of a 180s limit),
+and deep reads were at 8 of 10. `MAX_TOOL_CALLS` stays at 8; `max_tokens` and
+`max_deep_reads` are the numbers to look at when the judge starts requesting second rounds
+at 2.2.
+
 ## Answer-key drift confirmed (for task 2.1)
 
 L33822's current revision is **10/01/2024 (R16)**. The draft answer keys still expect
 2023-04-16 (R12). `docs/08` §2 anticipated this; task 2.1 has to correct the keys.
+
+## Decisions made today
+
+The full log is `docs/11-assumptions-and-approach.md` — **160 dated entries**, 40 of them from
+1.7. These are the ones that change how the code should be read; everything else there is detail.
+
+**Where the implementation deviates from a spec, deliberately**
+
+- `dispatch` is a node **plus** a conditional edge. `docs/03` §1 draws it returning `Send`s, but in
+  LangGraph only a routing function may. The node does the budget arithmetic; `_fan_out` sends.
+- The `Send` payload carries `ws` and `store` beyond §1's `{task, run_id, budget}` — the sub-agent
+  needs somewhere to fetch into and somewhere to record against.
+- Fan-out branches return **only** `task_results` and `events`; `PrimeState.ws` has no reducer.
+- One `RUN_LOCK` in `workspace.py`, shared with `search_agent.py` and `evidence/store.py`, because
+  the deep-read counter is check-then-incremented across two of them.
+- Synthesis **computes** `citations`, `effective_dates`, `claims` and `contradictions` from the
+  claim graph and asks the model only for the prose. A fabricated revision date is the failure
+  this system exists to prevent, and those fields are derivable.
+- `baseline.py` uses a **raw `TavilySearch()`**, against CLAUDE.md's "every Tavily call goes
+  through `primitives/`". `docs/03` §9 says "nothing else is added, so the comparison is fair";
+  our cache and tier classification would make the control arm better than the thing it controls
+  for. The other two CLAUDE.md conflicts in §9 resolve the other way (model from `models.py`,
+  prompt from a `.md`).
+- `RunRecord` is written at **every node boundary** (`docs/06` §4) rather than start and end
+  (`docs/02` §2.1); the file is rewritten, so the stricter reading satisfies both.
+- The LangGraph run for the compiled graph is named `graph`, so the trace is one level deeper than
+  `docs/06` §1's diagram — that level is LangGraph's and cannot be suppressed.
+- `render.py` is a new top-level module not in `docs/01` §10's layout.
+
+**Where a spec was silent and something was authored**
+
+- **`Answer.confidence`** has no derivation anywhere. Defined in `synthesizer.confidence_for`:
+  mean confidence of supported claims, ×0.8 with no primary-tier document, ×0.8 with an
+  unresolved branch, floor 0.05; all-contested reports 0.4; no claims reports 0.0.
+- **The GLP-1 strategy card.** `docs/03` §3 requires one per domain and quotes only the CGM card.
+  Written as *where to look* (Part B vs Part D, the statutory exclusion text, label indication vs
+  coverage) rather than *what is true*, so it does not hand the model answers the bench measures.
+  A test asserts it contains no "is covered"/"is not covered".
+- `docs/03` §3's `time_range="year"` change-detection rule lands on the `SearchTask`, because
+  `Branch` has no such field.
+
+**Where an assumption turned out to be wrong**
+
+- `docs/01` §4's fallback ladder named `deepseek-ai/DeepSeek-V3.2` for five of six roles — a model
+  the live catalog no longer offers. Every fallback would have raised model-not-found the first
+  time a role needed rescuing.
+- `docs/01` §3 contradicted itself on prefixed vs unprefixed credentials; resolved with
+  `AliasChoices`.
+- `langchain-core` 1.6's `tracing_v2_enabled` never populates `latest_run`, so `get_run_url()`
+  always raised. Replaced with an explicit `RunTree`.
+- L33822's current revision is **10/01/2024 (R16)**, not the 2023-04-16 the draft answer keys
+  expect. Task 2.1 has to correct the keys.
+
+## Open issues
+
+1. **`PRIME_MODELS__SUB` in `.env` is inert.** It should be `PRIME_MODELS__SUBAGENT`. The guard
+   added at 1.2 fires a `RuntimeWarning` on every run. No behavioural harm today — the role falls
+   back to the same model the line was trying to set — but it is silently doing nothing. **Only
+   you can fix this; the tooling cannot read or write `.env`.**
+2. **Judge/extractor/evaluator model switch is still unapplied.** `reports/model-selection.md`
+   recommends `deepseek-ai/DeepSeek-V4-Flash-0731` for these three roles; it was not applied
+   because it needs your approval. Decide before the Day 2 bench, so the numbers are measured on
+   one routing.
+3. **Answer-key drift.** L33822 is on R16 (10/01/2024); the draft keys say 2023-04-16. Task 2.1.
+4. **Judge and critic are pass-through stubs.** `docs/09` §1.7 specifies this, but it means
+   `max_rounds` is never exercised and every run is a single round until 2.2/2.3.
+5. **The deep-read budget is the binding constraint, not the tool-call cap.** The gate run spent 8
+   of 10 deep reads and hit the 150k token budget before the search budget. Worth revisiting the
+   `fast`/`deep` budgets once the judge can request a second round.
+6. **`Read(../starter_agent.py)` in `.claude/settings.json` is a relative pattern** and does not
+   match an absolute path. Widen to `Read(**/starter_agent.py)` if a hard block was intended. The
+   file is not tracked and nothing was copied from it beyond the three-line prompt and the
+   constructor arguments `docs/03` §9 requires.
+7. **`extract(doc_id, paragraph_indices, schema)`** (`docs/04` §3) is still deferred — twice now.
+   Consequence: rule 6's extractor-set `relevance` is unreachable and every item keeps the 0.8
+   agent-authored default, which rule 6 sanctions. Revisit at 2.2 or move to the cut list.
+
+## Fallbacks in effect
+
+**None.** Every role is on its `docs/01` §3 default:
+
+```
+root       nvidia/nemotron-3-super-120b-a12b
+critic     nvidia/nemotron-3-super-120b-a12b
+subagent   moonshotai/Kimi-K2.6
+judge      moonshotai/Kimi-K2.6
+extractor  moonshotai/Kimi-K2.6
+evaluator  moonshotai/Kimi-K2.6
+baseline   moonshotai/Kimi-K2.6      (starter default; do not change)
+```
+
+No `fallback:` tag appeared on either gate run, so neither the planner's structured-output rung
+nor its default-plan rung fired. The repaired ladder in `models.FALLBACKS` is available but has
+never been used; applying one still requires asking first.
+
+Budgets: deep `30/20/10 searches/fetches/deep-reads, 6 agents, 3 rounds, 150k tokens, 180s`;
+fast `3/2/10, 1 agent, 1 round, 30s`.
+
+## Resume tomorrow
+
+```bash
+cd C:/Users/ujjwa/Claude/Projects/tavily/prime-search
+
+make setup                 # if the venv is cold
+make smoke                 # confirm all 10 probes still pass before trusting a bench number
+make test                  # expect 366 passed, 8 deselected
+
+# pick up here — Day 1's last task, finishes Day 2 morning per docs/09
+#   1.8  SearchBench sources fetch  (eval/searchbench/fetch_sources.py, docs/08 §2 steps 1-2)
+
+# then task 2.1, which you must gate yourself:
+#   /validate-bench        # yours to invoke; 2.1 corrects the answer keys (see Open issues 3)
+
+# the servers, once 2.4/2.5 exist:
+make dev-api               # FastAPI + SSE   (task 2.4)
+make dev-ui                # Next.js         (task 2.5)
+
+# re-run either arm of the 1.7 gate at any time:
+make ask Q="Is a therapeutic CGM covered under Medicare for a type 2 diabetic not on insulin?"
+make ask Q="..." ARGS="--mode baseline"
+```
+
+**Next task id: 1.8.** Tell me when 2.1 starts — `/validate-bench` is yours to run.
