@@ -43,6 +43,12 @@ REQUIRED_KEYS = {
     "usage": {"searches", "fetches", "deep_reads", "agents", "rounds"},
     "run.finished": {"status", "langsmith_run_url"},
     "error": {"message", "node"},
+    "verdict": {"round", "sufficient", "coverage", "missing", "new_tasks", "reasoning"},
+    "critique": {
+        "weak_claims", "missing_interpretations", "source_independence_issues",
+        "secondary_when_primary_exists", "outdated_sources", "contradictions",
+        "recommended_searches", "completion_probability", "reasoning",
+    },
 }
 
 
@@ -407,3 +413,21 @@ def _passing_critic(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
     from prime_search.schemas import CriticReport
 
     return CriticOutcome(CriticReport(completion_probability=0.9, reasoning="ok"), "fenced_json")
+
+
+def test_the_verdict_event_carries_a_verdict(planned, monkeypatch) -> None:
+    """docs/02 §4: `verdict | Verdict | round separator`."""
+    monkeypatch.setattr(graph_module, "run_judge", _sufficient_judge)
+    graph_module._judge(_state(planned, round=1))
+
+    payloads = _by_type(_events(graph_module.events.run_dir(planned.run_id)), "verdict")
+    assert payloads and REQUIRED_KEYS["verdict"] <= set(payloads[0])
+
+
+def test_the_critique_event_carries_a_critic_report(planned, monkeypatch) -> None:
+    """docs/02 §4: `critique | CriticReport | critic panel`."""
+    monkeypatch.setattr(graph_module, "run_critic", _passing_critic)
+    graph_module._critic(_state(planned, round=1))
+
+    payloads = _by_type(_events(graph_module.events.run_dir(planned.run_id)), "critique")
+    assert payloads and REQUIRED_KEYS["critique"] <= set(payloads[0])

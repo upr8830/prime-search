@@ -107,3 +107,68 @@ def test_the_trace_url_is_captured_even_with_events_off() -> None:
     )
     assert renderer.trace_url == "https://smith.langchain.com/x"
     assert buffer.getvalue() == ""  # and nothing was rendered
+
+
+def test_a_verdict_event_prints_the_round_and_how_many_tasks_it_added() -> None:
+    """docs/07 §3: "Round separators show the judge's verdict and how many tasks it added"."""
+    renderer, buffer = _renderer()
+    renderer.event(
+        {
+            "type": "verdict",
+            "payload": {
+                "round": 0, "sufficient": False,
+                "coverage": {"b1": "resolved", "b2": "partial"},
+                "missing": ["the revision date [of L33822]"],
+                "new_tasks": [{"task_id": "b2-r1"}, {"task_id": "b2-r1-2"}],
+                "reasoning": "r",
+            },
+        }
+    )
+    out = buffer.getvalue()
+    assert "round 0: judge -> insufficient -> 2 new tasks" in out
+    assert "b2 partial" in out
+    assert "the revision date [of L33822]" in out  # printed, not swallowed as markup
+
+
+def test_a_critic_task_is_labelled_critic() -> None:
+    """docs/07 §3: "Critic-triggered tasks are labeled `critic`"."""
+    renderer, buffer = _renderer()
+    renderer.event(
+        {
+            "type": "task.started",
+            "payload": {"task_id": "b2-r1-critic1", "branch_id": "b2", "round": 1, "instruction": "Fetch the article"},
+        }
+    )
+    out = buffer.getvalue()
+    assert "start r1 critic b2" in out
+
+
+def test_a_plan_task_is_not_labelled_critic() -> None:
+    renderer, buffer = _renderer()
+    renderer.event(
+        {
+            "type": "task.started",
+            "payload": {"task_id": "b1-r0", "branch_id": "b1", "round": 0, "instruction": "Find the LCD"},
+        }
+    )
+    assert "critic" not in buffer.getvalue()
+    assert "start b1" in buffer.getvalue()
+
+
+def test_a_critique_event_prints_completion_and_first_findings() -> None:
+    renderer, buffer = _renderer()
+    renderer.event(
+        {
+            "type": "critique",
+            "payload": {
+                "completion_probability": 0.62,
+                "recommended_searches": [{"task_id": "a"}, {"task_id": "b"}],
+                "contradictions": ["A web guide says X; L33822 requires Y; the LCD governs"],
+                "outdated_sources": [], "missing_interpretations": ["Part B versus Part D"],
+            },
+        }
+    )
+    out = buffer.getvalue()
+    assert "critic completion 0.62, 2 recommended searches" in out
+    assert "A web guide says X; L33822 requires Y; the LCD governs" in out
+    assert "Part B versus Part D" in out

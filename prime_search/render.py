@@ -147,8 +147,14 @@ class _Renderer:
             self.console.print(f"  [dim]done when: {criteria}[/]")
 
     def _on_task_started(self, payload: dict) -> None:
+        # docs/07 §3: "Critic-triggered tasks are labeled `critic`" - their task id ends
+        # in `-critic{k}` (docs/02 §2.3). A re-search task shows its round.
+        task_id = str(payload.get("task_id", ""))
+        origin = " [magenta]critic[/]" if task_id.rsplit("-", 1)[-1].startswith("critic") else ""
+        round_ = payload.get("round") or 0
+        label = f" r{round_}" if round_ else ""
         self.console.print(
-            f"[cyan]start[/] {payload.get('branch_id', '?')}: "
+            f"[cyan]start{label}[/]{origin} {payload.get('branch_id', '?')}: "
             f"{str(payload.get('instruction', ''))[:90]}"
         )
 
@@ -201,6 +207,35 @@ class _Renderer:
             line += f" [dim](unresolved: {str(unresolved)[:80]})[/]"
         self.console.print(line)
 
+    def _on_verdict(self, payload: dict) -> None:
+        """docs/07 §3's round separator: the judge's verdict and how many tasks it added."""
+        tasks = payload.get("new_tasks") or []
+        state = "sufficient" if payload.get("sufficient") else "insufficient"
+        added = f" -> {len(tasks)} new task{'' if len(tasks) == 1 else 's'}" if tasks else ""
+        self.console.print(f"[bold cyan]-- round {payload.get('round', '?')}: judge -> {state}{added}[/]")
+        coverage = ", ".join(f"{branch} {status}" for branch, status in (payload.get("coverage") or {}).items())
+        if coverage:
+            self.console.print(f"  coverage: {coverage}", markup=False, style="dim")
+        for item in (payload.get("missing") or [])[:2]:
+            self.console.print(f"  missing: {item}", markup=False, style="dim")
+
+    def _on_critique(self, payload: dict) -> None:
+        """docs/07 §3's critic panel, in one line plus its first findings."""
+        searches = payload.get("recommended_searches") or []
+        probability = payload.get("completion_probability")
+        shown = f"{probability:.2f}" if isinstance(probability, int | float) else "?"
+        tail = (
+            f", {len(searches)} recommended search{'' if len(searches) == 1 else 'es'}" if searches else ""
+        )
+        self.console.print(f"[bold magenta]critic[/] completion {shown}{tail}")
+        for label, key in (
+            ("contradiction", "contradictions"),
+            ("outdated", "outdated_sources"),
+            ("missed", "missing_interpretations"),
+        ):
+            for item in (payload.get(key) or [])[:3]:
+                self.console.print(f"  {label}: {str(item)[:160]}", markup=False, style="dim")
+
     def _on_error(self, payload: dict) -> None:
         self.console.print(f"  [red]error[/] {str(payload.get('message', ''))[:200]}")
 
@@ -238,6 +273,11 @@ def _print_answer(console: Console, answer: Answer, *, mode: str) -> None:
         console.rule("[bold]Effective dates relied on")
         for line in answer.effective_dates:
             console.print(f"  {line}")
+
+    if mode == "prime" and answer.contradictions:
+        console.rule("[bold]Contradictions")
+        for line in answer.contradictions:
+            console.print(f"  {line}", markup=False)
 
 
 def _print_footer(console: Console, record: RunRecord) -> None:
