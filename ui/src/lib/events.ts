@@ -126,3 +126,12 @@ export type RunEvent = {
 export function isEventType(value: string): value is EventType {
   return (EVENT_TYPES as readonly string[]).includes(value);
 }
+
+/**
+ * EventSource delivers a server frame named `error` (docs/02 §4) to `onerror` as well as
+ * to its listener. That frame is a MessageEvent carrying data; a dropped connection is a
+ * plain Event. Without this check, one sub-agent error made the pane say the stream dropped.
+ */
+export function isServerErrorFrame(event: Event): boolean {
+  return typeof MessageEvent !== "undefined" && event instanceof MessageEvent;
+}

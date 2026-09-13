@@ -75,7 +75,14 @@ export function EvidenceTable({ view }: { view: RunView }) {
                     {view.runId ? (
                       <Link
                         href={documentHref(view.runId, item.doc_id, item.location.paragraph_index)}
-                        onClick={(event) => event.stopPropagation()}
+                        onClick={(event) => {
+                          event.stopPropagation(); // the row's own handler would navigate twice
+                          postUiEvent(
+                            "ui.evidence_opened",
+                            { from: "evidence_table", evidence_id: item.evidence_id, doc_id: item.doc_id },
+                            view.runId,
+                          );
+                        }}
                         className="text-accent underline"
                       >
                         {fetch?.title ?? item.doc_id}

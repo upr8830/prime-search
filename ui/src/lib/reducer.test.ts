@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import type { EventType, RunEvent } from "./events";
+import { isServerErrorFrame, type EventType, type RunEvent } from "./events";
 import {
   branchStatus,
   initialRun,
@@ -180,6 +180,11 @@ describe("reduceRun", () => {
     expect([fallback.planCodeRecorded, fallback.planCode]).toEqual([true, null]);
   });
 
+  it("tells a server error frame from a dropped connection (spec review, 2.5)", () => {
+    expect(isServerErrorFrame(new MessageEvent("error", { data: '{"message":"x","node":"search_agent"}' }))).toBe(true);
+    expect(isServerErrorFrame(new Event("error"))).toBe(false);
+  });
+
   it("names task origins from the task id convention (docs/02 §2.3)", () => {
     expect(taskOrigin("b1-r0", 0)).toBe("plan");
     expect(taskOrigin("b1-r1-2", 1)).toBe("judge");
@@ -187,8 +192,9 @@ describe("reduceRun", () => {
   });
 });
 
-// A real recorded run, when this checkout has it (runs/ is not committed).
-const REAL_RUN = resolve(__dirname, "../../../runs/01a09bb6-7412-7203-8fe8-1b44eb7a8497/events.jsonl");
+// A recorded prime deep run (runs/01a09bb6…, the out-of-scope athlete question), committed
+// without its token frames so the test runs on any checkout: synthetic policy content only.
+const REAL_RUN = resolve(__dirname, "__fixtures__/prime-deep-run.jsonl");
 
 describe.skipIf(!existsSync(REAL_RUN))("a recorded prime deep run", () => {
   it("replays to a finished run with its verdicts, critique, evidence and answer", () => {

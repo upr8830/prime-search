@@ -59,9 +59,10 @@ export default function ComparePage() {
             </button>
           </div>
           <div className={`grid gap-4 ${hideBaseline ? "grid-cols-1" : "lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]"}`}>
-            {!hideBaseline && (
+            {/* Hidden, not unmounted: unmounting would unlock feedback already sent (docs/07 §3). */}
+            <div className={hideBaseline ? "hidden" : "contents"}>
               <RunPane key={runIds.baseline ?? "baseline"} mode="baseline" view={baseline.view} connection={baseline.connection} />
-            )}
+            </div>
             <RunPane key={runIds.prime ?? "prime"} mode="prime" view={prime.view} connection={prime.connection} />
           </div>
         </>

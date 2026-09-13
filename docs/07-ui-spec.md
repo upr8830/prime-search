@@ -193,10 +193,13 @@ the contract stays in sync).
   - claim flags post `ui.claim_flagged` and join `claim_ids_flagged`.
 - **Footer and feedback:**
   - The footer prefers the saved record's `usage` once the run has ended.
-  - Feedback opens at `run.finished`, since `POST /feedback` needs the record. It then locks with
+  - Feedback opens at `run.finished`, since `POST /feedback` needs the record (both modes write it before emitting `run.finished`). It then locks with
     "LangSmith ✓" or "saved locally".
 - **Plan tab:** shows `code` from the `plan` event. Older runs say it was not recorded; a fallback plan says
   there is none.
+- **Stream errors:** a server `error` frame reaches `onerror` too; it is told apart from a dropped
+  connection (a `MessageEvent` has data), so a sub-agent error does not show the reconnect notice. Hiding
+  the starter pane keeps it mounted, so sent feedback stays locked.
 - **Checks:**
   - `pnpm test` (reducer, citations, and a replay of a recorded run when present);
   - `pnpm exec tsc --noEmit`;

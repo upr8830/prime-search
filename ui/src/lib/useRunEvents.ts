@@ -18,7 +18,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useReducer, useState } from "react";
 
 import { api, streamUrl } from "./api";
-import { EVENT_TYPES, type EventType, type RunEvent } from "./events";
+import { EVENT_TYPES, isServerErrorFrame, type EventType, type RunEvent } from "./events";
 import { initialRun, reduceRun, toRunEvent, type RunView } from "./reducer";
 
 export type Connection = "idle" | "open" | "reconnecting" | "closed" | "gave_up";
@@ -110,7 +110,9 @@ export function useRunEvents(runId: string | null): { view: RunView; connection:
         retries = 0;
         setConnection("open");
       };
-      source.onerror = () => {
+      source.onerror = (event) => {
+        // A server `error` frame, not a connection problem: its listener already handled it.
+        if (isServerErrorFrame(event)) return;
         if (cancelled || finished || !source) return;
         if (source.readyState !== EventSource.CLOSED) {
           setConnection("reconnecting"); // the browser retries and sends Last-Event-ID
