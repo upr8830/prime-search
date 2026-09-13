@@ -70,3 +70,46 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
+
+/* The synthesizer's answer Markdown (docs/03 §8 sections), rendered by react-markdown. */
+.answer-markdown h1,
+.answer-markdown h2,
+.answer-markdown h3 {
+  margin: 1rem 0 0.35rem;
+  font-weight: 600;
+}
+.answer-markdown h2 {
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.2rem;
+}
+.answer-markdown p {
+  margin: 0.4rem 0;
+}
+.answer-markdown ul,
+.answer-markdown ol {
+  margin: 0.35rem 0;
+  padding-left: 1.25rem;
+}
+.answer-markdown ul {
+  list-style: disc;
+}
+.answer-markdown ol {
+  list-style: decimal;
+}
+.answer-markdown li {
+  margin: 0.15rem 0;
+}
+.answer-markdown code {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.85em;
+}
+.answer-markdown table {
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+}
+.answer-markdown th,
+.answer-markdown td {
+  border: 1px solid var(--line);
+  padding: 0.2rem 0.4rem;
+}
