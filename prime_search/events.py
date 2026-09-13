@@ -51,6 +51,8 @@ _LOG_AT_INFO = {"error", "verdict", "critique", "run.finished"}
 _log = get_logger(component="events")
 _lock = threading.Lock()
 _subscribers: dict[str, list[Callable[[dict], None]]] = {}
+# Next `seq` per events file (keyed by path, so a test's tmp root never inherits a count).
+_next_seq: dict[str, int] = {}
 _root = Path("runs").resolve()
 
 __all__ = [
@@ -145,6 +147,7 @@ def emit(run_id: str, type: str, payload: Any) -> dict[str, Any]:
         "ts": datetime.now(UTC).isoformat(),
         "run_id": run_id,
         "type": type,
+        "seq": None,  # assigned under the write lock in _append
         "payload": encoded,
     }
     _append(run_id, record)
@@ -175,15 +178,22 @@ def replay(run_id: str) -> Iterator[dict[str, Any]]:
     path = _root / run_id / "events.jsonl"
     if not path.is_file():
         return
+    # A record written before `seq` existed gets its line position, which is what
+    # `_append` would have assigned, so an SSE client dedupes old and new runs alike.
     with path.open(encoding="utf-8") as handle:
+        position = -1
         for line in handle:
             stripped = line.strip()
             if not stripped:
                 continue
+            position += 1
             try:
-                yield json.loads(stripped)
+                record = json.loads(stripped)
             except ValueError:  # a torn last line from a killed process
                 continue
+            if record.get("seq") is None:
+                record["seq"] = position
+            yield record
 
 
 def jsonable(payload: Any) -> Any:
@@ -207,19 +217,40 @@ def _append(run_id: str, record: dict[str, Any]) -> None:
     # OSError, so a circular reference or a RecursionError in a payload escaped emit()
     # -> escaped the tool -> escaped the agent, against this module's one promise.
     try:
-        line = json.dumps(record, ensure_ascii=False, default=str)
         path = run_dir(run_id) / "events.jsonl"
         # Serialized: from 1.7 the graph fans sub-agents out with `Send` and they run
         # concurrently in one superstep, all emitting into this file. Append mode does
         # not make a multi-KB write atomic, and two interleaved writes produced a torn
         # line in a live run - `replay()` drops it, so the UI would have lost an event
         # silently rather than visibly.
-        with _lock, path.open("a", encoding="utf-8", newline="\n") as handle:
-            handle.write(line + "\n")
+        #
+        # `seq` is assigned inside the same lock, so file order and seq order agree and
+        # an SSE client that replays the file and then drains live events can drop
+        # exactly the ones it has already sent (docs/02 §4, task 2.4).
+        with _lock:
+            record["seq"] = _take_seq(path)
+            line = json.dumps(record, ensure_ascii=False, default=str)
+            with path.open("a", encoding="utf-8", newline="\n") as handle:
+                handle.write(line + "\n")
     except (OSError, ValueError, TypeError, RecursionError) as exc:
         _log.warning(
             "events.write_failed", run_id=run_id, type=record["type"], error=str(exc)
         )
+
+
+def _take_seq(path: Path) -> int:
+    """The next `seq` for this events file; the caller holds `_lock`. A run reopened by
+    a new process continues after the lines already on disk, as `replay()` numbers them."""
+    key = str(path)
+    if key not in _next_seq:
+        try:
+            with path.open(encoding="utf-8") as handle:
+                _next_seq[key] = sum(1 for line in handle if line.strip())
+        except OSError:
+            _next_seq[key] = 0
+    seq = _next_seq[key]
+    _next_seq[key] = seq + 1
+    return seq
 
 
 def _publish(run_id: str, record: dict[str, Any]) -> None:

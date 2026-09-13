@@ -309,7 +309,10 @@ Baseline mode emits `run.started`, `search` (per tool call), `token`, `answer`, 
 `run.finished` so the two panes share one renderer.
 
 Events are also appended to `runs/<run_id>/events.jsonl` with timestamps; the UI replays them when
-re-opening a past run.
+re-opening a past run. Each line is `{ts, run_id, type, seq, payload}`, where `seq` counts from 0 per run and
+is assigned under the same lock as the write, so file order and `seq` order agree. The SSE stream sends it as
+`id: <seq>`, and a client reconnecting with `Last-Event-ID` resumes after that event. Lines written before
+`seq` existed get their line position on replay.
 
 ## 5. Persisted run layout
 

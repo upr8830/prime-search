@@ -133,6 +133,43 @@ def test_the_runs_root_is_absolute_so_a_chdir_cannot_orphan_a_run(tmp_path: Path
     assert events.runs_root().is_absolute()
 
 
+def test_seq_counts_every_event_once_under_concurrent_emits() -> None:
+    """Task 2.4: the SSE stream replays the file, then drains live events, and drops the
+    ones it has already sent by `seq`. That only works if no two events share a seq,
+    none is skipped, and file order is seq order."""
+    import threading
+
+    returned: list[int] = []
+    guard = threading.Lock()
+
+    def worker(n: int) -> None:
+        for i in range(50):
+            record = events.emit("run-seq", "search", {"worker": n, "i": i})
+            with guard:
+                returned.append(record["seq"])
+
+    threads = [threading.Thread(target=worker, args=(n,)) for n in range(8)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+    assert sorted(returned) == list(range(400))
+    assert [record["seq"] for record in events.replay("run-seq")] == list(range(400))
+
+
+def test_replay_numbers_lines_written_before_seq_existed(tmp_path: Path) -> None:
+    legacy = tmp_path / "run-old" / "events.jsonl"
+    legacy.parent.mkdir()
+    lines = [{"ts": "t", "run_id": "run-old", "type": "search", "payload": {"i": i}} for i in range(3)]
+    legacy.write_text("".join(json.dumps(line) + "\n" for line in lines), encoding="utf-8")
+
+    assert [record["seq"] for record in events.replay("run-old")] == [0, 1, 2]
+    # A process reopening the run continues after what is on disk.
+    events._next_seq.clear()
+    assert events.emit("run-old", "search", {"i": 3})["seq"] == 3
+
+
 def test_concurrent_emits_do_not_tear_a_line(tmp_path) -> None:
     """From 1.7 the graph fans sub-agents out with `Send` and they run concurrently in
     one superstep. Append mode does not make a multi-KB write atomic: a live run

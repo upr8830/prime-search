@@ -51,7 +51,7 @@ Metadata: `run_id`, `question_id`, `question`, `git_sha`, `budget` (as dict), `m
 
 `events.emit(run_id, type, payload)`:
 
-1. appends `{ts, run_id, type, payload}` to `runs/<run_id>/events.jsonl`;
+1. appends `{ts, run_id, type, seq, payload}` to `runs/<run_id>/events.jsonl` (`seq` per run, under the write lock; 02 §4);
 2. pushes to the in-process SSE queue for that run;
 3. for `error`, `verdict`, `critique`, `run.finished`: also logs at INFO via structlog.
 
