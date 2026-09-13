@@ -389,7 +389,7 @@ def test_the_answer_precedes_run_finished_in_the_log(sandboxed_run, monkeypatch)
     assert order.index("usage") < order.index("run.finished")
 
 
-def test_a_prime_subscriber_receives_run_finished(sandboxed_run, monkeypatch) -> None:
+def _stub_prime_nodes(monkeypatch, synthesize=None) -> None:  # noqa: ANN001
     from contextlib import contextmanager
 
     from prime_search.agents import graph as module
@@ -409,10 +409,15 @@ def test_a_prime_subscriber_receives_run_finished(sandboxed_run, monkeypatch) ->
     monkeypatch.setattr(module, "structured", lambda *a, **k: _FakeCaller(_understanding()))
     monkeypatch.setattr(module, "plan_run", lambda ws, **k: _FakeOutcome(_plan_for(ws)))
     monkeypatch.setattr(module, "run_search_agent", lambda task, **k: _empty_result())
-    monkeypatch.setattr(module, "synthesize", lambda ws, **k: _blank_answer())
+    monkeypatch.setattr(module, "synthesize", synthesize or (lambda ws, **k: _blank_answer()))
     monkeypatch.setattr(module, "run_judge", _sufficient_judge)
     monkeypatch.setattr(module, "run_critic", _passing_critic)
 
+
+def test_a_prime_subscriber_receives_run_finished(sandboxed_run, monkeypatch) -> None:
+    from prime_search.agents import graph as module
+
+    _stub_prime_nodes(monkeypatch)
     seen: list[str] = []
     record = module.run_prime(RunRequest(question="q"), on_event=lambda r: seen.append(r["type"]))
     assert seen and seen[-1] == "run.finished", f"got {seen}"
@@ -430,6 +435,26 @@ def test_a_prime_subscriber_receives_run_finished(sandboxed_run, monkeypatch) ->
     assert usages[-1]["payload"] == record.usage.model_dump(mode="json")
     assert finished["payload"]["usage"] == record.usage.model_dump(mode="json")
     assert usages[-1]["seq"] < finished["seq"]
+    assert finished["payload"]["status"] == "completed" and finished["payload"]["limits_reached"] == []
+
+
+def test_run_finished_names_the_limits_a_run_reached(sandboxed_run, monkeypatch) -> None:
+    """docs/02 §4: the UI says which limit was reached in plain words (07 §9), so the
+    event names it; the status stays `budget_exhausted` for the bench."""
+    from prime_search.agents import graph as module
+    from prime_search.events import run_dir
+
+    def over_the_token_limit(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        ws.usage.input_tokens = ws.budget.max_tokens
+        return _blank_answer()
+
+    _stub_prime_nodes(monkeypatch, synthesize=over_the_token_limit)
+    record = module.run_prime(RunRequest(question="q"))
+
+    (finished,) = _by_type(_events(run_dir(record.run_id)), "run.finished")
+    assert record.status == "budget_exhausted"
+    assert finished["status"] == "budget_exhausted"
+    assert finished["limits_reached"] == ["max_tokens"]
 
 
 class _FakeCaller:

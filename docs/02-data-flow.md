@@ -303,8 +303,12 @@ paragraph counts, and calls `search_within` to see specific paragraphs. This is 
 | `token` | `{text}` | streaming answer (synthesis only) |
 | `answer` | `Answer` | final answer panel |
 | `usage` | `Usage` | cost/latency footer |
-| `run.finished` | `{status, langsmith_run_url, usage}` | footer link, final totals |
+| `run.finished` | `{status, langsmith_run_url, usage, limits_reached?}` | footer link, final totals, limit note (07 §9) |
 | `error` | `{message, node, severity, task_id?, summary?}` | red alert (`error`) or muted note (`warning`), 07 §3 |
+
+`run.finished.limits_reached` (prime runs) lists the `Budget` fields the run used up, e.g. `["max_tokens"]`. It
+is non-empty exactly when `status` is `budget_exhausted`, and `[]` for a run that stayed within its limits or
+failed. Baseline runs and the API's synthetic finishes omit it.
 
 `error.severity` is `"error"` when the run failed or cannot continue, and `"warning"` when one step did not
 work and the run went on without it. A missing severity (events written before it existed) means `"error"`.

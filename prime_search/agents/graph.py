@@ -549,6 +549,9 @@ def run_prime(
     record: RunRecord | None = None
     trace_url: str | None = None
     trace_id: str | None = None
+    # The Budget fields the run used up, read once so the status and the event agree
+    # (`max_seconds` keeps moving). The UI names them in plain words (docs/07 §9).
+    limits_reached: list[str] = []
     try:
         with trace_run(
             "prime_search",
@@ -600,12 +603,13 @@ def run_prime(
             # The run's totals, not the last round's: judge, critic and synthesis ran
             # after the last collect set these (docs/06 §5).
             workspace.usage.wall_seconds = round((datetime.now(UTC) - workspace.started_at).total_seconds(), 1)
+            limits_reached = [name for name, _ in workspace.exhausted_limits()]
             record = _write_record(
                 workspace,
                 request,
                 started,
                 handle.url,
-                status=_terminal_status(workspace, state),
+                status=_terminal_status(limits_reached),
                 answer=final.get("answer"),
                 trace_id=trace_id,
             )
@@ -613,6 +617,7 @@ def run_prime(
         _log.warning("run.failed", error=f"{type(exc).__name__}: {exc}")
         events.emit_error(workspace.run_id, f"{type(exc).__name__}: {exc}", "run_prime")
         workspace.usage.wall_seconds = round((datetime.now(UTC) - workspace.started_at).total_seconds(), 1)
+        limits_reached = []  # a failed run reports its failure, not its limits
         record = _write_record(
             workspace,
             request,
@@ -641,6 +646,7 @@ def run_prime(
                 "status": record.status if record else "failed",
                 "langsmith_run_url": trace_url,
                 "usage": workspace.usage,
+                "limits_reached": limits_reached,
             },
         )
         if unsubscribe:
@@ -753,11 +759,11 @@ def _unknowns(ws: Workspace, state: PrimeState) -> list[str]:
     return unique
 
 
-def _terminal_status(ws: Workspace, state: PrimeState) -> str:
+def _terminal_status(limits_reached: list[str]) -> str:
     """docs/02 section 2.1's status. `budget_exhausted` is a real outcome, not a
     failure: the answer is valid, it is just built on less than the plan asked for -
     and the bench needs to tell the two apart when it reads a thin row."""
-    return "budget_exhausted" if ws.exhausted_limits() else "completed"
+    return "budget_exhausted" if limits_reached else "completed"
 
 
 def _usage_tags(ws: Workspace) -> list[str]:
