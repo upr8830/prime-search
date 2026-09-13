@@ -195,6 +195,20 @@ def test_a_run_writes_the_experiment_json_and_each_metrics_json(bench, monkeypat
     assert metrics["experiment_name"] == FakeResults.experiment_name and metrics["split"] == "dev"
 
 
+def test_concurrency_n_runs_n_examples_at_once(bench, monkeypatch) -> None:
+    def fake_prime(request: RunRequest, **kwargs):  # noqa: ANN003, ANN202
+        record = kwargs["ws"].to_record(request, status="completed", answer=_answer())
+        events.write_run_artifacts(record)
+        return record
+
+    captured: dict = {}
+    monkeypatch.setattr(run_eval, "run_prime", fake_prime)
+    monkeypatch.setattr(run_eval, "_client", lambda: FakeClient(_examples()))
+    monkeypatch.setattr(run_eval, "_evaluate", _fake_evaluate(captured))
+    assert run_eval.main(["--mode", "prime", "--split", "dev", "--concurrency", "3"]) == 0
+    assert captured["max_concurrency"] == 3
+
+
 def test_rescore_scores_saved_records_without_running_agents(bench, monkeypatch) -> None:
     monkeypatch.setattr(run_eval, "run_prime", _must_not_call)
     monkeypatch.setattr(run_eval, "_evaluate", _must_not_call)

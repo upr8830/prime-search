@@ -445,6 +445,9 @@ def test_a_dailymed_label_matches_an_fda_label_target() -> None:
     dailymed = "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=f5e548d0"
     assert evaluators.matches_target(dailymed, "Label", None, target) == "host+type"
     assert evaluators.matches_target("https://pmc.ncbi.nlm.nih.gov/articles/PMC1/", None, None, target) is None
+    # The alias applies on both sides: a key source on DailyMed matches an FDA-hosted label.
+    keyed = evaluators.Target(descriptor="Wegovy label", hosts={evaluators._target_site(dailymed)})
+    assert evaluators.matches_target("https://www.accessdata.fda.gov/label/wegovy.pdf", "Label", None, keyed) == "host+type"
 
 
 def test_citation_correctness_skips_effective_dates_and_shows_each_passages_document(judge) -> None:

@@ -397,7 +397,7 @@ def resolve_descriptor(descriptor: str, key: AnswerKey, *, doc_type: str | None 
             target.urls.add(sources.normalize_url(url))
             if target.how == "unresolved":
                 target.how = "sources"
-    target.hosts = {_site(url) for url in target.urls}
+    target.hosts = {_target_site(url) for url in target.urls}
     return target
 
 
