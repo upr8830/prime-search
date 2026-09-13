@@ -410,6 +410,22 @@ def test_a_budget_note_is_added_to_the_unknowns_section(populated) -> None:
     assert "processing limit" in section.split("## Sources")[0]
 
 
+def test_raw_doc_ids_become_document_titles(populated) -> None:
+    """A live answer's Unknowns named "doc_7e7be1abff". A reader cannot look that up."""
+    post = _document("doc_7e7be1abff", title="Dexcom community post", url="https://facebook.com/dexcom/posts/1")
+    populated.documents[post.doc_id] = post
+    body = BODY.replace(
+        "- Whether a later revision exists.\n",
+        "- Whether a later revision exists.\n- The claim in doc_7e7be1abff and doc_0123456789 was not confirmed.\n",
+    )
+    model = ScriptedChatModel(script=[AIMessage(content=body)])
+    answer = synthesize(populated, model=model, unresolved=["doc_7e7be1abff could not be read"])
+
+    assert answer.unknowns == ['"Dexcom community post" could not be read']
+    assert 'The claim in "Dexcom community post" and a source document was not confirmed.' in answer.body_markdown
+    assert "doc_7e7be1abff" not in answer.body_markdown and "doc_0123456789" not in answer.body_markdown
+
+
 def test_no_budget_note_when_nothing_was_exhausted(populated) -> None:
     model = ScriptedChatModel(script=[AIMessage(content=BODY)])
     answer = synthesize(populated, model=model)

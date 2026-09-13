@@ -56,6 +56,8 @@ SECTION_HEADINGS = (
 )
 
 _CITATION = re.compile(r"\[(\d{1,3})\]")
+# docs/02 §2.4's document id. A live answer's Unknowns named "doc_7e7be1abff" to a reader.
+_DOC_REF = re.compile(r"\b(doc_[0-9a-f]{10})\b")
 
 # Citation forms models actually emit instead of `[n]`, normalized before validating so
 # the answer the reader sees uses one form and docs/03 §8's check sees all of them.
@@ -117,7 +119,8 @@ def synthesize(
     serves both, rather than this module knowing about either.
     """
     citations = build_citations(ws.evidence, ws.documents)
-    unresolved_notes = unresolved if unresolved is not None else list(ws.unknowns)
+    raw_notes = unresolved if unresolved is not None else list(ws.unknowns)
+    unresolved_notes = [_plain_doc_refs(note, ws) for note in raw_notes]
 
     # docs/03 §13: "No evidence at all: synthesis returns an answer consisting of the
     # scope warning/unknowns only; the UI shows it plainly rather than an error."
@@ -139,6 +142,7 @@ def synthesize(
 
     body, estimated = _stream(model or root_model(), prompt, on_token, ws)
     body, dropped = _validate_citations(body, citations)
+    body = _plain_doc_refs(body, ws)  # before Sources is rebuilt from the citations
     if dropped:
         _log.warning("synthesize.citations_dropped", numbers=sorted(dropped))
         events.emit_error(
@@ -595,6 +599,22 @@ def _ensure_sources_section(body: str, citations: list[Citation], ws: Workspace)
     match = re.search(r"^##+\s*Sources\b.*$", body, re.MULTILINE)
     trimmed = body[: match.start()].rstrip() if match else body.rstrip()
     return trimmed + "\n\n## Sources\n\n" + "\n".join(lines) + "\n"
+
+
+def _plain_doc_refs(text: str, ws: Workspace) -> str:
+    """Replace internal document ids with the document's title.
+
+    The sub-agent and synthesis prompts ask for titles, but a note written mid-task
+    quotes whatever id the tool returned, and it reaches the answer through
+    `ws.unknowns`. A reader cannot look up `doc_7e7be1abff` (docs/11).
+    """
+
+    def title(match: re.Match[str]) -> str:
+        document = ws.documents.get(match.group(1))
+        name = document.title.strip() if document is not None else ""
+        return f'"{name}"' if name else "a source document"
+
+    return _DOC_REF.sub(title, text)
 
 
 def _ensure_budget_note(body: str, ws: Workspace) -> str:

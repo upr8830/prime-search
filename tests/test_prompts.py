@@ -187,6 +187,22 @@ def test_the_search_agent_records_what_a_secondary_page_claims_when_asked_to() -
     assert "the secondary page's own passage *is* the evidence" in text
 
 
+def test_unresolved_items_are_written_for_a_reader_not_an_engineer() -> None:
+    """A live answer's Unknowns said "I exhausted my tool-call budget" and named
+    doc_7e7be1abff. Both prompts that write those notes, the cap turn and the tool
+    description now say who reads them (docs/11)."""
+    from prime_search.agents.search_agent import SUMMARIZE_AFTER_CAP
+    from prime_search.prompts import load
+
+    rule = (
+        "Write unresolved items for a patient or clinician: say what could not be confirmed. "
+        "Never mention tool calls, budgets, limits or doc_ids; name a document by its title or publisher."
+    )
+    for name in ("search_agent", "synthesize"):
+        assert rule in " ".join(load(name).split()), name
+    assert rule in " ".join(SUMMARIZE_AFTER_CAP.split())
+
+
 def test_the_eval_prompts_state_the_grading_guards() -> None:
     """An answer under evaluation is untrusted text: a judge that follows instructions
     inside it, or counts an "Unknowns" line as a claim, grades the wrong thing."""

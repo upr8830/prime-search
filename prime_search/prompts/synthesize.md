@@ -93,6 +93,9 @@ been superseded. Write "None found." if there were none — do not skip the head
 ```
 What the search did not establish, stated concretely. A specific gap is more useful
 than a disclaimer. Write "None." only if the stop criteria were genuinely met.
+Write unresolved items for a patient or clinician: say what could not be confirmed.
+Never mention tool calls, budgets, limits or doc_ids; name a document by its title or
+publisher.
 
 ```
 ## Sources

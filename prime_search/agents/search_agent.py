@@ -67,7 +67,9 @@ SUMMARIZE_AFTER_CAP = (
     "You have no tool calls left ({reason}). Do not call any more tools.\n"
     "Write your final answer now: 2-3 sentences on what you established and the "
     "evidence you recorded, then a final line starting with 'Unresolved:' naming what "
-    "you could not confirm."
+    "you could not confirm. Write unresolved items for a patient or clinician: say what "
+    "could not be confirmed. Never mention tool calls, budgets, limits or doc_ids; name a "
+    "document by its title or publisher."
 )
 
 _LIMITS = {"searches": "max_searches", "fetches": "max_fetches", "deep_reads": "max_deep_reads"}
@@ -484,8 +486,12 @@ def build_tools(ctx: ToolContext) -> list[BaseTool]:
         missing, a date is not stated, or two sources disagree and you cannot tell
         which governs. It reaches the answer's "Unknowns" section.
 
+        Write unresolved items for a patient or clinician: say what could not be
+        confirmed. Never mention tool calls, budgets, limits or doc_ids; name a document
+        by its title or publisher.
+
         Args:
-            text: One sentence naming what is missing and what you tried.
+            text: One sentence naming what could not be confirmed.
         """
         ctx.begin("note_unresolved")
         cleaned = _clip(text.strip(), 400)
