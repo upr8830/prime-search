@@ -49,7 +49,12 @@ EVENT_TYPES = (
 _LOG_AT_INFO = {"error", "verdict", "critique", "run.finished"}
 
 _log = get_logger(component="events")
-_lock = threading.Lock()
+# Guards the JSONL write, `seq`, and publishing together, so subscribers receive a run's
+# events in `seq` order. Publishing after releasing it let two concurrent sub-agents
+# publish seq 6 before seq 5, and an SSE client that had sent 6 dropped 5 for good
+# (task 2.4 review). Reentrant, so a subscriber that emits does not deadlock itself.
+_lock = threading.RLock()
+_subscribers_lock = threading.Lock()
 _subscribers: dict[str, list[Callable[[dict], None]]] = {}
 # Next `seq` per events file (keyed by path, so a test's tmp root never inherits a count).
 _next_seq: dict[str, int] = {}
@@ -150,8 +155,9 @@ def emit(run_id: str, type: str, payload: Any) -> dict[str, Any]:
         "seq": None,  # assigned under the write lock in _append
         "payload": encoded,
     }
-    _append(run_id, record)
-    _publish(run_id, record)
+    with _lock:
+        _append(run_id, record)
+        _publish(run_id, record)
     if type in _LOG_AT_INFO:
         _log.info(f"event.{type}", run_id=run_id, **_log_fields(record["payload"]))
     return record
@@ -159,11 +165,11 @@ def emit(run_id: str, type: str, payload: Any) -> dict[str, Any]:
 
 def subscribe(run_id: str, callback: Callable[[dict], None]) -> Callable[[], None]:
     """Register a listener and return its unsubscribe. Task 2.4's SSE queue is one."""
-    with _lock:
+    with _subscribers_lock:
         _subscribers.setdefault(run_id, []).append(callback)
 
     def unsubscribe() -> None:
-        with _lock:
+        with _subscribers_lock:
             listeners = _subscribers.get(run_id, [])
             if callback in listeners:
                 listeners.remove(callback)
@@ -254,7 +260,7 @@ def _take_seq(path: Path) -> int:
 
 
 def _publish(run_id: str, record: dict[str, Any]) -> None:
-    with _lock:
+    with _subscribers_lock:
         listeners = list(_subscribers.get(run_id, ()))
     for callback in listeners:
         try:

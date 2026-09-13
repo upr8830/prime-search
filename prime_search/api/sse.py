@@ -6,17 +6,22 @@ Ordering is what makes this correct:
 2. Replay `events.jsonl` past the client's `Last-Event-ID`.
 3. Drain live events, dropping any `seq` already sent.
 
-`emit` appends under a lock and publishes after releasing it, so an event can arrive in
-both the replay and the queue; `seq` (assigned under that lock) removes the duplicate.
-The stream ends at `run.finished`. A run that no worker here is running and that never
-finished (the API restarted mid-run) ends with a synthetic `error` and `run.finished`
-that are sent but never written: the record on disk stays exactly as the run left it.
+`emit` appends and publishes under one lock, so subscribers receive events in `seq` order.
+An event can still arrive both in the replay and in the queue (appended before the replay
+read, published after the subscription), and `seq` removes that duplicate.
+
+The stream ends at `run.finished`, including one the client already has: a browser
+EventSource reconnects on its own after a close, and must not be told a completed run
+failed. A run that never finished, and that nobody is still writing to, ends with a
+synthetic `error` and `run.finished`. These are sent but never written, so the record on
+disk stays exactly as the run left it.
 """
 
 from __future__ import annotations
 
 import asyncio
 import json
+import time
 from collections.abc import AsyncIterator
 from typing import Any
 
@@ -27,10 +32,14 @@ from prime_search.api import runs
 
 __all__ = ["event_stream"]
 
-# How long to wait for a live event before checking whether anyone is still running
-# the run. Not a latency: live events arrive as soon as they are emitted.
+# How long to wait for a live event before checking whether anyone is still running the
+# run. Not a latency: live events arrive as soon as they are emitted.
 POLL_SECONDS = 1.0
-INTERRUPTED = "run interrupted: the API process running it stopped before it finished"
+# A run this process did not start (the CLI, an earlier API process) is streamed from its
+# file. It counts as interrupted only once that file has been quiet this long, because a
+# prime model call can take minutes between events.
+STALE_SECONDS = 180.0
+INTERRUPTED = "run interrupted: the process running it stopped before it finished"
 
 
 async def event_stream(
@@ -49,8 +58,10 @@ async def event_stream(
     unsubscribe = events.subscribe(run_id, on_event)
     last = -1 if last_event_id is None else last_event_id
     try:
-        for record in await run_in_threadpool(lambda: list(events.replay(relative))):
+        for record in await _replay(relative):
             if record["seq"] <= last:
+                if record["type"] == "run.finished":
+                    return  # the client already has the end
                 continue
             last = record["seq"]
             yield _frame(record)
@@ -63,21 +74,26 @@ async def event_stream(
             except TimeoutError:
                 if registry.is_active(run_id):
                     continue
-                # Finished just now, or not this process's run: whatever is on disk
-                # past `last` is all there will be.
-                for record in await run_in_threadpool(lambda: list(events.replay(relative))):
+                # Finished just now, or not this process's run: the file is the source.
+                for record in await _replay(relative):
                     if record["seq"] <= last:
+                        if record["type"] == "run.finished":
+                            return
                         continue
                     last = record["seq"]
                     yield _frame(record)
                     if record["type"] == "run.finished":
                         return
+                if not registry.knows(run_id) and _recently_written(relative):
+                    continue  # another process is still writing it
                 for frame in _interrupted(run_id):
                     yield frame
                 return
             seq = record.get("seq")
             if seq is not None:
                 if seq <= last:
+                    if record["type"] == "run.finished":
+                        return
                     continue
                 last = seq
             yield _frame(record)
@@ -85,6 +101,18 @@ async def event_stream(
                 return
     finally:
         unsubscribe()
+
+
+async def _replay(relative: str) -> list[dict[str, Any]]:
+    return await run_in_threadpool(lambda: list(events.replay(relative)))
+
+
+def _recently_written(relative: str) -> bool:
+    try:
+        modified = (events.runs_root() / relative / "events.jsonl").stat().st_mtime
+    except OSError:
+        return False
+    return time.time() - modified < STALE_SECONDS
 
 
 def _frame(record: dict[str, Any]) -> dict[str, Any]:

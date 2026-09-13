@@ -257,6 +257,23 @@ def test_the_baseline_emits_the_six_events_the_ui_needs(sandboxed_run, monkeypat
     assert started and REQUIRED_KEYS["run.started"] <= set(started[0])
 
 
+def test_a_baseline_run_with_tracing_off_completes_without_a_trace(sandboxed_run, monkeypatch) -> None:
+    """docs/07 §9: with tracing off the footer shows "tracing off". The real trace_run
+    is used, not a fake handle: it must yield a null handle and nothing may assume a URL."""
+    from prime_search import baseline as module
+    from prime_search import tracing
+    from prime_search.events import run_dir
+
+    monkeypatch.setattr(tracing, "_tracing_on", lambda: False)
+    monkeypatch.setattr(module, "build_baseline_agent", lambda model=None: _FakeAgent())
+    record = module.run_baseline(RunRequest(question="q", mode="baseline"))
+
+    assert record.status == "completed"
+    assert record.langsmith_run_url is None and record.langsmith_trace_id is None
+    finished = _by_type(_events(run_dir(record.run_id)), "run.finished")
+    assert finished and finished[0]["langsmith_run_url"] is None
+
+
 def _one_citation():
     from prime_search.schemas import Citation
 

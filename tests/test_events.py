@@ -158,6 +158,28 @@ def test_seq_counts_every_event_once_under_concurrent_emits() -> None:
     assert [record["seq"] for record in events.replay("run-seq")] == list(range(400))
 
 
+def test_subscribers_receive_events_in_seq_order_under_concurrent_emits() -> None:
+    """Task 2.4 review: publishing after releasing the write lock let seq 6 reach a
+    subscriber before seq 5, and the SSE stream then dropped 5 as already sent."""
+    import threading
+
+    received: list[int] = []
+    unsubscribe = events.subscribe("run-order", lambda record: received.append(record["seq"]))
+
+    def worker(n: int) -> None:
+        for i in range(50):
+            events.emit("run-order", "search", {"worker": n, "i": i})
+
+    threads = [threading.Thread(target=worker, args=(n,)) for n in range(8)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    unsubscribe()
+
+    assert received == list(range(400))
+
+
 def test_replay_numbers_lines_written_before_seq_existed(tmp_path: Path) -> None:
     legacy = tmp_path / "run-old" / "events.jsonl"
     legacy.parent.mkdir()

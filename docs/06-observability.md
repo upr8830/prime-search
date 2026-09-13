@@ -61,7 +61,7 @@ response `{ok, langsmith}` says whether it was sent. A comment carrying patient-
 `events.emit(run_id, type, payload)`:
 
 1. appends `{ts, run_id, type, seq, payload}` to `runs/<run_id>/events.jsonl` (`seq` per run, under the write lock; 02 §4);
-2. pushes to the in-process SSE queue for that run;
+2. pushes to the in-process SSE queue for that run, in `seq` order (the append and the publish share one lock);
 3. for `error`, `verdict`, `critique`, `run.finished`: also logs at INFO via structlog.
 
 `RunRecord` is written at every node boundary (cheap; JSON of a few hundred KB max without document

@@ -42,8 +42,18 @@ def api(tmp_path, offline_credentials, monkeypatch):
             for i in range(3):
                 events.emit(ws.run_id, "search", {"task_id": "t", "query": f"q{i}", "n_results": 1, "cached": False})
             gate.wait(10)
-            for i in range(3, 6):
-                events.emit(ws.run_id, "search", {"task_id": "t", "query": f"q{i}", "n_results": 1, "cached": False})
+            # The rest from concurrent threads, as prime's sub-agents emit (graph.py `Send`).
+            workers = [
+                threading.Thread(
+                    target=events.emit,
+                    args=(ws.run_id, "search", {"task_id": f"t{i}", "query": f"q{i}", "n_results": 1, "cached": False}),
+                )
+                for i in range(3, 6)
+            ]
+            for worker in workers:
+                worker.start()
+            for worker in workers:
+                worker.join()
             record = ws.to_record(request, status="completed", langsmith_trace_id="trace-1")
             events.write_run_artifacts(record)
             events.emit(ws.run_id, "run.finished", {"status": "completed", "langsmith_run_url": None})
@@ -136,12 +146,19 @@ def test_patient_detail_is_rejected_but_a_quoted_a1c_threshold_is_not(api) -> No
 def test_a_stream_joined_mid_run_sends_every_event_exactly_once(api) -> None:
     run_id = _start(api)
     _wait_for_events(run_id, 4)  # run.started and three searches are on disk before the client joins
-    timer = threading.Timer(0.3, api.gate.set)
-    timer.start()
-    try:
-        frames = _read_stream(api.client, run_id)
-    finally:
-        timer.cancel()
+
+    def release_once_subscribed() -> None:
+        # The last events are emitted only after the stream subscribed, so they reach it
+        # through the live queue (and possibly the replay too), never the replay alone.
+        deadline = time.monotonic() + 5
+        while run_id not in events._subscribers and time.monotonic() < deadline:
+            time.sleep(0.01)
+        api.gate.set()
+
+    releaser = threading.Thread(target=release_once_subscribed)
+    releaser.start()
+    frames = _read_stream(api.client, run_id)
+    releaser.join()
     assert [frame["id"] for frame in frames] == [str(i) for i in range(EVENTS_PER_RUN)]
     assert frames[0]["event"] == "run.started" and frames[-1]["event"] == "run.finished"
 
@@ -156,8 +173,39 @@ def test_a_finished_run_replays_and_last_event_id_resumes(api) -> None:
     assert [frame["id"] for frame in resumed] == ["4", "5", "6", "7"]
 
 
+def test_reconnecting_after_the_end_sends_nothing_rather_than_a_failure(api, monkeypatch) -> None:
+    """A browser EventSource reconnects on its own after a close, with the last id it saw.
+    It must not be told a completed run was interrupted (task 2.4 review)."""
+    monkeypatch.setattr(sse, "POLL_SECONDS", 0.05)
+    api.gate.set()
+    run_id = _start(api)
+    _wait_done(api, run_id)
+    for last in (str(EVENTS_PER_RUN - 1), "99"):
+        assert _read_stream(api.client, run_id, headers={"Last-Event-ID": last}) == []
+
+
+def test_a_run_another_process_is_writing_streams_from_its_file(api, monkeypatch) -> None:
+    """A CLI run is not in this registry and publishes nothing here: the stream follows
+    its file, and a quiet second between events is not an interruption."""
+    monkeypatch.setattr(sse, "POLL_SECONDS", 0.05)
+    monkeypatch.setattr(sse, "STALE_SECONDS", 5.0)
+    run_id = "01cli-run"
+
+    def write(type_: str, payload: dict) -> None:  # the file only, as another process would
+        events._append(run_id, {"ts": "t", "run_id": run_id, "type": type_, "seq": None, "payload": payload})
+
+    write("run.started", {"run_id": run_id, "question": "q", "mode": "prime", "depth": "deep"})
+    finisher = threading.Timer(0.4, write, args=("run.finished", {"status": "completed", "langsmith_run_url": None}))
+    finisher.start()
+    frames = _read_stream(api.client, run_id)
+    finisher.join()
+    assert [frame["event"] for frame in frames] == ["run.started", "run.finished"]
+    assert frames[-1]["data"]["status"] == "completed"
+
+
 def test_an_interrupted_run_ends_with_a_finish_that_is_never_written(api, monkeypatch) -> None:
     monkeypatch.setattr(sse, "POLL_SECONDS", 0.05)
+    monkeypatch.setattr(sse, "STALE_SECONDS", 0.0)
     ws = Workspace(objective="an older question")
     events.write_run_artifacts(ws.to_record(RunRequest(question="an older question"), status="running"))
     events.emit(ws.run_id, "run.started", {"run_id": ws.run_id, "question": "q", "mode": "prime", "depth": "deep"})
