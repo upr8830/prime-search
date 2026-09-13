@@ -118,7 +118,7 @@ class Resolution:
     """
 
     descriptor: str
-    method: str  # record_url | id | search | unresolved
+    method: str  # url | record_url | id | search | unresolved
     url: str | None = None
     query: str | None = None
     document: Document | None = None
@@ -174,6 +174,11 @@ class Flag:
 def resolve(descriptor: str, key: AnswerKey, *, offline: bool = False) -> Resolution:
     """Turn one `governing_documents` entry into a URL (docs/08 §2 step 2)."""
     external = descriptor.strip()
+
+    # 0. A canonical URL. docs/08 §5 allows "external ids or canonical URLs"; without
+    #    this a corrected key naming its document by URL could never clear the flag.
+    if external.lower().startswith(("http://", "https://")):
+        return Resolution(external, "url", url=external)
 
     # 1. A URL the record already carries, when it plainly names this document.
     for url in key.sources:
@@ -255,13 +260,27 @@ def check_dates(
     if not asserted:
         return []
     flags: list[Flag] = []
+    governing_texts: list[str] = []
+    carried: set[date] = set()
+    program_documents = 0
     for descriptor in record.answer_key.governing_documents:
         resolution = resolutions.get(descriptor)
         document = resolution.document if resolution else None
         if document is None:
             continue
+        text = texts.get(resolution.slug, "")
+        governing_texts.append(text)
+        if document.document_id_external is None:
+            # A press release or fact sheet has no revision history for a key's dates to
+            # live in: "$50 per month beginning July 1, 2026" is a program date, and
+            # comparing it with the page's revision date reported a key whose every date
+            # is verbatim in the page as drift. Checked for presence below instead.
+            program_documents += 1
+            continue
         caveat = _guess_caveat(resolution)
         live = document.revision_date or document.effective_date
+        if live is not None:
+            carried.add(live)
         if live is None:
             flags.append(
                 Flag(
@@ -274,7 +293,6 @@ def check_dates(
             continue
         if live in asserted:
             continue
-        text = texts.get(resolution.slug, "")
         still_present = sorted(d for d in asserted if _date_in_text(text, d))
         if still_present:
             flags.append(
@@ -297,6 +315,21 @@ def check_dates(
                 f"document at all{caveat}",
             )
         )
+    if program_documents:
+        missing = sorted(
+            d
+            for d in asserted
+            if d not in carried and not any(_date_in_text(t, d) for t in governing_texts)
+        )
+        if missing:
+            flags.append(
+                Flag(
+                    record.id,
+                    "date",
+                    f"draft asserts {_join(missing)}, which appears in none of its governing "
+                    "documents — correct the date or add the document that establishes it",
+                )
+            )
     return flags
 
 
@@ -1156,6 +1189,10 @@ def _resolution_for(
 
 
 def _slugify(text: str) -> str:
+    if text.lower().startswith(("http://", "https://")):
+        # A URL's head is the shared host; the tail is what tells sibling pages apart.
+        path = re.sub(r"^https?://[^/]+", "", text.lower())
+        return re.sub(r"[^a-z0-9]+", "-", path).strip("-")[-60:].strip("-") or "document"
     slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
     return slug[:60] or "document"
 

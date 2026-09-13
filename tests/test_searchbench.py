@@ -187,10 +187,10 @@ def test_the_splits_match_the_spec() -> None:
         assert sum(1 for r in records if r.split == split) == expected
 
 
-def test_every_shipped_key_is_still_a_draft() -> None:
-    """docs/08 §9. If this ever fails, someone validated keys and this test should be
-    the thing that notices."""
-    assert all(not r.answer_key.is_validated for r in load_records())
+def test_every_shipped_key_is_validated() -> None:
+    """docs/09 §2.1 gate. Until task 2.1 this asserted every key was still a draft
+    (docs/08 §9); after it, a key losing `validated_by` or `as_of` is the regression."""
+    assert all(r.answer_key.is_validated for r in load_records())
 
 
 def test_the_authoring_check_catches_an_out_of_scope_record_with_evidence() -> None:
@@ -224,7 +224,7 @@ def test_a_missing_scope_warning_is_flagged() -> None:
 
 
 def test_the_shipped_dataset_authoring_violations_are_known() -> None:
-    """Documents the state 1.8 found, rather than asserting the drafts are clean.
+    """Documents the authoring state after task 2.1, rather than asserting the keys are clean.
 
     `fetch_sources` is forbidden from editing the keys (docs/08 §1's provenance
     argument), so every one of these is task 2.1's to fix — and this test is what says
@@ -238,12 +238,13 @@ def test_the_shipped_dataset_authoring_violations_are_known() -> None:
         for record in load_records()
         if check_authoring(record)
     }
+    # Task 2.1 fixed oos-002 (PHI, evidence) and oos-003 (evidence, scope warning, claim
+    # count). The two change-detection keys were validated with the gap recorded in
+    # their validation_notes, so they stay here until a dated rewrite.
     assert set(found) == {
-        "oos-002",     # required_evidence on an out-of-scope record, plus PHI
-        "oos-003",     # required_evidence, no scope warning, and only 1 required claim
         "chg-cgm-002", "chg-glp1-001",  # change-detection keys that date nothing
     }, f"authoring violations changed: {sorted(found)}"
-    assert any("patient-level detail" in d for d in found["oos-002"])
+    assert not any("patient-level detail" in d for details in found.values() for d in details)
 
 
 def test_a_question_carrying_patient_detail_is_flagged() -> None:
@@ -669,3 +670,57 @@ def test_the_index_records_what_the_spec_asks_for(tmp_path, monkeypatch) -> None
     assert entry["method"] == "record_url" and entry["needs_review"] is False
     assert entry["used_by"] == ["cgm-elig-001", "cross-001"]
     assert entry["text_file"] == "l33822.txt"
+
+
+def test_a_canonical_url_resolves_without_a_search(monkeypatch) -> None:
+    """docs/08 §5: `governing_documents` holds "external ids or canonical URLs". A key
+    corrected in task 2.1 to name its document by URL must resolve deterministically,
+    or its resolution flag could never clear."""
+    from eval.searchbench import fetch_sources
+
+    monkeypatch.setattr(fetch_sources.tavily, "search", lambda *a, **k: pytest.fail("should not search"))
+    url = "https://www.cms.gov/priorities/innovation/innovation-models/balance"
+    resolution = resolve(url, AnswerKey(summary=""))
+
+    assert resolution.method == "url"
+    assert resolution.url == url
+
+
+def test_url_slugs_keep_the_path_tail_so_sibling_pages_do_not_collide() -> None:
+    """Three Medicare GLP-1 Bridge pages share their first 60 slug characters."""
+    from eval.searchbench.fetch_sources import _slugify
+
+    base = "https://www.cms.gov/medicare/coverage/prescription-drug-coverage/medicare-glp-1-bridge/"
+    slugs = {_slugify(base + tail) for tail in ("information-providers", "information-pharmacies", "information-part-d-plans")}
+
+    assert len(slugs) == 3
+    assert all(len(slug) <= 60 and not slug.startswith("-") for slug in slugs)
+    assert _slugify("CMS/HHS 2025 announcements") == "cms-hhs-2025-announcements"
+
+
+def _program_page(url: str) -> dict[str, Resolution]:
+    page = _document(url=url, doc_type="Press release", document_id_external=None, revision_date=None)
+    return _resolved(url, method="url", document=page)
+
+
+def test_a_program_date_in_a_press_release_is_checked_for_presence_not_revision() -> None:
+    """`glp1-path-005` after its 2.1 rewrite: every date in the key is verbatim in the
+    CMS pages, yet the re-run compared "July 1, 2026" with each page's revision date and
+    raised four date flags on a correct key."""
+    url = "https://www.cms.gov/newsroom/press-releases/coming-soon"
+    resolutions = _program_page(url)
+    record = _record(answer_key={"summary": "The Bridge begins July 1, 2026.", "governing_documents": [url]})
+    text = "for $50 per month beginning July 1, 2026, through December 31, 2027."
+
+    assert check_dates(record, resolutions, {resolutions[url].slug: text}) == []
+
+
+def test_a_program_date_no_governing_document_carries_is_flagged() -> None:
+    url = "https://www.cms.gov/newsroom/press-releases/coming-soon"
+    resolutions = _program_page(url)
+    record = _record(answer_key={"summary": "The Bridge begins July 1, 2025.", "governing_documents": [url]})
+    text = "for $50 per month beginning July 1, 2026, through December 31, 2027."
+
+    flags = check_dates(record, resolutions, {resolutions[url].slug: text})
+    assert len(flags) == 1
+    assert "2025-07-01" in flags[0].detail

@@ -12,7 +12,7 @@ Dataset: `data/searchbench/searchbench_v0.jsonl`. Construction and validation pr
 ```json
 {
   "id": "cgm-elig-001",
-  "domain": "cgm",                         // cgm | glp1 | cross | out_of_scope
+  "domain": "cgm",                         // cgm | glp1 | cross | other
   "tier": 2,                               // 1 easy, 2 medium, 3 hard, 4 adversarial
   "question_type": "eligibility",
   "question": "Is a therapeutic CGM covered under Medicare for a type 2 diabetic not on insulin?",

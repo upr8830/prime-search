@@ -1,0 +1,229 @@
+![CMS.gov](/themes/custom/cms_evo/logo.svg)
+
+## [CMS Newsroom](/about-cms/contact/newsroom)
+
+## Search CMS.gov
+
+## CMS.gov main menu
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+# BALANCE (Better Approaches to Lifestyle and Nutrition for Comprehensive hEalth) Model
+
+The BALANCE Model, which stands for Better Approaches to Lifestyle and Nutrition for Comprehensive hEalth, aims to increase access to select glucagon-like peptide-1 (GLP-1) medications and healthy lifestyle interventions - to help people with Medicare and Medicaid improve their health.
+
+As part of this voluntary model, CMS will negotiate drug pricing and coverage terms with manufacturers of GLP-1 medications on behalf of state Medicaid agencies and Medicare Part D plan sponsors.
+
+State Medicaid agencies can apply to participate in the model through the [State Request for Applications](/priorities/innovation/files/balance-state-medicaid-rfa.pdf). State Medicaid agencies can join the model beginning in May 2026 through January 1, 2027. CMS will provide eligible Medicare Part D beneficiaries with access to certain GLP-1 drugs through the [Medicare GLP-1 Bridge](https://www.medicare.gov/coverage/weight-loss-drugs) from July 1, 2026, to December 31, 2027.
+
+| Key Points |
+| --- |
+| * **Problem:** GLP-1 drugs for weight loss, along with lifestyle interventions, can help people improve their overall health, but GLP-1s are expensive and currently Medicare and Medicaid generally do not cover these drugs for the weight loss indication. * **Solution:** Under BALANCE, CMS negotiates directly with GLP-1 manufacturers on behalf of state Medicaid agencies and Part D plans to lower the cost of these drugs, making them more accessible to people with Medicare and Medicaid. * **Outcomes:** Helping people improve their metabolic health with GLP-1 treatment, along with access to lifestyle interventions, is a prevention approach that will improve people's long-term health, potentially preventing chronic disease and disability. * **Strategy:** BALANCE empowers people with Medicaid and Medicare to meet their health goals by promoting evidence-based prevention. |
+
+### Model Details
+
+**Background**
+
+More than 70% of adults in the United States are considered to have obesity or screen as overweight, which increases risks for numerous chronic diseases, such as type 2 diabetes, cardiovascular disease, obstructive sleep apnea, and other metabolic conditions. GLP-1s have shown to be an effective tool in weight reduction, as well as improving other markers of good health, such as blood pressure, lipid profiles, and blood sugar levels.
+
+**Model Aims**
+
+BALANCE aims to extend access to GLP-1s and lifestyle interventions to people with Medicare and Medicaid with obesity or who are overweight to help them improve their health through weight loss.
+
+**Innovation**
+
+BALANCE will extend access for GLP-1s through negotiating lower prices by working directly with drug manufacturers.
+
+**Design**
+
+Under BALANCE, CMS negotiates lower prices directly with eligible GLP-1 manufacturers on behalf of State Medicaid agencies and Part D plans. Negotiations also address eligibility criteria for patients.
+
+This model provides patients with access to lifestyle support programs that help people with Medicare and Medicaid incorporate a reduced calorie diet and increased physical activity into their daily living, consistent with FDA labeling, which recommends that GLP-1s be used in complement to appropriate lifestyle modifications, when prescribed for obesity or weight management.
+
+### Participant Information
+
+Participation in BALANCE is voluntary for manufacturers, state Medicaid agencies, and Part D plans. Who can take part:
+
+### Frequently Asked Questions
+
+**When will GLP-1s for weight loss be available under BALANCE?**
+
+The coverage for weight loss under the BALANCE Model will launch in Medicaid as early as May 2026.
+
+Eligible Medicare Part D beneficiaries are expected to have access to GLP-1s by July 2026 through a separate short-term demonstration, the Medicare GLP-1 Bridge.
+
+Coverage in the Medicaid program will depend on participation by drug manufacturers and states. Patients would be subject to qualifications set by the negotiations between CMS and participating manufacturers, including certain prior authorization requirements. Therefore, this model will not guarantee coverage for any individual.
+
+**What lifestyle interventions are available through this model?**
+
+All beneficiaries receiving GLP-1s for weight management under the BALANCE model in Medicaid will be provided with access to a lifestyle support program, provided by the manufacturer at no cost. The lifestyle intervention offers education on how to maintain weight loss and make positive health choices to help improve health and will be available to patients during and after medication treatment.
+
+**As new drugs receive FDA approval, will they be included in the model?**
+
+The CMS Innovation Center expects to renew negotiations given the dynamic nature of the drug landscape, including when new products enter the market and as prices change over time. Full details of eligibility for the model test were outlined in the Manufacturer RFA.
+
+**What drugs are included in the BALANCE Model?**
+
+All formulations of Mounjaro®, Ozempic®, Rybelsus®, and Wegovy®, the KwikPen formulation of Zepbound®, and Foundayo™. These are included for both currently covered indications (ex: type 2 diabetes) as well as weight management indications.
+
+**Will the Medicare GLP-1 Bridge continue into 2027?**
+
+Yes. The Medicare GLP-1 Bridge has been extended through December 31, 2027. More information on the Medicare GLP-1 Bridge can be found on the [Medicare GLP-1 Bridge webpage](/medicare/coverage/prescription-drug-coverage/medicare-glp-1-bridge); please direct any technical questions related to the Medicare GLP-1 Bridge at to [glp1demo@cms.hhs.gov](mailto:glp1demo@cms.hhs.gov).
+
+**What is the impact of the BALANCE Model not launching in Medicare in 2027 on the Medicare GLP-1 Bridge?**
+
+The Medicare GLP-1 Bridge will be extended through December 31, 2027, providing eligible Medicare Part D beneficiaries with access to certain GLP-1 drugs and allowing CMS to collect additional data on GLP-1 utilization to share with Part D plan sponsors ahead of potential implementation of BALANCE in Part D.
+
+### Additional Information
+
+Additional information on the CMS Medicare GLP-1 payment demonstration will be made available before its implementation.Contact the GLP-1 Payment Demonstration team at [glp1demo@cms.hhs.gov](mailto:glp1demo@cms.hhs.gov).
+
+### Stay Connected
+
+Visit our [Innovation Models webpage](/priorities/innovation/models) for a list of all CMS Innovation Center model tests.
+
+### Model Summary
+
+**Stage:** Announced
+**Number of Participants:** N/A
+**Category:** Prescription Drug Models
+**Authority**: Section 1115A of the Social Security Act
+
+**CMS Innovation Center Highlights**
+
+Learn about topics that play a critical role in our work on our [Key Concepts webpage](/priorities/innovation/key-concepts).
+
+Read stories about our work in action in the [Value-Based Care Spotlight](/priorities/innovation-center/value-based-care-spotlight).
+
+## Get email updates
+
+Sign up to get the latest information about your choice of CMS topics. You can decide how often to receive updates.
+
+![CMS.gov](/themes/custom/cms_evo/logo.svg)
+![HHS Logo](/themes/custom/cms_evo/images/hhslogo.png)
+
+## Connect with CMS
+
+A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services.
+
+7500 Security Boulevard, Baltimore, MD 21244

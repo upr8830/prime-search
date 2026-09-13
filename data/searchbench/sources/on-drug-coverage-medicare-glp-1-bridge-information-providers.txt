@@ -1,0 +1,266 @@
+![CMS.gov](/themes/custom/cms_evo/logo.svg)
+
+## [CMS Newsroom](/about-cms/contact/newsroom)
+
+## Search CMS.gov
+
+## CMS.gov main menu
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## section title h2
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+### section title h3
+
+## Pages in this section
+
+# Information for Providers
+
+### FAQs for PROVIDERS
+
+#### GENERAL
+
+### What is the Medicare GLP-1 Bridge?
+
+The Medicare GLP-1 Bridge is a short-term demonstration run by CMS that will provide eligible Medicare Part D beneficiaries with access to certain GLP-1 drugs between July 1, 2026, and December 31, 2027.
+
+The Medicare GLP-1 Bridge will operate outside of the Medicare Part D benefit's coverage and payment flow. As a result, Part D sponsors will not carry risk for eligible GLP-1 drugs furnished under the Medicare GLP-1 Bridge, and Part D sponsors do not have to opt in to the Medicare GLP-1 Bridge for eligible beneficiaries to access these drugs beginning July 1, 2026. In 2026, CMS will use a single central processor to manage prior authorization, claims adjudication, and payment to pharmacies for the Medicare GLP-1 Bridge.
+
+### What is the impact of the BALANCE Model not launching in 2027 on the Medicare GLP-1 Bridge?
+
+The Medicare GLP-1 Bridge will be extended through December 31, 2027, providing eligible Medicare Part D beneficiaries with access to certain GLP-1 drugs and allowing CMS to collect additional data on GLP-1 utilization to share with Part D plan sponsors ahead of potential implementation of BALANCE in Part D.
+
+### I'm a prescriber with a question about a Medicare GLP-1 Bridge prior authorization request. Where can I get help?
+
+The Medicare GLP-1 Bridge Call Center is available at 855-273-0102 Monday through Friday from 8am - 7pm ET. Representatives are available to assist prescribers with questions about the prior authorization process or the status of a prior authorization request.
+
+Prescribers can also find additional information in the [Prescriber Fact Sheet](/files/document/glp-1-prescribers-c-1.pdf), which includes an overview of the process and key details about the Medicare GLP-1 Bridge for prescribers.
+
+#### **Medicare GLP-1 Bridge Eligibility**
+
+### Are all Medicare beneficiaries able to receive GLP-1 drugs furnished via the Medicare GLP-1 Bridge?
+
+Only Medicare Part D beneficiaries who are enrolled in eligible plan types,  use GLP-1s to reduce excess body weight and maintain weight reduction, and meet the Medicare GLP-1 Bridge Clinical Criteria (see FAQ "What clinical criteria must a beneficiary meet in order to qualify for the Medicare GLP-1 Bridge?") will be eligible for coverage under the Medicare GLP-1 Bridge.
+
+Eligible plan types: To qualify for coverage of eligible GLP-1 drugs via the Medicare GLP-1 Bridge, Medicare beneficiaries must be enrolled in a standalone prescription drug plan (PDP) or Medicare Advantage (MA) coordinated care plan (i.e., HMO, HMOPOS, and Local and Regional PPO plans) that offers prescription drug coverage (MA-PD plans) in CY 2026.Part D beneficiaries in Special Needs Plans (SNPs), employer/union group waiver plans (EGWPs), and the Limited Income Newly Eligible Transition (LI NET) program are eligible to participate. Beneficiaries enrolled in private fee-for-service plans, section 1876 cost contract plans, section 1833 health care prepayment plans, PACE organizations, fallback plans, and religious fraternal benefit plans are not eligible to participate, unless also enrolled in a standalone PDP, as applicable. Additionally, dually-eligible beneficiaries who are enrolled in eligible Part D plan types and meet the prior authorization criteria will have access to GLP-1 drugs via the Medicare GLP-1 Bridge.
+
+Please note that the Medicare GLP-1 Bridge is a Section 402 demonstration and does not constitute a Medicare Part D plan offering prescription drug coverage. Beneficiaries in need of prescription drug coverage should contact 1-800-MEDICARE (1-800-633-4227) or their local State Health Insurance Assistance Program (SHIP).
+
+### What clinical criteria must a beneficiary meet in order to qualify for the Medicare GLP-1 Bridge?
+
+For a beneficiary to qualify for the Medicare GLP-1 Bridge, a provider must submit a prior authorization request that attests the beneficiary meets the following criteria:
+
+The Medicare GLP-1 Bridge was designed to increase access to GLP-1s for beneficiaries who seek the drug solely to reduce excess body weight or maintain weight reduction. Type 2 diabetes, moderate to severe obstructive sleep apnea, and noncirrhotic metabolic dysfunction-associated steatohepatitis (MASH) indications are eligible for Part D coverage. Beneficiaries with these diagnoses are eligible to receive GLP-1s through their Part D plan and therefore are ineligible to receive them through the Medicare GLP-1 Bridge, even if they otherwise meet the Medicare GLP-1 Bridge clinical criteria. Eligible GLP-1s are only furnished under the Medicare GLP-1 Bridge, with the $50 co-pay, when prescribed for a weight management indication. If a Medicare Part D beneficiary has a prescription for a GLP-1 drug for an indication covered under Medicare Part D, they should continue to obtain their GLP-1 through their Part D plan.
+
+### Does a beneficiary need to meet the Medicare GLP-1 Bridge clinical criteria at the time of the prior authorization request, or at the time they first initiated GLP-1 therapy?
+
+Eligible beneficiaries must meet the clinical criteria at the time of GLP-1 therapy initiation. This includes beneficiaries who initiated therapy prior to enrolling in Medicare Part D and/or prior to the July 1, 2026 launch of the Medicare GLP-1 Bridge.
+
+For example, if a beneficiary initiated GLP-1 therapy in September 2024 with a body mass index (BMI) of 37 and has a BMI of 34 at the time of a July 2026 prior authorization request, the prescribing provider should attest that the beneficiary met the BMI ≥35 criterion at the time therapy was initiated.
+
+### What GLP-1 drugs will be available through the Medicare GLP-1 Bridge?
+
+At this time, for the purposes of the Medicare GLP-1 Bridge, an eligible GLP-1 drug is any of the following products when used to reduce excess body weight and maintain weight reduction: Foundayo®, Wegovy® (injection and tablets), and Zepbound® (KwikPen®).
+
+Note: This was updated on April 6, 2026, to include Foundayo® following FDA approval and to clarify that only the KwikPen®  formulation of Zepbound® is included.
+
+### What formulations of Wegovy, Foundayo, and Zepbound will be available through the Medicare GLP-1 Bridge?
+
+Beginning July 1, 2026, all formulations of Foundayo®, all formulations of Wegovy®, and the KwikPen ® formulation of Zepbound® will be available to eligible beneficiaries through the Medicare GLP-1 Bridge. The single-dose vial and single-dose pen formulations of Zepbound® will not be available through the Medicare GLP-1 Bridge. The specific National Drug Code (NDCs) are listed below:
+
+This list of products and NDCs may be updated over the course of the Medicare GLP-1 Bridge.
+
+### Are pen needles for the Zepbound® KwikPen® covered by Medicare GLP-1 Bridge?
+
+No. Pen needles are not covered by Medicare GLP-1 Bridge and should not be billed to Medicare GLP-1 Bridge or the patient's Part D plan. Patients can separately purchase pen needles.
+
+### Are beneficiaries eligible for the Medicare GLP-1 Bridge if they are prescribed a GLP-1 for a condition other than weight management?
+
+The Medicare GLP-1 Bridge was designed to increase access to GLP-1s for beneficiaries who seek the drug solely to reduce excess body weight or maintain weight reduction. Type 2 diabetes, moderate to severe obstructive sleep apnea, and noncirrhotic metabolic dysfunction-associated steatohepatitis (MASH) indications are eligible for Part D coverage. Beneficiaries with these diagnoses are eligible to receive GLP-1s through their Part D plan and therefore are ineligible to receive them through the Medicare GLP-1 Bridge, even if they otherwise meet the Medicare GLP-1 Bridge clinical criteria. Eligible GLP-1s are only furnished under the Medicare GLP-1 Bridge, with the $50 co-pay, when prescribed for a weight management indication. If a Medicare Part D beneficiary has a prescription for a GLP-1 drug for an indication covered under Medicare Part D, they should continue to obtain their GLP-1 through their Part D plan.
+
+### How should a provider interpret the clinical questions regarding patient's diagnoses on the Prior Authorization form and determine whether they apply to the patient?
+
+When determining whether a beneficiary meets the relevant diagnostic criteria - such as those for type 2 diabetes, MASH with moderate to advanced liver scarring consistent with stages F2 to F3 fibrosis, or moderate-to-severe OSA - prescribers should exercise their clinical judgment in accordance with accepted medical standards and their professional expertise, particularly in distinguishing between cases in which a diagnosis may no longer apply and those in which a condition is well controlled by medication or other interventions.
+
+### What are prescribers attesting to by completing the prior authorization request form?
+
+By completing the form the prescriber attests, under penalty of perjury, that the information is accurate and complete. Attestation is an important anti-fraud tool and helps protect program integrity. Submitting inaccurate information may expose the prescriber to penalties or prosecution under applicable federal law. The Medicare GLP-1 Bridge may independently verify the information submitted in a prior authorization request form, such as whether or not a patient has type 2 diabetes, by checking Medicare data for the patient.
+
+### If a patient has a BMI≥27 with previous myocardial infarction, previous stroke or symptomatic peripheral artery disease, are they eligible for Medicare GLP-1 Bridge coverage or should they be directed to their Part D plan for coverage?
+
+CMS recognizes the overlap between the clinical eligibility criteria for Medicare GLP-1 Bridge and the Part D-covered indication of risk reduction of major adverse cardiovascular events (MACE). Unlike type 2 diabetes, moderate to severe obstructive sleep apnea, and noncirrhotic metabolic dysfunction-associated steatohepatitis (MASH) with moderate to advanced liver scarring (fibrosis) [formerly known as nonalcoholic steatohepatitis (NASH)], the Medicare GLP-1 Bridge prior authorization does not require the physician to attest that the beneficiary does not have established cardiovascular disease. However, the prior authorization requires the physician to attest that the drug is being prescribed to reduce excess weight and maintain weight reduction. If the drug is being prescribed *in order to* reduce the risk of major adverse cardiovascular events (regardless of whether the drug is also prescribed in order to reduce excess weight and maintain weight reduction), that prescription should be routed to the Part D plan.
+
+#### **Medicare GLP-1 Bridge Process**
+
+### How can a medical provider refer a beneficiary to the Medicare GLP-1 Bridge?
+
+To access GLP-1 medications via the Medicare GLP-1 Bridge, an eligible beneficiary must have a medical provider submit a prescription for an eligible GLP-1 drug for a use covered under the demonstration and a prior authorization request. Prior authorization requests will be accepted electronically or by fax using the Medicare GLP-1 Bridge prior authorization form. CMS strongly encourages providers to submit prior authorization electronically.
+
+CMS has provided [additional information on prior authorization processes](/files/document/glp-1-prescribers-c-1.pdf), including the [Medicare GLP-1 Bridge prior authorization fax form](/files/document/glp-1-bridge.pdf).
+
+### Can a provider initiate the prior authorization process at the same time they send the prescription to the pharmacy?
+
+No, the prescriber should send the prescription to the pharmacy and wait for the pharmacy to request the prior authorization. Attempting to submit the prior authorization before there has been a pharmacy claim submitted to the Medicare GLP-1 Bridge establishing eligibility will result in an error of "patient not found."
+
+### Is the prescriber required to include diagnosis code information or an annotation directing the pharmacy to send the prescription to Medicare GLP-1 Bridge in order for Medicare GLP-1 Bridge to process a claim?
+
+No. We recommend that, if a prescriber determines that a beneficiary is eligible for coverage under Medicare GLP-1 Bridge, the prescriber includes the diagnosis code and annotation in order to help route the prescription appropriately. However, the diagnosis code and annotation are not required for a claim to be processed under Medicare GLP-1 Bridge.
+
+### Is a Part D denial required to submit a claim to the Medicare GLP-1 Bridge?
+
+No. If a prescriber has determined that their patient might be eligible for coverage under Medicare GLP-1 Bridge, they may direct the pharmacist to send the claim directly to Medicare GLP-1 Bridge.
+
+### How will the prior authorization request be transmitted to the prescriber?
+
+After the pharmacy transmits the claim to the Medicare GLP-1 Bridge and determines that a prior authorization is required, the pharmacy will transmit the prior authorization request to the prescriber electronically or by fax, typically within 24-72 hours. If after 72 hours the prescriber hasn't received a request for authorization via electronic prior authorization request or fax form from the pharmacy, the prescriber can download the fax form [here](https://www.cms.gov/files/document/glp-1-bridge.pdf) and submit it themselves.
+
+### How will prior authorization decisions be communicated?
+
+The prior authorization approval or denial will be mailed to your patient and sent to the prescriber through the ePA portal or by fax within 72 hours of submission.
+
+### Can a prescriber appeal a prior authorization denial if they believe the denial was made in error?
+
+A prescriber may resubmit the prior authorization form if they initially entered incorrect information or have updated or additional information to include. There is no appeals process under Medicare GLP-1 Bridge.
+
+### Must a provider be enrolled in Medicare to prescribe an eligible GLP-1 product or submit a prior authorization request under the Medicare GLP-1 Bridge?
+
+For the Medicare GLP-1 Bridge, as in the Part D program, a provider does not need to be enrolled in Medicare in order to write a prescription or submit a prior authorization request for products provided under the Medicare GLP-1 Bridge to an eligible beneficiary. However, the provider must not be on the [Preclusion List](/medicare/enrollment-renewal/providers-suppliers/chain-ownership-system-pecos/preclusion-list) in order for the drug to be coverable under the Medicare GLP-1 Bridge for an eligible beneficiary.
+
+### Additional Information
+
+[Prescriber Fact Sheet](/files/document/glp-1-prescribers-c-1.pdf)
+
+[Prior Authorization Form](/files/document/glp-1-bridge.pdf)
+
+### Stay Connected
+
+Submit technical questions to the Medicare GLP-1 Bridge mailbox at [glp1demo@cms.hhs.gov](mailto:glp1demo@cms.hhs.gov). Inquiries should not include sensitive information, including personally identifiable information or protected health information (PII/PHI). If you feel this information is crucial to your request or inquiry, please note this in your inquiry, and the team will be in touch to set up a secure information transfer.
+
+## Get email updates
+
+Sign up to get the latest information about your choice of CMS topics. You can decide how often to receive updates.
+
+![CMS.gov](/themes/custom/cms_evo/logo.svg)
+![HHS Logo](/themes/custom/cms_evo/images/hhslogo.png)
+
+## Connect with CMS
+
+A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services.
+
+7500 Security Boulevard, Baltimore, MD 21244

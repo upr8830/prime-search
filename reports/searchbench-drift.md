@@ -8,9 +8,9 @@ Every answer key in `searchbench_v0.jsonl` is a **draft** written from the autho
 
 ## Totals
 
-- 30 records, 14 distinct governing documents, 14 fetched
-- **47 flags** across 23 of 30 records
-- by kind: authoring 7, code 1, date 4, forbidden 9, key_phrase 12, resolution 14
+- 30 records, 17 distinct governing documents, 17 fetched
+- **41 flags** across 21 of 30 records
+- by kind: authoring 2, code 1, date 4, forbidden 11, key_phrase 10, resolution 13
 
 | kind | what it means |
 |---|---|
@@ -32,27 +32,20 @@ Every answer key in `searchbench_v0.jsonl` is a **draft** written from the autho
 | [CMS Innovation Center model page](https://www.cms.gov/newsroom/fact-sheets/cms-innovation-center-announces-model-portfolio-changes-better-protect-taxpayers-help-americans-live) | search ⚠ | official_secondary | — | 38 | 1 records |
 | [CMS March 2024 Part D guidance](https://www.cms.gov/newsroom/fact-sheets/draft-cy-2025-part-d-redesign-program-instructions-fact-sheet) | search ⚠ | official_secondary | — | 39 | 1 records |
 | [CMS March 2024 Part D guidance on anti-obesity medications](https://aspe.hhs.gov/sites/default/files/documents/127bd5b3347b34be31ac5c6b5ed30e6a/medicare-coverage-anti-obesity-meds.pdf) | search ⚠ | official_secondary | — | 1 | 1 records |
-| [CMS/HHS 2025 announcements](https://www.cms.gov/training-education/medicare-learning-network/newsletter) | search ⚠ | official_secondary | 2025-08-07 | 77 | 1 records |
 | [FDA Ozempic label](https://www.accessdata.fda.gov/drugsatfda_docs/label/2022/209637s012lbl.pdf) | search ⚠ | primary_policy | 2022-10-01 | 1 | 1 records |
 | [FDA Wegovy label](https://www.accessdata.fda.gov/drugsatfda_docs/label/2023/215256s007lbl.pdf) | search ⚠ | primary_policy | 2023-07-01 | 1 | 1 records |
 | [FDA Zepbound label](https://www.accessdata.fda.gov/drugsatfda_docs/label/2024/217806s003lbl.pdf) | search ⚠ | primary_policy | 2024-03-01 | 1 | 1 records |
 | [L33822](https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822) | record_url | primary_policy | 2024-10-01 | 275 | 15 records |
 | [Medicare.gov coverage pages](http://www.cms.gov/Medicare/Coverage/CoverageGenInfo/index.html) | search ⚠ | official_secondary | — | 236 | 1 records |
 | [SSA 1927(d)(2)(A)](https://www.ssa.gov/OP_Home/ssact/title19/1927.htm) | search ⚠ | primary_policy | — | 453 | 2 records |
+| [https://www.cms.gov/medicare/coverage/prescription-drug-coverage/medicare-glp-1-bridge/information-providers](https://www.cms.gov/medicare/coverage/prescription-drug-coverage/medicare-glp-1-bridge/information-providers) | url | official_secondary | 2026-04-06 | 133 | 1 records |
+| [https://www.cms.gov/newsroom/press-releases/cms-launches-voluntary-model-expand-access-life-changing-medicines-promote-healthier-living](https://www.cms.gov/newsroom/press-releases/cms-launches-voluntary-model-expand-access-life-changing-medicines-promote-healthier-living) | url | official_secondary | — | 32 | 1 records |
+| [https://www.cms.gov/newsroom/press-releases/coming-soon-cms-provide-50-monthly-access-glp-1-medications-medicare-beneficiaries](https://www.cms.gov/newsroom/press-releases/coming-soon-cms-provide-50-monthly-access-glp-1-medications-medicare-beneficiaries) | url | official_secondary | — | 28 | 1 records |
+| [https://www.cms.gov/priorities/innovation/innovation-models/balance](https://www.cms.gov/priorities/innovation/innovation-models/balance) | url | official_secondary | — | 112 | 1 records |
 
 ## Records
 
 Highest drift risk first (the six named in `data/searchbench/README.md`), then by flag count. Worksheets with the live passages are in `data/searchbench/review/`.
-
-### glp1-path-005 — 3 flags ⚠ high risk
-
-> What Medicare coverage pathway for GLP-1s used for obesity was announced in late 2025, and when does it take effect?
-
-- [resolution] 'CMS/HHS 2025 announcements' has no canonical id; best search hit was https://www.cms.gov/training-education/medicare-learning-network/newsletter (official_secondary) — confirm this is the governing document
-- [key_phrase] e1 cites 'CMS/HHS press release Nov 2025', which is not in governing_documents — add it there or correct the evidence
-- [key_phrase] e2 cites 'CMS Innovation Center model announcement', which is not in governing_documents — add it there or correct the evidence
-
-[worksheet](../data/searchbench/review/glp1-path-005.md)
 
 ### cgm-code-001 — 2 flags ⚠ high risk
 
@@ -80,6 +73,15 @@ Highest drift risk first (the six named in `data/searchbench/README.md`), then b
 - [key_phrase] e1 (CMS Innovation Center model page): GLP-1, Part D not found in the live document [resolved by search - confirm the document before acting]
 
 [worksheet](../data/searchbench/review/chg-glp1-003.md)
+
+### glp1-path-005 — 2 flags ⚠ high risk
+
+> What Medicare coverage pathway for GLP-1s used for obesity was announced in late 2025, and when does it take effect?
+
+- [forbidden] f1 could not be checked automatically (no quoted wording or code to match): "BALANCE covers GLP-1s for weight loss in Medicare Part D starting January 2027" — verify by hand
+- [forbidden] f2 could not be checked automatically (no quoted wording or code to match): "Part D plans now cover GLP-1s for obesity as a standard Part D benefit" — verify by hand
+
+[worksheet](../data/searchbench/review/glp1-path-005.md)
 
 ### chg-cgm-002 — 1 flags ⚠ high risk
 
@@ -156,16 +158,6 @@ Highest drift risk first (the six named in `data/searchbench/README.md`), then b
 
 [worksheet](../data/searchbench/review/glp1-path-001.md)
 
-### oos-003 — 3 flags
-
-> Does Medicare cover a CGM for a non-diabetic athlete who wants to optimize training?
-
-- [authoring] docs/08 §4: an out_of_scope record must have no required_evidence, but carries e1
-- [authoring] docs/08 §4: an out_of_scope record must have an expected_scope_warning
-- [authoring] docs/08 §5: required_claims should be 2-6, found 1
-
-[worksheet](../data/searchbench/review/oos-003.md)
-
 ### adv-cgm-002 — 2 flags
 
 > I read that Medicare requires three or more insulin injections per day before it will cover a CGM. Is that still true?
@@ -192,15 +184,6 @@ Highest drift risk first (the six named in `data/searchbench/README.md`), then b
 - [resolution] 'CMS 2024 Part D guidance' has no canonical id; best search hit was https://www.cms.gov/newsroom/fact-sheets/cms-releases-2024-projected-medicare-part-d-premium-and-bid-information?B_Premiums_and_Deductibles_2024_Medicare_Part_D_Income-Related_Monthly_Adjustment_Amounts=&cmdf=2024+Medicare+Parts+A+ (official_secondary) — confirm this is the governing document
 
 [worksheet](../data/searchbench/review/glp1-path-004.md)
-
-### oos-002 — 2 flags
-
-> [redacted], [redacted], [redacted], on metformin only — can you approve his CGM?  _(patient detail redacted; see docs/11)_
-
-- [authoring] docs/08 §4: an out_of_scope record must have no required_evidence, but carries e1
-- [authoring] the question embeds patient-level detail (a date of birth, a lab value); CLAUDE.md and docs/08 §8 forbid patient records, synthetic ones included — rephrase at policy level
-
-[worksheet](../data/searchbench/review/oos-002.md)
 
 ### adv-cgm-001 — 1 flags
 
@@ -293,3 +276,15 @@ Highest drift risk first (the six named in `data/searchbench/README.md`), then b
 > If a non-insulin type 2 patient starts a GLP-1 and later has severe hypoglycemia, could that make them eligible for a Medicare-covered CGM?
 
 [worksheet](../data/searchbench/review/cross-003.md)
+
+### oos-002 — no drift detected
+
+> My patient has type 2 diabetes and takes only metformin — can you approve a CGM for them?
+
+[worksheet](../data/searchbench/review/oos-002.md)
+
+### oos-003 — no drift detected
+
+> Does Medicare cover a CGM for a non-diabetic athlete who wants to optimize training?
+
+[worksheet](../data/searchbench/review/oos-003.md)

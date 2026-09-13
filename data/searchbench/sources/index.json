@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-13T05:01:16.677237+00:00",
+  "generated_at": "2026-09-13T13:19:35.593834+00:00",
   "search_domains": [
     "accessdata.fda.gov",
     "cgsmedicare.com",
@@ -43,7 +43,7 @@
       "effective_date": null,
       "paragraph_count": 281,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:15.763282+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.031436+00:00"
     },
     {
       "descriptor": "CMS 2024 Part D guidance",
@@ -65,7 +65,7 @@
       "effective_date": null,
       "paragraph_count": 95,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:15.806941+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.046706+00:00"
     },
     {
       "descriptor": "CMS 2026 announcements",
@@ -86,7 +86,7 @@
       "effective_date": null,
       "paragraph_count": 120,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:15.842834+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.061371+00:00"
     },
     {
       "descriptor": "CMS CY2026 MA/Part D final rule",
@@ -107,7 +107,7 @@
       "effective_date": null,
       "paragraph_count": 36,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:15.869848+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.068700+00:00"
     },
     {
       "descriptor": "CMS Innovation Center model page",
@@ -128,7 +128,7 @@
       "effective_date": null,
       "paragraph_count": 38,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:15.894030+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.075574+00:00"
     },
     {
       "descriptor": "CMS March 2024 Part D guidance",
@@ -149,7 +149,7 @@
       "effective_date": null,
       "paragraph_count": 39,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:15.923027+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.083866+00:00"
     },
     {
       "descriptor": "CMS March 2024 Part D guidance on anti-obesity medications",
@@ -170,28 +170,7 @@
       "effective_date": null,
       "paragraph_count": 1,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:15.987304+00:00"
-    },
-    {
-      "descriptor": "CMS/HHS 2025 announcements",
-      "method": "search",
-      "needs_review": true,
-      "url": "https://www.cms.gov/training-education/medicare-learning-network/newsletter",
-      "query": "CMS HHS 2025 announcements",
-      "error": null,
-      "used_by": [
-        "glp1-path-005"
-      ],
-      "text_file": "cms-hhs-2025-announcements.txt",
-      "title": "MLN Connects\u00ae Newsletter - CMS",
-      "source_tier": "official_secondary",
-      "publisher": "CMS",
-      "document_id_external": null,
-      "revision_date": "2025-08-07",
-      "effective_date": null,
-      "paragraph_count": 77,
-      "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:16.022163+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.115850+00:00"
     },
     {
       "descriptor": "FDA Ozempic label",
@@ -212,7 +191,7 @@
       "effective_date": "2019-11-01",
       "paragraph_count": 1,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:16.113378+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.177703+00:00"
     },
     {
       "descriptor": "FDA Wegovy label",
@@ -233,7 +212,7 @@
       "effective_date": "2023-07-01",
       "paragraph_count": 1,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:16.251722+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.258954+00:00"
     },
     {
       "descriptor": "FDA Zepbound label",
@@ -254,7 +233,7 @@
       "effective_date": "2023-11-01",
       "paragraph_count": 1,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:16.340423+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.312924+00:00"
     },
     {
       "descriptor": "L33822",
@@ -289,7 +268,7 @@
       "effective_date": null,
       "paragraph_count": 275,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:16.386653+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.348039+00:00"
     },
     {
       "descriptor": "Medicare.gov coverage pages",
@@ -310,7 +289,7 @@
       "effective_date": null,
       "paragraph_count": 236,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:16.454379+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.374741+00:00"
     },
     {
       "descriptor": "SSA 1927(d)(2)(A)",
@@ -332,7 +311,91 @@
       "effective_date": null,
       "paragraph_count": 453,
       "fetch_method": "extract",
-      "retrieved_at": "2026-09-13T05:01:16.524966+00:00"
+      "retrieved_at": "2026-09-13T13:19:35.426336+00:00"
+    },
+    {
+      "descriptor": "https://www.cms.gov/medicare/coverage/prescription-drug-coverage/medicare-glp-1-bridge/information-providers",
+      "method": "url",
+      "needs_review": false,
+      "url": "https://www.cms.gov/medicare/coverage/prescription-drug-coverage/medicare-glp-1-bridge/information-providers",
+      "query": null,
+      "error": null,
+      "used_by": [
+        "glp1-path-005"
+      ],
+      "text_file": "on-drug-coverage-medicare-glp-1-bridge-information-providers.txt",
+      "title": "Information for Providers - CMS",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "document_id_external": null,
+      "revision_date": "2026-04-06",
+      "effective_date": null,
+      "paragraph_count": 133,
+      "fetch_method": "extract",
+      "retrieved_at": "2026-09-13T13:19:35.439714+00:00"
+    },
+    {
+      "descriptor": "https://www.cms.gov/newsroom/press-releases/cms-launches-voluntary-model-expand-access-life-changing-medicines-promote-healthier-living",
+      "method": "url",
+      "needs_review": false,
+      "url": "https://www.cms.gov/newsroom/press-releases/cms-launches-voluntary-model-expand-access-life-changing-medicines-promote-healthier-living",
+      "query": null,
+      "error": null,
+      "used_by": [
+        "glp1-path-005"
+      ],
+      "text_file": "pand-access-life-changing-medicines-promote-healthier-living.txt",
+      "title": "CMS Launches Voluntary Model to Expand Access to Life-Changing ...",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "document_id_external": null,
+      "revision_date": null,
+      "effective_date": null,
+      "paragraph_count": 32,
+      "fetch_method": "extract",
+      "retrieved_at": "2026-09-13T13:19:35.445402+00:00"
+    },
+    {
+      "descriptor": "https://www.cms.gov/newsroom/press-releases/coming-soon-cms-provide-50-monthly-access-glp-1-medications-medicare-beneficiaries",
+      "method": "url",
+      "needs_review": false,
+      "url": "https://www.cms.gov/newsroom/press-releases/coming-soon-cms-provide-50-monthly-access-glp-1-medications-medicare-beneficiaries",
+      "query": null,
+      "error": null,
+      "used_by": [
+        "glp1-path-005"
+      ],
+      "text_file": "e-50-monthly-access-glp-1-medications-medicare-beneficiaries.txt",
+      "title": "Coming Soon: CMS to Provide $50 Monthly Access to GLP-1 ...",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "document_id_external": null,
+      "revision_date": null,
+      "effective_date": null,
+      "paragraph_count": 28,
+      "fetch_method": "extract",
+      "retrieved_at": "2026-09-13T13:19:35.449884+00:00"
+    },
+    {
+      "descriptor": "https://www.cms.gov/priorities/innovation/innovation-models/balance",
+      "method": "url",
+      "needs_review": false,
+      "url": "https://www.cms.gov/priorities/innovation/innovation-models/balance",
+      "query": null,
+      "error": null,
+      "used_by": [
+        "glp1-path-005"
+      ],
+      "text_file": "priorities-innovation-innovation-models-balance.txt",
+      "title": "BALANCE (Better Approaches to Lifestyle and Nutrition ...",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "document_id_external": null,
+      "revision_date": null,
+      "effective_date": null,
+      "paragraph_count": 112,
+      "fetch_method": "extract",
+      "retrieved_at": "2026-09-13T13:19:35.457556+00:00"
     }
   ]
 }
