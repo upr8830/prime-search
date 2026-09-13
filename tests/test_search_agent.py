@@ -8,6 +8,7 @@ tests/test_search_agent_live.py.
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 from datetime import UTC, date, datetime
 from pathlib import Path
 
@@ -738,3 +739,170 @@ def test_no_trajectory_means_no_invented_summary(sandboxed_run, monkeypatch) -> 
     result = run_search_agent(_task(), ws=sandboxed_run, model=model)
     assert "always covered" not in result.summary
     assert "no closing summary" in result.summary
+
+
+# --- paths the 1.6 review listed as untested --------------------------------------
+
+
+def test_a_failed_summarize_call_does_not_fail_the_task(sandboxed_run, monkeypatch) -> None:
+    """docs/03 §13's recovery path runs when a run is already going badly; if its own
+    model call throws, the task must still come back with what it gathered."""
+    _install_fake_tavily(monkeypatch)
+    sandboxed_run.budget = Budget(max_searches=50)
+
+    class DiesOnSummary(ScriptedChatModel):
+        def _generate(self, messages, stop=None, run_manager=None, **kwargs):  # type: ignore[no-untyped-def]
+            if not self.script:  # the un-tooled summarize turn
+                raise RuntimeError("nebius 500 on the summary")
+            return super()._generate(messages, stop, run_manager, **kwargs)
+
+    model = DiesOnSummary(
+        script=[
+            AIMessage(content="", tool_calls=[tool_call("search", query=f"q{i}")]) for i in range(9)
+        ]
+    )
+    result = run_search_agent(_task(), ws=sandboxed_run, model=model)
+
+    assert "tool-call cap" in result.unresolved
+    assert result.summary  # the deterministic fallback stood in
+    assert "8 queries" in result.summary
+
+
+def test_the_deep_read_budget_race_becomes_budget_exceeded(sandboxed_run, monkeypatch) -> None:
+    """Under a parallel fan-out the workspace's own re-check can fire after the tool's
+    pre-check passed. It raises DeepReadBudgetExceeded, matched by type rather than by
+    looking for "budget" in the message."""
+    _install_fake_tavily(monkeypatch)
+    from prime_search.workspace import DeepReadBudgetExceeded
+
+    def exhausted(*args, **kwargs):
+        raise DeepReadBudgetExceeded("deep-read budget exhausted (10 used)")
+
+    monkeypatch.setattr(sandboxed_run, "search_within", exhausted)
+    model = ScriptedChatModel(
+        script=[
+            AIMessage(content="", tool_calls=[tool_call("search", query="q")]),
+            AIMessage(content="", tool_calls=[tool_call("fetch", doc_id=DOC_ID)]),
+            AIMessage(content="", tool_calls=[tool_call("search_within", doc_id=DOC_ID, query="x")]),
+            AIMessage(content="Stopped."),
+        ]
+    )
+    result = run_search_agent(_task(), ws=sandboxed_run, model=model)
+    assert "deep-read budget exhausted" in result.unresolved
+
+
+def test_another_value_error_is_not_mistaken_for_the_budget(sandboxed_run, monkeypatch) -> None:
+    """The same method raises ValueError for an unreadable path and for drifted
+    offsets; neither may end the agent."""
+    _install_fake_tavily(monkeypatch)
+
+    def drifted(*args, **kwargs):
+        raise ValueError("paragraphs on disk vs paragraph_count on the Document")
+
+    monkeypatch.setattr(sandboxed_run, "search_within", drifted)
+    model = ScriptedChatModel(
+        script=[
+            AIMessage(content="", tool_calls=[tool_call("search", query="q")]),
+            AIMessage(content="", tool_calls=[tool_call("fetch", doc_id=DOC_ID)]),
+            AIMessage(content="", tool_calls=[tool_call("search_within", doc_id=DOC_ID, query="x")]),
+            AIMessage(content="Routed around it."),
+        ]
+    )
+    result = run_search_agent(_task(), ws=sandboxed_run, model=model)
+    assert result.summary == "Routed around it."  # the agent kept control
+    assert "budget" not in (result.unresolved or "")
+
+
+def test_reported_token_usage_is_carried_through(sandboxed_run, monkeypatch) -> None:
+    """docs/06 §5: usage_metadata when the wrapper provides it."""
+    _install_fake_tavily(monkeypatch)
+    model = ScriptedChatModel(
+        script=[
+            AIMessage(
+                content="Done.",
+                usage_metadata={"input_tokens": 120, "output_tokens": 30, "total_tokens": 150},
+            )
+        ]
+    )
+    result = run_search_agent(_task(), ws=sandboxed_run, model=model)
+    assert (result.usage.input_tokens, result.usage.output_tokens) == (120, 30)
+    assert sandboxed_run.usage.input_tokens == 120  # the run's max_tokens budget sees it
+
+
+def test_missing_token_usage_is_estimated_not_left_at_zero(sandboxed_run, monkeypatch) -> None:
+    """A wrapper that reports nothing used to leave the totals at zero, which silently
+    disables the max_tokens budget and understates every cost figure in the report."""
+    _install_fake_tavily(monkeypatch)
+    model = ScriptedChatModel(script=[AIMessage(content="x" * 400)])  # no usage_metadata
+    result = run_search_agent(_task(), ws=sandboxed_run, model=model)
+    assert result.usage.output_tokens == 100  # docs/06 §5's heuristic
+    assert sandboxed_run.usage.output_tokens == 100
+
+
+def test_the_optimized_prompt_set_is_used_when_gepa_wrote_one(
+    sandboxed_run, monkeypatch, tmp_path
+) -> None:
+    """docs/05 §5 freezes search_agent.md, so this path should normally fall back to
+    the base prompt — but run_search_agent takes prompt_set, and 1.7 passes it."""
+    from prime_search import prompts
+
+    optimized = tmp_path / "optimized"
+    optimized.mkdir()
+    (optimized / "search_agent.md").write_text(
+        "OPTIMIZED SYSTEM\n<!-- task -->\nOPTIMIZED TASK {instruction}", encoding="utf-8"
+    )
+    (tmp_path / "search_agent.md").write_text(
+        "BASE\n<!-- task -->\nBASE TASK {instruction}", encoding="utf-8"
+    )
+    monkeypatch.setattr(prompts, "_DIR", tmp_path)
+    prompts.load.cache_clear()
+    _install_fake_tavily(monkeypatch)
+
+    model = ScriptedChatModel(script=[AIMessage(content="Done.")])
+    run_search_agent(_task(), ws=sandboxed_run, model=model, prompt_set="optimized")
+    prompt_text = "\n".join(str(m.content) for m in model.seen[0])
+    assert "OPTIMIZED" in prompt_text
+    prompts.load.cache_clear()
+
+
+def test_a_standalone_run_opens_its_own_trace(sandboxed_run, monkeypatch) -> None:
+    """With no parent run current, the node opens one so the tool runs have somewhere
+    to hang and a URL exists for the build log."""
+    from prime_search.agents import search_agent as module
+
+    opened: list[str] = []
+
+    class FakeHandle:
+        url = "https://smith.langchain.com/o/x/trace/y"
+
+    @contextmanager
+    def fake_trace_run(name, **kwargs):
+        opened.append(name)
+        yield FakeHandle()
+
+    _install_fake_tavily(monkeypatch)
+    monkeypatch.setattr(module, "trace_run", fake_trace_run)
+    monkeypatch.setattr(module, "_tracing_enabled", lambda: True)
+    monkeypatch.setattr(module, "get_current_run_tree", lambda: None)
+
+    model = ScriptedChatModel(script=[AIMessage(content="Done.")])
+    run_search_agent(_task(), ws=sandboxed_run, model=model)
+
+    assert opened == ["search_agent:b1 (standalone)"]  # distinct, or the trace nests b1 > b1
+
+
+def test_a_nested_run_takes_its_url_from_the_parent(sandboxed_run, monkeypatch) -> None:
+    """Reporting None here meant every task logged None once 1.7 wires the graph."""
+    from prime_search.agents import search_agent as module
+
+    class FakeParent:
+        def get_url(self) -> str:
+            return "https://smith.langchain.com/o/x/trace/parent"
+
+    _install_fake_tavily(monkeypatch)
+    monkeypatch.setattr(module, "get_current_run_tree", lambda: FakeParent())
+    assert module._run_tree_url(FakeParent()) == "https://smith.langchain.com/o/x/trace/parent"
+
+    model = ScriptedChatModel(script=[AIMessage(content="Done.")])
+    result = run_search_agent(_task(), ws=sandboxed_run, model=model)
+    assert result.summary == "Done."  # and nothing raised on the nested path

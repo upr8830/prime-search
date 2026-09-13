@@ -120,6 +120,17 @@ def new_run_id() -> str:
     return str(uuid.UUID(int=value))
 
 
+class DeepReadBudgetExceeded(ValueError):
+    """`max_deep_reads` is spent (docs/01 §3).
+
+    A distinct type because the sub-agent has to tell this apart from every other
+    `ValueError` this method raises — an unreadable path, a snippet-only document,
+    offsets that drifted — and it was doing so by looking for the word "budget" in the
+    message, which held only until someone reworded an error string. Subclasses
+    `ValueError` so existing callers that catch that still behave.
+    """
+
+
 @dataclass(slots=True)
 class ExecResult:
     """Outcome of one sandboxed cell.
@@ -269,7 +280,7 @@ class Workspace:
             raise KeyError(f"no document {doc_id!r} in the workspace; search first")
         remaining = self.budget_remaining().max_deep_reads
         if remaining <= 0:
-            raise ValueError(
+            raise DeepReadBudgetExceeded(
                 f"deep-read budget exhausted ({self.budget.max_deep_reads} used); "
                 "answer from the evidence already gathered"
             )

@@ -51,7 +51,7 @@ _LOG_AT_INFO = {"error", "verdict", "critique", "run.finished"}
 _log = get_logger(component="events")
 _lock = threading.Lock()
 _subscribers: dict[str, list[Callable[[dict], None]]] = {}
-_root = Path("runs")
+_root = Path("runs").resolve()
 
 __all__ = [
     "EVENT_TYPES",
@@ -70,9 +70,15 @@ def runs_root() -> Path:
 
 
 def set_runs_root(path: str | Path) -> None:
-    """Point `runs/` somewhere else. Tests use this; nothing in the app does."""
+    """Point `runs/` somewhere else. Tests use this; nothing in the app does.
+
+    Resolved immediately rather than kept relative: `Workspace._assert_readable`
+    compares a document's path against this root, and a relative one rebinds to
+    whatever the working directory happens to be at the time — so a process that
+    changed directory mid-run would start refusing documents it had just fetched.
+    """
     global _root
-    _root = Path(path)
+    _root = Path(path).resolve()
 
 
 def run_dir(run_id: str) -> Path:

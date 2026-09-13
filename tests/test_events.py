@@ -121,3 +121,13 @@ def test_every_emitted_type_is_one_the_ui_knows() -> None:
     rather than dropped, but the sub-agent should not be inventing any."""
     for type_name in ("task.started", "search", "fetch", "evidence", "task.done", "error"):
         assert type_name in events.EVENT_TYPES
+
+
+def test_the_runs_root_is_absolute_so_a_chdir_cannot_orphan_a_run(tmp_path: Path) -> None:
+    """Workspace._assert_readable compares document paths against this root; a relative
+    one rebinds to the working directory, so a process that changed directory mid-run
+    would start refusing documents it had just fetched."""
+    events.set_runs_root("runs")
+    assert events.runs_root().is_absolute()
+    events.set_runs_root(tmp_path)
+    assert events.runs_root().is_absolute()

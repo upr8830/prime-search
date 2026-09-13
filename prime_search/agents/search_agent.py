@@ -37,12 +37,12 @@ from langsmith import get_current_run_tree
 from prime_search import events
 from prime_search.config import Budget, get_settings
 from prime_search.evidence.store import EvidenceRejected, EvidenceStore
-from prime_search.models import subagent_model
+from prime_search.models import subagent_model, token_usage
 from prime_search.primitives import tavily
 from prime_search.prompts import render
 from prime_search.schemas import SearchTask, TaskResult, Usage
 from prime_search.tracing import get_logger, trace_run
-from prime_search.workspace import Workspace
+from prime_search.workspace import DeepReadBudgetExceeded, Workspace
 
 # docs/03 §13: "Sub-agent exceeds its tool-call cap (default 8)". A module constant
 # rather than a Budget field: Budget is serialized into SearchPlan, RunRequest and
@@ -358,12 +358,15 @@ def build_tools(ctx: ToolContext) -> list[BaseTool]:
             # before charging the run. The task was charged; keep the two in step.
             ctx.charge_run_deep_read()
             return {"error": str(exc), "tool_calls_left": ctx.calls_left}
+        except DeepReadBudgetExceeded as exc:
+            # The pre-check in charge() normally gets there first, so this is the race
+            # under a parallel fan-out, where the workspace's own re-check bounds the
+            # overshoot at one. Matched by type: the same method raises ValueError for
+            # an unreadable path, a snippet-only document and drifted offsets, and
+            # telling them apart by looking for "budget" in the message held only until
+            # someone reworded one.
+            raise BudgetExceeded(str(exc)) from exc
         except ValueError as exc:
-            # ws.search_within raises a plain ValueError on budget exhaustion; the
-            # pre-check above normally gets there first, so this is the race under a
-            # parallel fan-out, where its own re-check bounds the overshoot at one.
-            if "budget" in str(exc):
-                raise BudgetExceeded(str(exc)) from exc
             return {"error": str(exc), "tool_calls_left": ctx.calls_left}
         except Exception as exc:
             # An OSError if the text file was removed or locked, say. An unguarded
@@ -579,7 +582,7 @@ def run_search_agent(
 
     ctx.usage.agents = 1
     ctx.usage.wall_seconds = round(time.monotonic() - started, 3)
-    _count_tokens(messages, ctx)
+    estimated = _count_tokens(messages, ctx)
     result = _build_result(ctx, messages)
     task.result, task.status = result, "done"
     ctx.emit("task.done", {"task_id": task.task_id, "result": result})
@@ -590,6 +593,7 @@ def run_search_agent(
         tool_calls=ctx.calls,
         evidence=len(result.evidence_ids),
         documents=len(result.documents_fetched),
+        tokens_estimated=estimated,  # docs/06 §2 puts the tag on the root run (1.7)
         trace_url=trace_url,
     )
     return result
@@ -771,17 +775,26 @@ def _branch_for(ws: Workspace, branch_id: str) -> Any:
     return next((b for b in ws.plan.branches if b.branch_id == branch_id), None)
 
 
-def _count_tokens(messages: list[BaseMessage], ctx: ToolContext) -> None:
-    """docs/06 §5: usage from `usage_metadata` where the wrapper provides it."""
+def _count_tokens(messages: list[BaseMessage], ctx: ToolContext) -> bool:
+    """docs/06 §5: usage from `usage_metadata`, else the heuristic. Returns whether
+    any reply had to be estimated, so the caller can tag the run `tokens:estimated`.
+
+    A wrapper that reports nothing used to leave the totals at zero, which silently
+    disables the `max_tokens` budget and understates every cost figure in the bench
+    report — a plausible number, quietly wrong.
+    """
+    estimated = False
     for message in messages:
-        usage = getattr(message, "usage_metadata", None)
-        if not isinstance(usage, dict):
+        if not isinstance(message, AIMessage):
             continue
-        ctx.usage.input_tokens += int(usage.get("input_tokens") or 0)
-        ctx.usage.output_tokens += int(usage.get("output_tokens") or 0)
+        input_tokens, output_tokens, was_estimated = token_usage(message)
+        ctx.usage.input_tokens += input_tokens
+        ctx.usage.output_tokens += output_tokens
+        estimated = estimated or was_estimated
     with _LOCK:  # the run-wide max_tokens budget is checked against ws.usage
         ctx.ws.usage.input_tokens += ctx.usage.input_tokens
         ctx.ws.usage.output_tokens += ctx.usage.output_tokens
+    return estimated
 
 
 def _run_tree_url(run_tree: Any) -> str | None:

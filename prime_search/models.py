@@ -215,6 +215,40 @@ def structured(role: Role, schema: type[_S], *, attempts: int = 2) -> Structured
     return StructuredCaller(role, schema, attempts=attempts)
 
 
+# docs/06 §5's fallback when the wrapper reports no usage. Four characters per token
+# is the standard rule of thumb for English prose; it is an estimate and is labelled
+# as one rather than dressed up with a real tokenizer we would then have to pin.
+_CHARS_PER_TOKEN = 4
+TOKENS_ESTIMATED_TAG = "tokens:estimated"
+
+
+def token_usage(message: Any) -> tuple[int, int, bool]:
+    """(input_tokens, output_tokens, estimated) for one model reply.
+
+    docs/06 §5: "reads `usage_metadata` from `AIMessage` when the Nebius wrapper
+    provides it; otherwise estimates with a tokenizer heuristic and tags the run
+    `tokens:estimated`." Without the fallback a wrapper that omits usage metadata
+    reports zero tokens, and a zero total silently disables the `max_tokens` budget
+    and understates every cost figure in the bench report.
+
+    The caller owns the tag, because docs/06 §2 puts tags on the *root* run.
+    """
+    usage = getattr(message, "usage_metadata", None)
+    if isinstance(usage, dict) and (usage.get("input_tokens") or usage.get("output_tokens")):
+        return int(usage.get("input_tokens") or 0), int(usage.get("output_tokens") or 0), False
+
+    text = getattr(message, "text", "") or ""
+    reasoning = _reasoning_text(message) if isinstance(message, AIMessage) else None
+    produced = len(text) + (len(reasoning) if reasoning and reasoning != text else 0)
+    # Only the output is visible on a reply; the prompt was counted where it was sent.
+    return 0, max(1, produced // _CHARS_PER_TOKEN) if produced else 0, True
+
+
+def estimate_tokens(text: str) -> int:
+    """docs/06 §5's heuristic, for a prompt whose reply carries no usage metadata."""
+    return max(1, len(text or "") // _CHARS_PER_TOKEN) if text else 0
+
+
 def model_for(role: Role, **overrides: Any) -> ChatNebius:
     """The model for a role by name. The per-role factories below are the normal
     entry points; this exists for code that iterates roles, such as `make smoke`."""
