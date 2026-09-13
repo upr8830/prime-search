@@ -80,6 +80,11 @@ def test_every_1_7_prompt_renders_with_no_placeholder_left(sandboxed_run) -> Non
             "question", "stop_criteria", "branches", "unresolved", "budget", "round",
             "max_new_tasks",
         },
+        "critic": {
+            "question", "stop_criteria", "branches", "claims", "documents", "contested",
+            "trajectory", "coverage", "review_mode",
+        },
+        "critic_repair": {"problem"},
         "baseline": set(),
     }
     for name, keys in call_sites.items():

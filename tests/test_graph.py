@@ -8,16 +8,21 @@ that is easy to get wrong and silent when wrong - usage is not counted twice.
 
 from __future__ import annotations
 
+import json
 import time
 
+import pytest
 
+from prime_search import events
 from prime_search.agents import graph as graph_module
 from prime_search.agents.graph import DEPTH, PrimeState, _slice_budget, build_graph
+from prime_search.agents.critic import CriticOutcome
 from prime_search.agents.judge import JudgeOutcome
 from prime_search.config import Budget
 from prime_search.evidence.store import EvidenceStore
 from prime_search.schemas import (
     Branch,
+    CriticReport,
     QueryUnderstanding,
     RunRequest,
     SearchPlan,
@@ -153,6 +158,7 @@ def test_two_branches_fanning_out_do_not_collide(sandboxed_run, monkeypatch) -> 
     monkeypatch.setattr(graph_module, "synthesize", lambda ws, **k: _answer())
     monkeypatch.setattr(graph_module, "structured", lambda *a, **k: _FakeCaller(_understanding()))
     monkeypatch.setattr(graph_module, "run_judge", _sufficient_judge)
+    monkeypatch.setattr(graph_module, "run_critic", _passing_critic)
 
     final = build_graph().invoke(_state(ws))
     assert len(final["task_results"]) == 2
@@ -356,8 +362,8 @@ def test_an_expired_deadline_short_circuits_the_nodes(sandboxed_run) -> None:
     assert graph_module._understand(expired) == {}
     assert graph_module._plan(expired) == {}
     assert graph_module._dispatch(expired)["pending_tasks"] == []
-    # And with nothing dispatched the edge routes to collect, not into a dead superstep.
-    assert graph_module._fan_out(expired) == "collect"
+    # And the edge sends the expired run straight to synthesis (docs/03 §1).
+    assert graph_module._fan_out(expired) == "synthesize"
 
 
 def test_nothing_to_dispatch_routes_to_collect(sandboxed_run) -> None:
@@ -385,6 +391,7 @@ def test_the_graph_runs_end_to_end_offline(sandboxed_run, monkeypatch) -> None:
     )
     monkeypatch.setattr(graph_module, "synthesize", lambda ws, **k: _answer())
     monkeypatch.setattr(graph_module, "run_judge", _sufficient_judge)
+    monkeypatch.setattr(graph_module, "run_critic", _passing_critic)
 
     final = build_graph().invoke(_state(ws))
     assert final["answer"].summary == "the answer"
@@ -683,6 +690,7 @@ def test_a_two_round_run_end_to_end(sandboxed_run, monkeypatch) -> None:
         return JudgeOutcome(_verdict(True, round_=1), "native")
 
     monkeypatch.setattr(graph_module, "run_judge", judge)
+    monkeypatch.setattr(graph_module, "run_critic", _passing_critic)
 
     final = build_graph().invoke(_state(ws))
     assert judged == [0, 1]
@@ -691,3 +699,189 @@ def test_a_two_round_run_end_to_end(sandboxed_run, monkeypatch) -> None:
     assert all(task.status == "done" for task in ws.tasks)
     assert ws.tasks[2].result.summary == "summary b1-r1"
     assert len(ws.verdicts) == 2
+
+
+# --- the critic and deadline routing (task 2.2) ----------------------------------------
+
+
+def _report(probability: float = 0.9, tasks=()) -> CriticReport:  # noqa: ANN001
+    return CriticReport(completion_probability=probability, recommended_searches=list(tasks), reasoning="r")
+
+
+def _passing_critic(ws, **kwargs) -> CriticOutcome:  # noqa: ANN001, ANN003
+    return CriticOutcome(_report(), "fenced_json")
+
+
+def _recording_critic(outcome: CriticOutcome, calls: list):  # noqa: ANN202
+    def critic(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        calls.append(kwargs)
+        return outcome
+
+    return critic
+
+
+def _must_not_run(*args, **kwargs):  # noqa: ANN002, ANN003, ANN202
+    raise AssertionError("this node should not have called its model")
+
+
+def test_a_low_completion_probability_dispatches_the_critics_searches(sandboxed_run, monkeypatch) -> None:
+    """docs/03 §7, at `round == max_rounds`: the critic's round goes beyond it (docs/11)."""
+    ws = sandboxed_run
+    _plan(ws, count=2)
+    calls: list = []
+    report = _report(0.5, [_task("b2-r3-critic1", "b2", 3)])
+    monkeypatch.setattr(graph_module, "run_critic", _recording_critic(CriticOutcome(report, "fenced_json"), calls))
+    state = _state(ws, round=3)
+
+    update = graph_module._critic(state)
+    assert (calls[0]["may_search"], calls[0]["state_round"]) == (True, 3)
+    assert [t.task_id for t in update["pending_tasks"]] == ["b2-r3-critic1"]
+    assert update["critic_rounds"] == 1
+    assert graph_module._after_critic({**state, **update}) == "dispatch"
+    assert ws.critic_reports == [report]
+    assert [record["type"] for record in update["events"]] == ["critique"]
+
+
+def test_a_confident_critic_goes_to_synthesis_and_keeps_its_recommendations(sandboxed_run, monkeypatch) -> None:
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    report = _report(0.9, [_task("b1-r1-critic1", "b1", 1)])
+    monkeypatch.setattr(graph_module, "run_critic", _recording_critic(CriticOutcome(report, "fenced_json"), []))
+    state = _state(ws, round=1)
+
+    update = graph_module._critic(state)
+    assert update["pending_tasks"] == []
+    assert graph_module._after_critic({**state, **update}) == "synthesize"
+    assert ws.critic_reports[0].recommended_searches  # recorded, not dispatched
+
+
+def test_the_second_critic_review_never_dispatches(sandboxed_run, monkeypatch) -> None:
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    calls: list = []
+    report = _report(0.2, [_task("b1-r2-critic1", "b1", 2)])
+    monkeypatch.setattr(graph_module, "run_critic", _recording_critic(CriticOutcome(report, "fenced_json"), calls))
+    state = _state(ws, round=2, critic_rounds=1)
+
+    update = graph_module._critic(state)
+    assert calls[0]["may_search"] is False
+    assert update["pending_tasks"] == [] and update["critic_rounds"] == 2
+    assert graph_module._after_critic({**state, **update}) == "synthesize"
+
+
+def test_the_critic_runs_at_most_twice(sandboxed_run, monkeypatch) -> None:
+    monkeypatch.setattr(graph_module, "run_critic", _must_not_run)
+    state = _state(sandboxed_run, round=2, critic_rounds=2)
+    assert graph_module._critic(state) == {}
+    assert graph_module._after_critic(state) == "synthesize"
+
+
+def test_with_no_searches_left_the_critic_only_reports(sandboxed_run, monkeypatch) -> None:
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    ws.usage.searches = ws.budget.max_searches
+    calls: list = []
+    report = _report(0.3, [_task("b1-r1-critic1", "b1", 1)])
+    monkeypatch.setattr(graph_module, "run_critic", _recording_critic(CriticOutcome(report, "fenced_json"), calls))
+
+    update = graph_module._critic(_state(ws, round=1))
+    assert calls[0]["may_search"] is False
+    assert update["pending_tasks"] == []
+
+
+def test_fast_depth_skips_the_critic(sandboxed_run, monkeypatch) -> None:
+    monkeypatch.setattr(graph_module, "run_critic", _must_not_run)
+    assert graph_module._critic(_state(sandboxed_run, round=1, depth="fast")) == {}
+
+
+def test_a_skipped_critic_reaches_the_run_tags(sandboxed_run, monkeypatch) -> None:
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    outcome = CriticOutcome(None, "skipped", "fallback:critic_skipped", "boom")
+    monkeypatch.setattr(graph_module, "run_critic", _recording_critic(outcome, []))
+
+    update = graph_module._critic(_state(ws, round=1))
+    assert update["fallback_tags"] == ["fallback:critic_skipped"]
+    assert update["critic_rounds"] == 1
+    assert "events" not in update and ws.critic_reports == []
+
+
+@pytest.mark.parametrize(
+    "router", ["_after_understand", "_after_plan", "_fan_out", "_after_collect", "_after_judge", "_after_critic"]
+)
+def test_an_expired_deadline_sends_every_router_to_synthesis(sandboxed_run, router) -> None:
+    """docs/03 §1: "if not, it returns a state that routes straight to `synthesize`" -
+    even with tasks pending."""
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    expired = _state(ws, deadline=time.time() - 1, pending_tasks=[_task("b1-r1", "b1", 1)])
+    assert getattr(graph_module, router)(expired) == "synthesize"
+
+
+def _offline_graph(ws, monkeypatch) -> None:  # noqa: ANN001
+    ws.understanding = _understanding()
+    _plan(ws, count=2)
+    monkeypatch.setattr(graph_module, "plan_run", lambda ws, **k: _FakeOutcome(ws.plan))
+    monkeypatch.setattr(graph_module, "structured", lambda *a, **k: _FakeCaller(_understanding()))
+    monkeypatch.setattr(graph_module, "synthesize", lambda ws, **k: _answer())
+    monkeypatch.setattr(
+        graph_module, "run_search_agent", lambda task, **k: _result(f"summary {task.task_id}")
+    )
+
+
+def _critic_once_then_pass(calls: list):  # noqa: ANN202
+    def critic(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        calls.append(kwargs["may_search"])
+        if len(calls) == 1:
+            round_ = kwargs["state_round"]
+            return CriticOutcome(_report(0.4, [_task(f"b2-r{round_}-critic1", "b2", round_)]), "fenced_json")
+        return CriticOutcome(_report(0.9), "fenced_json")
+
+    return critic
+
+
+def test_the_critic_loop_end_to_end(sandboxed_run, monkeypatch) -> None:
+    """Critic below 0.7 -> its search runs -> collect -> judge -> critic again, last word."""
+    ws = sandboxed_run
+    _offline_graph(ws, monkeypatch)
+    monkeypatch.setattr(graph_module, "run_judge", _sufficient_judge)
+    calls: list = []
+    monkeypatch.setattr(graph_module, "run_critic", _critic_once_then_pass(calls))
+
+    final = build_graph().invoke(_state(ws))
+    assert calls == [True, False]
+    assert (final["round"], final["critic_rounds"]) == (2, 2)
+    assert ws.tasks[-1].task_id == "b2-r1-critic1" and ws.tasks[-1].status == "done"
+    assert (len(ws.verdicts), len(ws.critic_reports)) == (2, 2)
+
+
+def test_the_longest_deep_run_fits_the_recursion_limit(sandboxed_run, monkeypatch) -> None:
+    """Initial round, two judge rounds, the critic's round beyond max_rounds, a second
+    critic: the arithmetic behind RECURSION_LIMIT."""
+    ws = sandboxed_run
+    _offline_graph(ws, monkeypatch)
+
+    def judge(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        next_round = kwargs["judged_round"] + 1
+        tasks = [_task(f"b1-r{next_round}", "b1", next_round)] if kwargs["max_new_tasks"] else []
+        return JudgeOutcome(_verdict(False, tasks, kwargs["judged_round"]), "native")
+
+    monkeypatch.setattr(graph_module, "run_judge", judge)
+    monkeypatch.setattr(graph_module, "run_critic", _critic_once_then_pass([]))
+
+    final = build_graph().invoke(_state(ws), config={"recursion_limit": graph_module.RECURSION_LIMIT})
+    assert final["round"] == 4  # initial + 2 judge rounds + the critic's
+    assert final["critic_rounds"] == 2
+
+
+def test_verdicts_and_critic_reports_reach_state_json(sandboxed_run, monkeypatch) -> None:
+    """docs/06 §4: the record written at every node boundary carries them."""
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    monkeypatch.setattr(graph_module, "run_judge", _sufficient_judge)
+    monkeypatch.setattr(graph_module, "run_critic", _passing_critic)
+
+    graph_module._judge(_state(ws, round=1))
+    graph_module._critic(_state(ws, round=1))
+    saved = json.loads((events.run_dir(ws.run_id) / "state.json").read_text(encoding="utf-8"))
+    assert (len(saved["verdicts"]), len(saved["critic_reports"])) == (1, 1)

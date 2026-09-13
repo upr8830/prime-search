@@ -111,7 +111,7 @@ class SearchPlan(BaseModel):
 
 ```python
 class SearchTask(BaseModel):
-    task_id: str                            # "{branch_id}-r{round}", "-{k}" for a second judge task on a branch
+    task_id: str                            # "{branch_id}-r{round}"; "-{k}" for a second judge task on a branch; "-critic{k}" for a critic task
     branch_id: str
     round: int                              # 0 = initial plan, 1.. = judge/critic re-search
     instruction: str                        # for the sub-agent
@@ -212,8 +212,8 @@ class CriticReport(BaseModel):
     source_independence_issues: list[str]
     secondary_when_primary_exists: list[str]   # claim ids relying on tier ≥ official_secondary when a primary doc is cited elsewhere
     outdated_sources: list[str]             # doc ids
-    contradictions: list[str]               # claim ids
-    recommended_searches: list[SearchTask]
+    contradictions: list[str]               # claim ids, or one sentence for a contradiction no claim captures
+    recommended_searches: list[SearchTask]  # dispatched only on the critic's first run, below 0.7, with budget left
     completion_probability: float           # 0–1
     reasoning: str
 ```

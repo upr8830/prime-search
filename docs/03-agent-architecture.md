@@ -45,6 +45,15 @@ Budget enforcement: `dispatch` truncates `pending_tasks` to what the remaining b
 (`max_agents`, `max_searches` divided across tasks). Every node checks `time.time() < deadline`;
 if not, it returns a state that routes straight to `synthesize`.
 
+**As built (task 2.2).** `understand`, `plan`, `dispatch` (through its `_fan_out` edge), `collect`,
+`judge` and `critic` each leave through a routing function that sends an expired deadline to
+`synthesize`; the nodes are also no-ops past it, except that `collect` still merges whatever arrived.
+`judge` routes to `dispatch` when it set `pending_tasks`, otherwise to `critic` (to `synthesize` at
+fast depth); `critic` routes to `dispatch` when it set `pending_tasks`, otherwise to `synthesize`.
+Results are paired with tasks by task id (`results_by_task`), `dispatch` seeds from the plan only in
+round 0, `max_agents` caps each round, and `max_rounds` counts every search round, the initial one
+included.
+
 ## 2. Node: `understand`
 
 Model: judge model (DeepSeek-V4-Flash), structured output `QueryUnderstanding`, temperature 0.
@@ -178,6 +187,17 @@ Routing: if `completion_probability < 0.7` and `critic_rounds == 0` and budget a
 `recommended_searches` (max 3) and return to `judge` after collection. Otherwise proceed. The critic
 runs at most twice.
 
+**As built (task 2.2).** `critic_rounds` counts critic runs: only the first may dispatch, and the
+second is the last word. "Budget allows" means searches and tokens left and at least 30 s before the
+deadline; the critic's round may go beyond `max_rounds`. The ladder is fenced JSON, one repair turn
+(`prompts/critic_repair.md`), structured output on the judge model (tag `fallback:critic_structured`),
+and finally no report (an `error` event and tag `fallback:critic_skipped`); the run proceeds either
+way. The harness keeps only claim and document ids that exist (an LCD number maps to its doc ids),
+keeps a contradiction written as a sentence when no claim captures it, and turns
+`recommended_searches` into tasks `{branch}-r{round}-critic{k}`, using the pseudo-branch `critic`
+when no plan branch fits. A report is recorded and emitted as a `critique` event whether or not its
+searches run.
+
 ## 8. Node: `synthesize`
 
 Model: root model, streaming tokens, then a structured pass on the judge model to produce `Answer`
@@ -243,6 +263,7 @@ Seed content checklist:
   and an explicit "snippets are not evidence" line.
 - `judge.md`: rubric for resolved/partial/unresolved; when to stop; the no-duplicate-task rule.
 - `critic.md`: the question list in §7; the JSON schema; the instruction to be adversarial.
+- `critic_repair.md`: the single repair turn when the critic's reply holds no valid report (§7, 01 §9).
 - `synthesize.md`: section order, citation rule, contradiction rule, patient-level rule.
 
 ## 12. Sandbox for code-as-action

@@ -1,8 +1,9 @@
 """The PRIME graph (docs/03 §1): understand -> plan -> dispatch -> search_agent ->
 collect -> judge -> critic -> synthesize.
 
-After every search round the judge (docs/03 §6) decides whether to search again; the
-critic (§7) is a pass-through until the next step of task 2.2.
+After every search round the judge (docs/03 §6) decides whether to search again, and the
+critic (§7) reviews the result before synthesis, with one re-search round of its own.
+Every routing function sends an expired deadline straight to synthesis (§1).
 
 Three places where the spec's diagram and working LangGraph differ. Each is a
 deliberate deviation, logged in docs/11:
@@ -40,6 +41,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
 
 from prime_search import events
+from prime_search.agents.critic import run_critic
 from prime_search.agents.judge import MAX_NEW_TASKS, run_judge
 from prime_search.agents.root import plan_run
 from prime_search.agents.search_agent import MAX_TOOL_CALLS, run_search_agent
@@ -74,6 +76,15 @@ DEPTH: dict[str, dict[str, int]] = {
 # a sub-agent times only itself; starting a round with less than this left would run it
 # past the deadline, so the judge and critic add no round below it.
 MIN_SECONDS_FOR_ROUND = 30
+
+# docs/03 §7: re-search when `completion_probability < 0.7`; "the critic runs at most twice".
+CRITIC_THRESHOLD = 0.7
+MAX_CRITIC_RUNS = 2
+# LangGraph counts supersteps. The longest deep run is understand, plan, three rounds of
+# dispatch/search_agent/collect/judge, a critic, its extra round, a second critic and
+# synthesize: 2 + 3x4 + 1 + 4 + 1 + 1 = 21. The limit leaves headroom without letting a
+# routing bug loop for long.
+RECURSION_LIMIT = 50
 
 
 def _merge_results(
@@ -210,6 +221,8 @@ def _fan_out(state: PrimeState) -> list[Send] | str:
     list that is empty leaves the superstep with no outgoing task and the graph stops
     with the answer unwritten.
     """
+    if _past_deadline(state):
+        return "synthesize"
     tasks = state.get("pending_tasks") or []
     if not tasks:
         return "collect"
@@ -397,9 +410,38 @@ def _judge(state: PrimeState) -> dict[str, Any]:
 
 
 def _critic(state: PrimeState) -> dict[str, Any]:
-    """docs/09 §1.7: stubbed as a pass-through today. Task 2.3 implements docs/03 §7."""
+    """docs/03 §7: the adversarial review before synthesis, with one re-search.
+
+    `critic_rounds` counts critic *runs*. The first may dispatch its recommended
+    searches - when `completion_probability < 0.7` and the budget allows - and those
+    tasks come back through collect and the judge; the second run is the last word. The
+    critic's round may go past `max_rounds` (docs/11) but still needs searches, tokens
+    and time. Fast depth has no critic (§10).
+    """
+    ws = state["ws"]
+    runs = state.get("critic_rounds", 0)
+    if _past_deadline(state) or state.get("depth", "deep") == "fast" or runs >= MAX_CRITIC_RUNS:
+        return {}
+    may_search = runs == 0 and _can_search(ws, state)
+    outcome = run_critic(
+        ws,
+        state_round=state.get("round", 0),
+        may_search=may_search,
+        prompt_set=state.get("prompt_set", "base"),
+        model=state.get("models", {}).get("critic"),
+    )
+    update: dict[str, Any] = {"critic_rounds": runs + 1, "pending_tasks": []}
+    if outcome.fallback_tag:
+        update["fallback_tags"] = [outcome.fallback_tag]
+    report = outcome.report
+    if report is not None:
+        with RUN_LOCK:
+            ws.critic_reports.append(report)
+        update["events"] = [events.emit(ws.run_id, "critique", report)]
+        if may_search and report.completion_probability < CRITIC_THRESHOLD:
+            update["pending_tasks"] = list(report.recommended_searches)
     _persist(state)
-    return {}
+    return update
 
 
 def _synthesize(state: PrimeState) -> dict[str, Any]:
@@ -432,14 +474,14 @@ def build_graph() -> Any:
     builder.add_node("synthesize", _synthesize)
 
     builder.add_edge(START, "understand")
-    builder.add_edge("understand", "plan")
-    builder.add_edge("plan", "dispatch")
+    builder.add_conditional_edges("understand", _after_understand, ["plan", "synthesize"])
+    builder.add_conditional_edges("plan", _after_plan, ["dispatch", "synthesize"])
     # The deviation from §1's diagram: the node computed the tasks, this edge sends them.
-    builder.add_conditional_edges("dispatch", _fan_out, ["search_agent", "collect"])
+    builder.add_conditional_edges("dispatch", _fan_out, ["search_agent", "collect", "synthesize"])
     builder.add_edge("search_agent", "collect")
-    builder.add_edge("collect", "judge")
+    builder.add_conditional_edges("collect", _after_collect, ["judge", "synthesize"])
     builder.add_conditional_edges("judge", _after_judge, ["dispatch", "critic", "synthesize"])
-    builder.add_edge("critic", "synthesize")
+    builder.add_conditional_edges("critic", _after_critic, ["dispatch", "synthesize"])
     builder.add_edge("synthesize", END)
     return builder.compile()
 
@@ -521,7 +563,7 @@ def run_prime(
                     # understand/plan/synthesize hidden one level below it. Two rows
                     # called `prime_search` read as a rendering glitch, not a hierarchy.
                     "run_name": "graph",
-                    "recursion_limit": 50,
+                    "recursion_limit": RECURSION_LIMIT,
                     "metadata": {"run_id": workspace.run_id},
                 },
             )
@@ -710,6 +752,20 @@ def _can_search(ws: Workspace, state: PrimeState) -> bool:
     )
 
 
+def _after_understand(state: PrimeState) -> str:
+    """docs/03 §1: every node checks the deadline; an expired one routes to synthesis."""
+    return "synthesize" if _past_deadline(state) else "plan"
+
+
+def _after_plan(state: PrimeState) -> str:
+    return "synthesize" if _past_deadline(state) else "dispatch"
+
+
+def _after_collect(state: PrimeState) -> str:
+    """Collect itself always runs: evidence gathered before the deadline still counts."""
+    return "synthesize" if _past_deadline(state) else "judge"
+
+
 def _after_judge(state: PrimeState) -> str:
     """docs/03 §1: insufficient with a round left -> dispatch, otherwise the critic.
     Fast depth has no critic (§10); an expired deadline goes straight to synthesis."""
@@ -720,14 +776,21 @@ def _after_judge(state: PrimeState) -> str:
     return "synthesize" if state.get("depth", "deep") == "fast" else "critic"
 
 
+def _after_critic(state: PrimeState) -> str:
+    """docs/03 §1: the critic's one re-search goes back through dispatch (and to the
+    judge after collection); otherwise synthesis."""
+    if _past_deadline(state):
+        return "synthesize"
+    return "dispatch" if state.get("pending_tasks") else "synthesize"
+
+
 def _past_deadline(state: PrimeState) -> bool:
     """docs/03 §1: "Every node checks `time.time() < deadline`; if not, it returns a
     state that routes straight to `synthesize`."
 
-    With judge and critic stubbed there is no branching to short-circuit yet, so an
-    expired deadline makes the remaining nodes cheap no-ops and the run synthesizes
-    from what it has — the same outcome, without a conditional edge that 2.2 would
-    immediately rewrite.
+    Both halves: every routing function sends an expired run to synthesis, and every
+    node is also a cheap no-op past the deadline, so a node called directly behaves the
+    same way.
     """
     expired = time.time() >= state.get("deadline", float("inf"))
     if expired:

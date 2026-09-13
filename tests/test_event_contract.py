@@ -337,6 +337,7 @@ def test_a_prime_subscriber_receives_run_finished(sandboxed_run, monkeypatch) ->
     monkeypatch.setattr(module, "run_search_agent", lambda task, **k: _empty_result())
     monkeypatch.setattr(module, "synthesize", lambda ws, **k: _blank_answer())
     monkeypatch.setattr(module, "run_judge", _sufficient_judge)
+    monkeypatch.setattr(module, "run_critic", _passing_critic)
 
     seen: list[str] = []
     module.run_prime(RunRequest(question="q"), on_event=lambda r: seen.append(r["type"]))
@@ -399,3 +400,10 @@ def _sufficient_judge(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
         reasoning="enough",
     )
     return JudgeOutcome(verdict, "native")
+
+
+def _passing_critic(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
+    from prime_search.agents.critic import CriticOutcome
+    from prime_search.schemas import CriticReport
+
+    return CriticOutcome(CriticReport(completion_probability=0.9, reasoning="ok"), "fenced_json")

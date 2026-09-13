@@ -68,7 +68,7 @@ Behavior:
   **Critic** (weak claims, missing interpretations, recommended searches, completion probability).
 - Search tree: a nested list, not a graph library. Branch nodes show status (pending/running/done),
   evidence count, and a one-line `TaskResult.summary` on expand. Round separators show the judge's
-  verdict and how many tasks it added. Critic-triggered tasks are labeled `critic`.
+  verdict and how many tasks it added. Critic-triggered tasks are labeled `critic`: their `task_id` ends in `-critic{k}` (02 §2.3).
 - Footer per pane: `Usage` numbers, thumbs, comment, LangSmith trace link (when tracing is on).
 - Feedback: thumbs sends `POST /feedback`; the button locks with a check mark. Comment is optional;
   on the prime pane the user can also flag claims from the Claims tab (adds `claim_ids_flagged`).
