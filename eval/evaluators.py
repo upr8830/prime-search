@@ -95,10 +95,17 @@ class Score:
     metadata: dict = field(default_factory=dict)
 
     def to_langsmith(self) -> dict[str, Any]:
-        """A dict LangSmith's `EvaluationResult` accepts (its model forbids extra keys)."""
+        """A dict LangSmith's `EvaluationResult` accepts (its model forbids extra keys).
+
+        LangSmith rejects a score outside +/-99999.9999 and drops the whole ingest batch
+        with it, so a larger count (a prime run's tokens) goes as a string `value`."""
+        score, value = self.score, None
+        if score is not None and abs(score) > LANGSMITH_SCORE_MAX:
+            score, value = None, f"{score:,}"
         return {
             "key": self.key,
-            "score": self.score,
+            "score": score,
+            "value": value,
             "comment": self.comment,
             "metadata": self.metadata or None,
         }
@@ -121,7 +128,9 @@ class ForbiddenJudgment(BaseModel):
 
 
 class AnswerCorrectnessJudgment(BaseModel):
-    claims: list[ClaimJudgment] = []
+    # Required, not defaulted: a native reply without the list validated as "no claims"
+    # and graded every claim missing on the first dev bench (docs/11).
+    claims: list[ClaimJudgment]
     forbidden: list[ForbiddenJudgment] = []
     summary_consistency: Literal["consistent", "partial", "inconsistent"]
     notes: str = ""
@@ -134,7 +143,7 @@ class SentenceJudgment(BaseModel):
 
 
 class CitationJudgment(BaseModel):
-    items: list[SentenceJudgment] = []
+    items: list[SentenceJudgment]
 
 
 class OrderJudgment(BaseModel):
@@ -157,7 +166,7 @@ class ContradictionItem(BaseModel):
 
 
 class ContradictionJudgment(BaseModel):
-    items: list[ContradictionItem] = []
+    items: list[ContradictionItem]
 
 
 class ScopeJudgment(BaseModel):
@@ -178,6 +187,10 @@ _CITES_ONLY = re.compile(r"^\s*(?:\[\d{1,3}\]\s*)+[.;,]?\s*$")
 _EMPTY_LINE = re.compile(r"^(?:none(?: found)?|not applicable|n/?a)\.?$", re.IGNORECASE)
 _URL = re.compile(r"https?://\S+")
 _MARKDOWN_LINK = re.compile(r"\[[^\]]+\]\([^)]+\)")
+# Footnote markers: markdown `[^1]` and the baseline model's `[^36130e-00^]` result ids.
+_FOOTNOTE = re.compile(r"\[\^[^\]\s]+\]")
+LANGSMITH_SCORE_MAX = 99_999.9999
+JUDGE_ATTEMPTS = 2
 _EXT_ID = re.compile(r"^(?:[LA]\d{5}|NCD\s*\d+(?:\.\d+)*)$", re.IGNORECASE)
 # Doc types that name the same kind of document in the key and in docmeta (docs/11).
 _TYPE_GROUPS = (
@@ -415,7 +428,7 @@ def _judge_failed(key: str, meta: dict) -> Score:
     return Score(key, None, f"judge failed: {meta.get('judge_error', 'no result')}", {**meta, "error": True})
 
 
-def judge_call(schema: type[BaseModel], prompt_name: str, **values: object) -> tuple[Any, dict]:
+def judge_call(schema: type[BaseModel], prompt_name: str, check: Any = None, **values: object) -> tuple[Any, dict]:
     """One judge call on the evaluator model. Never raises.
 
     Always the base prompt set: evaluators must not drift with the prompts GEPA
@@ -425,20 +438,41 @@ def judge_call(schema: type[BaseModel], prompt_name: str, **values: object) -> t
     answer = values.pop("answer", None)
     if answer is not None:
         values["answer"] = answer
-    caller = structured("evaluator", schema)
+    prompt = render(prompt_name, "base", **values)
     meta: dict[str, Any] = {}
-    try:
-        result = caller.invoke(render(prompt_name, "base", **values))
-        meta["judge_mode"] = caller.last_mode
-    except Exception as exc:  # noqa: BLE001 - a judge failure is a None score, not a lost row
-        meta["judge_error"] = _clip(f"{type(exc).__name__}: {exc}", 300)
-        result = None
     tokens = 0
-    for message in getattr(caller, "messages", None) or []:
-        input_tokens, output_tokens, _ = token_usage(message)
-        tokens += input_tokens + output_tokens
+    result = None
+    # `check` names a verdict that parsed but covers none of what it was asked to grade;
+    # that is retried once. A failure of both structured rungs is not retried.
+    for attempt in range(JUDGE_ATTEMPTS):
+        caller = structured("evaluator", schema)
+        problem = None
+        try:
+            result = caller.invoke(prompt)
+            meta["judge_mode"] = caller.last_mode
+            problem = check(result) if check is not None else None
+        except Exception as exc:  # noqa: BLE001 - a judge failure is a None score, not a lost row
+            meta["judge_error"] = _clip(f"{type(exc).__name__}: {exc}", 300)
+            result = None
+        for message in getattr(caller, "messages", None) or []:
+            input_tokens, output_tokens, _ = token_usage(message)
+            tokens += input_tokens + output_tokens
+        if result is None:
+            break
+        if problem is None:
+            meta.pop("judge_error", None)
+            break
+        meta["judge_error"] = problem
+        meta["judge_retries"] = attempt + 1
+        result = None
     meta["judge_tokens"] = tokens
     return result, meta
+
+
+def _covers(expected: set, judged: set, what: str) -> str | None:
+    if expected and not expected & judged:
+        return f"judge returned no verdict for any {what}"
+    return None
 
 
 # --- deterministic metrics -----------------------------------------------------------
@@ -521,16 +555,17 @@ def citation_completeness(record: RunRecord | None, bench: BenchRecord) -> Score
 
         def cited(unit: str) -> bool:
             return bool(_CITATION.search(unit))
-    elif not found:
-        # The baseline's prose has no section headings (docs/11): the whole answer, minus
-        # a trailing list of links, and a URL or markdown link counts as a citation.
+    else:
+        # No Criteria / Codes sections - the baseline's prose, whatever headings it uses
+        # (docs/11): the whole answer minus a trailing list of links, where a URL, markdown
+        # link or footnote marker counts as a citation.
         units = sentences(_strip_trailing_links(answer.body_markdown))
-        scope = "whole answer (no section headings)"
+        scope = "whole answer (no Criteria / Codes sections)"
 
         def cited(unit: str) -> bool:
-            return bool(_CITATION.search(unit) or _URL.search(unit) or _MARKDOWN_LINK.search(unit))
-    else:
-        return _not_applicable(key, "the answer has no Criteria / Details or Codes sections")
+            return bool(
+                _CITATION.search(unit) or _URL.search(unit) or _MARKDOWN_LINK.search(unit) or _FOOTNOTE.search(unit)
+            )
     if not units:
         return _not_applicable(key, f"no sentences in {scope}")
     uncited = [unit for unit in units if not cited(unit)]
@@ -673,6 +708,9 @@ def answer_correctness(record: RunRecord | None, bench: BenchRecord, *, judge: b
             question=bench.question, key_summary=answer_key.summary,
             required_claims=_render_claims(answer_key), forbidden_claims=_render_forbidden(answer_key),
             answer=_judge_text(answer),
+            check=lambda result: _covers(
+                {claim.id for claim in answer_key.required_claims}, {claim.id for claim in result.claims}, "required claim"
+            ),
         )
         score = _judge_failed(key, meta) if result is None else _grade_answer(result, answer_key, meta)
     return [score, _search_efficiency(score, record)]
@@ -768,7 +806,12 @@ def citation_correctness(record: RunRecord | None, bench: BenchRecord, *, judge:
     if blocks:
         if not judge:
             return Score(key, None, "judge not run")
-        result, meta = judge_call(CitationJudgment, "eval_citation_correctness", question=bench.question, items="\n\n".join(blocks))
+        result, meta = judge_call(
+            CitationJudgment, "eval_citation_correctness", question=bench.question, items="\n\n".join(blocks),
+            check=lambda result: _covers(
+                set(range(len(sampled))) - unmapped, {item.index for item in result.items}, "cited sentence"
+            ),
+        )
         if result is None:
             return _judge_failed(key, meta)
         judged = {item.index: item for item in result.items}
@@ -809,6 +852,9 @@ def contradiction_handling(record: RunRecord | None, bench: BenchRecord, *, judg
         expected_contradictions="\n".join(f"x{index}. {text}" for index, text in enumerate(expected, start=1)),
         contradiction_lines="\n".join(f"- {line}" for line in answer.contradictions) or "(none recorded)",
         answer=_judge_text(answer),
+        check=lambda result: _covers(
+            set(range(1, len(expected) + 1)), {item.index for item in result.items}, "expected contradiction"
+        ),
     )
     if result is None:
         return _judge_failed(key, meta)

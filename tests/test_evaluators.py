@@ -13,6 +13,7 @@ from types import SimpleNamespace
 
 import pytest
 from langsmith.evaluation import EvaluationResult
+from pydantic import ValidationError
 
 from eval import evaluators
 from eval.evaluators import (
@@ -81,11 +82,15 @@ class FakeCaller:
 
 @pytest.fixture
 def judge(monkeypatch):
-    """`judge.answers[SchemaName] = value`; `judge.calls` records (schema, caller)."""
+    """`judge.answers[SchemaName] = value` (or a list, answered in turn, the last repeating);
+    `judge.calls` records (schema, caller)."""
     state = SimpleNamespace(answers={}, calls=[], error=None)
 
     def fake(role, schema, **kwargs):  # noqa: ANN001, ANN003, ANN202
-        caller = FakeCaller(state.answers.get(schema.__name__), state.error)
+        value = state.answers.get(schema.__name__)
+        if isinstance(value, list):
+            value = value.pop(0) if len(value) > 1 else value[0]
+        caller = FakeCaller(value, state.error)
         state.calls.append((schema.__name__, caller))
         return caller
 
@@ -361,10 +366,51 @@ def test_an_asserted_forbidden_claim_caps_answer_correctness(judge) -> None:
 
 
 def test_a_claim_the_judge_omitted_counts_as_missing(judge) -> None:
+    judge.answers["AnswerCorrectnessJudgment"] = _correctness([ClaimJudgment(id="c1", status="present")])
+    score = evaluators.answer_correctness(_record(), _bench(required_claims=_claims(("c1", True), ("c2", True))))[0]
+    assert score.score == pytest.approx(0.8 * 0.5 + 0.2, abs=1e-4)
+    assert "c2 (must) (judge omitted)" in score.comment
+
+
+def test_a_verdict_with_no_claims_is_retried_then_a_judge_failure(judge) -> None:
+    # Dev bench, glp1-path-002 / adv-glp1-002: a native reply without `claims` graded both answers 0.2.
+    with pytest.raises(ValidationError):
+        AnswerCorrectnessJudgment(summary_consistency="consistent")
     judge.answers["AnswerCorrectnessJudgment"] = _correctness([])
     score = evaluators.answer_correctness(_record(), _bench(required_claims=_claims(("c1", True))))[0]
-    assert score.score == 0.2
-    assert "judge omitted" in score.comment
+    assert score.score is None and score.metadata["error"] is True
+    assert "no verdict for any required claim" in score.comment
+    assert len(judge.calls) == 2
+
+
+def test_a_retry_that_covers_the_claims_is_graded(judge) -> None:
+    judge.answers["AnswerCorrectnessJudgment"] = [_correctness([]), _correctness([ClaimJudgment(id="c1", status="present")])]
+    score = evaluators.answer_correctness(_record(), _bench(required_claims=_claims(("c1", True))))[0]
+    assert score.score == 1.0
+    assert "judge_error" not in score.metadata and score.metadata["judge_retries"] == 1
+
+
+def test_a_citation_verdict_with_no_items_is_a_judge_failure(judge) -> None:
+    judge.answers["CitationJudgment"] = CitationJudgment(items=[])
+    record = _record("## Answer\n\nCovered [1].", citations=[_cite(1, "ev1", "doc_lcd")], documents=[_doc()], evidence=[_ev("ev1", "doc_lcd", "covered")])
+    score = evaluators.citation_correctness(record, _bench())
+    assert score.score is None and "no verdict for any cited sentence" in score.comment
+
+
+def test_a_score_outside_langsmiths_range_is_sent_as_a_value() -> None:
+    big = evaluators.Score("tokens", 586002, "586002 tokens").to_langsmith()
+    assert (big["score"], big["value"]) == (None, "586,002")
+    EvaluationResult(**big)
+    assert evaluators.Score("tokens", 9002, "x").to_langsmith()["score"] == 9002
+
+
+def test_citation_completeness_reads_a_headed_baseline_whole_and_counts_footnotes() -> None:
+    # Dev bench: cgm-elig-004's baseline used `###` headings (was not applicable) and
+    # adv-glp1-002 cited with `[^36130e-00^]` markers (was 0/11).
+    body = "Covered for pump users.[^ab12-00^]\n\n### Key Coverage Criteria\n\n1. **Use insulin**[^cd34-01^]\n2. Have a visit."
+    score = evaluators.citation_completeness(_record(body), _bench())
+    assert score.score == pytest.approx(2 / 3, abs=1e-4)
+    assert "whole answer" in score.comment
 
 
 def test_citation_correctness_samples_eight_evenly_spaced_sentences(judge) -> None:

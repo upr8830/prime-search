@@ -83,7 +83,10 @@ report runs the holdout twice and reports mean ± spread.
 
 - A metric that does not apply (no required evidence, expected contradiction, scope warning, governing
   document or citation) returns `score=None` with "not applicable: ..." and is left out of means. A failed
-  run (no answer) scores 0 on quality metrics. A judge failure is `None` with `metadata.error`.
+  run (no answer) scores 0 on quality metrics. A judge failure is `None` with `metadata.error`. The judge's
+  claim and item lists are required fields, and a verdict that covers none of the expected claims, sentences
+  or contradictions is retried once before it counts as a judge failure. A score outside LangSmith's
+  +/-99999.9999 range (a prime run's `tokens`) is sent to LangSmith as a string `value`; the local JSON keeps it.
 - `evidence_recall` and `currency` resolve a key's document through `data/searchbench/sources/index.json` and
   the key's `sources`: external id (also read from MCD URLs, `lcdid=33822` -> L33822), then normalized URL,
   then host plus a compatible doc type only when the key names no id. Key phrases and dates match after NFKC,
@@ -97,8 +100,9 @@ report runs the holdout twice and reports mean ± spread.
 - `citation_correctness` samples 8 evenly spaced cited sentences; a citation number with no passage is
   unsupported without a judge call. The baseline scores 0 on it and on `evidence_recall` by construction: its
   citations are URLs with no stored passage.
-- `citation_completeness` reads the whole answer when it has no section headings (the baseline), where a URL
-  or markdown link counts as a citation.
+- `citation_completeness` reads the whole answer when it has no Criteria / Codes sections (the baseline,
+  whatever headings it uses), where a URL, markdown link or footnote marker (`[^1]`, `[^36130e-00^]`) counts
+  as a citation.
 - `scope_handling` applies when `expected_scope_warning` is set; the warning counts in the field or stated in
   the text. `primary_source_ratio` takes a citation's tier from its document, else from its URL.
 - `composite`: a not-applicable component takes `answer_correctness`; the result is clamped to [0, 1].
