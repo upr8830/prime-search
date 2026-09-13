@@ -78,6 +78,32 @@ Evaluator noise control: LLM-judge evaluators run with a fixed rubric prompt, te
 `must` structure so the judge is mostly checking presence rather than free-form grading. The final
 report runs the holdout twice and reports mean ± spread.
 
+**As built (task 2.3).** `eval/evaluators.py` implements every key above (`score_record`, `composite`,
+`feedback_text`, and `EVALUATORS` for LangSmith). Rules the table leaves open:
+
+- A metric that does not apply (no required evidence, expected contradiction, scope warning, governing
+  document or citation) returns `score=None` with "not applicable: ..." and is left out of means. A failed
+  run (no answer) scores 0 on quality metrics. A judge failure is `None` with `metadata.error`.
+- `evidence_recall` and `currency` resolve a key's document through `data/searchbench/sources/index.json` and
+  the key's `sources`: external id (also read from MCD URLs, `lcdid=33822` -> L33822), then normalized URL,
+  then host plus a compatible doc type only when the key names no id. Key phrases and dates match after NFKC,
+  hyphen and whitespace folding. Index entries resolved by search (`needs_review`) are flagged in the comment
+  and never supply a governing date.
+- `currency` is the mean of "governing documents cited" and "governing date stated" (in `effective_dates` or
+  the answer text), plus, for change detection, the judge's ordering verdict (ordered with dates 1, dated but
+  not ordered 0.5, undated 0, no change with a date 1, no change without one 0.5).
+- `answer_correctness` = 0.8 x must-weighted claims present + 0.2 x summary consistency (1 / 0.5 / 0); any
+  asserted forbidden claim caps it at 0.25. `search_efficiency` is returned with it.
+- `citation_correctness` samples 8 evenly spaced cited sentences; a citation number with no passage is
+  unsupported without a judge call. The baseline scores 0 on it and on `evidence_recall` by construction: its
+  citations are URLs with no stored passage.
+- `citation_completeness` reads the whole answer when it has no section headings (the baseline), where a URL
+  or markdown link counts as a citation.
+- `scope_handling` applies when `expected_scope_warning` is set; the warning counts in the field or stated in
+  the text. `primary_source_ratio` takes a citation's tier from its document, else from its URL.
+- `composite`: a not-applicable component takes `answer_correctness`; the result is clamped to [0, 1].
+  Judges use the base prompts `prompts/eval_*.md` on the evaluator model, never an optimized set.
+
 ## 3. Bench runner
 
 `eval/run_eval.py`:
