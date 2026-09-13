@@ -307,7 +307,9 @@ export function reduceEvents(events: RunEvent[], start: RunView = initialRun()):
 }
 
 /** A record from `GET /runs/{id}/events` (or a JSONL line) as a reducer event. */
-export function toRunEvent(record: Pick<ApiEvent, "type" | "seq" | "payload">): RunEvent | null {
+export function toRunEvent(
+  record: Pick<ApiEvent, "type" | "payload"> & { seq: number | null },
+): RunEvent | null {
   if (!isEventType(record.type)) return null;
   return { type: record.type, seq: record.seq ?? null, payload: record.payload } as RunEvent;
 }

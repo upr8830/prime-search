@@ -173,7 +173,8 @@ describe("reduceRun", () => {
 
   it("tells a run recorded before plan code apart from a fallback plan", () => {
     seq = 0;
-    const { code: _code, ...withoutCode } = plan;
+    const withoutCode: Record<string, unknown> = { ...plan };
+    delete withoutCode.code;
     expect(reduceRun(initialRun(), ev("plan", withoutCode)).planCodeRecorded).toBe(false);
     const fallback = reduceRun(initialRun(), ev("plan", { ...plan, code: null }));
     expect([fallback.planCodeRecorded, fallback.planCode]).toEqual([true, null]);
