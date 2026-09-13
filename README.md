@@ -57,6 +57,20 @@ curl -s -X POST localhost:8765/feedback -H 'content-type: application/json' \
 Feedback reaches LangSmith when tracing is on, and is always appended to `data/feedback.jsonl`, which stays
 local.
 
+## UI
+
+The side-by-side harness (`docs/07-ui-spec.md`) runs against the API above:
+
+```bash
+uv run python -m prime_search.api          # terminal 1: the API on PRIME_API_PORT (default 8765)
+cd ui && pnpm install && pnpm dev          # terminal 2: http://localhost:3000
+```
+
+The UI reads `PRIME_API_HOST` / `PRIME_API_PORT` from the shell or the repo-root `.env`, the same variables
+the API reads. `/` compares the starter and PRIME on one question; `/runs`, `/runs/<id>`, `/docs/...` and
+`/bench` replay past runs and the latest bench report. In `ui/`: `pnpm test` (vitest), `pnpm lint`,
+`pnpm exec tsc --noEmit`, and `pnpm gen:types` to regenerate `src/types/api.ts` from a running API.
+
 ## How it works
 
 A LangGraph pipeline — `understand → plan → dispatch → search sub-agents → collect → judge →

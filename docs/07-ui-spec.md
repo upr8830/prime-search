@@ -156,3 +156,50 @@ the contract stays in sync).
 - Status colors: supported green, contested amber, weak grey, unresolved red — always with a text
   label, never color alone.
 - Keep everything server-independent of LangSmith: the UI must work with tracing off.
+
+## 11. As built (task 2.5)
+
+- **Stack:** Next 15.5 (App Router, every page a client component: the API is local and SSR adds nothing),
+  React 19.1, Tailwind 4, `@tanstack/react-query`, `react-markdown` + `remark-gfm`, `vitest` for pure logic.
+- **API origin:** `ui/api-origin.mjs`, shared by `next.config.ts` and `pnpm gen:types`. It takes
+  `PRIME_API_HOST`/`PRIME_API_PORT` from the shell, then those two keys only from the repo-root `.env`, then
+  127.0.0.1:8765. REST goes through the `/api/:path*` rewrite; `EventSource` connects to
+  `NEXT_PUBLIC_PRIME_API_ORIGIN` directly, because a dev rewrite can buffer the stream.
+- **Types:** generated into `ui/src/types/api.ts` (not `src/types.ts`) and committed, with aliases in
+  `src/lib/types.ts`. Stream-only payloads and the bench report are hand-typed in `src/lib/events.ts` and
+  `src/lib/types.ts`.
+- **One reducer** (`src/lib/reducer.ts`) feeds the live view and the replay, and absorbs the stream as
+  emitted:
+  - applies each `seq` once; frames without an id always apply;
+  - the `answer` event replaces streamed tokens;
+  - pairs the baseline's two `search` frames and reads both `task.done` shapes;
+  - names task origins from `task_id` (`-critic{k}`);
+  - tells the API's synthetic interrupted finish from a real failure;
+  - builds the search tree in arrival order, since no event marks a round boundary.
+- **`useRunEvents`:**
+  - one listener per named event, closing on `run.finished`;
+  - the browser's own reconnect resumes with `Last-Event-ID`;
+  - a CLOSED stream is replayed from `GET /runs/{id}/events` and reopened (1/2/4 s, 5 tries);
+  - a repeated `lastEventId` counts as no id, because EventSource keeps the previous id on id-less frames.
+- **Compare view:**
+  - Ask starts both runs at once, and a 422 `detail` shows inline;
+  - presets are grouped by domain and tier and show their split;
+  - "opt" is disabled until GEPA writes optimized prompts;
+  - "hide the starter pane" posts `ui.compare_toggled`, and asking again posts `ui.rerun`.
+- **Answer and evidence:**
+  - `[n]` becomes a hover and focus card (quote, stance, confidence, tier, date) linking to
+    `/docs/{run}/{doc}?p=<paragraph>`, and posts `ui.evidence_opened` from a citation or an evidence row;
+  - Sources URLs render as links;
+  - claim flags post `ui.claim_flagged` and join `claim_ids_flagged`.
+- **Footer and feedback:**
+  - The footer prefers the saved record's `usage` once the run has ended.
+  - Feedback opens at `run.finished`, since `POST /feedback` needs the record. It then locks with
+    "LangSmith ✓" or "saved locally".
+- **Plan tab:** shows `code` from the `plan` event. Older runs say it was not recorded; a fallback plan says
+  there is none.
+- **Checks:**
+  - `pnpm test` (reducer, citations, and a replay of a recorded run when present);
+  - `pnpm exec tsc --noEmit`;
+  - `pnpm lint`.
+
+  `pnpm build` shares `.next` with a running `pnpm dev`, so run it with the dev server stopped.
