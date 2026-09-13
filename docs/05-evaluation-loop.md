@@ -192,6 +192,35 @@ Guardrails:
   negative result honestly.
 - The optimized prompts are committed as artifacts with the diff visible in the PR.
 
+**As built (task 3.1).** `eval/gepa/adapter.py` (`PrimeAdapter`) and `eval/gepa/run_gepa.py`.
+
+- **Scope (user decision, docs/11):** `plan.md` and `judge.md` only (the cut list's item 5), with
+  `max_metric_calls` 60. `answer_correctness` is the majority of three judge calls (§2 as built).
+  `--components` and `--max-metric-calls` restore the full configuration.
+- **Candidates:** each is registered as an in-memory prompt set `gepa-<sha>` (`prompts.register_prompt_set`)
+  and passed to `run_prime(prompt_set=...)`, so concurrent runs of different candidates never share text.
+  The record's `request.prompt_set` stays `base`; the trace carries `prompt_set:gepa-<sha>`. A candidate
+  that drops a placeholder of its base prompt scores 0 without running.
+- **Rollout:** a deep `run_prime` on one train or dev record, budget capped at `max_searches=20,
+  max_agents=4`, Tavily cache on, traced in project `prime-search-gepa` with `source:gepa`. It is scored with
+  `score_record` and `composite`; a composite left empty by a judge failure is re-scored once, then counts
+  as 0.
+- **Feedback:** `feedback_text` plus what the component being optimized did on that run: the plan's
+  branches and tasks per round, the judge's verdicts, the critic's reports.
+- **Reflection:** the critic model (`critic_model()`), with `prompts/gepa_reflection.md`. That is GEPA's
+  `<curr_param>`/`<side_info>` template plus PRIME's context and rules: general rules only, no example
+  questions or ids, keep placeholders and the output format.
+- **GEPA settings:** `reflection_minibatch_size=3`, Pareto candidate selection, round-robin components,
+  `cache_evaluation=True`, `raise_on_exception=False`, checkpoints in `runs/gepa/<timestamp>`
+  (`--run-dir` resumes).
+- **Guardrails:** `--split` accepts only `train`; dev is the Pareto set, and holdout is refused by both the
+  runner and the adapter. `--dry-run` prints the plan and the cost estimate and spends nothing.
+- **Output:** `reports/gepa-run.json` holds every candidate's parents, dev scores, discovery point, changed
+  components and diff against base, the Pareto front, and every rollout's run id and score. Only when the
+  best candidate beats the seed on dev does the runner write `prime_search/prompts/optimized/<component>.md`
+  for each changed component; an unchanged component's older file is removed. Acceptance on holdout is
+  task 3.2's.
+
 ## 6. What "the loop" looks like in the technical statement
 
 ```

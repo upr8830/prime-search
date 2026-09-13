@@ -10,7 +10,7 @@
 #   make ask Q="Is a therapeutic CGM covered under Medicare for a type 2 diabetic not on insulin?"
 #   make ask Q="..." ARGS="--mode baseline"
 #   make bench ARGS="--mode prime --split dev --prompt-set base"
-#   make gepa ARGS="--split train"
+#   make gepa ARGS="--dry-run"   # plan and cost estimate; spends nothing
 #   make dev-api
 #   make dev-ui
 
