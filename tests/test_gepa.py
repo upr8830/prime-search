@@ -109,6 +109,7 @@ def test_a_candidate_that_drops_a_placeholder_scores_zero_without_running(fakes)
     adapter = PrimeAdapter(TRAIN, budget=Budget(), runner=fakes.runner, scorer=fakes.scorer)
     batch = adapter.evaluate(TRAIN[:3], candidate, capture_traces=True)
     assert batch.scores == [0.0, 0.0, 0.0]
+    assert batch.num_metric_calls == 0  # nothing ran, so nothing counts against the budget
     assert fakes.calls == []
     assert "was not run" in batch.trajectories[0].feedback
 
@@ -131,6 +132,99 @@ def test_the_reflective_dataset_pairs_each_components_output_with_the_feedback(f
     json.dumps(dataset)  # GEPA serializes it into the reflection prompt
 
 
+def test_a_record_already_run_with_a_candidate_is_reused_not_paid_again(fakes) -> None:
+    """GEPA re-evaluates a parent on each minibatch and caches only dev (spec review)."""
+    adapter = PrimeAdapter(TRAIN, budget=Budget(), runner=fakes.runner, scorer=fakes.scorer)
+    candidate = _candidate()
+    try:
+        first = adapter.evaluate(TRAIN[:3], candidate)
+        second = adapter.evaluate(TRAIN[1:4], candidate, capture_traces=True)
+    finally:
+        prompts.unregister_prompt_set(prompt_set_name(candidate))
+    assert (first.num_metric_calls, second.num_metric_calls) == (3, 1)
+    assert len(fakes.calls) == 4
+    assert second.trajectories[0].run_id == first.outputs[1].run_id
+    assert len(adapter.log) == 4  # paid rollouts only
+
+
+def test_the_rollout_log_and_reuse_survive_a_resume(fakes) -> None:
+    candidate = _candidate()
+    adapter = PrimeAdapter(TRAIN, budget=Budget(), runner=fakes.runner, scorer=fakes.scorer)
+    adapter.started_at = "2026-09-14T10:00:00+00:00"
+    try:
+        adapter.evaluate(TRAIN[:2], candidate)
+        state = adapter.get_adapter_state()
+        json.dumps(state)  # GEPA writes it into its checkpoint
+
+        resumed = PrimeAdapter(TRAIN, budget=Budget(), runner=fakes.runner, scorer=fakes.scorer)
+        resumed.started_at = "a later start"
+        resumed.set_adapter_state(state)
+        assert resumed.log == adapter.log and resumed.started_at == "2026-09-14T10:00:00+00:00"
+        batch = resumed.evaluate(TRAIN[:2], candidate)
+    finally:
+        prompts.unregister_prompt_set(prompt_set_name(candidate))
+    assert batch.num_metric_calls == 0 and len(fakes.calls) == 2
+
+
+def test_gepa_proposes_and_keeps_a_better_candidate_through_the_adapter(tmp_path) -> None:
+    """End to end with the real `gepa.optimize` and fake runs. Spec review: without
+    `propose_new_texts` on the adapter, GEPA 0.1.4 made no candidate and never called the
+    reflection model, and the tests that called the adapter directly could not see it."""
+    import gepa
+
+    train = TRAIN[:4]
+    dev = [record for record in RECORDS if record.split == "dev"][:2]
+    reflections: list[str] = []
+
+    def runner(request, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        record = _record(request, kwargs["ws"].run_id)
+        prompt_set = kwargs["prompt_set"]
+        edited = "Rule " in prompts.load("plan", prompt_set) + prompts.load("judge", prompt_set)
+        record.usage.searches = 1 if edited else 0
+        return record
+
+    def scorer(record, bench):  # noqa: ANN001, ANN202
+        value = 0.9 if record.usage.searches == 1 else 0.3
+        return {
+            "answer_correctness": Score("answer_correctness", value, "claims present" if value > 0.5 else "missing: c1"),
+            "search_cost": Score("search_cost", 0, "0 calls"),
+        }
+
+    def reflect(prompt):  # noqa: ANN001, ANN202
+        target = "plan" if "{workspace_api}" in str(prompt) else "judge"
+        reflections.append(target)
+        return "```\n" + prompts.load(target) + f"\nRule {len(reflections)}.\n```"
+
+    adapter = PrimeAdapter([*train, *dev], budget=Budget(), concurrency=2, runner=runner, scorer=scorer)
+    seed = {"plan": prompts.load("plan"), "judge": prompts.load("judge")}
+    result = gepa.optimize(
+        seed_candidate=seed,
+        trainset=train,
+        valset=dev,
+        adapter=adapter,
+        reflection_lm=reflect,
+        reflection_prompt_template=prompts.load("gepa_reflection"),
+        reflection_minibatch_size=2,
+        candidate_selection_strategy="pareto",
+        module_selector="round_robin",
+        max_metric_calls=14,
+        cache_evaluation=True,
+        run_dir=str(tmp_path / "gepa"),
+        seed=0,
+        raise_on_exception=True,
+    )
+
+    assert reflections, "the reflection model was never called"
+    assert len(result.candidates) > 1
+    best = result.candidates[result.best_idx]
+    assert result.val_aggregate_scores[result.best_idx] > result.val_aggregate_scores[0]
+    assert "Rule " in best["plan"] + best["judge"]
+    assert not candidate_problems(best)  # the fenced code inside plan.md survived extraction
+    # GEPA's engine counts every dev record it sends, even one the adapter reuses, so its
+    # count is never below the paid runs: the cap can stop early, never overspend.
+    assert 0 < len(adapter.log) <= result.total_metric_calls
+
+
 def test_the_runner_refuses_holdout_and_any_split_but_train(capsys) -> None:
     assert run_gepa.main(["--split", "holdout"]) == 1
     assert "holdout is never used" in capsys.readouterr().err
@@ -149,6 +243,7 @@ def test_a_dry_run_prints_the_plan_and_estimate_and_spends_nothing(offline_crede
     assert "max metric calls 60" in out
     assert "20 searches, 4 agents per round" in out
     assert "estimated cost $36-$57" in out
+    assert "up to 11 more past the cap" in out
 
 
 def _result(seed: dict[str, str], best: dict[str, str], scores: list[float]) -> SimpleNamespace:

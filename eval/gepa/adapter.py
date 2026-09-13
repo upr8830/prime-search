@@ -18,7 +18,7 @@ import threading
 from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Any
 
 from gepa import EvaluationBatch
@@ -160,6 +160,11 @@ def usage_view(record: RunRecord | None) -> str:
 class PrimeAdapter:
     """GEPA's `GEPAAdapter` for PRIME. `runner` and `scorer` are injectable for tests."""
 
+    # GEPA 0.1.4 reads this attribute directly; without it every proposal failed inside
+    # GEPA's own try block, so no candidate was ever made and the budget went on re-running
+    # the seed (spec review). None means GEPA's reflection model writes the new texts.
+    propose_new_texts = None
+
     def __init__(
         self,
         records: Sequence[BenchRecord],
@@ -174,8 +179,13 @@ class PrimeAdapter:
         self.concurrency = max(1, concurrency)
         self.runner = runner
         self.scorer = scorer
-        # Every rollout, for reports/gepa-run.json.
+        # Every paid rollout, for reports/gepa-run.json.
         self.log: list[dict[str, Any]] = []
+        # (prompt set, question id) -> its rollout. GEPA re-evaluates a parent on each new
+        # minibatch and caches only dev evaluations, so without this a parent's train run
+        # would be paid again every iteration.
+        self._memo: dict[tuple[str, str], Rollout] = {}
+        self.started_at: str | None = None
         self._lock = threading.Lock()
 
     def evaluate(
@@ -191,11 +201,19 @@ class PrimeAdapter:
             rollouts = [
                 Rollout(record.id, None, "not_run", 0.0, None, note, "", "", "", "", error=note) for record in batch
             ]
+            paid: list[Rollout] = []
         else:
             prompts.register_prompt_set(name, candidate)
-            with ThreadPoolExecutor(max_workers=max(1, min(self.concurrency, len(batch)))) as pool:
-                rollouts = list(pool.map(lambda record: self._rollout(record, name), batch))
+            with self._lock:
+                known = {record.id: self._memo.get((name, record.id)) for record in batch}
+            todo = [record for record in batch if known[record.id] is None]
+            with ThreadPoolExecutor(max_workers=max(1, min(self.concurrency, len(todo) or 1))) as pool:
+                paid = list(pool.map(lambda record: self._rollout(record, name), todo))
+            fresh = {rollout.question_id: rollout for rollout in paid}
+            rollouts = [known[record.id] or fresh[record.id] for record in batch]
         with self._lock:
+            for rollout in paid:
+                self._memo[(name, rollout.question_id)] = rollout
             self.log.extend(
                 {
                     "prompt_set": name,
@@ -206,13 +224,37 @@ class PrimeAdapter:
                     "composite": rollout.composite,
                     "error": rollout.error,
                 }
-                for rollout in rollouts
+                for rollout in paid
             )
         return EvaluationBatch(
             outputs=rollouts,
             scores=[rollout.score for rollout in rollouts],
             trajectories=rollouts if capture_traces else None,
+            # GEPA's metric budget counts paid runs only: a candidate that was not run and
+            # a rollout reused from the memo cost nothing.
+            num_metric_calls=len(paid),
         )
+
+    def get_adapter_state(self) -> dict[str, Any]:
+        """Saved in GEPA's checkpoint, so a `--run-dir` resume keeps the rollout log, the
+        memo and the original start time."""
+        with self._lock:
+            return {
+                "log": [dict(entry) for entry in self.log],
+                "memo": [asdict(rollout) | {"prompt_set": key[0]} for key, rollout in self._memo.items()],
+                "started_at": self.started_at,
+            }
+
+    def set_adapter_state(self, state: Mapping[str, Any]) -> None:
+        with self._lock:
+            self.log = [dict(entry) for entry in state.get("log", [])]
+            self._memo = {}
+            for item in state.get("memo", []):
+                data = dict(item)
+                prompt_set = data.pop("prompt_set")
+                self._memo[(prompt_set, data["question_id"])] = Rollout(**data)
+            if state.get("started_at"):
+                self.started_at = state["started_at"]
 
     def _rollout(self, bench: BenchRecord, prompt_set: str) -> Rollout:
         request = RunRequest(

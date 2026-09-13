@@ -50,17 +50,24 @@ def gepa_budget(settings: Any) -> Budget:
     return settings.budget("deep").model_copy(update={"max_searches": 20, "max_agents": 4})
 
 
-def estimate(max_metric_calls: int, concurrency: int) -> dict[str, float]:
+def estimate(max_metric_calls: int, concurrency: int, *, minibatch: int = 3, dev_size: int = 5) -> dict[str, float]:
     """Cost and wall time from the measured per-run figures. Reflection calls are extra
-    and small (one critic-model call per GEPA iteration)."""
+    and small (one critic-model call per GEPA iteration).
+
+    GEPA checks the cap only between iterations, so the last one can finish past it: a new
+    parent's minibatch, the child's minibatch and a dev evaluation (spec review)."""
     low, high = COST_PER_EVALUATION
     hours = max_metric_calls * MINUTES_PER_EVALUATION / 60
+    overshoot = 2 * minibatch + dev_size
     return {
         "cost_low": round(max_metric_calls * low, 2),
         "cost_high": round(max_metric_calls * high, 2),
         "hours_sequential": round(hours, 1),
         # A minibatch is 3 records, so more than 3 at a time only speeds up dev evaluations.
         "hours_parallel": round(hours / max(1, min(concurrency, 3)), 1),
+        "overshoot_runs": overshoot,
+        "overshoot_cost_low": round(overshoot * low, 2),
+        "overshoot_cost_high": round(overshoot * high, 2),
     }
 
 
@@ -223,7 +230,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     get_settings.cache_clear()
     settings = get_settings()
     budget = gepa_budget(settings)
-    cost = estimate(args.max_metric_calls, args.concurrency)
+    cost = estimate(args.max_metric_calls, args.concurrency, minibatch=args.minibatch, dev_size=len(dev))
     print(f"GEPA on {', '.join(components)}: train {len(train)} records, dev {len(dev)} (holdout never used)")
     print(f"max metric calls {args.max_metric_calls}, reflection minibatch {args.minibatch}, {args.concurrency} runs at a time")
     print(
@@ -233,6 +240,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(
         f"estimated cost ${cost['cost_low']:.0f}-${cost['cost_high']:.0f}; about {cost['hours_parallel']} h "
         f"({cost['hours_sequential']} h one run at a time)"
+    )
+    print(
+        f"the last iteration can run up to {cost['overshoot_runs']} more past the cap "
+        f"(${cost['overshoot_cost_low']:.0f}-${cost['overshoot_cost_high']:.0f})"
     )
     if args.dry_run:
         return 0
@@ -245,6 +256,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     run_dir = Path(args.run_dir or f"runs/gepa/{started:%Y%m%d-%H%M}")
     seed = {name: prompts.load(name, "base") for name in components}
     adapter = PrimeAdapter([*train, *dev], budget=budget, concurrency=args.concurrency)
+    adapter.started_at = started.isoformat()  # a resume restores the first run's start
     result = gepa.optimize(
         seed_candidate=seed,
         trainset=train,
@@ -278,7 +290,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         max_metric_calls=args.max_metric_calls,
         minibatch=args.minibatch,
         run_dir=run_dir.as_posix(),
-        started_at=started,
+        started_at=datetime.fromisoformat(adapter.started_at),
         finished_at=datetime.now(UTC),
     )
     write_artifacts(result, report, seed=seed, components=components)

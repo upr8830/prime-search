@@ -200,7 +200,7 @@ Guardrails:
 - **Candidates:** each is registered as an in-memory prompt set `gepa-<sha>` (`prompts.register_prompt_set`)
   and passed to `run_prime(prompt_set=...)`, so concurrent runs of different candidates never share text.
   The record's `request.prompt_set` stays `base`; the trace carries `prompt_set:gepa-<sha>`. A candidate
-  that drops a placeholder of its base prompt scores 0 without running.
+  that drops a placeholder of its base prompt scores 0 without running and uses no metric calls.
 - **Rollout:** a deep `run_prime` on one train or dev record, budget capped at `max_searches=20,
   max_agents=4`, Tavily cache on, traced in project `prime-search-gepa` with `source:gepa`. It is scored with
   `score_record` and `composite`; a composite left empty by a judge failure is re-scored once, then counts
@@ -212,7 +212,13 @@ Guardrails:
   questions or ids, keep placeholders and the output format.
 - **GEPA settings:** `reflection_minibatch_size=3`, Pareto candidate selection, round-robin components,
   `cache_evaluation=True`, `raise_on_exception=False`, checkpoints in `runs/gepa/<timestamp>`
-  (`--run-dir` resumes).
+  (`--run-dir` resumes). The adapter sets `propose_new_texts = None`, which GEPA 0.1.4 reads directly.
+  GEPA caches only dev evaluations and re-evaluates a parent on each new minibatch, so the adapter also
+  reuses a rollout it already paid for (same prompt set, same record). A minibatch reports only its paid
+  runs as `num_metric_calls`; GEPA counts a dev evaluation per record sent, reused or not, so the cap bounds
+  paid runs from above. The rollout log, that reuse cache and the start time go into GEPA's checkpoint
+  (`get_adapter_state`). The cap is checked between iterations, so the last one can finish up to
+  2 × minibatch + dev runs past it; `--dry-run` prints that too.
 - **Guardrails:** `--split` accepts only `train`; dev is the Pareto set, and holdout is refused by both the
   runner and the adapter. `--dry-run` prints the plan and the cost estimate and spends nothing.
 - **Output:** `reports/gepa-run.json` holds every candidate's parents, dev scores, discovery point, changed

@@ -31,7 +31,7 @@ metadata (title, tier, dates, paragraph count).
 Set on the root run via `tracing_v2_enabled(project_name, tags)` and `config["metadata"]` exactly
 as the starter does, so the two modes are directly comparable in the LangSmith UI.
 
-Tags: `mode:<baseline|prime>`, `depth:<fast|deep>`, `prompt_set:<base|optimized|gepa>`,
+Tags: `mode:<baseline|prime>`, `depth:<fast|deep>`, `prompt_set:<base|optimized|gepa-<sha>>` (GEPA runs also carry `gepa:<split>` and `candidate:<gepa-sha>`, in project `prime-search-gepa`),
 `model:<root>`, `subagent:<model>`, `domain:<cgm|glp1|...>`, `qtype:<...>`, `source:<ui|cli|bench|gepa>`,
 `fallback:<...>` when any fallback fires, `bench:<split>` when applicable.
 
