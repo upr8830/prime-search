@@ -142,7 +142,8 @@ The UI's thumbs up/down and comment on any run:
 
 1. `POST /feedback {run_id, thumbs, comment, claim_ids_flagged?}`.
 2. API writes `langsmith.Client().create_feedback(run_id=<trace root>, key="user_thumbs",
-   score=1|0, comment=...)` and appends to `data/feedback.jsonl`.
+   score=1|0, comment=...)` and appends to `data/feedback.jsonl`. As built (task 2.4), it also sends
+   `user_comment` and `user_flagged_claims`; the line shape is in 06 §3.
 3. `eval/searchbench/from_feedback.py` (manual step) lists thumbs-down runs on questions not yet in
    SearchBench and drafts new records (question, run's answer as a starting point for the key) into
    `data/searchbench/candidates.jsonl` for human validation.

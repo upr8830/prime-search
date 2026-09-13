@@ -22,14 +22,17 @@ from sse_starlette import EventSourceResponse
 
 from eval.searchbench.schema import DATASET, load_records
 from prime_search import events
-from prime_search.api import runs, sse
+from prime_search.api import feedback, runs, sse
 from prime_search.api.models import (
     BenchQuestion,
     DocView,
     Event,
+    FeedbackIn,
+    Ok,
     ParagraphOut,
     RunStarted,
     RunSummary,
+    UiEventIn,
 )
 from prime_search.config import get_settings
 from prime_search.phi import patient_details
@@ -259,3 +262,25 @@ def bench_summary() -> dict[str, Any]:
     except (OSError, ValueError) as exc:
         _log.warning("api.report_unreadable", path=str(LATEST_REPORT), error=str(exc))
         return {"missing": True, "error": str(exc)}
+
+
+# --- feedback ------------------------------------------------------------------------------
+
+
+@app.post("/feedback", response_model=Ok)
+def post_feedback(body: FeedbackIn) -> Ok:
+    """Thumbs, comment and flagged claims to LangSmith and `data/feedback.jsonl` (docs/05 §4).
+
+    `langsmith` in the response says whether LangSmith has it; the file always does.
+    """
+    record = runs.load_record(body.run_id)
+    if record is None:
+        raise _not_found(body.run_id)
+    reject_patient_details(body.comment, "comment")
+    return feedback.record_feedback(record, body)
+
+
+@app.post("/ui-event", response_model=Ok)
+def post_ui_event(body: UiEventIn) -> Ok:
+    """UI interactions to `data/ui-events.jsonl` (docs/06 §8)."""
+    return feedback.record_ui_event(body)

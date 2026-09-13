@@ -47,6 +47,15 @@ Metadata: `run_id`, `question_id`, `question`, `git_sha`, `budget` (as dict), `m
 | `user_flagged_claims` | UI (optional) | none; comment lists claim ids |
 | evaluator keys from 05 §2 | bench | as defined |
 
+**As built (task 2.4).** `POST /feedback {run_id, thumbs: "up"|"down", comment?, claim_ids_flagged?}` sends
+`user_thumbs` (score 1/0, carrying the comment), `user_comment` (only when a comment is given) and
+`user_flagged_claims` (comment = the ids, comma-separated) to the run's root trace
+(`RunRecord.langsmith_trace_id`, 02 §2.1). It then appends `{ts, run_id, question_id, question, mode, thumbs,
+score, comment, claim_ids_flagged, langsmith: {sent, trace_id, error}}` to `data/feedback.jsonl`. LangSmith is
+skipped when the run has no trace id or tracing is off, and a LangSmith error never fails the request; the
+response `{ok, langsmith}` says whether it was sent. A comment carrying patient-level detail is rejected with
+422 (01 §8). `data/feedback.jsonl` and `data/ui-events.jsonl` are local, via `data/.gitignore`.
+
 ## 4. Local events and run records
 
 `events.emit(run_id, type, payload)`:
@@ -92,4 +101,5 @@ The event stream records UI interactions too: `ui.evidence_opened`, `ui.claim_fl
 `ui.compare_toggled`, `ui.rerun`. These are appended to `data/ui-events.jsonl` via `POST /ui-event`.
 Not used by any automated loop in this delivery; they exist so the "combine human behavior with agent
 traces" story in the technical statement is backed by real data, and so the roadmap's feedback-driven
-skill learning has an input. Keep the endpoint and the file; skip any analysis beyond counts.
+skill learning has an input. Keep the endpoint and the file; skip any analysis beyond counts. As built (task 2.4): each line is
+`{ts, run_id, type, payload}`, `run_id` is optional, and any other `type` is rejected with 422.

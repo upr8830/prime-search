@@ -18,11 +18,14 @@ __all__ = [
     "BenchQuestion",
     "DocView",
     "Event",
+    "FeedbackIn",
     "Ok",
     "ParagraphOut",
     "RunStarted",
     "RunStatus",
     "RunSummary",
+    "UiEventIn",
+    "UiEventType",
 ]
 
 # RunRecord's statuses plus `interrupted`: saved as running, but no process is running
@@ -55,6 +58,27 @@ class Event(BaseModel):
     type: str
     seq: int
     payload: Any = None
+
+
+class FeedbackIn(BaseModel):
+    """`POST /feedback` (docs/07 §7). `thumbs` maps to `user_thumbs` 1 / 0 (06 §3)."""
+
+    run_id: str
+    thumbs: Literal["up", "down"]
+    comment: str | None = Field(default=None, max_length=4000)
+    claim_ids_flagged: list[str] = Field(default_factory=list)
+
+
+# docs/06 §8's four interaction types; anything else is rejected.
+UiEventType = Literal["ui.evidence_opened", "ui.claim_flagged", "ui.compare_toggled", "ui.rerun"]
+
+
+class UiEventIn(BaseModel):
+    """`POST /ui-event` (docs/07 §7, 06 §8)."""
+
+    run_id: str | None = None
+    type: UiEventType
+    payload: dict[str, Any] = Field(default_factory=dict)
 
 
 class Ok(BaseModel):
