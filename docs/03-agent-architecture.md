@@ -47,7 +47,7 @@ if not, it returns a state that routes straight to `synthesize`.
 
 ## 2. Node: `understand`
 
-Model: judge model (Kimi-K2.6), structured output `QueryUnderstanding`, temperature 0.
+Model: judge model (DeepSeek-V4-Flash), structured output `QueryUnderstanding`, temperature 0.
 
 Prompt `prompts/understand.md` — classifies domain, question type, entities, time sensitivity, and
 sets `scope_warning` when the question is outside CMS/CGM/GLP-1 (S6). Includes a short glossary
@@ -142,6 +142,17 @@ round. It must not create tasks for branches already `resolved`. The judge canno
 
 The judge is the cheap, frequent check ("is there enough?"). The critic is the expensive, single
 check ("is it right?").
+
+**As built (task 2.2).** `collect` has already advanced `round` when the judge runs, so a verdict
+judges round `round − 1` and its tasks belong to round `round`. `max_rounds` counts every search
+round, the initial one included, so new tasks are allowed only while `round < max_rounds`, at deep
+depth, and while searches, tokens and at least 30 s remain. The harness normalizes the verdict:
+every branch gets a coverage status (partial or unresolved from the evidence when the model omitted
+one); tasks for unknown or resolved branches, and tasks repeating an instruction or query already
+run, are dropped; `task_id` (`{branch}-r{round}`), `round` and `status` are rewritten. At fast depth
+the judge still records coverage but may add no tasks. If structured output fails in every mode, the
+node records `sufficient: false` with no tasks, emits an `error` event, tags the run
+`fallback:judge_failed`, and the graph proceeds (01 §9).
 
 ## 7. Node: `critic`
 

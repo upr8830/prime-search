@@ -111,7 +111,7 @@ class SearchPlan(BaseModel):
 
 ```python
 class SearchTask(BaseModel):
-    task_id: str
+    task_id: str                            # "{branch_id}-r{round}", "-{k}" for a second judge task on a branch
     branch_id: str
     round: int                              # 0 = initial plan, 1.. = judge/critic re-search
     instruction: str                        # for the sub-agent
@@ -199,11 +199,11 @@ class Claim(BaseModel):
 
 ```python
 class Verdict(BaseModel):
-    round: int
+    round: int                              # the search round judged, 0 = the initial one
     sufficient: bool
     coverage: dict[str, Literal["resolved", "partial", "unresolved"]]   # branch_id -> status
     missing: list[str]                      # what is still needed, in plain language
-    new_tasks: list[SearchTask] = []
+    new_tasks: list[SearchTask] = []        # only tasks the graph dispatches: empty when no round or budget is left
     reasoning: str
 
 class CriticReport(BaseModel):

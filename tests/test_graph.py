@@ -13,6 +13,7 @@ import time
 
 from prime_search.agents import graph as graph_module
 from prime_search.agents.graph import DEPTH, PrimeState, _slice_budget, build_graph
+from prime_search.agents.judge import JudgeOutcome
 from prime_search.config import Budget
 from prime_search.evidence.store import EvidenceStore
 from prime_search.schemas import (
@@ -23,6 +24,7 @@ from prime_search.schemas import (
     SearchTask,
     TaskResult,
     Usage,
+    Verdict,
 )
 
 
@@ -150,6 +152,7 @@ def test_two_branches_fanning_out_do_not_collide(sandboxed_run, monkeypatch) -> 
     monkeypatch.setattr(graph_module, "plan_run", lambda ws, **k: _FakeOutcome(ws.plan))
     monkeypatch.setattr(graph_module, "synthesize", lambda ws, **k: _answer())
     monkeypatch.setattr(graph_module, "structured", lambda *a, **k: _FakeCaller(_understanding()))
+    monkeypatch.setattr(graph_module, "run_judge", _sufficient_judge)
 
     final = build_graph().invoke(_state(ws))
     assert len(final["task_results"]) == 2
@@ -381,6 +384,7 @@ def test_the_graph_runs_end_to_end_offline(sandboxed_run, monkeypatch) -> None:
         ),
     )
     monkeypatch.setattr(graph_module, "synthesize", lambda ws, **k: _answer())
+    monkeypatch.setattr(graph_module, "run_judge", _sufficient_judge)
 
     final = build_graph().invoke(_state(ws))
     assert final["answer"].summary == "the answer"
@@ -541,3 +545,149 @@ def test_the_send_payload_carries_the_deadline(sandboxed_run) -> None:
     state = _state(ws, deadline=deadline)
     state.update(graph_module._dispatch(state))  # type: ignore[typeddict-item]
     assert graph_module._fan_out(state)[0].arg["deadline"] == deadline
+
+
+# --- the judge and its edge (task 2.2) -------------------------------------------------
+
+
+def _verdict(sufficient: bool = True, tasks=(), round_: int = 0) -> Verdict:  # noqa: ANN001
+    return Verdict(
+        round=round_, sufficient=sufficient, coverage={}, missing=[], new_tasks=list(tasks),
+        reasoning="r",
+    )
+
+
+def _sufficient_judge(ws, **kwargs) -> JudgeOutcome:  # noqa: ANN001, ANN003
+    return JudgeOutcome(_verdict(round_=kwargs.get("judged_round", 0)), "native")
+
+
+def _recording_judge(verdict: Verdict, seen: dict, tag: str | None = None):  # noqa: ANN202
+    def judge(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        seen.update(kwargs)
+        return JudgeOutcome(verdict, "native", tag)
+
+    return judge
+
+
+def test_an_insufficient_verdict_with_rounds_left_routes_back_to_dispatch(
+    sandboxed_run, monkeypatch
+) -> None:
+    ws = sandboxed_run
+    _plan(ws, count=2)
+    seen: dict = {}
+    verdict = _verdict(False, [_task("b2-r1", "b2", 1)])
+    monkeypatch.setattr(graph_module, "run_judge", _recording_judge(verdict, seen))
+    state = _state(ws, round=1)
+
+    update = graph_module._judge(state)
+    # collect already advanced the round: this verdict judges round 0, tasks go in round 1.
+    assert (seen["judged_round"], seen["max_new_tasks"], seen["rounds_left"]) == (0, 3, 2)
+    assert [t.task_id for t in update["pending_tasks"]] == ["b2-r1"]
+    assert graph_module._after_judge({**state, **update}) == "dispatch"
+    assert ws.verdicts == [verdict]
+    assert [record["type"] for record in update["events"]] == ["verdict"]
+
+
+def test_no_rounds_left_ignores_new_tasks_and_routes_to_the_critic(sandboxed_run, monkeypatch) -> None:
+    """docs/03 §6: "the graph ignores `new_tasks` when `round == max_rounds`"."""
+    ws = sandboxed_run
+    _plan(ws, count=2)
+    seen: dict = {}
+    monkeypatch.setattr(
+        graph_module, "run_judge", _recording_judge(_verdict(False, [_task("b2-r3", "b2", 3)]), seen)
+    )
+    state = _state(ws, round=3)
+
+    update = graph_module._judge(state)
+    assert seen["max_new_tasks"] == 0
+    assert update["pending_tasks"] == []
+    assert ws.verdicts[0].new_tasks == []  # the record lists only what was dispatched
+    assert graph_module._after_judge({**state, **update}) == "critic"
+
+
+def test_fast_depth_never_re_searches_and_skips_the_critic(sandboxed_run, monkeypatch) -> None:
+    """docs/03 §10: fast is "1 (no re-search)" and "critic skipped"."""
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    seen: dict = {}
+    monkeypatch.setattr(
+        graph_module, "run_judge", _recording_judge(_verdict(False, [_task("b1-r1", "b1", 1)]), seen)
+    )
+    state = _state(ws, round=1, depth="fast")
+
+    update = graph_module._judge(state)
+    assert seen["max_new_tasks"] == 0
+    assert update["pending_tasks"] == []
+    assert graph_module._after_judge({**state, **update}) == "synthesize"
+
+
+def test_too_little_time_left_adds_no_round(sandboxed_run, monkeypatch) -> None:
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    seen: dict = {}
+    monkeypatch.setattr(
+        graph_module, "run_judge", _recording_judge(_verdict(False, [_task("b1-r1", "b1", 1)]), seen)
+    )
+    update = graph_module._judge(_state(ws, round=1, deadline=time.time() + 10))
+    assert seen["max_new_tasks"] == 0
+    assert update["pending_tasks"] == []
+
+
+def test_a_sufficient_verdict_routes_to_the_critic(sandboxed_run, monkeypatch) -> None:
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    monkeypatch.setattr(graph_module, "run_judge", _sufficient_judge)
+    state = _state(ws, round=1)
+    update = graph_module._judge(state)
+    assert graph_module._after_judge({**state, **update}) == "critic"
+
+
+def test_an_expired_deadline_skips_the_judge_and_synthesizes(sandboxed_run, monkeypatch) -> None:
+    def must_not_run(*args, **kwargs):  # noqa: ANN002, ANN003, ANN202
+        raise AssertionError("the judge ran after the deadline")
+
+    monkeypatch.setattr(graph_module, "run_judge", must_not_run)
+    expired = _state(sandboxed_run, round=1, deadline=time.time() - 1)
+    assert graph_module._judge(expired) == {}
+    assert graph_module._after_judge(expired) == "synthesize"
+
+
+def test_a_failed_judge_reaches_the_run_tags(sandboxed_run, monkeypatch) -> None:
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    monkeypatch.setattr(
+        graph_module, "run_judge", _recording_judge(_verdict(False), {}, "fallback:judge_failed")
+    )
+    update = graph_module._judge(_state(ws, round=1))
+    assert update["fallback_tags"] == ["fallback:judge_failed"]
+
+
+def test_a_two_round_run_end_to_end(sandboxed_run, monkeypatch) -> None:
+    """The loop the stubs never exercised: round 0, an insufficient verdict adding one
+    task, round 1, a sufficient verdict, synthesis."""
+    ws = sandboxed_run
+    ws.understanding = _understanding()
+    _plan(ws, count=2)
+    monkeypatch.setattr(graph_module, "plan_run", lambda ws, **k: _FakeOutcome(ws.plan))
+    monkeypatch.setattr(graph_module, "structured", lambda *a, **k: _FakeCaller(_understanding()))
+    monkeypatch.setattr(graph_module, "synthesize", lambda ws, **k: _answer())
+    monkeypatch.setattr(
+        graph_module, "run_search_agent", lambda task, **k: _result(f"summary {task.task_id}")
+    )
+    judged: list[int] = []
+
+    def judge(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        judged.append(kwargs["judged_round"])
+        if len(judged) == 1:
+            return JudgeOutcome(_verdict(False, [_task("b1-r1", "b1", 1)]), "native")
+        return JudgeOutcome(_verdict(True, round_=1), "native")
+
+    monkeypatch.setattr(graph_module, "run_judge", judge)
+
+    final = build_graph().invoke(_state(ws))
+    assert judged == [0, 1]
+    assert final["round"] == 2
+    assert [task.task_id for task in ws.tasks] == ["b1-r0", "b2-r0", "b1-r1"]
+    assert all(task.status == "done" for task in ws.tasks)
+    assert ws.tasks[2].result.summary == "summary b1-r1"
+    assert len(ws.verdicts) == 2

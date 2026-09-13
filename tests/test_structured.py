@@ -43,7 +43,7 @@ class _StubModel:
         self.plain_invocations = 0
         self.structured_invocations = 0
 
-    def with_structured_output(self, _schema: type) -> _StubStructured:
+    def with_structured_output(self, _schema: type, **_kwargs: object) -> _StubStructured:
         self.structured_invocations += 1
         return _StubStructured(self.native)
 
@@ -120,3 +120,21 @@ def test_schema_violating_json_is_rejected_not_coerced(stub) -> None:
     caller = models.structured("judge", Verdict)
     with pytest.raises(RuntimeError, match="ValidationError"):
         caller.invoke("judge this")
+
+
+def test_the_native_reply_is_kept_so_its_tokens_can_be_charged(stub) -> None:
+    """A bare parsed object carries no usage metadata; `include_raw` keeps the reply."""
+    raw = AIMessage(content="", usage_metadata={"input_tokens": 5, "output_tokens": 2, "total_tokens": 7})
+    stub([{"raw": raw, "parsed": Verdict(**VALID), "parsing_error": None}])
+    caller = models.structured("judge", Verdict)
+    assert caller.invoke("judge this").sufficient is False
+    assert caller.last_mode == "native"
+    assert caller.last_message is raw
+
+
+def test_the_fenced_reply_is_kept_too(stub) -> None:
+    stub([None, None], text=f"```json\n{json.dumps(VALID)}\n```")
+    caller = models.structured("judge", Verdict)
+    caller.invoke("judge this")
+    assert caller.last_mode == "fenced_json"
+    assert caller.last_message is not None and caller.last_message.content.startswith("```json")

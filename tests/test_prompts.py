@@ -76,6 +76,10 @@ def test_every_1_7_prompt_renders_with_no_placeholder_left(sandboxed_run) -> Non
         },
         "plan_repair": {"problem"},
         "synthesize": {"question", "understanding", "evidence", "claims", "unresolved"},
+        "judge": {
+            "question", "stop_criteria", "branches", "unresolved", "budget", "round",
+            "max_new_tasks",
+        },
         "baseline": set(),
     }
     for name, keys in call_sites.items():

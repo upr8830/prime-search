@@ -174,6 +174,10 @@ class StructuredCaller(Generic[_S]):
     fallback, so both rungs failing raises and the human decides. `last_mode`
     records which rung answered, so smoke output and traces show when the ladder
     was used.
+
+    `last_message` is the reply the value came from, so a caller can charge its tokens:
+    the native rung asks for `include_raw`, because a bare parsed object carries no
+    usage metadata and an uncharged judge call would never count against `max_tokens`.
     """
 
     def __init__(self, role: Role, schema: type[_S], *, attempts: int = 2) -> None:
@@ -181,15 +185,20 @@ class StructuredCaller(Generic[_S]):
         self.schema = schema
         self.attempts = attempts
         self.last_mode: str = "unused"
+        self.last_message: AIMessage | None = None
 
     def invoke(self, prompt: str) -> _S:
         model = _build(self.role)
         errors: list[str] = []
         for attempt in range(self.attempts):
             try:
-                result = model.with_structured_output(self.schema).invoke(prompt)
+                result = model.with_structured_output(self.schema, include_raw=True).invoke(prompt)
+                raw = None
+                if isinstance(result, dict):  # include_raw: {"raw", "parsed", "parsing_error"}
+                    raw, result = result.get("raw"), result.get("parsed")
                 if isinstance(result, self.schema):
                     self.last_mode = "native" if attempt == 0 else f"native_retry_{attempt}"
+                    self.last_message = raw if isinstance(raw, AIMessage) else None
                     return result
                 errors.append(f"attempt {attempt}: returned {type(result).__name__}")
             except Exception as exc:
@@ -203,6 +212,7 @@ class StructuredCaller(Generic[_S]):
                 schema=json.dumps(self.schema.model_json_schema(), indent=2),
             )
         )
+        self.last_message = message if isinstance(message, AIMessage) else None
         try:
             value = self.schema.model_validate(parse_fenced_json(message.text))
         except Exception as exc:

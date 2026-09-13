@@ -1,9 +1,8 @@
 """The PRIME graph (docs/03 §1): understand -> plan -> dispatch -> search_agent ->
 collect -> judge -> critic -> synthesize.
 
-Judge and critic are pass-throughs today; docs/09 §1.7 stubs them and 2.2/2.3 give
-them their models. The loop-back edges they will need are already drawn, so adding a
-model there is a node change and not a graph change.
+After every search round the judge (docs/03 §6) decides whether to search again; the
+critic (§7) is a pass-through until the next step of task 2.2.
 
 Three places where the spec's diagram and working LangGraph differ. Each is a
 deliberate deviation, logged in docs/11:
@@ -41,6 +40,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
 
 from prime_search import events
+from prime_search.agents.judge import MAX_NEW_TASKS, run_judge
 from prime_search.agents.root import plan_run
 from prime_search.agents.search_agent import MAX_TOOL_CALLS, run_search_agent
 from prime_search.agents.synthesizer import synthesize
@@ -69,6 +69,11 @@ DEPTH: dict[str, dict[str, int]] = {
     "fast": {"max_branches": 2, "max_agents": 1, "max_rounds": 1, "tool_calls": 5},
     "deep": {"max_branches": 7, "max_agents": 6, "max_rounds": 3, "tool_calls": MAX_TOOL_CALLS},
 }
+
+# Not specified anywhere (docs/11). A round is one model-driven sub-agent per task, and
+# a sub-agent times only itself; starting a round with less than this left would run it
+# past the deadline, so the judge and critic add no round below it.
+MIN_SECONDS_FOR_ROUND = 30
 
 
 def _merge_results(
@@ -351,10 +356,44 @@ def _collect(state: PrimeState) -> dict[str, Any]:
 
 
 def _judge(state: PrimeState) -> dict[str, Any]:
-    """docs/09 §1.7: stubbed as a pass-through today. Task 2.2 gives it the model and
-    the `insufficient -> dispatch` edge below it."""
+    """docs/03 §6: is there enough? If not, and a round is left, new tasks for dispatch.
+
+    `collect` has already advanced `round`, so the verdict judges round `round - 1` and
+    any task it adds belongs to round `round`. `max_rounds` counts every search round,
+    the initial one included (docs/11), so tasks are allowed while `round < max_rounds`.
+    """
+    ws = state["ws"]
+    if _past_deadline(state):
+        return {}
+    depth = state.get("depth", "deep")
+    current = state.get("round", 0)
+    may_search = depth != "fast" and current < _max_rounds(state) and _can_search(ws, state)
+    per_round = min(ws.budget.max_agents, DEPTH[depth]["max_agents"])
+    outcome = run_judge(
+        ws,
+        judged_round=max(0, current - 1),
+        max_new_tasks=min(MAX_NEW_TASKS, per_round) if may_search else 0,
+        rounds_left=max(0, _max_rounds(state) - current),
+        prompt_set=state.get("prompt_set", "base"),
+        model=state.get("models", {}).get("judge"),
+    )
+    verdict = outcome.verdict
+    if verdict.new_tasks and not may_search:
+        # docs/03 §6: "the graph ignores `new_tasks` when `round == max_rounds`". The
+        # recorded verdict lists only tasks actually dispatched (docs/02 §2.6).
+        _log.info("judge.tasks_ignored", round=current, tasks=len(verdict.new_tasks))
+        verdict = verdict.model_copy(update={"new_tasks": []})
+    with RUN_LOCK:
+        ws.verdicts.append(verdict)
+    record = events.emit(ws.run_id, "verdict", verdict)
+    update: dict[str, Any] = {
+        "events": [record],
+        "pending_tasks": [] if verdict.sufficient else list(verdict.new_tasks),
+    }
+    if outcome.fallback_tag:
+        update["fallback_tags"] = [outcome.fallback_tag]
     _persist(state)
-    return {}
+    return update
 
 
 def _critic(state: PrimeState) -> dict[str, Any]:
@@ -399,10 +438,7 @@ def build_graph() -> Any:
     builder.add_conditional_edges("dispatch", _fan_out, ["search_agent", "collect"])
     builder.add_edge("search_agent", "collect")
     builder.add_edge("collect", "judge")
-    # Judge and critic are pass-throughs today; 2.2/2.3 replace these unconditional
-    # edges with the conditional ones in §1's diagram (judge -> dispatch when
-    # insufficient, critic -> dispatch once).
-    builder.add_edge("judge", "critic")
+    builder.add_conditional_edges("judge", _after_judge, ["dispatch", "critic", "synthesize"])
     builder.add_edge("critic", "synthesize")
     builder.add_edge("synthesize", END)
     return builder.compile()
@@ -655,6 +691,33 @@ def _usage_tags(ws: Workspace) -> list[str]:
     from prime_search.models import TOKENS_ESTIMATED_TAG
 
     return [TOKENS_ESTIMATED_TAG] if ws.tokens_estimated else []
+
+
+def _max_rounds(state: PrimeState) -> int:
+    """Search rounds allowed, the initial one included (docs/11)."""
+    return min(state["ws"].budget.max_rounds, DEPTH[state.get("depth", "deep")]["max_rounds"])
+
+
+def _can_search(ws: Workspace, state: PrimeState) -> bool:
+    """docs/03 §7's "budget allows", used by the judge and the critic before adding a
+    round: searches and tokens left, and time for a round before the deadline."""
+    remaining = ws.budget_remaining()
+    seconds_left = state.get("deadline", float("inf")) - time.time()
+    return (
+        seconds_left >= MIN_SECONDS_FOR_ROUND
+        and remaining.max_searches > 0
+        and remaining.max_tokens > 0
+    )
+
+
+def _after_judge(state: PrimeState) -> str:
+    """docs/03 §1: insufficient with a round left -> dispatch, otherwise the critic.
+    Fast depth has no critic (§10); an expired deadline goes straight to synthesis."""
+    if _past_deadline(state):
+        return "synthesize"
+    if state.get("pending_tasks"):
+        return "dispatch"
+    return "synthesize" if state.get("depth", "deep") == "fast" else "critic"
 
 
 def _past_deadline(state: PrimeState) -> bool:

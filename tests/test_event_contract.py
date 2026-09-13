@@ -336,6 +336,7 @@ def test_a_prime_subscriber_receives_run_finished(sandboxed_run, monkeypatch) ->
     monkeypatch.setattr(module, "plan_run", lambda ws, **k: _FakeOutcome(_plan_for(ws)))
     monkeypatch.setattr(module, "run_search_agent", lambda task, **k: _empty_result())
     monkeypatch.setattr(module, "synthesize", lambda ws, **k: _blank_answer())
+    monkeypatch.setattr(module, "run_judge", _sufficient_judge)
 
     seen: list[str] = []
     module.run_prime(RunRequest(question="q"), on_event=lambda r: seen.append(r["type"]))
@@ -387,3 +388,14 @@ def _blank_answer():
         summary="s", body_markdown="## Answer\n\ns", claims=[], citations=[],
         effective_dates=[], contradictions=[], unknowns=[], confidence=0.1,
     )
+
+
+def _sufficient_judge(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
+    from prime_search.agents.judge import JudgeOutcome
+    from prime_search.schemas import Verdict
+
+    verdict = Verdict(
+        round=kwargs.get("judged_round", 0), sufficient=True, coverage={}, missing=[],
+        reasoning="enough",
+    )
+    return JudgeOutcome(verdict, "native")

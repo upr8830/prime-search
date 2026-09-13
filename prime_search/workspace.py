@@ -253,15 +253,22 @@ class Workspace:
             max_seconds=max(0, int(limit.max_seconds - used.wall_seconds)),
         )
 
-    def charge_tokens(self, message: object) -> None:
+    def charge_tokens(self, message: object | None, prompt: str | None = None) -> None:
         """Add one model reply's tokens to the run's usage (docs/06 section 5).
 
         Shared by every node that calls a model outside a sub-agent - synthesis, the
-        judge and the critic - so the token budget sees all of them.
+        judge and the critic - so the token budget sees all of them. `prompt` is counted
+        by estimate when the reply carries no usage metadata, or when there is no reply
+        at all because the call failed.
         """
-        from prime_search.models import token_usage
+        from prime_search.models import estimate_tokens, token_usage
 
-        input_tokens, output_tokens, estimated = token_usage(message)
+        if message is None:
+            input_tokens, output_tokens, estimated = 0, 0, True
+        else:
+            input_tokens, output_tokens, estimated = token_usage(message)
+        if estimated and prompt and not input_tokens:
+            input_tokens = estimate_tokens(prompt)
         with RUN_LOCK:
             self.usage.input_tokens += input_tokens
             self.usage.output_tokens += output_tokens
