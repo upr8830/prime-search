@@ -148,6 +148,16 @@ SearchTask, Evidence, Document, Claim, date, datetime. `print(...)` works and it
 output comes back to you.'''
 
 
+def _plan_payload(plan: SearchPlan, code: str | None) -> dict:
+    """The `plan` event: the SearchPlan plus the cell that built it (docs/02 §4).
+
+    docs/07 §4's Plan tab shows the root's plan code, the code-as-action a reviewer
+    reads, and nothing else keeps it: the cell was a local variable here. `None` when
+    the plan came from a fallback rung rather than code.
+    """
+    return {**plan.model_dump(mode="json"), "code": code}
+
+
 def plan_run(
     ws: Workspace,
     *,
@@ -203,7 +213,7 @@ def plan_run(
                 problem = _validate(ws.plan, minimum, limit, understanding)
                 if problem is None:
                     _normalize(ws.plan, understanding, ws)
-                    events.emit(ws.run_id, "plan", ws.plan)
+                    events.emit(ws.run_id, "plan", _plan_payload(ws.plan, code))
                     _log.info("root.planned", mode="code", repairs=attempt,
                               branches=len(ws.plan.branches))
                     return PlanOutcome(ws.plan, "code", repairs=attempt)
@@ -222,7 +232,7 @@ def plan_run(
         if problem is None:
             ws.plan = plan
             _normalize(plan, understanding, ws)
-            events.emit(ws.run_id, "plan", plan)
+            events.emit(ws.run_id, "plan", _plan_payload(plan, None))
             _log.warning("root.plan_structured_fallback", branches=len(plan.branches))
             return PlanOutcome(plan, "structured", fallback_tag="fallback:plan_structured")
     except Exception as exc:  # noqa: BLE001 - rung 4 is the point
@@ -232,7 +242,7 @@ def plan_run(
     # Rung 4: docs/03 §13's default plan.
     plan = default_plan(ws, understanding, limit)
     ws.plan = plan
-    events.emit(ws.run_id, "plan", plan)
+    events.emit(ws.run_id, "plan", _plan_payload(plan, None))
     events.emit(
         ws.run_id,
         "error",

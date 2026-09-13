@@ -291,7 +291,7 @@ paragraph counts, and calls `search_within` to see specific paragraphs. This is 
 |---|---|---|
 | `run.started` | `{run_id, mode, depth, question}` | header |
 | `understanding` | `QueryUnderstanding` | chip row |
-| `plan` | `SearchPlan` | search tree skeleton |
+| `plan` | `SearchPlan` + `code` (the root's plan cell; `null` from a fallback rung) | search tree skeleton, Plan tab (07 §4) |
 | `task.started` | `{task_id, branch_id, round, instruction}` | tree node spinner |
 | `search` | `{task_id, query, n_results, cached}` | tree node child |
 | `fetch` | `{task_id, doc_id, url, title, tier, effective_date}` | tree node child, doc list |

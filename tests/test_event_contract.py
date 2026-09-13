@@ -33,7 +33,7 @@ from conftest import ScriptedChatModel
 REQUIRED_KEYS = {
     "run.started": {"run_id", "mode", "depth", "question"},
     "understanding": {"normalized_question", "domain", "question_type", "time_sensitivity"},
-    "plan": {"understanding", "branches", "stop_criteria", "budget"},
+    "plan": {"understanding", "branches", "stop_criteria", "budget", "code"},
     "task.started": {"task_id", "branch_id", "round", "instruction"},
     "search": {"task_id", "query", "n_results", "cached"},
     "fetch": {"task_id", "doc_id", "url", "title", "tier", "effective_date"},
@@ -139,6 +139,8 @@ ws.plan = SearchPlan(
     assert REQUIRED_KEYS["plan"] <= set(payload)
     assert [branch["branch_id"] for branch in payload["branches"]] == ["b1", "b2", "b3"]
     assert payload["branches"][0]["question"] == "What are the criteria?"
+    # docs/07 §4: the Plan tab shows the root's plan code, which only this event carries.
+    assert payload["code"].startswith("ws.plan = SearchPlan(")
 
 
 def test_dispatch_does_not_emit_plan_or_task_started(planned) -> None:
