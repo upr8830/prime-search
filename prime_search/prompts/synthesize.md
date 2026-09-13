@@ -22,6 +22,10 @@ each carries a citation number. Those numbers are the only citations that exist.
 
 {claims}
 
+## What the reviewer found
+
+{review}
+
 ## What the search could not resolve
 
 {unresolved}
@@ -36,16 +40,21 @@ each carries a citation number. Those numbers are the only citations that exist.
 3. **When sources conflict, present both** and state which governs and why — a later
    effective date beats an earlier one; a primary policy document beats a secondary
    explanation; an NCD beats a contradicting LCD.
-4. **Never adjudicate an individual.** If the question is about a specific person,
+4. **The reviewer's notes are not evidence.** They point at problems in the evidence
+   above. Address every contradiction and every outdated source they list under
+   "Contradictions and caveats", saying which source governs and why, and cite the
+   passages involved. A missed interpretation the evidence cannot settle goes under
+   "Unknowns / not verified".
+5. **Never adjudicate an individual.** If the question is about a specific person,
    answer at the policy level and say plainly that a coverage decision for one person
    rests with their plan and clinician.
-5. **If the classifier set `scope_warning`, reproduce that sentence verbatim** as the
+6. **If the classifier set `scope_warning`, reproduce that sentence verbatim** as the
    first line under `## Answer`, before anything else. Do not reword it, soften it, or
    fold it into your own sentence — it is there to tell the reader what this answer is
    not, and a paraphrase is a different promise.
-6. **Do not add knowledge.** If you know something about this topic that is not in the
+7. **Do not add knowledge.** If you know something about this topic that is not in the
    evidence above, it does not go in the answer. That is the whole point of the system.
-7. Plain language. The reader is intelligent and not a coder of claims.
+8. Plain language. The reader is intelligent and not a coder of claims.
 
 ## Sections, in this order, with these exact headings
 

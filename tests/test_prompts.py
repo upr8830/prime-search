@@ -75,7 +75,7 @@ def test_every_1_7_prompt_renders_with_no_placeholder_left(sandboxed_run) -> Non
             "min_branches", "max_branches", "budget",
         },
         "plan_repair": {"problem"},
-        "synthesize": {"question", "understanding", "evidence", "claims", "unresolved"},
+        "synthesize": {"question", "understanding", "evidence", "claims", "review", "unresolved"},
         "judge": {
             "question", "stop_criteria", "branches", "unresolved", "budget", "round",
             "max_new_tasks",

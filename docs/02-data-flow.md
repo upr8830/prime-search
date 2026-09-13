@@ -234,7 +234,7 @@ class Answer(BaseModel):
     claims: list[Claim]
     citations: list[Citation]
     effective_dates: list[str]              # "LCD L33822: revision effective 2023-04-16"
-    contradictions: list[str]
+    contradictions: list[str]               # one line each: which sources disagree and which governs (not claim ids)
     unknowns: list[str]
     confidence: float
     scope_warning: str | None

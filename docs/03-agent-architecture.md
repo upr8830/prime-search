@@ -213,6 +213,11 @@ Prompt `prompts/synthesize.md` — rules:
   caveats**, **Unknowns / not verified**, **Sources** (numbered, with tier and date).
 - When claims conflict, present both and state which governs and why (later effective date, primary
   over secondary).
+- As built (task 2.2): the critic's latest report reaches the prompt as "What the reviewer found" -
+  notes to address, never evidence - and `Answer.contradictions` is computed: one line per contested
+  claim (its strongest supporting against its strongest contradicting passage; the higher source tier
+  governs, then the later date) plus the critic's own contradictions. When there are any and the model
+  wrote "None found." or no section, those lines are written into "Contradictions and caveats".
 - Carry `scope_warning` from understanding into the answer verbatim.
 - Never adjudicate an individual patient; if the question implies one, answer at the policy level and
   say so.

@@ -6,7 +6,7 @@ proves unreliable." This module takes the third option the sentence implies: **s
 the prose, compute the fields.**
 
 `citations`, `effective_dates`, `claims` and `contradictions` are all derivable from
-the claim graph and the evidence store, by functions that already exist and are already
+the claim graph, the evidence store and the critic's report, by functions that already exist and are already
 tested (`evidence/cite.py`, `evidence/graph.py`). Asking a model to restate them is a
 chance to get them wrong — a fabricated revision date in `effective_dates` is exactly
 the failure this system exists to prevent — and costs a second call. So the model
@@ -20,6 +20,8 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable
+from datetime import date
+from urllib.parse import urlparse
 
 from langchain_core.language_models import BaseChatModel
 
@@ -27,13 +29,19 @@ from prime_search import events
 from prime_search.evidence.cite import build_citations, effective_dates_section, source_line
 from prime_search.models import root_model, token_usage
 from prime_search.prompts import render
-from prime_search.schemas import Answer, Citation, Evidence
+from prime_search.schemas import Answer, Citation, Claim, CriticReport, Document, Evidence
 from prime_search.tracing import get_logger
 from prime_search.workspace import Workspace
 
 _log = get_logger(component="synthesize")
 
-__all__ = ["SECTION_HEADINGS", "confidence_for", "safe_token_sink", "synthesize"]
+__all__ = [
+    "SECTION_HEADINGS",
+    "confidence_for",
+    "contradiction_lines",
+    "safe_token_sink",
+    "synthesize",
+]
 
 # docs/03 §8's section order. Asserted in tests, because this list is what the gate
 # and the docs/05 §2 completeness evaluator both look for.
@@ -77,6 +85,17 @@ MIN_CONFIDENCE = 0.05
 # The tier table (primitives/sources.py) has exactly one primary tier.
 _PRIMARY_TIERS = {"primary_policy"}
 
+# How a contradiction line names a source tier; the tier ids are not reader-facing.
+_TIER_NAMES = {
+    "primary_policy": "primary policy",
+    "official_secondary": "official secondary source",
+    "professional": "professional source",
+    "trade": "trade press",
+    "web": "web page",
+    "unknown": "unclassified source",
+}
+MAX_CONTRADICTION_EXCERPT = 100
+
 
 def synthesize(
     ws: Workspace,
@@ -85,8 +104,13 @@ def synthesize(
     model: BaseChatModel | None = None,
     on_token: Callable[[str], None] | None = None,
     unresolved: list[str] | None = None,
+    review: CriticReport | None = None,
 ) -> Answer:
     """Produce the run's `Answer`. Never raises on an empty run.
+
+    `review` is the critic's latest report (docs/03 §7). Its findings reach the prompt
+    as notes to address, and its contradictions reach `Answer.contradictions`; they are
+    never cited as evidence.
 
     `on_token` receives the streamed body as it arrives, so the CLI can render it live
     and the event stream can carry `token` events (docs/02 §4) — the same callback
@@ -109,6 +133,7 @@ def synthesize(
         ),
         evidence=_render_evidence(ws, citations),
         claims=_render_claims(ws),
+        review=_render_review(ws, review),
         unresolved=_render_unresolved(unresolved_notes),
     )
 
@@ -120,6 +145,8 @@ def synthesize(
 
     warning = ws.understanding.scope_warning if ws.understanding else None
     body = _ensure_scope_warning(body, warning)
+    contradictions = contradiction_lines(ws, review)
+    body = _ensure_contradictions_section(body, contradictions)
     # docs/03 §8 derives the answer's fields "from the streamed body plus the claim
     # graph". Keeping every gathered passage in `citations` overstated what the answer
     # rested on - the CLI footer counted them and the docs/04 §7 citation evaluator
@@ -135,7 +162,7 @@ def synthesize(
         claims=list(ws.claims),
         citations=used,
         effective_dates=effective_dates_section(_cited_evidence(ws, used), ws.documents),
-        contradictions=list(ws.contradictions),
+        contradictions=contradictions,
         unknowns=unresolved_notes,
         confidence=confidence_for(ws),
         scope_warning=ws.understanding.scope_warning if ws.understanding else None,
@@ -147,6 +174,106 @@ def synthesize(
     if estimated:
         _log.info("synthesize.tokens_estimated", run_id=ws.run_id)
     return answer
+
+
+def contradiction_lines(ws: Workspace, review: CriticReport | None = None) -> list[str]:
+    """`Answer.contradictions` (docs/02 §2.7): one readable line per disagreement,
+    naming both sources and which governs.
+
+    Claim ids were the field's content, and an id tells neither a reader nor the
+    docs/05 §2 `contradiction_handling` evaluator ("does the answer surface them and
+    state which governs?") anything. Built here, not by the model, for the same reason
+    as the other fields: which source governs is decided by docs/04's rules - primary
+    over secondary, then the later date - not by prose.
+
+    The claim graph only sees disagreement inside one branch (docs/04 §4), so the
+    critic's contradictions are added after the contested claims: a sentence it wrote
+    about a cross-branch conflict verbatim, and a claim id it flagged that the graph did
+    not mark contested as a "Reviewer" line.
+    """
+    evidence = {item.evidence_id: item for item in ws.evidence}
+    claims = {claim.claim_id: claim for claim in ws.claims}
+    lines: list[str] = []
+    covered: set[str] = set()
+    for claim in ws.claims:
+        if claim.status != "contested":
+            continue
+        support = _strongest(claim.supported_by, evidence)
+        against = _strongest(claim.contradicted_by, evidence)
+        if support is None or against is None:
+            continue
+        covered.add(claim.claim_id)
+        lines.append(_contradiction_line(claim, support, against, ws))
+
+    for entry in review.contradictions if review else []:
+        if entry in covered:
+            continue
+        if entry in claims:
+            lines.append(
+                f'Reviewer: "{claims[entry].text}" ({entry}) conflicts with other evidence '
+                "in this run; the claim graph did not mark it contested."
+            )
+        else:
+            lines.append(entry)
+
+    unique: list[str] = []
+    for line in lines:
+        if line not in unique:
+            unique.append(line)
+    return unique
+
+
+def _strongest(evidence_ids: list[str], evidence: dict[str, Evidence]) -> Evidence | None:
+    items = [evidence[eid] for eid in evidence_ids if eid in evidence]
+    if not items:
+        return None
+    return max(items, key=lambda item: (item.source_quality * item.confidence, item.evidence_id))
+
+
+def _contradiction_line(claim: Claim, support: Evidence, against: Evidence, ws: Workspace) -> str:
+    supporting_doc = ws.documents.get(support.doc_id)
+    contradicting_doc = ws.documents.get(against.doc_id)
+    supporting = _source_label(supporting_doc, support)
+    contradicting = _source_label(contradicting_doc, against)
+    excerpt = " ".join(against.evidence_text.split())
+    if len(excerpt) > MAX_CONTRADICTION_EXCERPT:
+        excerpt = excerpt[:MAX_CONTRADICTION_EXCERPT].rstrip() + "..."
+    head = f'{supporting}: {claim.text} - contradicted by {contradicting} ("{excerpt}")'
+
+    if support.source_quality != against.source_quality:
+        winner_is_support = support.source_quality > against.source_quality
+        winner, loser = (
+            (supporting_doc, contradicting_doc) if winner_is_support else (contradicting_doc, supporting_doc)
+        )
+        label = supporting if winner_is_support else contradicting
+        return f"{head}; {label} governs ({_tier_name(winner)} over {_tier_name(loser)})"
+
+    supporting_date = _evidence_date(support, supporting_doc)
+    contradicting_date = _evidence_date(against, contradicting_doc)
+    if supporting_date and contradicting_date and supporting_date != contradicting_date:
+        later_is_support = supporting_date > contradicting_date
+        label = supporting if later_is_support else contradicting
+        later = supporting_date if later_is_support else contradicting_date
+        return f"{head}; {label} governs (later effective date {later.isoformat()})"
+    return f"{head}; which governs is not established"
+
+
+def _source_label(document: Document | None, item: Evidence) -> str:
+    if document is None:
+        return item.doc_id
+    return document.document_id_external or document.publisher or urlparse(document.url).netloc
+
+
+def _tier_name(document: Document | None) -> str:
+    return _TIER_NAMES.get(document.source_tier if document else "unknown", "unclassified source")
+
+
+def _evidence_date(item: Evidence, document: Document | None) -> date | None:
+    if item.effective_date:
+        return item.effective_date
+    if document is None:
+        return None
+    return document.effective_date or document.revision_date
 
 
 def confidence_for(ws: Workspace) -> float:
@@ -269,6 +396,45 @@ def _render_claims(ws: Workspace) -> str:
             f"{len(claim.contradicted_by)} contradicting)"
         )
     return "\n".join(lines)
+
+
+def _render_review(ws: Workspace, review: CriticReport | None) -> str:
+    """The critic's findings as notes for the writer. Claim ids are shown with their
+    text and document ids as labels, because the writer is shown neither id scheme."""
+    if review is None:
+        return "(no review was run)"
+    claims = {claim.claim_id: claim for claim in ws.claims}
+
+    def claim(entry: str) -> str:
+        return f"{entry}: {claims[entry].text}" if entry in claims else entry
+
+    def document(doc_id: str) -> str:
+        found = ws.documents.get(doc_id)
+        if found is None:
+            return doc_id
+        dated = found.revision_date or found.effective_date
+        kind = f"{found.doc_type}, " if found.doc_type else ""
+        when = f"dated {dated.isoformat()}" if dated else "no date found"
+        return f"{found.document_id_external or found.title} ({kind}{when})"
+
+    sections = [
+        ("Contradictions to address", [claim(entry) for entry in review.contradictions]),
+        ("Outdated or superseded sources", [document(doc_id) for doc_id in review.outdated_sources]),
+        (
+            "Claims resting on a secondary source where a primary one was fetched",
+            [claim(entry) for entry in review.secondary_when_primary_exists],
+        ),
+        ("Weak claims", [claim(entry) for entry in review.weak_claims]),
+        ("Interpretations the search may have missed", list(review.missing_interpretations)),
+        ("Sources that may not be independent", list(review.source_independence_issues)),
+    ]
+    blocks = [
+        f"{title}:\n" + "\n".join(f"- {item}" for item in items)
+        for title, items in sections
+        if items
+    ]
+    header = f"Completion probability {review.completion_probability:.2f}."
+    return "\n\n".join([header, *blocks]) if blocks else f"{header} The reviewer raised nothing."
 
 
 def _render_unresolved(notes: list[str]) -> str:
@@ -426,6 +592,31 @@ def _ensure_budget_note(body: str, ws: Workspace) -> str:
     following = re.search(r"^##+\s", body[match.end():], re.MULTILINE)
     cut = match.end() + (following.start() if following else len(body) - match.end())
     return body[:cut].rstrip() + "\n" + bullets + "\n\n" + body[cut:].lstrip()
+
+
+def _ensure_contradictions_section(body: str, lines: list[str]) -> str:
+    """The prompt asks for the disagreements; this makes sure the section states them.
+
+    Same pattern as `_ensure_budget_note`. Only when there is something to state, and
+    only when the model's own section is missing or says "None found." - a section the
+    model filled in itself is left alone, because it is cited and the bullets are not.
+    """
+    if not lines:
+        return body
+    bullets = "\n".join(f"- {line}" for line in lines)
+    match = re.search(r"^##+\s*Contradictions[^\n]*$", body, re.MULTILINE)
+    if match is None:
+        section = "## Contradictions and caveats\n\n" + bullets + "\n\n"
+        anchor = re.search(r"^##+\s*(?:Unknowns|Sources)\b", body, re.MULTILINE)
+        if anchor is None:
+            return body.rstrip() + "\n\n" + section
+        return body[: anchor.start()] + section + body[anchor.start():]
+    following = re.search(r"^##+\s", body[match.end():], re.MULTILINE)
+    end = match.end() + (following.start() if following else len(body) - match.end())
+    content = body[match.end():end].strip()
+    if content and not re.fullmatch(r"(?i)none(?: found)?\.?", content):
+        return body
+    return body[: match.end()] + "\n\n" + bullets + "\n\n" + body[end:].lstrip()
 
 
 def _summary_from(body: str, warning: str | None = None) -> str:

@@ -885,3 +885,19 @@ def test_verdicts_and_critic_reports_reach_state_json(sandboxed_run, monkeypatch
     graph_module._critic(_state(ws, round=1))
     saved = json.loads((events.run_dir(ws.run_id) / "state.json").read_text(encoding="utf-8"))
     assert (len(saved["verdicts"]), len(saved["critic_reports"])) == (1, 1)
+
+
+def test_synthesis_is_given_the_latest_critic_report(sandboxed_run, monkeypatch) -> None:
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    first, last = _report(0.4), _report(0.9)
+    ws.critic_reports = [first, last]
+    received: dict = {}
+
+    def fake_synthesize(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        received.update(kwargs)
+        return _answer()
+
+    monkeypatch.setattr(graph_module, "synthesize", fake_synthesize)
+    graph_module._synthesize(_state(ws))
+    assert received["review"] is last

@@ -453,6 +453,7 @@ def _synthesize(state: PrimeState) -> dict[str, Any]:
         model=state.get("models", {}).get("root"),
         on_token=state.get("models", {}).get("on_token"),
         unresolved=ws.unknowns,
+        review=ws.critic_reports[-1] if ws.critic_reports else None,
     )
     _persist(state, answer=answer)
     return {"answer": answer}

@@ -13,8 +13,13 @@ from datetime import UTC, date, datetime
 import pytest
 from langchain_core.messages import AIMessage
 
-from prime_search.agents.synthesizer import SECTION_HEADINGS, confidence_for, synthesize
-from prime_search.schemas import Claim, Document, Evidence, Location, QueryUnderstanding
+from prime_search.agents.synthesizer import (
+    SECTION_HEADINGS,
+    confidence_for,
+    contradiction_lines,
+    synthesize,
+)
+from prime_search.schemas import Claim, CriticReport, Document, Evidence, Location, QueryUnderstanding
 from prime_search.schemas import Branch, SearchPlan
 
 from conftest import ScriptedChatModel
@@ -439,3 +444,122 @@ def test_the_summary_is_the_answer_not_the_caveat(populated) -> None:
 
     assert answer.summary.startswith("A therapeutic CGM is covered")
     assert "This is a policy-level answer only." not in answer.summary
+
+
+# --- contradictions reach the answer (task 2.2) -------------------------------------------
+
+
+def _contested(ws, *, against_doc: str = "doc_web"):  # noqa: ANN001, ANN202
+    """Turn c1 into a contested claim: the LCD for it, a web guide (or the article) against."""
+    if against_doc == "doc_web":
+        ws.documents["doc_web"] = Document(
+            doc_id="doc_web", url="https://example.com/cgm-guide", title="CGM guide",
+            source_tier="web", retrieved_at=datetime.now(UTC), fetch_method="extract",
+        )
+    text = "Medicare covers a CGM for every person with diabetes."
+    ws.evidence.append(
+        Evidence(
+            evidence_id="ev_against", doc_id=against_doc, branch_id="b1",
+            claim_text="A beneficiary must have diabetes", evidence_text=text,
+            location=Location(paragraph_index=0, char_start=0, char_end=len(text)),
+            effective_date=None, relevance=0.8,
+            source_quality=0.3 if against_doc == "doc_web" else 1.0, confidence=0.9,
+            stance="contradicts",
+        )
+    )
+    ws.claims[0] = ws.claims[0].model_copy(
+        update={"status": "contested", "supported_by": ["ev1"], "contradicted_by": ["ev_against"]}
+    )
+    return ws
+
+
+def test_a_contested_claim_becomes_a_readable_contradiction_line(populated) -> None:
+    """docs/05 §2's contradiction evaluator asks whether the answer states which source
+    governs; a claim id says neither."""
+    assert contradiction_lines(_contested(populated)) == [
+        'L33822: A beneficiary must have diabetes - contradicted by example.com '
+        '("Medicare covers a CGM for every person with diabetes."); '
+        "L33822 governs (primary policy over web page)"
+    ]
+
+
+def test_the_later_effective_date_governs_between_equal_tiers(populated) -> None:
+    lines = contradiction_lines(_contested(populated, against_doc="doc_art"))
+    assert lines[0].endswith("A52464 governs (later effective date 2025-01-15)")
+
+
+def test_the_critics_contradictions_are_added(populated) -> None:
+    """The claim graph only sees disagreement inside a branch; the critic's are how a
+    cross-branch one reaches the answer."""
+    description = "A web guide says every diabetic qualifies; L33822 requires more; the LCD governs"
+    review = CriticReport(contradictions=["c1", description], completion_probability=0.5, reasoning="r")
+
+    lines = contradiction_lines(populated, review)  # c1 is not contested in the graph
+    assert lines[0].startswith('Reviewer: "A beneficiary must have diabetes" (c1)')
+    assert lines[1] == description
+
+
+def test_a_contested_claim_the_critic_also_flags_is_listed_once(populated) -> None:
+    ws = _contested(populated)
+    review = CriticReport(contradictions=["c1"], completion_probability=0.5, reasoning="r")
+    assert len(contradiction_lines(ws, review)) == 1
+
+
+def test_the_answer_field_holds_readable_lines_not_claim_ids(populated) -> None:
+    ws = _contested(populated)
+    answer = synthesize(ws, model=ScriptedChatModel(script=[AIMessage(content=BODY)]))
+    assert answer.contradictions == contradiction_lines(ws)
+    assert "c1" not in answer.contradictions
+
+
+def test_none_found_is_replaced_when_there_are_contradictions(populated) -> None:
+    ws = _contested(populated)
+    answer = synthesize(ws, model=ScriptedChatModel(script=[AIMessage(content=BODY)]))
+
+    section = answer.body_markdown.split("## Contradictions and caveats")[1].split("## Unknowns")[0]
+    assert "None found." not in section
+    assert "L33822 governs (primary policy over web page)" in section
+
+
+def test_a_contradictions_section_the_model_wrote_is_left_alone(populated) -> None:
+    """The model's own section is cited; the inserted bullets are not."""
+    ws = _contested(populated)
+    written = BODY.replace("None found.", "The web guide overstates coverage; the LCD governs [1].")
+    answer = synthesize(ws, model=ScriptedChatModel(script=[AIMessage(content=written)]))
+
+    assert "The web guide overstates coverage; the LCD governs [1]." in answer.body_markdown
+    assert "primary policy over web page" not in answer.body_markdown
+
+
+def test_a_missing_contradictions_section_is_inserted_before_unknowns(populated) -> None:
+    ws = _contested(populated)
+    body = BODY.replace("## Contradictions and caveats\n\nNone found.\n\n", "")
+    answer = synthesize(ws, model=ScriptedChatModel(script=[AIMessage(content=body)]))
+
+    text = answer.body_markdown
+    assert text.index("## Contradictions and caveats") < text.index("## Unknowns")
+
+
+def test_the_reviewers_notes_reach_the_prompt(populated) -> None:
+    review = CriticReport(
+        contradictions=["A web guide says every diabetic qualifies; the LCD governs"],
+        outdated_sources=["doc_lcd"],
+        missing_interpretations=["Part B versus Part D"],
+        completion_probability=0.55,
+        reasoning="r",
+    )
+    model = ScriptedChatModel(script=[AIMessage(content=BODY)])
+    synthesize(populated, model=model, review=review)
+
+    prompt = "\n".join(str(m.content) for m in model.seen[0])
+    assert "## What the reviewer found" in prompt
+    assert "Completion probability 0.55." in prompt
+    assert "A web guide says every diabetic qualifies; the LCD governs" in prompt
+    assert "L33822 (LCD, dated 2024-10-01)" in prompt
+    assert "Part B versus Part D" in prompt
+
+
+def test_no_review_says_so_in_the_prompt(populated) -> None:
+    model = ScriptedChatModel(script=[AIMessage(content=BODY)])
+    synthesize(populated, model=model)
+    assert "(no review was run)" in "\n".join(str(m.content) for m in model.seen[0])
