@@ -243,6 +243,32 @@ describe("reduceRun", () => {
     expect(paneErrors(interrupted)).toHaveLength(1);
   });
 
+  it("keeps the same pane warning from two rounds as two lines (spec review)", () => {
+    seq = 0;
+    const failure = {
+      message: "judge: RuntimeError: 503",
+      node: "judge",
+      severity: "warning",
+      summary: "The check of whether the research was complete could not run this round",
+    };
+    const view = reduceEvents([ev("error", failure), ev("error", failure)]);
+    expect(paneWarnings(view)).toHaveLength(2);
+  });
+
+  it("attaches an older run's crashed sub-agent to the task its message names", () => {
+    seq = 0;
+    const view = reduceEvents([
+      ev("task.started", { task_id: "b1-r0", branch_id: "b1", round: 0, instruction: "i" }),
+      ev("task.started", { task_id: "b2-r0", branch_id: "b2", round: 0, instruction: "i" }),
+      ev("error", { message: "b1-r0: RuntimeError: tavily down", node: "search_agent" }),
+    ]);
+    expect(taskNotices(view, "b1-r0").map((notice) => notice.summary)).toEqual([
+      "This line of research stopped because of a technical problem",
+    ]);
+    expect(taskNotices(view, "b2-r0")).toEqual([]);
+    expect(paneWarnings(view)).toEqual([]);
+  });
+
   it("tells a server error frame from a dropped connection (spec review, 2.5)", () => {
     expect(isServerErrorFrame(new MessageEvent("error", { data: '{"message":"x","node":"search_agent"}' }))).toBe(true);
     expect(isServerErrorFrame(new Event("error"))).toBe(false);

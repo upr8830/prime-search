@@ -77,7 +77,7 @@ Behavior:
   the affected pane; the other pane continues. A `warning` (02 §4) is a muted line. One that names a task shows
   under that task in the search tree ("skipped: couldn't read a page from facebook.com", the engineer's
   message on hover); the rest show as "ⓘ {summary}" under the pane header. The same warning on the same task
-  shows once. Runs recorded before `severity` existed are read the same way: `search_agent*`, `judge`,
+  shows once; pane warnings are never merged (a judge failing in two rounds is two lines). Runs recorded before `severity` existed are read the same way: `search_agent*`, `judge`,
   `critic`, `plan` and `synthesize` count as warnings, a branch's miss attaches to that branch's running task,
   and the summary is derived from the message.
 - Scope warning (`Answer.scope_warning`) renders as an amber banner above the answer.

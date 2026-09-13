@@ -287,9 +287,13 @@ export function reduceRun(view: RunView, event: RunEvent): RunView {
       return { ...view, usage: event.payload };
     case "error": {
       const notice = noticeFor(view, event.payload);
-      const repeated = view.notices.some(
-        (seen) => seen.severity === notice.severity && seen.taskId === notice.taskId && seen.summary === notice.summary,
-      );
+      // The same warning on the same task shows once (07 §3). Pane notes are never merged:
+      // a judge failing in two rounds is two problems.
+      const repeated =
+        notice.taskId !== null &&
+        view.notices.some(
+          (seen) => seen.severity === notice.severity && seen.taskId === notice.taskId && seen.summary === notice.summary,
+        );
       return {
         ...view,
         errors: [...view.errors, event.payload],

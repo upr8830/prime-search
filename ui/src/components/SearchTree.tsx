@@ -1,6 +1,6 @@
 "use client";
 
-import { formatDate, formatPercent, plural, tierBadgeClass, tierLabel } from "@/lib/format";
+import { formatDate, formatPercent, noticeText, plainMissing, plural, tierBadgeClass, tierLabel } from "@/lib/format";
 import {
   branchIds,
   evidenceForBranch,
@@ -8,7 +8,6 @@ import {
   tasksForBranch,
   timeline,
   type BranchStatus,
-  type Notice,
   type RunView,
   type TaskNode,
 } from "@/lib/reducer";
@@ -163,12 +162,6 @@ function TaskRow({ view, task }: { view: RunView; task: TaskNode }) {
   );
 }
 
-/** A retrieval miss is something the agent skipped; any other task warning is a note. */
-function noticeText(notice: Notice): string {
-  if (!notice.node.includes(":")) return `ⓘ ${notice.summary}`;
-  return `skipped: ${notice.summary.charAt(0).toLowerCase()}${notice.summary.slice(1)}`;
-}
-
 function VerdictSeparator({ verdict }: { verdict: Verdict }) {
   return (
     <div className="bg-panel px-3 py-1.5 text-xs text-muted" title={verdict.reasoning}>
@@ -177,7 +170,7 @@ function VerdictSeparator({ verdict }: { verdict: Verdict }) {
         {verdict.sufficient ? "sufficient" : "insufficient"}
       </span>
       , {plural(verdict.new_tasks.length, "new task")}
-      {verdict.missing.length > 0 && <span> · missing: {verdict.missing.join("; ")}</span>}
+      {verdict.missing.length > 0 && <span> · missing: {verdict.missing.map(plainMissing).join("; ")}</span>}
     </div>
   );
 }

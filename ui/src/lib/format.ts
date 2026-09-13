@@ -1,4 +1,4 @@
-import type { ViewStatus } from "./reducer";
+import type { Notice, ViewStatus } from "./reducer";
 import type { ClaimStatus, RunStatus, Tier, Usage } from "./types";
 
 export const TIER_LABEL: Record<Tier, string> = {
@@ -49,6 +49,19 @@ export function limitNote(limits: readonly string[] | null | undefined): string 
   const words = [...new Set((limits ?? []).map((limit) => LIMIT_WORDS[limit]).filter(Boolean))];
   if (words.length === 0) return LIMIT_NOTE_GENERIC;
   return `ⓘ Research limit reached (${words.join(", ")}) — this answer uses the sources found before the limit.`;
+}
+
+/** A task note in the search tree: a retrieval miss is something the agent skipped. */
+export function noticeText(notice: Pick<Notice, "node" | "summary">): string {
+  if (!notice.node.includes(":")) return `ⓘ ${notice.summary}`;
+  return `skipped: ${notice.summary.charAt(0).toLowerCase()}${notice.summary.slice(1)}`;
+}
+
+export const JUDGE_SKIPPED = "The check of whether the research was complete could not run this round.";
+
+/** A failed judge used to record its exception as `missing`; runs saved then still carry it. */
+export function plainMissing(item: string): string {
+  return item.startsWith("judge output unusable") ? JUDGE_SKIPPED : item;
 }
 
 export const CLAIM_STATUS_CLASS: Record<ClaimStatus, string> = {
