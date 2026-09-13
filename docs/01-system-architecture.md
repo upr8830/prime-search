@@ -83,14 +83,21 @@ class Budget(BaseModel):
     max_tokens: int = 150_000
     max_seconds: int = 180
 
+class DeepBudget(Budget):   # defaults on the class, so one PRIME_BUDGET_DEEP__* override keeps the rest (11)
+    max_tokens: int = 400_000
+    max_deep_reads: int = 30
+
+class FastBudget(Budget):
+    max_searches: int = 3; max_fetches: int = 2; max_agents: int = 1; max_rounds: int = 1; max_seconds: int = 30
+
 class Settings(BaseSettings):
     tavily_api_key: str
     nebius_api_key: str
     langsmith_api_key: str | None = None
     langsmith_project: str = "prime-search"
     models: ModelRouting = ModelRouting()
-    budget_deep: Budget = Budget(max_tokens=400_000, max_deep_reads=30)   # round 0 alone spends ~175-195k tokens and 10 reads (11, 2026-09-13)
-    budget_fast: Budget = Budget(max_searches=3, max_fetches=2, max_agents=1, max_rounds=1, max_seconds=30)
+    budget_deep: DeepBudget = DeepBudget()  # max_tokens=400_000, max_deep_reads=30; round 0 alone spends ~175-195k tokens and 10 reads (11, 2026-09-13)
+    budget_fast: FastBudget = FastBudget()  # max_searches=3, max_fetches=2, max_agents=1, max_rounds=1, max_seconds=30
     tavily_cache: bool = True         # cache search/extract by args (used in bench + GEPA)
     tavily_cache_dir: str = ".cache/tavily"
 
