@@ -138,6 +138,7 @@ def run_baseline(
                     "run_id": ws.run_id,
                     "question": request.question,
                     "mode": "baseline",
+                    "depth": request.depth,
                     "trace_url": handle.url,
                 },
             )

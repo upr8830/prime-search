@@ -248,6 +248,9 @@ def test_the_baseline_emits_the_six_events_the_ui_needs(sandboxed_run, monkeypat
 
     seen = {r["type"] for r in _events(run_dir(record.run_id))}
     assert {"run.started", "token", "answer", "usage", "run.finished"} <= seen
+    # One renderer for both panes: the baseline's run.started lacked `depth` until 2.4.
+    started = _by_type(_events(run_dir(record.run_id)), "run.started")
+    assert started and REQUIRED_KEYS["run.started"] <= set(started[0])
 
 
 def _one_citation():
