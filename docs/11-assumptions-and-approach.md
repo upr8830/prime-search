@@ -330,3 +330,7 @@ Format: `YYYY-MM-DD — <decision> — <reason> — <spec affected>`
 
 
 - 2026-09-13 — Task 2.3: the "docs/05 §2 calibration evaluator" named in the 1.7 `Answer.confidence` entry, in `confidence_for`'s docstring and in a synthesis test does not exist — 05 §2 defines no calibration metric. The references are removed rather than a metric invented; `Answer.confidence` keeps its authored formula and is not scored by the bench — 05 §2, 02 §2.7
+
+
+- 2026-09-13 — Task 2.3: `run_prime` and `run_baseline` take `source`, `extra_tags` and `project_name` (explicit keyword arguments rather than a context variable; 2.4 needs `source:ui` too), so bench runs carry docs/06 §2's `source:bench` and `bench:<split>` and land in project `prime-search-bench` (01 §6) as their own root traces, linked from each experiment row. Trace metadata `tavily_cache` now reads settings (it was hardcoded True); the baseline's is False because it uses raw TavilySearch — 06 §2, 05 §3
+- 2026-09-13 — Task 2.3: the baseline model is built with `stream_usage=True` (user decision). A saved baseline run logged `input_tokens=0`: `BaseChatOpenAI` does not request usage on a stream for a non-default base URL, so the bench's baseline token and cost rows would have been output-only estimates. Measurement only — the starter's model, three-line prompt and single TavilySearch tool are unchanged, so 03 §9 parity holds — 01 §3, 03 §9

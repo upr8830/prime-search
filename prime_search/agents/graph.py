@@ -32,7 +32,7 @@ from __future__ import annotations
 
 import operator
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from typing import Annotated, Any, TypedDict
 
@@ -493,12 +493,18 @@ def run_prime(
     on_token: Callable[[str], None] | None = None,
     models: dict[str, BaseChatModel] | None = None,
     ws: Workspace | None = None,
+    source: str = "cli",
+    extra_tags: Sequence[str] = (),
+    project_name: str | None = None,
 ) -> RunRecord:
     """Run one PRIME investigation end to end and return its `RunRecord`.
 
     `on_event` and `on_token` are how the CLI (and, at 2.4, the SSE stream) watch a
     run: the CLI subscribes rather than reaching into the graph, so the API will not
     need a second rendering path.
+
+    `source`, `extra_tags` and `project_name` label the root trace (docs/06 §2): the
+    bench passes `source="bench"`, `bench:<split>` and its own LangSmith project.
     """
     settings = get_settings()
     budget = request.budget_override or settings.budget(request.depth)
@@ -529,12 +535,15 @@ def run_prime(
         "trace_url": None,
     }
 
-    tags, metadata = _trace_tags(request, settings, workspace)
+    tags, metadata = _trace_tags(
+        request, settings, workspace, source=source, extra_tags=extra_tags
+    )
     record: RunRecord | None = None
     trace_url: str | None = None
     try:
         with trace_run(
             "prime_search",
+            project_name=project_name,
             tags=tags,
             metadata=metadata,
             inputs={"question": request.question},
@@ -829,7 +838,12 @@ def _empty_usage() -> Any:
 
 
 def _trace_tags(
-    request: RunRequest, settings: Any, ws: Workspace
+    request: RunRequest,
+    settings: Any,
+    ws: Workspace,
+    *,
+    source: str = "cli",
+    extra_tags: Sequence[str] = (),
 ) -> tuple[list[str], dict[str, Any]]:
     """docs/06 §2's root-run tags and metadata. `domain:`/`qtype:` are added later —
     they do not exist until `understand` has run."""
@@ -839,7 +853,8 @@ def _trace_tags(
         f"prompt_set:{request.prompt_set}",
         f"model:{settings.models.root}",
         f"subagent:{settings.models.subagent}",
-        "source:cli",
+        f"source:{source}",
+        *extra_tags,
     ]
     metadata = {
         "run_id": ws.run_id,
@@ -848,7 +863,10 @@ def _trace_tags(
         "git_sha": _git_sha(),
         "budget": ws.budget.model_dump(),
         "models": settings.models.model_dump(),
-        "tavily_cache": True,
+        # Read from settings: it was hardcoded True, and docs/05 §3's report has to say
+        # whether a bench row ran against the cache.
+        "tavily_cache": settings.tavily_cache,
+        "source": source,
     }
     return tags, metadata
 

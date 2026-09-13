@@ -29,7 +29,7 @@ is resolved:
 from __future__ import annotations
 
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from typing import Any
 
@@ -63,7 +63,10 @@ def build_baseline_agent(model: BaseChatModel | None = None) -> Any:
     settings = get_settings()
     settings.export_sdk_env()  # TavilySearch reads TAVILY_API_KEY from the environment
     return create_agent(
-        model=model or baseline_model(streaming=True),
+        # `stream_usage` asks the endpoint to report token usage on the stream; without
+        # it every streamed reply carried none and the baseline logged input_tokens=0.
+        # Measurement only: the model, prompt and tool are the starter's (docs/11).
+        model=model or baseline_model(streaming=True, stream_usage=True),
         tools=[TavilySearch()],
         system_prompt=STARTER_SYSTEM_PROMPT,
     )
@@ -75,15 +78,22 @@ def run_baseline(
     on_event: Callable[[dict], None] | None = None,
     on_token: Callable[[str], None] | None = None,
     model: BaseChatModel | None = None,
+    source: str = "cli",
+    extra_tags: Sequence[str] = (),
+    project_name: str | None = None,
+    ws: Workspace | None = None,
 ) -> RunRecord:
     """Run the baseline once and return a `RunRecord`, so both modes are comparable.
+
+    `source`, `extra_tags` and `project_name` label the root trace as for `run_prime`;
+    `ws` lets a caller (the bench) know the run id even when the run raises.
 
     The starter prints and exits; the bench needs a record with usage and an `Answer`.
     Wrapping its output is not adding capability to the agent — the agent sees exactly
     what the starter's agent saw.
     """
     settings = get_settings()
-    ws = Workspace(objective=request.question, budget=settings.budget(request.depth))
+    ws = ws or Workspace(objective=request.question, budget=settings.budget(request.depth))
     started = datetime.now(UTC)
     unsubscribe = events.subscribe(ws.run_id, on_event) if on_event else None
     # Same rule as synthesis: whatever is watching a run is downstream of the answer,
@@ -95,7 +105,8 @@ def run_baseline(
         "mode:baseline",
         f"depth:{request.depth}",
         f"model:{settings.models.baseline}",
-        "source:cli",
+        f"source:{source}",
+        *extra_tags,
     ]
     text_parts: list[str] = []
     status = "completed"
@@ -105,6 +116,7 @@ def run_baseline(
     try:
         with trace_run(
             "baseline",
+            project_name=project_name,
             tags=tags,
             metadata={
                 "run_id": ws.run_id,
@@ -112,6 +124,9 @@ def run_baseline(
                 "question": request.question,
                 "provider": "nebius",
                 "model": settings.models.baseline,
+                "source": source,
+                # Raw TavilySearch, never through primitives/ (docs/03 §9): uncached.
+                "tavily_cache": False,
             },
             inputs={"question": request.question},
         ) as handle:

@@ -180,3 +180,55 @@ def test_a_baseline_run_persists_its_record(sandboxed_run, monkeypatch, tmp_path
     request = json.loads((directory / "request.json").read_text(encoding="utf-8"))
     assert request["mode"] == "baseline"
     assert (directory / "answer.md").read_text(encoding="utf-8") == "Covered when insulin-treated."
+
+
+def test_the_baseline_trace_carries_the_source_project_and_cache_flag(sandboxed_run, monkeypatch) -> None:
+    from contextlib import contextmanager
+
+    from langchain_core.messages import AIMessageChunk
+
+    from prime_search import baseline as module
+    from prime_search.schemas import RunRequest
+
+    seen: dict = {}
+
+    class FakeAgent:
+        def stream(self, *args, **kwargs):  # type: ignore[no-untyped-def]
+            yield "messages", (AIMessageChunk(content="answer"), {})
+
+    @contextmanager
+    def fake_trace(name, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        seen.update(kwargs)
+
+        class Handle:
+            url = "https://smith.langchain.com/x"
+
+        yield Handle()
+
+    monkeypatch.setattr(module, "build_baseline_agent", lambda model=None: FakeAgent())
+    monkeypatch.setattr(module, "trace_run", fake_trace)
+    ws = module.Workspace(objective="q")
+    record = module.run_baseline(
+        RunRequest(question="q", mode="baseline"),
+        source="bench", extra_tags=["bench:dev"], project_name="prime-search-bench", ws=ws,
+    )
+    assert record.run_id == ws.run_id
+    assert "source:bench" in seen["tags"] and "bench:dev" in seen["tags"]
+    assert seen["project_name"] == "prime-search-bench"
+    assert seen["metadata"]["tavily_cache"] is False
+
+
+def test_the_baseline_model_reports_streamed_token_usage(offline_credentials, monkeypatch) -> None:
+    """A saved baseline run showed input_tokens=0: streamed replies carried no usage."""
+    from prime_search import baseline as module
+
+    captured: dict = {}
+    real = module.baseline_model
+
+    def recording(**kwargs):  # noqa: ANN003, ANN202
+        captured.update(kwargs)
+        return real(**kwargs)
+
+    monkeypatch.setattr(module, "baseline_model", recording)
+    module.build_baseline_agent()
+    assert captured == {"streaming": True, "stream_usage": True}

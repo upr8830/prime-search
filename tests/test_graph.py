@@ -1051,3 +1051,27 @@ def test_a_later_round_is_held_to_the_reads_left(sandboxed_run) -> None:
     pending = [_task(f"b{i}-r1", f"b{i}", 1) for i in (1, 2, 3)]
     update = graph_module._dispatch(_state(ws, round=1, pending_tasks=pending))
     assert len(update["pending_tasks"]) == 2
+
+
+def test_trace_tags_carry_the_source_and_bench_split(sandboxed_run) -> None:
+    """docs/06 §2: `source:<ui|cli|bench|gepa>` and `bench:<split>` when applicable."""
+    from prime_search.config import get_settings
+
+    request = RunRequest(question="q")
+    tags, metadata = graph_module._trace_tags(
+        request, get_settings(), sandboxed_run, source="bench", extra_tags=["bench:dev"]
+    )
+    assert "source:bench" in tags and "bench:dev" in tags and "source:cli" not in tags
+    assert metadata["source"] == "bench"
+    default_tags, _ = graph_module._trace_tags(request, get_settings(), sandboxed_run)
+    assert "source:cli" in default_tags
+
+
+def test_trace_metadata_reports_the_cache_setting(sandboxed_run, monkeypatch) -> None:
+    """It was hardcoded True; the bench report has to say whether a row was cached."""
+    from prime_search.config import get_settings
+
+    monkeypatch.setenv("PRIME_TAVILY_CACHE", "false")
+    get_settings.cache_clear()
+    _, metadata = graph_module._trace_tags(RunRequest(question="q"), get_settings(), sandboxed_run)
+    assert metadata["tavily_cache"] is False
