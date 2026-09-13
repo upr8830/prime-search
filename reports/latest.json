@@ -1,0 +1,412 @@
+{
+ "generated_at": "2026-09-13 17:47 UTC",
+ "split": "dev",
+ "passes": 1,
+ "sources": [
+  "reports/bench/baseline-none-dev-20260913-1649-45ba5ed8.json",
+  "reports/bench/prime-base-dev-20260913-1649-5273555d.json"
+ ],
+ "configs": [
+  {
+   "config": "baseline-none-deep",
+   "mode": "baseline",
+   "prompt_set": "none",
+   "depth": "deep",
+   "split": "dev",
+   "experiments": [
+    {
+     "name": "baseline-none-dev-20260913-1649-45ba5ed8",
+     "url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/datasets/9dc81116-8a93-480c-9da2-29cacc1e9370/compare?selectedSessions=2de02a0d-e7b2-4e77-b66e-35b8b334ff02",
+     "tavily_cache": false,
+     "git_sha": "c499974",
+     "evaluator_model": "moonshotai/Kimi-K2.6",
+     "dataset_sha": "2b33b5a37f34",
+     "started_at": "2026-09-13T16:49:11.679286+00:00",
+     "rescored_at": "2026-09-13T17:46:57.526357+00:00",
+     "file": "reports/bench/baseline-none-dev-20260913-1649-45ba5ed8.json"
+    }
+   ],
+   "n": 5,
+   "metrics": {
+    "answer_correctness": {
+     "mean": 0.868,
+     "spread": null,
+     "n": 5
+    },
+    "evidence_recall": {
+     "mean": 0.0,
+     "spread": null,
+     "n": 4
+    },
+    "citation_correctness": {
+     "mean": 0.0,
+     "spread": null,
+     "n": 5
+    },
+    "citation_completeness": {
+     "mean": 0.0871,
+     "spread": null,
+     "n": 5
+    },
+    "currency": {
+     "mean": 0.2,
+     "spread": null,
+     "n": 5
+    },
+    "contradiction_handling": {
+     "mean": 1.0,
+     "spread": null,
+     "n": 1
+    },
+    "scope_handling": {
+     "mean": 1.0,
+     "spread": null,
+     "n": 1
+    },
+    "primary_source_ratio": {
+     "mean": 0.25,
+     "spread": null,
+     "n": 5
+    },
+    "search_cost": {
+     "mean": 1.0,
+     "spread": null,
+     "n": 5
+    },
+    "latency_s": {
+     "mean": 11.62,
+     "spread": null,
+     "n": 5
+    },
+    "tokens": {
+     "mean": 8667.8,
+     "spread": null,
+     "n": 5
+    },
+    "search_efficiency": {
+     "mean": 8.68,
+     "spread": null,
+     "n": 5
+    }
+   },
+   "composite": {
+    "mean": 0.4972,
+    "spread": null,
+    "n": 5
+   },
+   "per_tier": {
+    "1": {
+     "n": 1,
+     "answer_correctness": 1.0,
+     "evidence_recall": 0.0,
+     "citation_correctness": 0.0,
+     "citation_completeness": 0.2353,
+     "currency": 0.0,
+     "composite": 0.5
+    },
+    "2": {
+     "n": 1,
+     "answer_correctness": 1.0,
+     "evidence_recall": 0.0,
+     "citation_correctness": 0.0,
+     "citation_completeness": 0.0,
+     "currency": 0.0,
+     "composite": 0.5
+    },
+    "3": {
+     "n": 1,
+     "answer_correctness": 0.5,
+     "evidence_recall": 0.0,
+     "citation_correctness": 0.0,
+     "citation_completeness": 0.2,
+     "currency": 1.0,
+     "composite": 0.35
+    },
+    "4": {
+     "n": 2,
+     "answer_correctness": 0.92,
+     "evidence_recall": 0.0,
+     "citation_correctness": 0.0,
+     "citation_completeness": 0.0,
+     "currency": 0.0,
+     "composite": 0.568
+    }
+   },
+   "per_domain": {
+    "cgm": {
+     "n": 2,
+     "answer_correctness": 0.75,
+     "evidence_recall": 0.0,
+     "citation_correctness": 0.0,
+     "citation_completeness": 0.2177,
+     "currency": 0.5,
+     "composite": 0.425
+    },
+    "glp1": {
+     "n": 2,
+     "answer_correctness": 0.92,
+     "evidence_recall": 0.0,
+     "citation_correctness": 0.0,
+     "citation_completeness": 0.0,
+     "currency": 0.0,
+     "composite": 0.468
+    },
+    "other": {
+     "n": 1,
+     "answer_correctness": 1.0,
+     "evidence_recall": null,
+     "citation_correctness": 0.0,
+     "citation_completeness": 0.0,
+     "currency": 0.0,
+     "composite": 0.7
+    }
+   },
+   "judge_errors": 0,
+   "failed_runs": 0,
+   "judge_tokens": 84018,
+   "missing_keys": []
+  },
+  {
+   "config": "prime-base-deep",
+   "mode": "prime",
+   "prompt_set": "base",
+   "depth": "deep",
+   "split": "dev",
+   "experiments": [
+    {
+     "name": "prime-base-dev-20260913-1649-5273555d",
+     "url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/datasets/9dc81116-8a93-480c-9da2-29cacc1e9370/compare?selectedSessions=4b381e35-dfce-4f8e-a65c-e3e69b14e84b",
+     "tavily_cache": true,
+     "git_sha": "c499974",
+     "evaluator_model": "moonshotai/Kimi-K2.6",
+     "dataset_sha": "2b33b5a37f34",
+     "started_at": "2026-09-13T16:49:08.226408+00:00",
+     "rescored_at": "2026-09-13T17:42:51.672197+00:00",
+     "file": "reports/bench/prime-base-dev-20260913-1649-5273555d.json"
+    }
+   ],
+   "n": 5,
+   "metrics": {
+    "answer_correctness": {
+     "mean": 0.68,
+     "spread": null,
+     "n": 5
+    },
+    "evidence_recall": {
+     "mean": 0.625,
+     "spread": null,
+     "n": 4
+    },
+    "citation_correctness": {
+     "mean": 0.6,
+     "spread": null,
+     "n": 5
+    },
+    "citation_completeness": {
+     "mean": 0.9667,
+     "spread": null,
+     "n": 5
+    },
+    "currency": {
+     "mean": 0.9667,
+     "spread": null,
+     "n": 5
+    },
+    "contradiction_handling": {
+     "mean": 1.0,
+     "spread": null,
+     "n": 1
+    },
+    "scope_handling": {
+     "mean": 1.0,
+     "spread": null,
+     "n": 1
+    },
+    "primary_source_ratio": {
+     "mean": 0.7811,
+     "spread": null,
+     "n": 5
+    },
+    "search_cost": {
+     "mean": 26.4,
+     "spread": null,
+     "n": 5
+    },
+    "latency_s": {
+     "mean": 158.68,
+     "spread": null,
+     "n": 5
+    },
+    "tokens": {
+     "mean": 441670.4,
+     "spread": null,
+     "n": 5
+    },
+    "search_efficiency": {
+     "mean": 0.2889,
+     "spread": null,
+     "n": 5
+    }
+   },
+   "composite": {
+    "mean": 0.6823,
+    "spread": null,
+    "n": 5
+   },
+   "per_tier": {
+    "1": {
+     "n": 1,
+     "answer_correctness": 0.5,
+     "evidence_recall": 1.0,
+     "citation_correctness": 0.625,
+     "citation_completeness": 1.0,
+     "currency": 1.0,
+     "composite": 0.655
+    },
+    "2": {
+     "n": 1,
+     "answer_correctness": 0.32,
+     "evidence_recall": 0.5,
+     "citation_correctness": 0.625,
+     "citation_completeness": 0.8333,
+     "currency": 1.0,
+     "composite": 0.455
+    },
+    "3": {
+     "n": 1,
+     "answer_correctness": 1.0,
+     "evidence_recall": 1.0,
+     "citation_correctness": 0.625,
+     "citation_completeness": 1.0,
+     "currency": 0.8333,
+     "composite": 0.8903
+    },
+    "4": {
+     "n": 2,
+     "answer_correctness": 0.79,
+     "evidence_recall": 0.0,
+     "citation_correctness": 0.5625,
+     "citation_completeness": 1.0,
+     "currency": 1.0,
+     "composite": 0.7055
+    }
+   },
+   "per_domain": {
+    "cgm": {
+     "n": 2,
+     "answer_correctness": 0.75,
+     "evidence_recall": 1.0,
+     "citation_correctness": 0.625,
+     "citation_completeness": 1.0,
+     "currency": 0.9166,
+     "composite": 0.7727
+    },
+    "glp1": {
+     "n": 2,
+     "answer_correctness": 0.45,
+     "evidence_recall": 0.25,
+     "citation_correctness": 0.5625,
+     "citation_completeness": 0.9166,
+     "currency": 1.0,
+     "composite": 0.4735
+    },
+    "other": {
+     "n": 1,
+     "answer_correctness": 1.0,
+     "evidence_recall": null,
+     "citation_correctness": 0.625,
+     "citation_completeness": 1.0,
+     "currency": 1.0,
+     "composite": 0.919
+    }
+   },
+   "judge_errors": 0,
+   "failed_runs": 0,
+   "judge_tokens": 222637,
+   "missing_keys": []
+  }
+ ],
+ "prd_targets": [
+  {
+   "config": "baseline-none-deep",
+   "metric": "contradiction_handling",
+   "subset": "tier 4 with expected contradictions",
+   "value": 1.0,
+   "n": 1,
+   "target": 0.6,
+   "met": true
+  },
+  {
+   "config": "baseline-none-deep",
+   "metric": "currency",
+   "subset": "change-detection questions",
+   "value": 1.0,
+   "n": 1,
+   "target": 0.8,
+   "met": true
+  },
+  {
+   "config": "baseline-none-deep",
+   "metric": "evidence_recall",
+   "subset": "all",
+   "value": 0.0,
+   "n": 4,
+   "target": 0.75,
+   "met": false
+  },
+  {
+   "config": "baseline-none-deep",
+   "metric": "citation_correctness",
+   "subset": "all",
+   "value": 0.0,
+   "n": 5,
+   "target": 0.85,
+   "met": false
+  },
+  {
+   "config": "prime-base-deep",
+   "metric": "contradiction_handling",
+   "subset": "tier 4 with expected contradictions",
+   "value": 1.0,
+   "n": 1,
+   "target": 0.6,
+   "met": true
+  },
+  {
+   "config": "prime-base-deep",
+   "metric": "currency",
+   "subset": "change-detection questions",
+   "value": 0.8333,
+   "n": 1,
+   "target": 0.8,
+   "met": true
+  },
+  {
+   "config": "prime-base-deep",
+   "metric": "evidence_recall",
+   "subset": "all",
+   "value": 0.625,
+   "n": 4,
+   "target": 0.75,
+   "met": false
+  },
+  {
+   "config": "prime-base-deep",
+   "metric": "citation_correctness",
+   "subset": "all",
+   "value": 0.6,
+   "n": 5,
+   "target": 0.85,
+   "met": false
+  },
+  {
+   "config": "prime-base-deep",
+   "metric": "answer_correctness",
+   "subset": "delta over baseline",
+   "value": -0.188,
+   "n": 5,
+   "target": 0.25,
+   "met": false
+  }
+ ]
+}
