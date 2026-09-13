@@ -238,6 +238,7 @@ def test_a_failed_judge_returns_a_structured_failure(ws, monkeypatch) -> None:
     assert outcome.verdict.coverage == {"b1": "partial", "b2": "unresolved"}
     logged = [r for r in events.replay(ws.run_id) if r["type"] == "error"]
     assert logged and "judge" in json.dumps(logged[-1])
+    assert logged[-1]["payload"]["severity"] == "warning"  # the run goes on (docs/02 §4)
 
 
 def test_judge_tokens_are_charged_to_the_run(ws, monkeypatch) -> None:

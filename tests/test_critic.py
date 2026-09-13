@@ -190,6 +190,7 @@ def test_when_everything_fails_the_run_goes_on_without_a_report(ws, monkeypatch)
     assert outcome.fallback_tag == SKIPPED_TAG
     logged = [r for r in events.replay(ws.run_id) if r["type"] == "error"]
     assert logged and "critic" in json.dumps(logged[-1])
+    assert logged[-1]["payload"]["severity"] == "warning"  # the run goes on (docs/02 §4)
 
 
 # --- what the harness keeps ----------------------------------------------------------------

@@ -38,6 +38,7 @@ from prime_search.config import Budget, get_settings
 from prime_search.evidence.store import EvidenceRejected, EvidenceStore
 from prime_search.models import subagent_model, token_usage
 from prime_search.primitives import tavily
+from prime_search.primitives.sources import host_of
 from prime_search.prompts import render
 from prime_search.schemas import SearchTask, TaskResult, Usage
 from prime_search.tracing import get_logger, trace_run
@@ -193,16 +194,24 @@ class ToolContext:
     def emit(self, type: str, payload: Any) -> None:
         events.emit(self.ws.run_id, type, payload)
 
-    def error_event(self, tool_name: str, message: str) -> None:
-        """docs/02 §4's `error {message, node}`. Retrieval failures only — an evidence
-        rejection is a normal correction loop, not a run error."""
-        self.emit(
-            "error",
-            {
-                "message": f"{tool_name}: {message}"[:500],
-                "node": f"search_agent:{self.task.branch_id}",
-            },
+    def error_event(self, tool_name: str, message: str, summary: str) -> None:
+        """docs/02 §4's `error` event at severity "warning": a retrieval miss the agent
+        works around, not a failed run. Retrieval failures only — an evidence rejection
+        is a normal correction loop, not an event."""
+        events.emit_error(
+            self.ws.run_id,
+            f"{tool_name}: {message}",
+            f"search_agent:{self.task.branch_id}",
+            severity="warning",
+            task_id=self.task.task_id,
+            summary=summary,
         )
+
+    def page_summary(self, doc_id: str) -> str:
+        """The reader's words for an unreadable page: which site, never the extractor's."""
+        document = self.ws.documents.get(doc_id)
+        host = host_of(document.url) if document is not None else ""
+        return f"Couldn't read a page from {host}" if host else "Couldn't read a page"
 
 
 # --- the five tools (docs/03 §4) --------------------------------------------------
@@ -250,14 +259,14 @@ def build_tools(ctx: ToolContext) -> list[BaseTool]:
                 docs=ctx.ws.documents,  # registers every hit as snippet_only
             )
         except Exception as exc:  # docs/01 §9: never raise at the model
-            ctx.error_event("search", f"{type(exc).__name__}: {exc}")
+            ctx.error_event("search", f"{type(exc).__name__}: {exc}", "A web search failed")
             return {
                 "error": f"search failed: {type(exc).__name__}: {exc}",
                 "tool_calls_left": ctx.calls_left,
             }
         ctx.emit("search", result.event(ctx.task.task_id))
         if result.error:
-            ctx.error_event("search", result.error)
+            ctx.error_event("search", result.error, "A web search returned no usable results")
             return {
                 "error": result.error,
                 "hint": "reformulate the query once; do not repeat it verbatim",
@@ -284,19 +293,32 @@ def build_tools(ctx: ToolContext) -> list[BaseTool]:
 
         You must fetch a document before search_within or add_evidence will work on
         it. Fetch each document once: a repeat fetch of the same doc_id still costs a
-        tool call and a fetch from your budget, even though the text is cached.
+        tool call and a fetch from your budget, even though the text is cached. A page
+        that could not be read is not retried: fetching it again returns the same error.
 
         Args:
             doc_id: A doc_id from a previous search result.
         """
         ctx.begin("fetch")
+        with _LOCK:
+            failed_before = doc_id in ctx.ws.failed_fetches
+        if failed_before:
+            # Another branch, or an earlier round, already failed on this page. The
+            # live run that prompted this tried one unreadable page in two rounds and
+            # showed the same miss twice. No fetch is charged and no event repeats it.
+            return {
+                "doc_id": doc_id,
+                "error": "this page could not be read earlier in this run; it is not retried",
+                "hint": "try a different source for the same fact",
+                "tool_calls_left": ctx.calls_left,
+            }
         refused = ctx.charge("fetches")
         if refused:
             return {"error": refused, "tool_calls_left": ctx.calls_left}
         try:
             result = tavily.fetch(doc_id, docs=ctx.ws.documents, run_dir=ctx.run_dir)
         except Exception as exc:  # an unknown doc_id raises ValueError
-            ctx.error_event("fetch", f"{type(exc).__name__}: {exc}")
+            ctx.error_event("fetch", f"{type(exc).__name__}: {exc}", ctx.page_summary(doc_id))
             return {
                 "error": f"{type(exc).__name__}: {exc}",
                 "hint": "search first; doc_ids only exist for search results",
@@ -304,7 +326,9 @@ def build_tools(ctx: ToolContext) -> list[BaseTool]:
             }
         document = result.document
         if not document.is_fetched:
-            ctx.error_event("fetch", result.error or "no text extracted")
+            with _LOCK:
+                ctx.ws.failed_fetches[doc_id] = result.error or "no text extracted"
+            ctx.error_event("fetch", result.error or "no text extracted", ctx.page_summary(doc_id))
             return {
                 "doc_id": doc_id,
                 "error": result.error or "no text could be extracted from this page",

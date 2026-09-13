@@ -126,7 +126,10 @@ def run_critic(
         except Exception as fallback:  # noqa: BLE001 - no report is not a failed run
             error = f"{first}; then {type(fallback).__name__}: {fallback}"[:500]
             _log.warning("critic.skipped", run_id=ws.run_id, error=error)
-            events.emit(ws.run_id, "error", {"message": f"critic: {error}", "node": "critic"})
+            events.emit_error(
+                ws.run_id, f"critic: {error}", "critic", severity="warning",
+                summary="The final review of the answer was skipped",
+            )
             _charge(ws, caller, prompt)
             return CriticOutcome(None, "skipped", SKIPPED_TAG, error)
         _charge(ws, caller, prompt)

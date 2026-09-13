@@ -99,7 +99,10 @@ def run_judge(
     except Exception as exc:  # noqa: BLE001 - a failed judge must not fail the run
         error = f"{type(exc).__name__}: {exc}"[:500]
         _log.warning("judge.failed", run_id=ws.run_id, error=error)
-        events.emit(ws.run_id, "error", {"message": f"judge: {error}", "node": "judge"})
+        events.emit_error(
+            ws.run_id, f"judge: {error}", "judge", severity="warning",
+            summary="The check of whether the research was complete could not run this round",
+        )
         _charge(ws, caller, prompt)
         return JudgeOutcome(failed_verdict(ws, judged_round, error), "failed", FAILED_TAG, error)
 

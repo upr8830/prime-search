@@ -156,7 +156,7 @@ def run_baseline(
         status = "failed"
         error = f"{type(exc).__name__}: {exc}"
         _log.warning("baseline.failed", error=error)
-        events.emit(ws.run_id, "error", {"message": error[:500], "node": "baseline"})
+        events.emit_error(ws.run_id, error, "baseline")
         raise
     finally:
         # Everything below is inside the `finally` and ordered deliberately:

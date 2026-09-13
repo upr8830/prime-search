@@ -350,6 +350,9 @@ def test_one_failing_branch_does_not_fail_the_run(sandboxed_run, monkeypatch) ->
     result = update["task_results"][0]
     assert "because of a technical problem" in result.unresolved
     assert "tavily down" not in result.unresolved  # the exception stays in the log (docs/11)
+    crash = [e["payload"] for e in graph_module.events.replay(sandboxed_run.run_id) if e["type"] == "error"]
+    assert crash and crash[-1]["severity"] == "warning" and crash[-1]["task_id"] == "b1-r0"
+    assert "tavily down" in crash[-1]["message"]
     assert result.evidence_ids == []
 
 

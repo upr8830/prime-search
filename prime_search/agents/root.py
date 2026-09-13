@@ -243,11 +243,12 @@ def plan_run(
     plan = default_plan(ws, understanding, limit)
     ws.plan = plan
     events.emit(ws.run_id, "plan", _plan_payload(plan, None))
-    events.emit(
+    events.emit_error(
         ws.run_id,
-        "error",
-        {"message": f"planning fell back to the default plan: {problem or 'unknown'}"[:500],
-         "node": "plan"},
+        f"planning fell back to the default plan: {problem or 'unknown'}",
+        "plan",
+        severity="warning",
+        summary="The research followed a standard plan for this kind of question",
     )
     _log.warning("root.default_plan", problem=(problem or "")[:300])
     return PlanOutcome(plan, "default", fallback_tag="fallback:default_plan")

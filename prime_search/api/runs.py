@@ -121,7 +121,7 @@ def _execute(request: RunRequest, ws: Workspace) -> None:
         _log.warning("api.run_failed", run_id=ws.run_id, error=error)
         if any(record.get("type") == "run.finished" for record in events.replay(ws.run_id)):
             return
-        events.emit(ws.run_id, "error", {"message": error, "node": "api"})
+        events.emit_error(ws.run_id, error, "api")
         # The record first, as the runners do: a client acts on `run.finished`.
         events.write_run_artifacts(
             ws.to_record(request, status="failed", error=error, finished_at=datetime.now(UTC))

@@ -42,7 +42,7 @@ REQUIRED_KEYS = {
     "answer": {"summary", "body_markdown", "citations", "effective_dates", "unknowns"},
     "usage": {"searches", "fetches", "deep_reads", "agents", "rounds"},
     "run.finished": {"status", "langsmith_run_url", "usage"},
-    "error": {"message", "node"},
+    "error": {"message", "node", "severity"},
     "verdict": {"round", "sufficient", "coverage", "missing", "new_tasks", "reasoning"},
     "critique": {
         "weak_claims", "missing_interpretations", "source_independence_issues",
@@ -166,6 +166,24 @@ def test_collect_emits_usage_not_a_second_evidence_shape(planned) -> None:
     assert usage and REQUIRED_KEYS["usage"] <= set(usage[-1])
     for payload in _by_type(records, "evidence"):
         assert "evidence_id" in payload, "an `evidence` event must carry an Evidence"
+
+
+def test_error_events_carry_a_known_severity(sandboxed_run) -> None:
+    """docs/02 §4: `error {message, node, severity, task_id?, summary?}`."""
+    from prime_search import events
+    from prime_search.events import run_dir
+
+    events.emit_error(sandboxed_run.run_id, "RuntimeError: boom", "run_prime")
+    events.emit_error(
+        sandboxed_run.run_id, "fetch: extract yielded 0 paragraphs", "search_agent:b1",
+        severity="warning", task_id="b1-r0", summary="Couldn't read a page from example.org",
+    )
+    payloads = _by_type(_events(run_dir(sandboxed_run.run_id)), "error")
+    assert all(REQUIRED_KEYS["error"] <= set(payload) for payload in payloads)
+    assert [payload["severity"] for payload in payloads] == ["error", "warning"]
+    assert "task_id" not in payloads[0] and payloads[1]["task_id"] == "b1-r0"
+    with pytest.raises(ValueError):
+        events.emit_error(sandboxed_run.run_id, "x", "api", severity="fatal")
 
 
 def test_the_answer_event_carries_the_whole_answer(sandboxed_run) -> None:

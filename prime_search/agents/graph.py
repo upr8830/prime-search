@@ -273,10 +273,13 @@ def _search_agent(payload: dict[str, Any]) -> dict[str, Any]:
         return {"task_results": [result], "results_by_task": {task.task_id: result}, "events": []}
     except Exception as exc:  # noqa: BLE001 - one failed branch is not a failed run
         _log.warning("search_agent.failed", task=task.task_id, error=str(exc))
-        events.emit(
+        events.emit_error(
             payload["run_id"],
-            "error",
-            {"message": f"{task.task_id}: {type(exc).__name__}: {exc}"[:500], "node": "search_agent"},
+            f"{task.task_id}: {type(exc).__name__}: {exc}",
+            "search_agent",
+            severity="warning",  # the run goes on without this branch
+            task_id=task.task_id,
+            summary="This line of research stopped because of a technical problem",
         )
         # The exception is in the log and the error event; the answer gets plain words (docs/11).
         return _failed_task(
@@ -608,11 +611,7 @@ def run_prime(
             )
     except Exception as exc:
         _log.warning("run.failed", error=f"{type(exc).__name__}: {exc}")
-        events.emit(
-            workspace.run_id,
-            "error",
-            {"message": f"{type(exc).__name__}: {exc}"[:500], "node": "run_prime"},
-        )
+        events.emit_error(workspace.run_id, f"{type(exc).__name__}: {exc}", "run_prime")
         workspace.usage.wall_seconds = round((datetime.now(UTC) - workspace.started_at).total_seconds(), 1)
         record = _write_record(
             workspace,

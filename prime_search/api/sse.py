@@ -132,7 +132,7 @@ def _interrupted(run_id: str) -> list[dict[str, Any]]:
     usage = saved.usage.model_dump(mode="json") if saved is not None else None
     # No `id`: these are not in the file, so they must not move a client's Last-Event-ID.
     return [
-        {"event": "error", "data": json.dumps({"message": INTERRUPTED, "node": "api"})},
+        {"event": "error", "data": json.dumps({"message": INTERRUPTED, "node": "api", "severity": "error"})},
         {
             "event": "run.finished",
             "data": json.dumps({"status": "failed", "langsmith_run_url": url, "usage": usage}),

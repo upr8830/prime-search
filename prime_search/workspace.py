@@ -208,6 +208,11 @@ class Workspace:
     # docs/06 section 2 puts tags on the root run and only the graph can reach it. Not
     # serialized into RunRecord: the tag is where a reader looks for this.
     tokens_estimated: bool = False
+    # doc_id -> why that page could not be read. A failed page and a search hit nobody
+    # opened are both `snippet_only`, so this is the only record that a fetch was tried
+    # and failed; the fetch tool reads it so no branch fetches the page again (docs/02
+    # §3). Not serialized: each miss is already an `error` event.
+    failed_fetches: dict[str, str] = field(default_factory=dict)
     run_id: str = field(default_factory=new_run_id)
     # Captured when the workspace is created, which is when the run begins. Timezone
     # aware, matching Document.retrieved_at.

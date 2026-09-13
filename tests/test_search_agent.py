@@ -690,7 +690,8 @@ def test_a_clipped_passage_is_marked_truncated(sandboxed_run, monkeypatch) -> No
 
 
 def test_the_error_event_payload_matches_the_spec(sandboxed_run, monkeypatch) -> None:
-    """docs/02 §4: error {message, node}."""
+    """docs/02 §4: error {message, node, severity, task_id?, summary?}; a retrieval miss
+    is a warning the agent works around, attached to its task."""
     _install_fake_tavily(monkeypatch, search_error="rate limit exceeded")
     model = ScriptedChatModel(
         script=[
@@ -700,8 +701,52 @@ def test_the_error_event_payload_matches_the_spec(sandboxed_run, monkeypatch) ->
     )
     run_search_agent(_task(), ws=sandboxed_run, model=model)
     error_event = next(e for e in events.replay(sandboxed_run.run_id) if e["type"] == "error")
-    assert set(error_event["payload"]) == {"message", "node"}
+    assert set(error_event["payload"]) == {"message", "node", "severity", "task_id", "summary"}
     assert error_event["payload"]["node"] == "search_agent:b1"
+    assert error_event["payload"]["severity"] == "warning"
+    assert error_event["payload"]["task_id"] == "t1"
+    assert error_event["payload"]["summary"] == "A web search returned no usable results"
+
+
+def test_a_page_that_could_not_be_read_is_not_fetched_again(sandboxed_run, monkeypatch) -> None:
+    """The live run behind this tried one unreadable page in round 0 and round 1 and
+    showed the same miss twice. The second try costs a tool call but no fetch, calls
+    nothing, and emits nothing."""
+    from prime_search.primitives.sources import host_of
+    from prime_search.primitives.tavily import FetchResult
+
+    _install_fake_tavily(monkeypatch)
+    calls: list[str] = []
+
+    def unreadable(target, *, docs=None, run_dir=None, **kwargs):
+        calls.append(target)
+        return FetchResult(document=docs[DOC_ID], error="extract yielded 0 paragraphs (< 20)")
+
+    monkeypatch.setattr(search_agent.tavily, "fetch", unreadable)
+    fetch_twice = [
+        AIMessage(content="", tool_calls=[tool_call("search", query="q")]),
+        AIMessage(content="", tool_calls=[tool_call("fetch", doc_id=DOC_ID)]),
+        AIMessage(content="", tool_calls=[tool_call("fetch", doc_id=DOC_ID)]),
+        AIMessage(content="Nothing readable."),
+    ]
+    model = ScriptedChatModel(script=fetch_twice)
+    run_search_agent(_task(), ws=sandboxed_run, model=model)
+    # A later round of the same branch, as in the live run.
+    run_search_agent(_task(task_id="t2", round=1), ws=sandboxed_run, model=ScriptedChatModel(script=fetch_twice[1:]))
+
+    assert calls == [DOC_ID]
+    assert sandboxed_run.usage.fetches == 1
+    assert DOC_ID in sandboxed_run.failed_fetches
+    misses = [e["payload"] for e in events.replay(sandboxed_run.run_id) if e["type"] == "error"]
+    assert len(misses) == 1
+    assert misses[0]["summary"] == f"Couldn't read a page from {host_of(URL)}"
+    retried = [
+        m.content
+        for prompt in model.seen
+        for m in prompt
+        if getattr(m, "type", "") == "tool" and "not retried" in str(m.content)
+    ]
+    assert retried, "the second fetch did not say the page is not retried"
 
 
 def test_orphan_tool_messages_are_dropped_with_their_parent() -> None:

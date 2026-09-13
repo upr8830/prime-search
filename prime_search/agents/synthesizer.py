@@ -141,7 +141,10 @@ def synthesize(
     body, dropped = _validate_citations(body, citations)
     if dropped:
         _log.warning("synthesize.citations_dropped", numbers=sorted(dropped))
-        events.emit(ws.run_id, "error", {"message": f"dropped unmapped citations {sorted(dropped)}", "node": "synthesize"})
+        events.emit_error(
+            ws.run_id, f"dropped unmapped citations {sorted(dropped)}", "synthesize", severity="warning",
+            summary="Some citation markers matched no source and were removed from the answer",
+        )
 
     warning = ws.understanding.scope_warning if ws.understanding else None
     body = _ensure_scope_warning(body, warning)

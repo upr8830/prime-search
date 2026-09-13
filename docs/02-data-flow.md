@@ -271,6 +271,7 @@ ws.contradictions: list[str]
 ws.unknowns: list[str]
 ws.verdicts: list[Verdict]                # one per judge run; persisted as RunRecord.verdicts
 ws.critic_reports: list[CriticReport]     # one per critic run; persisted as RunRecord.critic_reports
+ws.failed_fetches: dict[str, str]        # doc_id -> why the page could not be read; never re-fetched, not persisted
 ws.search_tree: dict                      # branch_id -> {tasks, evidence_ids, status}
 ws.budget_remaining() -> Budget
 # helpers
@@ -303,7 +304,23 @@ paragraph counts, and calls `search_within` to see specific paragraphs. This is 
 | `answer` | `Answer` | final answer panel |
 | `usage` | `Usage` | cost/latency footer |
 | `run.finished` | `{status, langsmith_run_url, usage}` | footer link, final totals |
-| `error` | `{message, node}` | toast |
+| `error` | `{message, node, severity, task_id?, summary?}` | red alert (`error`) or muted note (`warning`), 07 §3 |
+
+`error.severity` is `"error"` when the run failed or cannot continue, and `"warning"` when one step did not
+work and the run went on without it. A missing severity (events written before it existed) means `"error"`.
+`message` is the engineer's detail; `summary` is a plain sentence for the reader; `task_id` names the task a
+warning belongs to.
+
+| Emitted by (`node`) | Severity | When |
+|---|---|---|
+| `search_agent:<branch>` | warning | a search or fetch failed; a failed page is recorded in `ws.failed_fetches` and never fetched again |
+| `search_agent` | warning | a sub-agent crashed; its task is `failed` |
+| `plan` | warning | planning fell back to the default plan |
+| `judge` | warning | the judge failed; the round gets a failed verdict |
+| `critic` | warning | the critic was skipped |
+| `synthesize` | warning | citation markers with no source were dropped |
+| `run_prime`, `baseline` | error | the run raised |
+| `api` | error | the runner died before emitting, or the run was interrupted |
 
 Baseline mode emits `run.started`, `search` (per tool call), `token`, `answer`, `usage`,
 `run.finished` so the two panes share one renderer.

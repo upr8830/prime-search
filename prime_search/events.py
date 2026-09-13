@@ -61,8 +61,10 @@ _next_seq: dict[str, int] = {}
 _root = Path("runs").resolve()
 
 __all__ = [
+    "ERROR_SEVERITIES",
     "EVENT_TYPES",
     "emit",
+    "emit_error",
     "jsonable",
     "replay",
     "run_dir",
@@ -161,6 +163,36 @@ def emit(run_id: str, type: str, payload: Any) -> dict[str, Any]:
     if type in _LOG_AT_INFO:
         _log.info(f"event.{type}", run_id=run_id, **_log_fields(record["payload"]))
     return record
+
+
+# docs/02 §4. "error": the run failed or cannot go on (red in the UI). "warning": one
+# step did not work and the run carried on without it - an unreadable page, a skipped
+# critic, a crashed branch (a muted note in the UI).
+ERROR_SEVERITIES = ("error", "warning")
+
+
+def emit_error(
+    run_id: str,
+    message: str,
+    node: str,
+    *,
+    severity: str = "error",
+    task_id: str | None = None,
+    summary: str | None = None,
+) -> dict[str, Any]:
+    """docs/02 §4's `error {message, node, severity, task_id?, summary?}`.
+
+    `message` is the engineer's detail; `summary` is the plain sentence a reader of the
+    run sees (docs/07 §3). One helper so every emitter carries the same keys.
+    """
+    if severity not in ERROR_SEVERITIES:
+        raise ValueError(f"unknown error severity {severity!r}; expected one of {ERROR_SEVERITIES}")
+    payload: dict[str, Any] = {"message": message[:500], "node": node, "severity": severity}
+    if task_id is not None:
+        payload["task_id"] = task_id
+    if summary is not None:
+        payload["summary"] = summary
+    return emit(run_id, "error", payload)
 
 
 def subscribe(run_id: str, callback: Callable[[dict], None]) -> Callable[[], None]:
