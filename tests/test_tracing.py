@@ -66,3 +66,27 @@ def test_trace_run_creates_a_real_run_and_exposes_its_url() -> None:
     with trace_run("test", tags=["pytest"], inputs={"probe": "tracing"}) as trace:
         assert trace.url.startswith("https://")
         assert trace.trace_id in trace.url  # url is valid before the block exits
+
+
+def test_trace_run_with_tracing_off_touches_no_langsmith(monkeypatch) -> None:
+    """docs/07 §9-10: the API and UI work with tracing off. A keyless run used to post
+    a RunTree and read its project to build the URL, failing inside `trace_run`."""
+    import langsmith
+
+    from prime_search import config
+
+    class TracingOff:
+        tracing_enabled = False
+
+    def no_langsmith(*args, **kwargs):  # noqa: ANN002, ANN003, ANN202
+        raise AssertionError("RunTree must not be built with tracing off")
+
+    monkeypatch.setattr(config, "get_settings", lambda: TracingOff())
+    monkeypatch.setattr(langsmith, "RunTree", no_langsmith)
+
+    with trace_run("test", tags=["pytest"]) as trace:
+        assert trace.url is None and trace.trace_id is None
+        trace.add_tags("domain:cgm")  # a no-op, not an error
+
+    with pytest.raises(ValueError, match="boom"), trace_run("test"):
+        raise ValueError("boom")

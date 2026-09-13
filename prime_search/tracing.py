@@ -93,14 +93,17 @@ def get_logger(**initial: Any) -> Any:
 
 class TraceHandle:
     """A live LangSmith trace. `url` is valid as soon as the block is entered, so it
-    can be streamed to the UI and stored on the RunRecord before the run finishes."""
+    can be streamed to the UI and stored on the RunRecord before the run finishes.
+
+    With tracing off the handle is null: `run_tree`, `url` and `trace_id` are None and
+    `add_tags` does nothing (docs/07 §9: "tracing off" instead of a link)."""
 
     __slots__ = ("run_tree", "url", "trace_id")
 
-    def __init__(self, run_tree: Any) -> None:
+    def __init__(self, run_tree: Any | None) -> None:
         self.run_tree = run_tree
-        self.url: str = run_tree.get_url()
-        self.trace_id: str = str(run_tree.trace_id)
+        self.url: str | None = run_tree.get_url() if run_tree is not None else None
+        self.trace_id: str | None = str(run_tree.trace_id) if run_tree is not None else None
 
     def add_tags(self, *tags: str) -> None:
         """Add tags to the live root run.
@@ -113,6 +116,8 @@ class TraceHandle:
 
         Never raises: a tracing failure must not end a run that is otherwise fine.
         """
+        if self.run_tree is None:
+            return
         new = [tag for tag in tags if tag and tag not in (self.run_tree.tags or [])]
         if not new:
             return
@@ -121,6 +126,16 @@ class TraceHandle:
             self.run_tree.patch()
         except Exception as exc:  # noqa: BLE001 - see docstring
             get_logger(component="tracing").warning("trace.add_tags_failed", error=str(exc))
+
+
+def _tracing_on() -> bool:
+    """Settings decide, not the environment: `.env` supplies the key (docs/01 §3)."""
+    try:
+        from prime_search.config import get_settings
+
+        return get_settings().tracing_enabled
+    except Exception:  # noqa: BLE001 - unreadable settings: run untraced rather than fail
+        return False
 
 
 @contextmanager
@@ -141,7 +156,15 @@ def trace_run(
     equivalent and additionally makes the URL available *before* the run ends.
 
     Everything invoked inside the block nests under this run.
+
+    With no LangSmith key the block runs untraced under a null handle. It used to post
+    a RunTree anyway, and `get_url()` then read the project over the network, so a
+    keyless run failed inside `trace_run` instead of running (docs/11).
     """
+    if not _tracing_on():
+        yield TraceHandle(None)
+        return
+
     from langsmith import RunTree, tracing_context
 
     run_tree = RunTree(
