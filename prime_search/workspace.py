@@ -267,14 +267,18 @@ class Workspace:
         document = self.documents.get(doc_id)
         if document is None:
             raise KeyError(f"no document {doc_id!r} in the workspace; search first")
-        _assert_readable(document.text_path)
         remaining = self.budget_remaining().max_deep_reads
         if remaining <= 0:
             raise ValueError(
                 f"deep-read budget exhausted ({self.budget.max_deep_reads} used); "
                 "answer from the evidence already gathered"
             )
+        # Charged here, before any work: docs/01 §9 counts a call that fails, and
+        # every failure below this line (an unreadable path, a missing text file,
+        # offsets that drifted) is a call that was really made. Only the two raises
+        # above happen without spending anything.
         self.usage.deep_reads += 1
+        _assert_readable(document.text_path)
         return [passage.as_dict() for passage in within.search_within(document, query, k=k)]
 
     # --- persistence -------------------------------------------------------------
@@ -420,8 +424,15 @@ def _assert_readable(text_path: str) -> None:
     """
     if not text_path:
         return  # snippet_only; within.load_text raises its own clearer error
+    # Imported here rather than at module scope: events imports nothing from this
+    # module, but the run directory is its definition to own, not ours to hardcode.
+    # Hardcoding Path("runs") made search_within refuse a document the agent had just
+    # fetched whenever the runs root moved — which is every test, and would be any
+    # deployment that relocates it.
+    from prime_search.events import runs_root
+
     resolved = Path(text_path).resolve()
-    allowed = [Path(get_settings().tavily_cache_dir).resolve(), Path("runs").resolve()]
+    allowed = [Path(get_settings().tavily_cache_dir).resolve(), runs_root().resolve()]
     if not any(resolved.is_relative_to(root) for root in allowed):
         raise ValueError(
             f"{resolved} is outside this run's document directories; "

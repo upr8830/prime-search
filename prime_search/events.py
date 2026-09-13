@@ -1,0 +1,205 @@
+"""Local event stream (docs/06 §4, docs/02 §4).
+
+One `emit()` feeds three consumers: the JSONL under `runs/<run_id>/events.jsonl`
+that the UI replays, the in-process subscribers task 2.4 turns into the SSE queue,
+and structlog for the four types docs/06 §4 singles out.
+
+Built at 1.6 rather than 2.4 because docs/06 §1 makes this the *only* emit path.
+Threading a callback through the sub-agent's tools would have to be unpicked when the
+API arrives, and the sub-agent needs `runs/<run_id>/` for document text now
+(docs/02 §5).
+
+Nothing here raises: a full disk or a subscriber that throws must not end a run that
+is otherwise fine.
+"""
+
+from __future__ import annotations
+
+import json
+import threading
+from collections.abc import Callable, Iterator
+from datetime import UTC, date, datetime
+from pathlib import Path
+from typing import Any
+
+from pydantic import BaseModel
+
+from prime_search.tracing import get_logger
+
+# docs/02 §4's table. Not enforced — an unknown type is written rather than dropped,
+# so a new event never disappears silently — but it records the contract in one place.
+EVENT_TYPES = (
+    "run.started",
+    "understanding",
+    "plan",
+    "task.started",
+    "search",
+    "fetch",
+    "evidence",
+    "task.done",
+    "verdict",
+    "critique",
+    "token",
+    "answer",
+    "usage",
+    "run.finished",
+    "error",
+)
+# docs/06 §4: these also log at INFO.
+_LOG_AT_INFO = {"error", "verdict", "critique", "run.finished"}
+
+_log = get_logger(component="events")
+_lock = threading.Lock()
+_subscribers: dict[str, list[Callable[[dict], None]]] = {}
+_root = Path("runs")
+
+__all__ = [
+    "EVENT_TYPES",
+    "emit",
+    "jsonable",
+    "replay",
+    "run_dir",
+    "runs_root",
+    "set_runs_root",
+    "subscribe",
+]
+
+
+def runs_root() -> Path:
+    return _root
+
+
+def set_runs_root(path: str | Path) -> None:
+    """Point `runs/` somewhere else. Tests use this; nothing in the app does."""
+    global _root
+    _root = Path(path)
+
+
+def run_dir(run_id: str) -> Path:
+    """`runs/<run_id>/` (docs/02 §5), created on demand.
+
+    The single definition of a run's directory: `events.jsonl` lands here and
+    `primitives.tavily.fetch(run_dir=...)` writes `docs/<doc_id>.txt` beneath it.
+    """
+    directory = _root / run_id
+    try:
+        directory.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:  # read-only FS: the run still works, it is just not replayable
+        _log.warning("events.run_dir_failed", run_id=run_id, error=str(exc))
+    return directory
+
+
+def emit(run_id: str, type: str, payload: Any) -> dict[str, Any]:
+    """docs/06 §4: append to the JSONL, push to subscribers, log the loud ones.
+
+    Returns the record so a graph node can also put it into `PrimeState.events`
+    (docs/03 §1) without building a second copy.
+    """
+    try:
+        encoded = jsonable(payload)
+    except (ValueError, TypeError, RecursionError) as exc:
+        # A self-referential or otherwise unencodable payload. Losing the detail is
+        # acceptable; losing the run is not, and this function is called from inside
+        # a tool inside an agent.
+        _log.warning("events.payload_unencodable", run_id=run_id, type=type, error=str(exc))
+        encoded = {"unencodable": f"{type} payload could not be serialized: {exc}"}
+    record = {
+        "ts": datetime.now(UTC).isoformat(),
+        "run_id": run_id,
+        "type": type,
+        "payload": encoded,
+    }
+    _append(run_id, record)
+    _publish(run_id, record)
+    if type in _LOG_AT_INFO:
+        _log.info(f"event.{type}", run_id=run_id, **_log_fields(record["payload"]))
+    return record
+
+
+def subscribe(run_id: str, callback: Callable[[dict], None]) -> Callable[[], None]:
+    """Register a listener and return its unsubscribe. Task 2.4's SSE queue is one."""
+    with _lock:
+        _subscribers.setdefault(run_id, []).append(callback)
+
+    def unsubscribe() -> None:
+        with _lock:
+            listeners = _subscribers.get(run_id, [])
+            if callback in listeners:
+                listeners.remove(callback)
+            if not listeners:
+                _subscribers.pop(run_id, None)
+
+    return unsubscribe
+
+
+def replay(run_id: str) -> Iterator[dict[str, Any]]:
+    """Past events for a run, in order (docs/02 §4: the UI replays them)."""
+    path = _root / run_id / "events.jsonl"
+    if not path.is_file():
+        return
+    with path.open(encoding="utf-8") as handle:
+        for line in handle:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            try:
+                yield json.loads(stripped)
+            except ValueError:  # a torn last line from a killed process
+                continue
+
+
+def jsonable(payload: Any) -> Any:
+    """Pydantic models to JSON-mode dicts, dates to ISO strings.
+
+    Exposed because the API and the CLI shape their own payloads the same way.
+    """
+    if isinstance(payload, BaseModel):
+        return payload.model_dump(mode="json")
+    if isinstance(payload, dict):
+        return {str(key): jsonable(value) for key, value in payload.items()}
+    if isinstance(payload, (list, tuple)):
+        return [jsonable(value) for value in payload]
+    if isinstance(payload, (date, datetime)):
+        return payload.isoformat()
+    return payload
+
+
+def _append(run_id: str, record: dict[str, Any]) -> None:
+    # json.dumps is inside the try on purpose: it was outside, guarded only for
+    # OSError, so a circular reference or a RecursionError in a payload escaped emit()
+    # -> escaped the tool -> escaped the agent, against this module's one promise.
+    try:
+        line = json.dumps(record, ensure_ascii=False, default=str)
+        path = run_dir(run_id) / "events.jsonl"
+        with path.open("a", encoding="utf-8", newline="\n") as handle:
+            handle.write(line + "\n")
+    except (OSError, ValueError, TypeError, RecursionError) as exc:
+        _log.warning(
+            "events.write_failed", run_id=run_id, type=record["type"], error=str(exc)
+        )
+
+
+def _publish(run_id: str, record: dict[str, Any]) -> None:
+    with _lock:
+        listeners = list(_subscribers.get(run_id, ()))
+    for callback in listeners:
+        try:
+            callback(record)
+        except Exception as exc:  # a broken UI connection is not a run failure
+            _log.warning("events.subscriber_failed", run_id=run_id, error=str(exc))
+
+
+def _log_fields(payload: Any) -> dict[str, Any]:
+    """Scalars only, so a structlog line stays one line.
+
+    `run_id` is dropped because `emit` passes its own — a payload carrying that key
+    would otherwise raise "multiple values for keyword argument" from the logging
+    call itself. `run.started`'s payload already carries one.
+    """
+    if not isinstance(payload, dict):
+        return {"payload": str(payload)[:200]}
+    return {
+        key: value
+        for key, value in payload.items()
+        if key != "run_id" and isinstance(value, (str, int, float, bool, type(None)))
+    }

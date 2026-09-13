@@ -6,8 +6,6 @@ only show up much later as a bench regression, so they are pinned here.
 
 from __future__ import annotations
 
-import pytest
-
 from prime_search.primitives import extract_tool, search_tool
 from prime_search.primitives.tavily import CGM_LCD_URL
 
