@@ -155,7 +155,7 @@ check ("is it right?").
 **As built (task 2.2).** `collect` has already advanced `round` when the judge runs, so a verdict
 judges round `round − 1` and its tasks belong to round `round`. `max_rounds` counts every search
 round, the initial one included, so new tasks are allowed only while `round < max_rounds`, at deep
-depth, and while searches, tokens and at least 30 s remain. The harness normalizes the verdict:
+depth, and while searches, deep reads, tokens and at least 30 s remain. The harness normalizes the verdict:
 every branch gets a coverage status (partial or unresolved from the evidence when the model omitted
 one); tasks for unknown or resolved branches, and tasks repeating an instruction or query already
 run, are dropped; `task_id` (`{branch}-r{round}`), `round` and `status` are rewritten. At fast depth
@@ -188,7 +188,7 @@ Routing: if `completion_probability < 0.7` and `critic_rounds == 0` and budget a
 runs at most twice.
 
 **As built (task 2.2).** `critic_rounds` counts critic runs: only the first may dispatch, and the
-second is the last word. "Budget allows" means searches and tokens left and at least 30 s before the
+second is the last word. "Budget allows" means searches, deep reads and tokens left and at least 30 s before the
 deadline; the critic's round may go beyond `max_rounds`. The ladder is fenced JSON, one repair turn
 (`prompts/critic_repair.md`), structured output on the judge model (tag `fallback:critic_structured`),
 and finally no report (an `error` event and tag `fallback:critic_skipped`); the run proceeds either

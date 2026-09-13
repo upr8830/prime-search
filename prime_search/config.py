@@ -70,9 +70,10 @@ class Settings(BaseSettings):
     )
 
     models: ModelRouting = ModelRouting()
-    # Round 0's sub-agents alone spend ~175-195k tokens on a deep question (measured
-    # live, 2026-09-13); 400k leaves room for a judge round and the critic's (docs/11).
-    budget_deep: Budget = Budget(max_tokens=400_000)
+    # Round 0's sub-agents alone spend ~175-195k tokens and all ten deep reads on a deep
+    # question (measured live, 2026-09-13); these leave room for a judge round and the
+    # critic's (docs/11). Deep reads are local BM25 over fetched text, not Tavily calls.
+    budget_deep: Budget = Budget(max_tokens=400_000, max_deep_reads=30)
     budget_fast: Budget = Budget(
         max_searches=3, max_fetches=2, max_agents=1, max_rounds=1, max_seconds=30
     )

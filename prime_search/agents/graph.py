@@ -738,13 +738,22 @@ def _usage_tags(ws: Workspace) -> list[str]:
 def _agents_this_round(ws: Workspace, depth: str) -> int:
     """Sub-agents one round may dispatch.
 
-    `max_agents` caps each round, not the run (docs/11), and a run with no searches left
-    gets none: each would spend a model call discovering it cannot search. The judge and
-    the critic are held to the same number, so a recorded verdict never lists a task
-    that dispatch then drops (docs/02 §2.6).
+    `max_agents` caps each round, not the run (docs/11). A run with no searches left gets
+    none, and neither does one with no deep reads left: a sub-agent records evidence from
+    `search_within`, so without a read it stops at its first attempt - measured live, seven
+    re-search tasks dispatched after round 0 spent all ten reads returned zero evidence.
+    The judge and the critic are held to the same number, so a recorded verdict never
+    lists a task that dispatch then drops (docs/02 §2.6).
     """
+    remaining = ws.budget_remaining()
     return max(
-        0, min(ws.budget.max_agents, DEPTH[depth]["max_agents"], ws.budget_remaining().max_searches)
+        0,
+        min(
+            ws.budget.max_agents,
+            DEPTH[depth]["max_agents"],
+            remaining.max_searches,
+            remaining.max_deep_reads,
+        ),
     )
 
 
@@ -755,12 +764,14 @@ def _max_rounds(state: PrimeState) -> int:
 
 def _can_search(ws: Workspace, state: PrimeState) -> bool:
     """docs/03 §7's "budget allows", used by the judge and the critic before adding a
-    round: searches and tokens left, and time for a round before the deadline."""
+    round: searches, deep reads and tokens left, and time for a round before the
+    deadline."""
     remaining = ws.budget_remaining()
     seconds_left = state.get("deadline", float("inf")) - time.time()
     return (
         seconds_left >= MIN_SECONDS_FOR_ROUND
         and remaining.max_searches > 0
+        and remaining.max_deep_reads > 0
         and remaining.max_tokens > 0
     )
 

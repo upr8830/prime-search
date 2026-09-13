@@ -87,7 +87,7 @@ class Settings(BaseSettings):
     langsmith_api_key: str | None = None
     langsmith_project: str = "prime-search"
     models: ModelRouting = ModelRouting()
-    budget_deep: Budget = Budget(max_tokens=400_000)   # round 0 alone spends ~175-195k (11, 2026-09-13)
+    budget_deep: Budget = Budget(max_tokens=400_000, max_deep_reads=30)   # round 0 alone spends ~175-195k tokens and 10 reads (11, 2026-09-13)
     budget_fast: Budget = Budget(max_searches=3, max_fetches=2, max_agents=1, max_rounds=1, max_seconds=30)
     tavily_cache: bool = True         # cache search/extract by args (used in bench + GEPA)
     tavily_cache_dir: str = ".cache/tavily"

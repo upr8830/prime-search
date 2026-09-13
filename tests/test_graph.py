@@ -993,3 +993,26 @@ def test_with_the_token_budget_spent_the_judge_and_critic_review_but_start_no_ro
     critic_update = graph_module._critic({**state, **judge_update})
     assert calls[0]["may_search"] is False and critic_update["pending_tasks"] == []
     assert len(ws.verdicts) == 1 and len(ws.critic_reports) == 1
+
+
+def test_no_deep_reads_left_adds_no_round(sandboxed_run, monkeypatch) -> None:
+    """Live, 2026-09-13 (400k budget): round 0 spent all ten deep reads, then seven
+    judge and critic tasks were dispatched and every one stopped at its first read with
+    zero evidence. A round that cannot read cannot record evidence."""
+    ws = sandboxed_run
+    _plan(ws, count=2)
+    ws.usage.deep_reads = ws.budget.max_deep_reads
+    seen: dict = {}
+    monkeypatch.setattr(
+        graph_module, "run_judge", _recording_judge(_verdict(False, [_task("b1-r1", "b1", 1)]), seen)
+    )
+    calls: list = []
+    report = _report(0.2, [_task("b2-r1-critic1", "b2", 1)])
+    monkeypatch.setattr(graph_module, "run_critic", _recording_critic(CriticOutcome(report, "fenced_json"), calls))
+    state = _state(ws, round=1)
+
+    assert graph_module._judge(state)["pending_tasks"] == []
+    assert seen["max_new_tasks"] == 0
+    assert graph_module._critic(state)["pending_tasks"] == []
+    assert calls[0]["may_search"] is False
+    assert graph_module._dispatch(_state(ws, round=1, pending_tasks=[_task("b1-r1", "b1", 1)]))["pending_tasks"] == []
