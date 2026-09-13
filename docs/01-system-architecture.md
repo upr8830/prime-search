@@ -56,7 +56,9 @@ Three layers, deliberately separated (proposal §4):
 | GEPA | `uv run python -m eval.gepa.run_gepa` | — | Long-running; writes `prompts/optimized/` |
 
 No database. Runs persist to `runs/<run_id>/{state.json, events.jsonl, answer.md}`. Feedback appends
-to `data/feedback.jsonl` and is sent to LangSmith.
+to `data/feedback.jsonl` and is sent to LangSmith. As built (task 2.4), runs execute on a 4-worker thread
+pool inside the API process, so a restart leaves in-flight runs `interrupted` (07 §7), and CORS allows the UI
+dev origins.
 
 ## 3. Configuration
 

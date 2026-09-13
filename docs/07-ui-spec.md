@@ -108,6 +108,29 @@ tier, publisher, doc type, external id, effective/revision dates, URL.
 | `/bench/questions` | GET | SearchBench records (question, id, domain, tier) |
 | `/bench/summary` | GET | latest report JSON or `{missing: true}` |
 
+**As built (task 2.4).** The app is in `prime_search/api/main.py`, with request and response models in
+`prime_search/api/models.py`, so every JSON route has a typed schema for `openapi-typescript` (§8).
+
+- `POST /run` returns at once. The run executes on a worker thread (4 at a time, no cancellation) and is
+  tagged `source:ui`. A question carrying patient-level detail (a date of birth, a record, member or policy
+  number, a named patient) is rejected with 422 (01 §8); an A1c value is allowed.
+- `GET /run/{id}/events` sends frames as `event: <type>`, `id: <seq>`, `data: <payload>` (02 §4), and a
+  reconnect with `Last-Event-ID` resumes after that event. The stream ends after `run.finished`. A run saved
+  as running that no worker is running ends with an unsaved `error` and `run.finished {status: failed}`.
+  An unknown id is a 404.
+- `GET /runs` rows also carry `depth` and `example` (a committed `runs/examples/` run). `status` may be
+  `interrupted`, which is derived and never saved.
+- `GET /runs/{id}` returns a stub `RunRecord` (`status: running`) until the run writes its own.
+- `GET /runs/{id}/events` returns whole records `{ts, run_id, type, seq, payload}`.
+- `GET /docs/{run_id}/{doc_id}?offset=&limit=` (limit ≤ 200) returns
+  `{document, paragraphs[], evidence[], offset, limit, total, text_error}`. `text_error` explains why a
+  document's text cannot be shown (for example, a snippet-only document).
+- `POST /feedback` takes `thumbs: "up"|"down"` and returns `{ok, langsmith}` (06 §3).
+- `POST /ui-event` accepts only 06 §8's four types.
+- `GET /bench/questions?split=` returns `{id, question, domain, tier, question_type, split}`, never the
+  answer key.
+- CORS allows `http://localhost:3000` and `http://127.0.0.1:3000`.
+
 ## 8. Components
 
 `QuestionBar`, `PaneHeader`, `SearchTree` (+ `BranchNode`, `RoundSeparator`), `AnswerView`

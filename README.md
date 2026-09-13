@@ -38,6 +38,24 @@ needs Node 20+ and `pnpm`.
 | `make dev-api` | FastAPI + SSE on `localhost:8000` |
 | `make dev-ui` | Next.js harness on `localhost:3000` |
 
+## API
+
+`make dev-api` serves the endpoints in `docs/07-ui-spec.md` §7 on `localhost:8000`, with the schema at
+`/openapi.json`. A quick check from Git Bash:
+
+```bash
+RUN=$(curl -s -X POST localhost:8000/run -H 'content-type: application/json' \
+  -d '{"question":"Does Medicare cover a CGM for a type 2 diabetic not on insulin?","mode":"baseline"}' \
+  | uv run python -c "import sys, json; print(json.load(sys.stdin)['run_id'])")
+curl -sN localhost:8000/run/$RUN/events     # SSE until run.finished
+curl -s localhost:8000/runs/$RUN            # the RunRecord
+curl -s -X POST localhost:8000/feedback -H 'content-type: application/json' \
+  -d "{\"run_id\":\"$RUN\",\"thumbs\":\"up\",\"comment\":\"clear answer\"}"
+```
+
+Feedback reaches LangSmith when tracing is on, and is always appended to `data/feedback.jsonl`, which stays
+local.
+
 ## How it works
 
 A LangGraph pipeline — `understand → plan → dispatch → search sub-agents → collect → judge →
