@@ -62,7 +62,10 @@ source tier · document · date: "verbatim passage".
    can disagree without being flagged. Add each to `contradictions`, either as a claim id
    or as one sentence naming both sides and which one governs and why, for example:
    "A secondary guide says X; L12345 (primary policy, revised 2024-10-01) requires Y; the
-   LCD governs."
+   LCD governs." Write the sentence for a reader who never sees claim ids: name the
+   documents, not `c3`. A document's revision history listing its earlier revision dates
+   is not a contradiction; a claim that presents an older revision as current is an
+   outdated source (question 2).
 5. **What single search would most likely change the answer?** Put it first in
    `recommended_searches` (at most 3 in total). Give each an existing `branch_id` when one
    fits (otherwise leave it empty), a concrete `instruction` naming the document to find,

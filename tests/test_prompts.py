@@ -114,3 +114,43 @@ def test_the_plan_prompt_states_the_fenced_python_output_rule() -> None:
     text = load("plan").lower()
     assert "fenced python block" in text
     assert "ws.plan" in text
+
+
+def test_the_judge_prompt_states_the_no_duplicate_and_resolved_rules() -> None:
+    """docs/03 §11's seed checklist for judge.md."""
+    from prime_search.prompts import load
+
+    text = load("judge")
+    assert "Never repeat an instruction or a query" in text
+    assert "Never create a task for a branch you marked `resolved`" in text
+
+
+def test_the_judge_prompt_separates_sufficiency_from_running_out() -> None:
+    """Live run 2026-09-13 (adv-cgm-001): with 0 tokens left the judge set
+    `sufficient: true` over partial coverage, reading "stop when the budget cannot buy a
+    search" as permission to call the evidence enough."""
+    from prime_search.prompts import load
+
+    assert "Running out of budget or rounds is not sufficiency" in load("judge")
+
+
+def test_the_critic_prompt_is_adversarial_and_emits_one_fenced_json_block() -> None:
+    """docs/03 §11's seed checklist for critic.md: the §7 questions, the JSON schema,
+    the instruction to be adversarial."""
+    from prime_search.prompts import load
+
+    text = load("critic")
+    assert "adversarial" in text
+    assert "Exactly one fenced `json` block" in text
+    assert all(f"{n}. **" in text for n in range(1, 7))
+
+
+def test_the_critic_prompt_asks_for_contradictions_a_reader_can_follow() -> None:
+    """Live run 2026-09-13: the critic's only contradiction was "c5 claims ...; c6
+    claims ..." about the LCD's own revision history - ids no reader sees, about dates
+    that do not conflict."""
+    from prime_search.prompts import load
+
+    text = load("critic")
+    assert "never sees claim ids" in text
+    assert "revision history listing its earlier revision dates" in text

@@ -39,10 +39,14 @@ evidence count · best source tier behind its support] claim text.
 
 ## When to stop
 
-Set `sufficient: true` when the stop criteria are met, or when every high-priority branch
-is resolved and what remains cannot change the answer. Also stop when the budget left
-cannot buy a meaningful search. Do not keep searching low-priority branches for the sake
-of completeness.
+`sufficient` answers one question only: does the evidence above answer the question? Set
+it to true when the stop criteria are met, or when every high-priority branch is resolved
+and what remains cannot change the answer. Do not keep searching low-priority branches for
+the sake of completeness.
+
+Running out of budget or rounds is not sufficiency. When the evidence is not enough but no
+more tasks are allowed, set `sufficient: false`, leave `new_tasks` empty, and say in
+`missing` what is still needed; the answer will report it as unverified.
 
 ## New tasks, only when `sufficient` is false
 
