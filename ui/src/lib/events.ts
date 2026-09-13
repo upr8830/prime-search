@@ -99,7 +99,14 @@ export type RunFinishedPayload = {
   limits_reached?: string[];
 };
 
-export type ErrorPayload = { message: string; node: string };
+/** `severity`, `task_id` and `summary` arrived with 02 §4's warning level; older runs have none. */
+export type ErrorPayload = {
+  message: string;
+  node: string;
+  severity?: "error" | "warning";
+  task_id?: string;
+  summary?: string;
+};
 
 export type PayloadByType = {
   "run.started": RunStartedPayload;

@@ -10,7 +10,9 @@
  * - streamed `token` text is provisional: synthesis rewrites it, and `answer` replaces it;
  * - the baseline sends two `search` frames per tool call, the second with `query: ""`;
  * - a task that failed or started past the deadline sends a flat `task.done`;
- * - no event marks a round boundary, so the timeline keeps arrival order.
+ * - no event marks a round boundary, so the timeline keeps arrival order;
+ * - an `error` is a red alert only at severity `error`; a `warning` is a muted note, on its
+ *   task when it names one. Older runs carry no severity, so it is inferred from the node.
  */
 
 import type {
@@ -59,6 +61,20 @@ export type TaskNode = {
   unresolved: string | null;
 };
 
+export type NoticeSeverity = "error" | "warning";
+
+/** An `error` event as a reader sees it (docs/07 §3). */
+export type Notice = {
+  severity: NoticeSeverity;
+  node: string;
+  /** The task a warning belongs to; null when it belongs to the pane. */
+  taskId: string | null;
+  /** Plain words for the reader. */
+  summary: string;
+  /** The engineer's message, shown on hover. */
+  detail: string;
+};
+
 export type BaselineSearch = { query: string; nResults: number | null; tool: string | null };
 
 /** Arrival order of the things the search tree draws between rounds. */
@@ -91,7 +107,10 @@ export type RunView = {
   streamText: string;
   answer: Answer | null;
   usage: Usage | null;
+  /** Every `error` payload as received; the interrupted check reads these. */
   errors: ErrorPayload[];
+  /** The same events for display: severity resolved, attached to a task, deduplicated. */
+  notices: Notice[];
   /** From `run.finished`; null when the event did not name them (older runs, baseline). */
   limitsReached: string[] | null;
   finished: boolean;
@@ -125,6 +144,7 @@ export function initialRun(runId: string | null = null): RunView {
     answer: null,
     usage: null,
     errors: [],
+    notices: [],
     limitsReached: null,
     finished: false,
     lastSeq: -1,
@@ -265,8 +285,17 @@ export function reduceRun(view: RunView, event: RunEvent): RunView {
       return { ...view, answer: event.payload, streamText: "" };
     case "usage":
       return { ...view, usage: event.payload };
-    case "error":
-      return { ...view, errors: [...view.errors, event.payload] };
+    case "error": {
+      const notice = noticeFor(view, event.payload);
+      const repeated = view.notices.some(
+        (seen) => seen.severity === notice.severity && seen.taskId === notice.taskId && seen.summary === notice.summary,
+      );
+      return {
+        ...view,
+        errors: [...view.errors, event.payload],
+        notices: repeated ? view.notices : [...view.notices, notice],
+      };
+    }
     case "run.finished": {
       const payload = event.payload;
       const interrupted =
@@ -282,6 +311,67 @@ export function reduceRun(view: RunView, event: RunEvent): RunView {
       };
     }
   }
+}
+
+// Nodes whose failures the run survives (02 §4). Runs recorded before `severity` existed
+// carry none, so their events are read by node.
+const WARNING_NODES = new Set(["search_agent", "judge", "critic", "plan", "synthesize"]);
+
+const NODE_SUMMARY: Record<string, string> = {
+  search_agent: "This line of research stopped because of a technical problem",
+  judge: "The check of whether the research was complete could not run this round",
+  critic: "The final review of the answer was skipped",
+  plan: "The research followed a standard plan for this kind of question",
+  synthesize: "Some citation markers matched no source and were removed from the answer",
+};
+
+/** The site of the first URL in a message, without `www.`. */
+export function hostOf(text: string): string | null {
+  const match = /https?:\/\/[^\s"'<>)]+/.exec(text);
+  if (!match) return null;
+  try {
+    return new URL(match[0]).hostname.replace(/^www\./, "") || null;
+  } catch {
+    return null;
+  }
+}
+
+function noticeFor(view: RunView, payload: ErrorPayload): Notice {
+  const base = payload.node.split(":")[0];
+  const severity = payload.severity ?? (WARNING_NODES.has(base) ? "warning" : "error");
+  return {
+    severity,
+    node: payload.node,
+    taskId: payload.task_id ?? (severity === "warning" ? inferTaskId(view, payload) : null),
+    summary: payload.summary ?? inferSummary(payload),
+    detail: payload.message,
+  };
+}
+
+/** Older runs: a branch's miss (`search_agent:b5`) belongs to that branch's running task,
+ * or its latest; a crashed sub-agent's message starts with its task id. */
+function inferTaskId(view: RunView, payload: ErrorPayload): string | null {
+  const [base, branchId] = payload.node.split(":");
+  if (base !== "search_agent") return null;
+  if (!branchId) {
+    const taskId = payload.message.split(":")[0];
+    return Object.prototype.hasOwnProperty.call(view.tasks, taskId) ? taskId : null;
+  }
+  const tasks = tasksForBranch(view, branchId);
+  const running = tasks.filter((task) => task.status === "running");
+  return (running[running.length - 1] ?? tasks[tasks.length - 1])?.taskId ?? null;
+}
+
+function inferSummary(payload: ErrorPayload): string {
+  const base = payload.node.split(":")[0];
+  if (base === "search_agent" && payload.node.includes(":")) {
+    if (payload.message.startsWith("fetch:")) {
+      const host = hostOf(payload.message);
+      return host ? `Couldn't read a page from ${host}` : "Couldn't read a page";
+    }
+    return "A web search failed";
+  }
+  return NODE_SUMMARY[base] ?? payload.message;
 }
 
 function reduceBaselineSearch(view: RunView, payload: SearchPayload): RunView {
@@ -340,6 +430,21 @@ export function branchStatus(view: RunView, branchId: string): BranchStatus {
   if (tasks.some((task) => task.status === "running")) return view.finished ? "failed" : "running";
   if (tasks.every((task) => task.status === "failed")) return "failed";
   return "done";
+}
+
+/** Red alerts: the run failed or was interrupted. */
+export function paneErrors(view: RunView): Notice[] {
+  return view.notices.filter((notice) => notice.severity === "error");
+}
+
+/** Muted notes for the pane: warnings that belong to no task. */
+export function paneWarnings(view: RunView): Notice[] {
+  return view.notices.filter((notice) => notice.severity === "warning" && notice.taskId === null);
+}
+
+/** Muted notes shown under one task in the search tree. */
+export function taskNotices(view: RunView, taskId: string): Notice[] {
+  return view.notices.filter((notice) => notice.severity === "warning" && notice.taskId === taskId);
 }
 
 export function evidenceForBranch(view: RunView, branchId: string): Evidence[] {

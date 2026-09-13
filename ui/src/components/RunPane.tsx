@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { api } from "@/lib/api";
 import { limitNote } from "@/lib/format";
-import type { RunView } from "@/lib/reducer";
+import { paneErrors, paneWarnings, type RunView } from "@/lib/reducer";
 import type { RunRecord } from "@/lib/types";
 import type { Connection } from "@/lib/useRunEvents";
 
@@ -75,9 +75,14 @@ export function RunPane({
 
       {connection === "reconnecting" && <p className="text-xs text-muted">Stream dropped: reconnecting and replaying…</p>}
       {connection === "gave_up" && <p className="text-xs text-bad">Lost the event stream. Reload the page to replay this run.</p>}
-      {view.errors.map((error, index) => (
-        <p key={index} role="alert" className="rounded-md border border-bad bg-bad-soft px-3 py-2 text-sm text-bad">
-          <span className="font-medium">{error.node}:</span> {error.message}
+      {paneErrors(view).map((error, index) => (
+        <p key={`e-${index}`} role="alert" className="rounded-md border border-bad bg-bad-soft px-3 py-2 text-sm text-bad">
+          <span className="font-medium">{error.node}:</span> {error.detail}
+        </p>
+      ))}
+      {paneWarnings(view).map((warning, index) => (
+        <p key={`w-${index}`} className="text-xs text-muted" title={warning.detail}>
+          ⓘ {warning.summary}
         </p>
       ))}
 

@@ -7,8 +7,11 @@ import { isServerErrorFrame, type EventType, type RunEvent } from "./events";
 import {
   branchStatus,
   initialRun,
+  paneErrors,
+  paneWarnings,
   reduceEvents,
   reduceRun,
+  taskNotices,
   taskOrigin,
   timeline,
   toRunEvent,
@@ -190,6 +193,54 @@ describe("reduceRun", () => {
     expect(reduceRun(initialRun(), ev("plan", withoutCode)).planCodeRecorded).toBe(false);
     const fallback = reduceRun(initialRun(), ev("plan", { ...plan, code: null }));
     expect([fallback.planCodeRecorded, fallback.planCode]).toEqual([true, null]);
+  });
+
+  it("shows an older run's retrieval miss as one muted line under its task, not a red alert", () => {
+    seq = 0;
+    const miss =
+      "fetch: extract yielded 0 paragraphs (< 20); raw-content fallback found no exact match for https://www.facebook.com/dexcom/posts/1";
+    const view = reduceEvents([
+      ev("task.started", { task_id: "b5-r0", branch_id: "b5", round: 0, instruction: "i" }),
+      ev("error", { message: miss, node: "search_agent:b5" }),
+      ev("error", { message: miss, node: "search_agent:b5" }),
+      ev("task.done", { task_id: "b5-r0", result: taskResult([]) }),
+      ev("task.started", { task_id: "b5-r1", branch_id: "b5", round: 1, instruction: "i" }),
+      ev("error", { message: miss, node: "search_agent:b5" }),
+    ]);
+    expect(paneErrors(view)).toEqual([]);
+    expect(paneWarnings(view)).toEqual([]);
+    expect(taskNotices(view, "b5-r0").map((notice) => notice.summary)).toEqual(["Couldn't read a page from facebook.com"]);
+    expect(taskNotices(view, "b5-r0")[0].detail).toBe(miss);
+    expect(taskNotices(view, "b5-r1")).toHaveLength(1);
+    expect(view.errors).toHaveLength(3); // raw events are kept
+  });
+
+  it("uses the severity, task and summary a newer run sends", () => {
+    seq = 0;
+    const view = reduceEvents([
+      ev("task.started", { task_id: "b1-r0", branch_id: "b1", round: 0, instruction: "i" }),
+      ev("task.started", { task_id: "b1-r1", branch_id: "b1", round: 1, instruction: "i" }),
+      ev("error", { message: "search: rate limit", node: "search_agent:b1", severity: "warning", task_id: "b1-r0", summary: "A web search failed" }),
+    ]);
+    expect(taskNotices(view, "b1-r0").map((notice) => notice.summary)).toEqual(["A web search failed"]);
+    expect(taskNotices(view, "b1-r1")).toEqual([]);
+  });
+
+  it("keeps a survivable judge failure out of the red alerts, and an interrupted run in them", () => {
+    seq = 0;
+    const judged = reduceEvents([ev("error", { message: "judge: RuntimeError: 503", node: "judge" })]);
+    expect(paneErrors(judged)).toEqual([]);
+    expect(paneWarnings(judged).map((notice) => notice.summary)).toEqual([
+      "The check of whether the research was complete could not run this round",
+    ]);
+
+    seq = 0;
+    const interrupted = reduceEvents([
+      ev("error", { message: "run interrupted: the process running it stopped before it finished", node: "api", severity: "error" }, null),
+      ev("run.finished", { status: "failed", langsmith_run_url: null }, null),
+    ]);
+    expect(interrupted.status).toBe("interrupted");
+    expect(paneErrors(interrupted)).toHaveLength(1);
   });
 
   it("tells a server error frame from a dropped connection (spec review, 2.5)", () => {

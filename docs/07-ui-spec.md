@@ -73,7 +73,13 @@ Behavior:
 - Footer per pane: `Usage` numbers, thumbs, comment, LangSmith trace link (when tracing is on).
 - Feedback: thumbs sends `POST /feedback`; the button locks with a check mark. Comment is optional;
   on the prime pane the user can also flag claims from the Claims tab (adds `claim_ids_flagged`).
-- Errors: `error` events render as a red banner in the affected pane; the other pane continues.
+- Errors: an `error` event at severity `error` (the run failed or was interrupted) renders as a red banner in
+  the affected pane; the other pane continues. A `warning` (02 §4) is a muted line. One that names a task shows
+  under that task in the search tree ("skipped: couldn't read a page from facebook.com", the engineer's
+  message on hover); the rest show as "ⓘ {summary}" under the pane header. The same warning on the same task
+  shows once. Runs recorded before `severity` existed are read the same way: `search_agent*`, `judge`,
+  `critic`, `plan` and `synthesize` count as warnings, a branch's miss attaches to that branch's running task,
+  and the summary is derived from the message.
 - Scope warning (`Answer.scope_warning`) renders as an amber banner above the answer.
 
 ## 4. Run detail (`/runs/[id]`)

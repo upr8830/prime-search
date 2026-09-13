@@ -4,9 +4,11 @@ import { formatDate, formatPercent, plural, tierBadgeClass, tierLabel } from "@/
 import {
   branchIds,
   evidenceForBranch,
+  taskNotices,
   tasksForBranch,
   timeline,
   type BranchStatus,
+  type Notice,
   type RunView,
   type TaskNode,
 } from "@/lib/reducer";
@@ -149,11 +151,22 @@ function TaskRow({ view, task }: { view: RunView; task: TaskNode }) {
             </li>
           );
         })}
+        {taskNotices(view, task.taskId).map((notice, index) => (
+          <li key={`n-${index}`} title={notice.detail}>
+            ├ {noticeText(notice)}
+          </li>
+        ))}
         {task.status !== "running" && <li>└ evidence ×{evidence}</li>}
         {task.unresolved && <li className="italic">unresolved: {task.unresolved}</li>}
       </ul>
     </div>
   );
+}
+
+/** A retrieval miss is something the agent skipped; any other task warning is a note. */
+function noticeText(notice: Notice): string {
+  if (!notice.node.includes(":")) return `ⓘ ${notice.summary}`;
+  return `skipped: ${notice.summary.charAt(0).toLowerCase()}${notice.summary.slice(1)}`;
 }
 
 function VerdictSeparator({ verdict }: { verdict: Verdict }) {
