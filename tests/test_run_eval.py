@@ -215,3 +215,15 @@ def test_rescore_scores_saved_records_without_running_agents(bench, monkeypatch)
     rescored = json.loads((bench / "bench" / "prime-base-dev-x.json").read_text(encoding="utf-8"))
     assert set(rescored["rows"][0]["scores"]) == set(METRIC_KEYS)
     assert "rescored_at" in rescored
+
+
+def test_rows_keep_a_score_langsmith_received_as_a_value() -> None:
+    # A prime run's tokens exceed LangSmith's score range; the local JSON must keep the number.
+    item = EvaluationResult(**evaluators.Score("tokens", 586002, "586002 tokens").to_langsmith())
+    result = {
+        "run": SimpleNamespace(id=uuid.uuid4(), outputs={}, error=None),
+        "example": SimpleNamespace(metadata={"id": "cgm-elig-004"}),
+        "evaluation_results": {"results": [item]},
+    }
+    (row,) = run_eval.rows_from_results([result])
+    assert row["scores"]["tokens"]["score"] == 586002

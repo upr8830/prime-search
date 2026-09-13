@@ -136,6 +136,18 @@ def trim_record(data: dict[str, Any] | None) -> dict[str, Any] | None:
     return {key: value for key, value in data.items() if key not in TRIM_FIELDS}
 
 
+def _langsmith_score(item: Any) -> float | int | None:
+    """The score, or the number `Score.to_langsmith` moved into `value` because it was
+    outside LangSmith's score range (a prime run's tokens)."""
+    if item.score is not None or not isinstance(item.value, str):
+        return item.score
+    try:
+        number = float(item.value.replace(",", ""))
+    except ValueError:
+        return None
+    return int(number) if number.is_integer() else number
+
+
 def rows_from_results(results: Any) -> list[dict[str, Any]]:
     """One row per example from LangSmith's `ExperimentResults`."""
     rows: list[dict[str, Any]] = []
@@ -144,7 +156,7 @@ def rows_from_results(results: Any) -> list[dict[str, Any]]:
         outputs = getattr(run, "outputs", None) or {}
         scores: dict[str, dict[str, Any]] = {}
         for item in result["evaluation_results"]["results"]:
-            scores[item.key] = {"score": item.score, "comment": item.comment, "metadata": item.metadata or {}}
+            scores[item.key] = {"score": _langsmith_score(item), "comment": item.comment, "metadata": item.metadata or {}}
         record = record_from_run(run)
         metadata = dict(getattr(example, "metadata", None) or {})
         rows.append(
@@ -175,7 +187,7 @@ def _row(*, question_id, metadata, target_run_id, outputs, error, record, scores
         "langsmith_run_url": outputs.get("langsmith_run_url"),
         "usage": record.usage.model_dump(mode="json") if record is not None else None,
         "scores": ordered,
-        "composite": composite({key: value["score"] for key, value in ordered.items()}),
+        "composite": composite(ordered),
         "record": trim_record(outputs.get("record")),
     }
 
@@ -362,7 +374,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         experiment_prefix=prefix,
         metadata=metadata,
         description=f"SearchBench {args.split}: {args.mode} ({metadata['prompt_set']}, {args.depth})",
-        max_concurrency=max(0, args.concurrency - 1),
+        max_concurrency=args.concurrency if args.concurrency > 1 else 0,  # 0 runs examples one at a time
         client=client,
         blocking=True,
     )

@@ -131,7 +131,7 @@ class AnswerCorrectnessJudgment(BaseModel):
     # Required, not defaulted: a native reply without the list validated as "no claims"
     # and graded every claim missing on the first dev bench (docs/11).
     claims: list[ClaimJudgment]
-    forbidden: list[ForbiddenJudgment] = []
+    forbidden: list[ForbiddenJudgment]
     summary_consistency: Literal["consistent", "partial", "inconsistent"]
     notes: str = ""
 
@@ -710,6 +710,9 @@ def answer_correctness(record: RunRecord | None, bench: BenchRecord, *, judge: b
             answer=_judge_text(answer),
             check=lambda result: _covers(
                 {claim.id for claim in answer_key.required_claims}, {claim.id for claim in result.claims}, "required claim"
+            )
+            or _covers(
+                {claim.id for claim in answer_key.forbidden_claims}, {item.id for item in result.forbidden}, "forbidden claim"
             ),
         )
         score = _judge_failed(key, meta) if result is None else _grade_answer(result, answer_key, meta)
@@ -935,13 +938,22 @@ def _safely(keys: Sequence[str], step: Callable[[], Score | list[Score]]) -> lis
     return result if isinstance(result, list) else [result]
 
 
-def composite(scores: Mapping[str, Score | float | int | None]) -> float | None:
+def composite(scores: Mapping[str, Any]) -> float | None:
     """docs/05 §2's scalar. A not-applicable component takes answer_correctness,
-    extending 05's own "else answer_correctness" rule; clamped to [0, 1] (docs/11)."""
+    extending 05's own "else answer_correctness" rule; clamped to [0, 1] (docs/11).
+
+    A judge failure is not "not applicable": if any score carries `metadata.error` the
+    composite is None until re-scored, rather than borrowing answer_correctness."""
+    for item in scores.values():
+        metadata = item.metadata if isinstance(item, Score) else item.get("metadata") if isinstance(item, dict) else None
+        if (metadata or {}).get("error"):
+            return None
 
     def value(key: str) -> float | None:
         item = scores.get(key)
-        return item.score if isinstance(item, Score) else item
+        if isinstance(item, Score):
+            return item.score
+        return item.get("score") if isinstance(item, dict) else item
 
     correctness = value("answer_correctness")
     if correctness is None:

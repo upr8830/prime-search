@@ -404,6 +404,22 @@ def test_a_score_outside_langsmiths_range_is_sent_as_a_value() -> None:
     assert evaluators.Score("tokens", 9002, "x").to_langsmith()["score"] == 9002
 
 
+def test_a_verdict_that_skips_the_forbidden_claims_is_a_judge_failure(judge) -> None:
+    with pytest.raises(ValidationError):
+        AnswerCorrectnessJudgment(claims=[], summary_consistency="consistent")
+    judge.answers["AnswerCorrectnessJudgment"] = _correctness([ClaimJudgment(id="c1", status="present")])
+    bench = _bench(required_claims=_claims(("c1", True)), forbidden_claims=[{"id": "f1", "text": "x", "reason": "y"}])
+    score = evaluators.answer_correctness(_record(), bench)[0]
+    assert score.score is None and "no verdict for any forbidden claim" in score.comment
+
+
+def test_a_judge_failure_leaves_the_composite_empty() -> None:
+    failed = evaluators.Score("citation_correctness", None, "judge failed: x", {"error": True})
+    scores = {"answer_correctness": evaluators.Score("answer_correctness", 0.9, ""), "citation_correctness": failed}
+    assert evaluators.composite(scores) is None
+    assert evaluators.composite({"answer_correctness": 0.9, "citation_correctness": None}) == pytest.approx(0.9)
+
+
 def test_citation_completeness_reads_a_headed_baseline_whole_and_counts_footnotes() -> None:
     # Dev bench: cgm-elig-004's baseline used `###` headings (was not applicable) and
     # adv-glp1-002 cited with `[^36130e-00^]` markers (was 0/11).

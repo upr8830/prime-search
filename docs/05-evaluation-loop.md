@@ -84,8 +84,8 @@ report runs the holdout twice and reports mean ± spread.
 - A metric that does not apply (no required evidence, expected contradiction, scope warning, governing
   document or citation) returns `score=None` with "not applicable: ..." and is left out of means. A failed
   run (no answer) scores 0 on quality metrics. A judge failure is `None` with `metadata.error`. The judge's
-  claim and item lists are required fields, and a verdict that covers none of the expected claims, sentences
-  or contradictions is retried once before it counts as a judge failure. A score outside LangSmith's
+  claim, forbidden-claim and item lists are required fields, and a verdict that covers none of the expected
+  claims, forbidden claims, sentences or contradictions is retried once before it counts as a judge failure. A score outside LangSmith's
   +/-99999.9999 range (a prime run's `tokens`) is sent to LangSmith as a string `value`; the local JSON keeps it.
 - `evidence_recall` and `currency` resolve a key's document through `data/searchbench/sources/index.json` and
   the key's `sources`: external id (also read from MCD URLs, `lcdid=33822` -> L33822), then normalized URL,
@@ -105,7 +105,11 @@ report runs the holdout twice and reports mean ± spread.
   as a citation.
 - `scope_handling` applies when `expected_scope_warning` is set; the warning counts in the field or stated in
   the text. `primary_source_ratio` takes a citation's tier from its document, else from its URL.
-- `composite`: a not-applicable component takes `answer_correctness`; the result is clamped to [0, 1].
+- `contradiction_handling` = mean over expected contradictions of 0.5 x surfaced + 0.5 x surfaced with the
+  governing source stated. `scope_handling` = 0.5 x scope flagged (field or text) + 0.5 x no fabricated payer
+  criteria.
+- `composite`: a not-applicable component takes `answer_correctness`; the result is clamped to [0, 1]. A
+  judge failure in any component leaves the composite `None` until re-scored.
   Judges use the base prompts `prompts/eval_*.md` on the evaluator model, never an optimized set.
 
 ## 3. Bench runner
