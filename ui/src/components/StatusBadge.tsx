@@ -6,7 +6,7 @@ const TONE: Record<ViewStatus | RunStatus, string> = {
   connecting: "border-line text-muted",
   running: "border-accent text-accent",
   completed: "border-ok text-ok",
-  budget_exhausted: "border-warn text-warn bg-warn-soft",
+  budget_exhausted: "border-ok text-ok", // a finished run; the limit is a note beside it
   failed: "border-bad text-bad bg-bad-soft",
   interrupted: "border-bad text-bad bg-bad-soft",
 };

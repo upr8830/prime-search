@@ -35,9 +35,6 @@ export function UsageFooter({
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
       <span>{parts.length > 0 ? parts.join(" · ") : view.finished ? "no usage recorded" : "…"}</span>
-      {view.status === "budget_exhausted" && (
-        <span className="rounded-full border border-warn bg-warn-soft px-2 py-0.5 text-warn">budget hit</span>
-      )}
       {traceUrl ? (
         <a href={traceUrl} target="_blank" rel="noreferrer" className="text-accent underline">
           LangSmith ↗

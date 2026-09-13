@@ -25,10 +25,31 @@ export const STATUS_LABEL: Record<ViewStatus | RunStatus, string> = {
   connecting: "connecting",
   running: "running",
   completed: "completed",
-  budget_exhausted: "budget hit",
+  // The run finished and its answer is valid; the limit it reached is a quiet note
+  // (`limitNote`), not a status a reader should worry about (docs/07 §9).
+  budget_exhausted: "completed",
   failed: "failed",
   interrupted: "interrupted",
 };
+
+/** A `Budget` field in the words the limit note uses (docs/07 §9). */
+export const LIMIT_WORDS: Record<string, string> = {
+  max_tokens: "processing",
+  max_seconds: "time",
+  max_searches: "web searches",
+  max_fetches: "pages opened",
+  max_deep_reads: "reading inside documents",
+};
+
+export const LIMIT_NOTE_GENERIC = "ⓘ Research limit reached — this answer uses the sources found before the limit.";
+
+/** The note under a run that reached a limit. Runs saved before `run.finished` named the
+ * limits get the generic sentence. */
+export function limitNote(limits: readonly string[] | null | undefined): string {
+  const words = [...new Set((limits ?? []).map((limit) => LIMIT_WORDS[limit]).filter(Boolean))];
+  if (words.length === 0) return LIMIT_NOTE_GENERIC;
+  return `ⓘ Research limit reached (${words.join(", ")}) — this answer uses the sources found before the limit.`;
+}
 
 export const CLAIM_STATUS_CLASS: Record<ClaimStatus, string> = {
   supported: "text-ok bg-ok-soft border-ok",

@@ -171,6 +171,18 @@ describe("reduceRun", () => {
     expect(failed.status).toBe("failed");
   });
 
+  it("keeps the limits a run reached, and none when run.finished does not name them", () => {
+    seq = 0;
+    const named = reduceEvents([
+      ev("run.finished", { status: "budget_exhausted", langsmith_run_url: null, limits_reached: ["max_tokens"] }),
+    ]);
+    expect([named.status, named.limitsReached]).toEqual(["budget_exhausted", ["max_tokens"]]);
+
+    seq = 0;
+    const older = reduceEvents([ev("run.finished", { status: "budget_exhausted", langsmith_run_url: null })]);
+    expect(older.limitsReached).toBeNull();
+  });
+
   it("tells a run recorded before plan code apart from a fallback plan", () => {
     seq = 0;
     const withoutCode: Record<string, unknown> = { ...plan };

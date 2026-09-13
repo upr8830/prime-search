@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { api } from "@/lib/api";
+import { limitNote } from "@/lib/format";
 import type { RunView } from "@/lib/reducer";
 import type { RunRecord } from "@/lib/types";
 import type { Connection } from "@/lib/useRunEvents";
@@ -70,6 +71,7 @@ export function RunPane({
   return (
     <section className={`flex min-w-0 flex-col gap-3 rounded-lg border p-4 ${mode === "prime" ? "border-accent/40" : "border-line"}`}>
       <PaneHeader view={view} mode={mode} />
+      {view.status === "budget_exhausted" && <p className="text-xs text-muted">{limitNote(view.limitsReached)}</p>}
 
       {connection === "reconnecting" && <p className="text-xs text-muted">Stream dropped: reconnecting and replaying…</p>}
       {connection === "gave_up" && <p className="text-xs text-bad">Lost the event stream. Reload the page to replay this run.</p>}

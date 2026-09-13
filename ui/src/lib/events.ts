@@ -95,6 +95,8 @@ export type RunFinishedPayload = {
   status: FinishStatus;
   langsmith_run_url: string | null;
   usage?: Usage;
+  /** prime only: the Budget fields the run used up (`max_tokens`, ...); absent in older runs. */
+  limits_reached?: string[];
 };
 
 export type ErrorPayload = { message: string; node: string };

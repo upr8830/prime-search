@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { StatusBadge } from "@/components/StatusBadge";
 import { api } from "@/lib/api";
-import { formatSeconds, formatTokens, totalTokens } from "@/lib/format";
+import { LIMIT_NOTE_GENERIC, formatSeconds, formatTokens, totalTokens } from "@/lib/format";
 
 /** Run history (docs/07 §2), newest first, from `GET /runs`. */
 export default function RunsPage() {
@@ -57,6 +57,11 @@ export default function RunsPage() {
                   </td>
                   <td className="py-2 pr-3">
                     <StatusBadge status={run.status} />
+                    {run.status === "budget_exhausted" && (
+                      <span className="ml-2 text-xs whitespace-nowrap text-muted" title={LIMIT_NOTE_GENERIC}>
+                        ⓘ limit reached
+                      </span>
+                    )}
                   </td>
                   <td className="py-2 text-xs whitespace-nowrap text-muted">
                     {run.usage

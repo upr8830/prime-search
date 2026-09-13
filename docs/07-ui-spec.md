@@ -143,8 +143,11 @@ the contract stays in sync).
 ## 9. States and edge cases
 
 - Tracing off → footer shows "tracing off" instead of a link.
-- Budget exhausted → prime footer shows an amber "budget hit" chip; answer's Unknowns section
-  explains.
+- Limit reached (`budget_exhausted`) → the badge is a green "completed" (the answer is valid), with one muted
+  note under the pane header naming the limit in plain words: "ⓘ Research limit reached (processing) — this
+  answer uses the sources found before the limit." Names come from `run.finished.limits_reached` (02 §4); a run
+  saved before that field gets the note without the parenthesis. `/runs` shows the green badge plus "ⓘ limit
+  reached". The answer's Unknowns section says the same in a sentence.
 - Baseline finishes first (always) → its pane shows complete while prime continues.
 - Reconnect: if the SSE drops, the hook reconnects and replays from `GET /runs/{id}/events`.
 - Long documents: document view paginates paragraphs at 200.

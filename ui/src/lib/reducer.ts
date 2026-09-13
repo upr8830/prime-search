@@ -92,6 +92,8 @@ export type RunView = {
   answer: Answer | null;
   usage: Usage | null;
   errors: ErrorPayload[];
+  /** From `run.finished`; null when the event did not name them (older runs, baseline). */
+  limitsReached: string[] | null;
   finished: boolean;
   lastSeq: number;
 };
@@ -123,6 +125,7 @@ export function initialRun(runId: string | null = null): RunView {
     answer: null,
     usage: null,
     errors: [],
+    limitsReached: null,
     finished: false,
     lastSeq: -1,
   };
@@ -274,6 +277,7 @@ export function reduceRun(view: RunView, event: RunEvent): RunView {
         status: interrupted ? "interrupted" : payload.status,
         traceUrl: payload.langsmith_run_url ?? view.traceUrl,
         usage: payload.usage ?? view.usage,
+        limitsReached: payload.limits_reached ?? null,
         finished: true,
       };
     }
