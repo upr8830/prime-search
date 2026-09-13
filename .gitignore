@@ -10,3 +10,6 @@ starter_agent.py
 __pycache__/
 .venv/
 .pytest_cache/
+OPERATOR_GUIDE.md
+feedback.jsonl
+ui-events.jsonl
