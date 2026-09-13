@@ -35,8 +35,9 @@ bench:
 gepa:
 	uv run python -m eval.gepa.run_gepa $(ARGS)
 
+# Listens on PRIME_API_HOST:PRIME_API_PORT (default 127.0.0.1:8765; docs/01 §2).
 dev-api:
-	uv run uvicorn prime_search.api.main:app --reload --port 8000
+	uv run python -m prime_search.api --reload
 
 dev-ui:
 	cd ui && pnpm dev

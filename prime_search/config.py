@@ -101,16 +101,37 @@ class Settings(BaseSettings):
         return bool(self.langsmith_api_key)
 
 
+class ServerSettings(BaseSettings):
+    """Where the API listens (docs/01 §2), as `PRIME_API_HOST` / `PRIME_API_PORT` or `.env`.
+
+    Separate from `Settings` so the API starts, and serves past runs, without model or
+    search keys. The default port is 8765, not 8000: on some Windows machines HTTP.sys
+    holds 8000 and uvicorn cannot bind it (docs/11).
+    """
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="PRIME_",
+        case_sensitive=False,
+        extra="ignore",
+    )
+
+    api_host: str = "127.0.0.1"  # local only; nothing here is meant to be exposed
+    api_port: int = Field(default=8765, ge=1, le=65535)
+
+
 def _known_override_names() -> set[str]:
-    """Every PRIME_-prefixed variable this Settings actually reads."""
+    """Every PRIME_-prefixed variable Settings and ServerSettings actually read."""
     names = set()
-    for field, info in Settings.model_fields.items():
-        names.add(f"PRIME_{field}".upper())
-        annotation = info.annotation
-        nested = getattr(annotation, "model_fields", None)
-        if nested:  # ModelRouting, Budget -> PRIME_MODELS__ROOT, PRIME_BUDGET_DEEP__...
-            for sub in nested:
-                names.add(f"PRIME_{field}__{sub}".upper())
+    for model in (Settings, ServerSettings):
+        for field, info in model.model_fields.items():
+            names.add(f"PRIME_{field}".upper())
+            annotation = info.annotation
+            nested = getattr(annotation, "model_fields", None)
+            if nested:  # ModelRouting, Budget -> PRIME_MODELS__ROOT, PRIME_BUDGET_DEEP__...
+                for sub in nested:
+                    names.add(f"PRIME_{field}__{sub}".upper())
     return names
 
 

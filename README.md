@@ -35,21 +35,22 @@ needs Node 20+ and `pnpm`.
 | `make ask Q="…"` | One investigation, cited answer to the console. `ARGS="--mode baseline"`, `ARGS="--depth fast"` |
 | `make bench` | Run the SearchBench evaluation. `ARGS="--mode prime --split dev"` |
 | `make gepa` | GEPA prompt optimization (train/dev splits only, never holdout) |
-| `make dev-api` | FastAPI + SSE on `localhost:8000` |
+| `make dev-api` | FastAPI + SSE on `localhost:8765` (`PRIME_API_PORT`) |
 | `make dev-ui` | Next.js harness on `localhost:3000` |
 
 ## API
 
-`make dev-api` serves the endpoints in `docs/07-ui-spec.md` §7 on `localhost:8000`, with the schema at
-`/openapi.json`. A quick check from Git Bash:
+`make dev-api` (or `uv run python -m prime_search.api --reload`) serves the endpoints in
+`docs/07-ui-spec.md` §7 on `localhost:8765`, with the schema at `/openapi.json`. Set `PRIME_API_PORT` (and
+`PRIME_API_HOST`) in the shell or `.env` to move it. A quick check from Git Bash:
 
 ```bash
-RUN=$(curl -s -X POST localhost:8000/run -H 'content-type: application/json' \
+RUN=$(curl -s -X POST localhost:8765/run -H 'content-type: application/json' \
   -d '{"question":"Does Medicare cover a CGM for a type 2 diabetic not on insulin?","mode":"baseline"}' \
   | uv run python -c "import sys, json; print(json.load(sys.stdin)['run_id'])")
-curl -sN localhost:8000/run/$RUN/events     # SSE until run.finished
-curl -s localhost:8000/runs/$RUN            # the RunRecord
-curl -s -X POST localhost:8000/feedback -H 'content-type: application/json' \
+curl -sN localhost:8765/run/$RUN/events     # SSE until run.finished
+curl -s localhost:8765/runs/$RUN            # the RunRecord
+curl -s -X POST localhost:8765/feedback -H 'content-type: application/json' \
   -d "{\"run_id\":\"$RUN\",\"thumbs\":\"up\",\"comment\":\"clear answer\"}"
 ```
 

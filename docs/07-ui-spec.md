@@ -9,7 +9,8 @@ not a product UI. Clarity beats polish; every element should map to a concept in
 - Next.js 15 (App Router), TypeScript, Tailwind. `pnpm`.
 - Data: `@tanstack/react-query` for REST, a custom `useRunEvents(runId)` hook over `EventSource`.
 - No component library; a handful of local components. Dark/light follows system.
-- `next.config.js` rewrites `/api/:path*` → `http://localhost:8000/:path*`.
+- `next.config.js` rewrites `/api/:path*` → `http://localhost:8765/:path*`, the API's `PRIME_API_PORT`
+  (default 8765; 01 §2), so the UI must read the same variable rather than hard-code the port.
 
 ## 2. Routes
 

@@ -9,7 +9,7 @@
                           └──────────────┬───────────────┘
                                          │ HTTP + SSE
                           ┌──────────────▼───────────────┐
-                          │  FastAPI (localhost:8000)     │
+                          │  FastAPI (localhost:8765)     │
                           │  /run  /runs/{id}  /feedback  │
                           │  /bench/summary               │
                           └───────┬──────────────┬────────┘
@@ -49,8 +49,8 @@ Three layers, deliberately separated (proposal §4):
 
 | Process | Command | Port | Notes |
 |---|---|---|---|
-| API | `uvicorn prime_search.api.main:app --reload` | 8000 | Runs both agents; streams SSE |
-| UI | `pnpm dev` in `ui/` | 3000 | Proxies `/api/*` to 8000 via `next.config.js` rewrites |
+| API | `uv run python -m prime_search.api --reload` (`make dev-api`) | 8765 (`PRIME_API_PORT`) | Runs both agents; streams SSE |
+| UI | `pnpm dev` in `ui/` | 3000 | Proxies `/api/*` to the API port via `next.config.js` rewrites |
 | CLI | `uv run prime-search ask "..."` | — | Same graph, console rendering like the starter |
 | Bench | `uv run python -m eval.run_eval` | — | Batch; uses LangSmith `evaluate()` |
 | GEPA | `uv run python -m eval.gepa.run_gepa` | — | Long-running; writes `prompts/optimized/` |
@@ -93,10 +93,14 @@ class Settings(BaseSettings):
     budget_fast: Budget = Budget(max_searches=3, max_fetches=2, max_agents=1, max_rounds=1, max_seconds=30)
     tavily_cache: bool = True         # cache search/extract by args (used in bench + GEPA)
     tavily_cache_dir: str = ".cache/tavily"
+
+class ServerSettings(BaseSettings):   # separate: the API starts without model or search keys
+    api_host: str = "127.0.0.1"        # PRIME_API_HOST
+    api_port: int = 8765               # PRIME_API_PORT; not 8000, which HTTP.sys can hold on Windows (11)
 ```
 
 `.env.example` lists `TAVILY_API_KEY`, `NEBIUS_API_KEY`, `LANGSMITH_API_KEY`, `LANGSMITH_PROJECT`,
-and optional `PRIME_MODELS__ROOT=` style overrides.
+and optional `PRIME_MODELS__ROOT=` style overrides, plus `PRIME_API_HOST` / `PRIME_API_PORT` for the API.
 
 ## 4. Model routing — verified IDs and the fallback rule
 

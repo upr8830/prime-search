@@ -1,6 +1,6 @@
 """The HTTP API (docs/01 §2, docs/07 §7).
 
-    uvicorn prime_search.api.main:app --reload --port 8000     # make dev-api
+    uv run python -m prime_search.api --reload     # make dev-api; PRIME_API_PORT, default 8765
 
 Endpoints and shapes are docs/07 §7; the event stream is docs/02 §4. No database: runs
 are read from `runs/` (docs/01 §2).
