@@ -42,6 +42,32 @@ class Budget(BaseModel):
     max_seconds: int = 180
 
 
+class DeepBudget(Budget):
+    """The deep defaults on the class, not only on the field.
+
+    A nested override such as `PRIME_BUDGET_DEEP__MAX_SEARCHES` makes pydantic-settings
+    build the field from the class defaults, so a `Budget(...)` field default was dropped
+    whole: one override silently turned deep back into 150k tokens and 10 deep reads
+    (docs/11). Defaults that live on the class survive a partial override.
+    """
+
+    # Round 0's sub-agents alone spend ~175-195k tokens and all ten deep reads on a deep
+    # question (measured live, 2026-09-13); these leave room for a judge round and the
+    # critic's (docs/11). Deep reads are local BM25 over fetched text, not Tavily calls.
+    max_tokens: int = 400_000
+    max_deep_reads: int = 30
+
+
+class FastBudget(Budget):
+    """The fast defaults on the class, for the same reason as `DeepBudget`."""
+
+    max_searches: int = 3
+    max_fetches: int = 2
+    max_agents: int = 1
+    max_rounds: int = 1
+    max_seconds: int = 30
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -70,13 +96,8 @@ class Settings(BaseSettings):
     )
 
     models: ModelRouting = ModelRouting()
-    # Round 0's sub-agents alone spend ~175-195k tokens and all ten deep reads on a deep
-    # question (measured live, 2026-09-13); these leave room for a judge round and the
-    # critic's (docs/11). Deep reads are local BM25 over fetched text, not Tavily calls.
-    budget_deep: Budget = Budget(max_tokens=400_000, max_deep_reads=30)
-    budget_fast: Budget = Budget(
-        max_searches=3, max_fetches=2, max_agents=1, max_rounds=1, max_seconds=30
-    )
+    budget_deep: DeepBudget = DeepBudget()
+    budget_fast: FastBudget = FastBudget()
     tavily_cache: bool = True  # cache search/extract by args (used in bench + GEPA)
     tavily_cache_dir: str = ".cache/tavily"
 

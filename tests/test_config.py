@@ -136,3 +136,16 @@ def test_deep_budget_is_raised_for_re_search_and_fast_is_unchanged(env: pytest.M
     deep, fast = settings.budget("deep"), settings.budget("fast")
     assert (deep.max_tokens, deep.max_deep_reads) == (400_000, 30)
     assert (fast.max_tokens, fast.max_deep_reads) == (150_000, 10)
+
+
+def test_a_partial_budget_override_keeps_the_other_depth_defaults(env: pytest.MonkeyPatch) -> None:
+    """One `PRIME_BUDGET_DEEP__*` key in .env used to rebuild the deep budget from the base
+    `Budget` defaults, silently dropping 400k tokens and 30 deep reads (docs/11)."""
+    from prime_search.config import Settings
+
+    env.setenv("PRIME_BUDGET_DEEP__MAX_SEARCHES", "12")
+    env.setenv("PRIME_BUDGET_FAST__MAX_SEARCHES", "4")
+    settings = Settings(_env_file=None)
+    deep, fast = settings.budget_deep, settings.budget_fast
+    assert (deep.max_searches, deep.max_tokens, deep.max_deep_reads) == (12, 400_000, 30)
+    assert (fast.max_searches, fast.max_fetches, fast.max_agents, fast.max_seconds) == (4, 2, 1, 30)
