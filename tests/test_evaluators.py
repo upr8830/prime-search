@@ -8,6 +8,7 @@ small fixture except where the real dataset is the point.
 
 from __future__ import annotations
 
+import threading
 from datetime import UTC, date, datetime
 from types import SimpleNamespace
 
@@ -85,13 +86,16 @@ def judge(monkeypatch):
     """`judge.answers[SchemaName] = value` (or a list, answered in turn, the last repeating);
     `judge.calls` records (schema, caller)."""
     state = SimpleNamespace(answers={}, calls=[], error=None)
+    # answer_correctness asks its judge calls concurrently, so a list is consumed under a lock.
+    lock = threading.Lock()
 
     def fake(role, schema, **kwargs):  # noqa: ANN001, ANN003, ANN202
-        value = state.answers.get(schema.__name__)
-        if isinstance(value, list):
-            value = value.pop(0) if len(value) > 1 else value[0]
-        caller = FakeCaller(value, state.error)
-        state.calls.append((schema.__name__, caller))
+        with lock:
+            value = state.answers.get(schema.__name__)
+            if isinstance(value, list):
+                value = value.pop(0) if len(value) > 1 else value[0]
+            caller = FakeCaller(value, state.error)
+            state.calls.append((schema.__name__, caller))
         return caller
 
     monkeypatch.setattr(evaluators, "structured", fake)
@@ -380,7 +384,7 @@ def test_a_verdict_with_no_claims_is_retried_then_a_judge_failure(judge) -> None
     score = evaluators.answer_correctness(_record(), _bench(required_claims=_claims(("c1", True))))[0]
     assert score.score is None and score.metadata["error"] is True
     assert "no verdict for any required claim" in score.comment
-    assert len(judge.calls) == 2
+    assert len(judge.calls) == 2 * evaluators.ANSWER_JUDGE_VOTES  # each call retried once
 
 
 def test_a_retry_that_covers_the_claims_is_graded(judge) -> None:
@@ -388,6 +392,59 @@ def test_a_retry_that_covers_the_claims_is_graded(judge) -> None:
     score = evaluators.answer_correctness(_record(), _bench(required_claims=_claims(("c1", True))))[0]
     assert score.score == 1.0
     assert "judge_error" not in score.metadata and score.metadata["judge_retries"] == 1
+
+
+def test_answer_correctness_takes_the_majority_of_three_judge_calls(judge) -> None:
+    """Re-scoring an unchanged answer moved single rows 0.3-0.5 with one judge call (docs/11)."""
+    bench = _bench(
+        required_claims=_claims(("c1", True), ("c2", True), ("c3", False)),
+        forbidden_claims=[{"id": "f1", "text": "x", "reason": "y"}],
+    )
+    judge.answers["AnswerCorrectnessJudgment"] = [
+        _correctness(
+            [ClaimJudgment(id="c1", status="present"), ClaimJudgment(id="c2", status="missing")],
+            [ForbiddenJudgment(id="f1", asserted=True, quote="all covered")],
+            "inconsistent",
+        ),
+        _correctness(
+            [ClaimJudgment(id="c1", status="present"), ClaimJudgment(id="c2", status="present")],
+            [ForbiddenJudgment(id="f1", asserted=False)],
+            "consistent",
+        ),
+        _correctness(
+            [ClaimJudgment(id="c1", status="missing"), ClaimJudgment(id="c2", status="incorrect", reason="wrong year")],
+            [ForbiddenJudgment(id="f1", asserted=False)],
+            "partial",
+        ),
+    ]
+    score = evaluators.answer_correctness(_record(), bench)[0]
+
+    # c1 present by 2 of 3; c2 has no majority, so missing; c3 omitted by every call;
+    # f1 asserted by only one call; the summary is the median grade.
+    assert score.score == pytest.approx(0.8 * 2 / 5 + 0.2 * 0.5, abs=1e-4)
+    assert "missing: c2 (must), c3 (judge omitted)" in score.comment
+    assert "forbidden asserted" not in score.comment and "summary: partial" in score.comment
+    assert (score.metadata["judge_votes"], score.metadata["judge_calls"]) == (3, 3)
+
+
+def test_one_failed_judge_call_still_counts_the_others(judge, monkeypatch) -> None:
+    calls = {"n": 0}
+    lock = threading.Lock()
+    real = evaluators.judge_call
+
+    def flaky(*args, **kwargs):  # noqa: ANN002, ANN003, ANN202
+        with lock:
+            calls["n"] += 1
+            first = calls["n"] == 1
+        if first:
+            return None, {"judge_error": "RuntimeError: 503", "judge_tokens": 0}
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(evaluators, "judge_call", flaky)
+    judge.answers["AnswerCorrectnessJudgment"] = _correctness([ClaimJudgment(id="c1", status="present")])
+    score = evaluators.answer_correctness(_record(), _bench(required_claims=_claims(("c1", True))))[0]
+    assert score.score == 1.0
+    assert (score.metadata["judge_votes"], score.metadata["judge_failed_votes"]) == (2, 1)
 
 
 def test_a_citation_verdict_with_no_items_is_a_judge_failure(judge) -> None:

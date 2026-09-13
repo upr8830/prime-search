@@ -20,6 +20,7 @@ adapter imports; `EVALUATORS` are the same functions wrapped for LangSmith `eval
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 import json
 import re
 import unicodedata
@@ -191,6 +192,11 @@ _MARKDOWN_LINK = re.compile(r"\[[^\]]+\]\([^)]+\)")
 _FOOTNOTE = re.compile(r"\[\^[^\]\s]+\]")
 LANGSMITH_SCORE_MAX = 99_999.9999
 JUDGE_ATTEMPTS = 2
+# answer_correctness is the majority of this many independent judge calls (docs/05 §2 as
+# built). One call moved single rows 0.3-0.5 when an unchanged answer was re-scored.
+ANSWER_JUDGE_VOTES = 3
+_STATUS_ORDER = ("present", "incorrect", "missing")
+_SUMMARY_ORDER = ("inconsistent", "partial", "consistent")
 _EXT_ID = re.compile(r"^(?:[LA]\d{5}|NCD\s*\d+(?:\.\d+)*)$", re.IGNORECASE)
 # Doc types that name the same kind of document in the key and in docmeta (docs/11).
 _TYPE_GROUPS = (
@@ -721,9 +727,12 @@ def _render_forbidden(key: AnswerKey) -> str:
     return "\n".join(f"- {claim.id}: {claim.text}" for claim in key.forbidden_claims) or "(none)"
 
 
-def answer_correctness(record: RunRecord | None, bench: BenchRecord, *, judge: bool = True) -> list[Score]:
+def answer_correctness(
+    record: RunRecord | None, bench: BenchRecord, *, judge: bool = True, votes: int = ANSWER_JUDGE_VOTES
+) -> list[Score]:
     """answer_correctness and search_efficiency, which needs it (separate evaluators
-    cannot see each other's scores)."""
+    cannot see each other's scores). The judge is asked `votes` times, concurrently, and
+    the verdicts are merged by majority (`_majority`)."""
     key = "answer_correctness"
     answer_key = bench.answer_key
     answer = _answer_of(record)
@@ -732,20 +741,81 @@ def answer_correctness(record: RunRecord | None, bench: BenchRecord, *, judge: b
     elif not judge:
         score = Score(key, None, "judge not run")
     else:
-        result, meta = judge_call(
-            AnswerCorrectnessJudgment, "eval_answer_correctness",
-            question=bench.question, key_summary=answer_key.summary,
-            required_claims=_render_claims(answer_key), forbidden_claims=_render_forbidden(answer_key),
-            answer=_judge_text(answer),
-            check=lambda result: _covers(
-                {claim.id for claim in answer_key.required_claims}, {claim.id for claim in result.claims}, "required claim"
+
+        def one_vote(_: int) -> tuple[AnswerCorrectnessJudgment | None, dict]:
+            return judge_call(
+                AnswerCorrectnessJudgment, "eval_answer_correctness",
+                question=bench.question, key_summary=answer_key.summary,
+                required_claims=_render_claims(answer_key), forbidden_claims=_render_forbidden(answer_key),
+                answer=_judge_text(answer),
+                check=lambda result: _covers(
+                    {claim.id for claim in answer_key.required_claims}, {claim.id for claim in result.claims}, "required claim"
+                )
+                or _covers(
+                    {claim.id for claim in answer_key.forbidden_claims}, {item.id for item in result.forbidden}, "forbidden claim"
+                ),
             )
-            or _covers(
-                {claim.id for claim in answer_key.forbidden_claims}, {item.id for item in result.forbidden}, "forbidden claim"
-            ),
-        )
-        score = _judge_failed(key, meta) if result is None else _grade_answer(result, answer_key, meta)
+
+        count = max(1, votes)
+        with ThreadPoolExecutor(max_workers=count) as pool:
+            ballots = list(pool.map(one_vote, range(count)))
+        results = [result for result, _ in ballots if result is not None]
+        meta = _vote_meta([meta for _, meta in ballots], len(results))
+        score = _judge_failed(key, meta) if not results else _grade_answer(_majority(results, answer_key), answer_key, meta)
     return [score, _search_efficiency(score, record)]
+
+
+def _majority(results: Sequence[AnswerCorrectnessJudgment], key: AnswerKey) -> AnswerCorrectnessJudgment:
+    """One verdict from several judge calls.
+
+    A required claim takes the status more than half the calls gave it; without a
+    majority it is missing (unconfirmed is not present), and a claim most calls omitted
+    stays omitted. A forbidden claim counts as asserted only on a majority. The summary
+    takes the median grade, and a tie between two calls goes to the lower one.
+    """
+    half = len(results) / 2
+    claims: list[ClaimJudgment] = []
+    for claim in key.required_claims:
+        votes = [next((item for item in result.claims if item.id == claim.id), None) for result in results]
+        if sum(vote is None for vote in votes) > half:
+            continue
+        statuses = [vote.status if vote is not None else "missing" for vote in votes]
+        status = next((option for option in _STATUS_ORDER if statuses.count(option) > half), None)
+        chosen = next((vote for vote in votes if vote is not None and vote.status == status), None)
+        if chosen is None:
+            chosen = ClaimJudgment(id=claim.id, status="missing", reason="judges disagreed: " + "/".join(statuses))
+        claims.append(chosen)
+    forbidden: list[ForbiddenJudgment] = []
+    for item in key.forbidden_claims:
+        votes = [next((vote for vote in result.forbidden if vote.id == item.id), None) for result in results]
+        asserted = [vote for vote in votes if vote is not None and vote.asserted]
+        if len(asserted) > half:
+            forbidden.append(asserted[0])
+        elif any(vote is not None for vote in votes):
+            forbidden.append(ForbiddenJudgment(id=item.id, asserted=False))
+    grades = sorted(_SUMMARY_ORDER.index(result.summary_consistency) for result in results)
+    summary = _SUMMARY_ORDER[grades[(len(grades) - 1) // 2]]
+    return AnswerCorrectnessJudgment(claims=claims, forbidden=forbidden, summary_consistency=summary)
+
+
+def _vote_meta(metas: Sequence[dict], counted: int) -> dict:
+    """Metadata for a majority verdict: tokens and retries summed over every call."""
+    meta: dict[str, Any] = {
+        "judge_tokens": sum(item.get("judge_tokens", 0) for item in metas),
+        "judge_votes": counted,
+        "judge_calls": len(metas),
+    }
+    modes = sorted({item["judge_mode"] for item in metas if item.get("judge_mode")})
+    if modes:
+        meta["judge_mode"] = "+".join(modes)
+    retries = sum(item.get("judge_retries", 0) for item in metas)
+    if retries:
+        meta["judge_retries"] = retries
+    if counted == 0:
+        meta["judge_error"] = next((item["judge_error"] for item in metas if item.get("judge_error")), "no result")
+    elif counted < len(metas):
+        meta["judge_failed_votes"] = len(metas) - counted
+    return meta
 
 
 def _grade_answer(result: AnswerCorrectnessJudgment, key: AnswerKey, meta: dict) -> Score:

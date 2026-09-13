@@ -96,7 +96,11 @@ report runs the holdout twice and reports mean ± spread.
   the answer text), plus, for change detection, the judge's ordering verdict (ordered with dates 1, dated but
   not ordered 0.5, undated 0, no change with a date 1, no change without one 0.5).
 - `answer_correctness` = 0.8 x must-weighted claims present + 0.2 x summary consistency (1 / 0.5 / 0); any
-  asserted forbidden claim caps it at 0.25. `search_efficiency` is returned with it.
+  asserted forbidden claim caps it at 0.25. `search_efficiency` is returned with it. The verdict is the
+  majority of three independent judge calls (`ANSWER_JUDGE_VOTES`, run concurrently; user decision, docs/11):
+  a required claim takes the status more than half the calls gave it, else missing; a forbidden claim is
+  asserted only on a majority; the summary takes the median grade (a tie goes to the lower one). A call that
+  fails is left out, and all three failing is a judge failure. Metadata sums `judge_tokens` over the calls.
 - `citation_correctness` samples 8 evenly spaced cited sentences, skipping "Effective dates relied on"
   (a bibliography, not claims); each passage reaches the judge under a `Document:` line with its source's
   type, id, title, publisher and dates. A citation number with no passage is unsupported without a judge call. The baseline scores 0 on it and on `evidence_recall` by construction: its
