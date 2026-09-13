@@ -188,6 +188,8 @@ def test_both_rungs_failing_gives_the_default_two_branch_plan(ws, monkeypatch) -
     assert plans and plans[-1]["code"] is None  # docs/07 §4: a fallback plan has no cell
     assert len(outcome.plan.branches) == 2
     assert outcome.plan.branches[0].source_hint == "primary_policy"
+    warnings = [r["payload"] for r in event_log.replay(ws.run_id) if r["type"] == "error"]
+    assert warnings and warnings[-1]["severity"] == "warning"  # the run goes on (docs/02 §4)
     # The objective is substituted in, not left as a template hole.
     assert "{objective}" not in outcome.plan.branches[0].question
     assert ws.objective in outcome.plan.branches[0].question

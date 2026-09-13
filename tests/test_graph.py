@@ -20,6 +20,7 @@ from prime_search.agents.critic import CriticOutcome
 from prime_search.agents.judge import JudgeOutcome
 from prime_search.config import Budget
 from prime_search.evidence.store import EvidenceStore
+from prime_search.plain_language import DEADLINE_NOTE
 from prime_search.schemas import (
     Branch,
     CriticReport,
@@ -215,6 +216,24 @@ def test_unresolved_branches_become_unknowns(sandboxed_run) -> None:
     assert "could not find the revision date" in ws.unknowns
     assert any("question 1" in note for note in ws.unknowns)
     assert any("question 2" in note for note in ws.unknowns)
+
+
+
+def test_engineer_words_in_task_notes_do_not_reach_the_unknowns(sandboxed_run) -> None:
+    ws = sandboxed_run
+    _plan(ws, count=1)
+    results = [
+        TaskResult(
+            queries_issued=[], documents_fetched=[], evidence_ids=[], summary="",
+            unresolved="I exhausted my tool-call budget. The revision date was not confirmed.", usage=Usage(),
+        )
+    ]
+    ws.tasks = [SearchTask(task_id="b1-r0", branch_id="b1", round=0, instruction="i", status="running")]
+    graph_module._collect(_state(ws, task_results=results, results_by_task={"b1-r0": results[0]}))
+
+    assert "The revision date was not confirmed." in ws.unknowns
+    assert "This line of research stopped before it was finished." in ws.unknowns
+    assert not any("budget" in note or "tool-call" in note for note in ws.unknowns)
 
 
 # --- budget and depth ---------------------------------------------------------------
@@ -544,7 +563,9 @@ def test_a_task_past_the_deadline_is_not_started(sandboxed_run, monkeypatch) -> 
             "deadline": time.time() - 1,
         }
     )
-    assert "deadline" in update["results_by_task"]["b1-r1"].unresolved
+    # Plain words: the note reaches the answer's Unknowns (docs/11); it used to read
+    # "not started: run deadline reached".
+    assert update["results_by_task"]["b1-r1"].unresolved == DEADLINE_NOTE
     assert task.status == "failed"
 
 

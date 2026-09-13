@@ -37,6 +37,7 @@ from prime_search import events
 from prime_search.config import Budget, get_settings
 from prime_search.evidence.store import EvidenceRejected, EvidenceStore
 from prime_search.models import subagent_model, token_usage
+from prime_search.plain_language import STOPPED_NOTE, STOPPED_ON_ERROR_NOTE, plain_note, plain_notes
 from prime_search.primitives import tavily
 from prime_search.primitives.sources import host_of
 from prime_search.prompts import render
@@ -302,41 +303,45 @@ def build_tools(ctx: ToolContext) -> list[BaseTool]:
             doc_id: A doc_id from a previous search result.
         """
         ctx.begin("fetch")
-        with _LOCK:
-            failed_before = doc_id in ctx.ws.failed_fetches
-        if failed_before:
-            # Another branch, or an earlier round, already failed on this page. The
-            # live run that prompted this tried one unreadable page in two rounds and
-            # showed the same miss twice. No fetch is charged and no event repeats it.
-            return {
-                "doc_id": doc_id,
-                "error": "this page could not be read earlier in this run; it is not retried",
-                "hint": "try a different source for the same fact",
-                "tool_calls_left": ctx.calls_left,
-            }
-        refused = ctx.charge("fetches")
-        if refused:
-            return {"error": refused, "tool_calls_left": ctx.calls_left}
-        try:
-            result = tavily.fetch(doc_id, docs=ctx.ws.documents, run_dir=ctx.run_dir)
-        except Exception as exc:  # an unknown doc_id raises ValueError
-            ctx.error_event("fetch", f"{type(exc).__name__}: {exc}", ctx.page_summary(doc_id))
-            return {
-                "error": f"{type(exc).__name__}: {exc}",
-                "hint": "search first; doc_ids only exist for search results",
-                "tool_calls_left": ctx.calls_left,
-            }
-        document = result.document
-        if not document.is_fetched:
+        # One fetch of a page at a time, run-wide: two branches opening the same page in
+        # one round each passed the failed-page check before either had recorded a
+        # failure (spec review). The second now waits, then sees the first's outcome.
+        with ctx.ws.fetch_lock(doc_id):
             with _LOCK:
-                ctx.ws.failed_fetches[doc_id] = result.error or "no text extracted"
-            ctx.error_event("fetch", result.error or "no text extracted", ctx.page_summary(doc_id))
-            return {
-                "doc_id": doc_id,
-                "error": result.error or "no text could be extracted from this page",
-                "hint": "try a different source for the same fact",
-                "tool_calls_left": ctx.calls_left,
-            }
+                failed_before = doc_id in ctx.ws.failed_fetches
+            if failed_before:
+                # Another branch, or an earlier round, already failed on this page. The
+                # live run that prompted this tried one unreadable page in two rounds and
+                # showed the same miss twice. No fetch is charged and no event repeats it.
+                return {
+                    "doc_id": doc_id,
+                    "error": "this page could not be read earlier in this run; it is not retried",
+                    "hint": "try a different source for the same fact",
+                    "tool_calls_left": ctx.calls_left,
+                }
+            refused = ctx.charge("fetches")
+            if refused:
+                return {"error": refused, "tool_calls_left": ctx.calls_left}
+            try:
+                result = tavily.fetch(doc_id, docs=ctx.ws.documents, run_dir=ctx.run_dir)
+            except Exception as exc:  # an unknown doc_id raises ValueError
+                ctx.error_event("fetch", f"{type(exc).__name__}: {exc}", ctx.page_summary(doc_id))
+                return {
+                    "error": f"{type(exc).__name__}: {exc}",
+                    "hint": "search first; doc_ids only exist for search results",
+                    "tool_calls_left": ctx.calls_left,
+                }
+            document = result.document
+            if not document.is_fetched:
+                with _LOCK:
+                    ctx.ws.failed_fetches[doc_id] = result.error or "no text extracted"
+                ctx.error_event("fetch", result.error or "no text extracted", ctx.page_summary(doc_id))
+                return {
+                    "doc_id": doc_id,
+                    "error": result.error or "no text could be extracted from this page",
+                    "hint": "try a different source for the same fact",
+                    "tool_calls_left": ctx.calls_left,
+                }
         ctx.fetched.append(document.doc_id)
         ctx.emit("fetch", result.event(ctx.task.task_id))
         payload: dict[str, Any] = {
@@ -494,7 +499,7 @@ def build_tools(ctx: ToolContext) -> list[BaseTool]:
             text: One sentence naming what could not be confirmed.
         """
         ctx.begin("note_unresolved")
-        cleaned = _clip(text.strip(), 400)
+        cleaned = plain_note(_clip(text.strip(), 400), ctx.ws.documents)
         if cleaned and cleaned not in ctx.unresolved:
             ctx.unresolved.append(cleaned)
             ctx.ws.unknowns.append(cleaned)  # docs/02 §3
@@ -634,9 +639,6 @@ def run_search_agent(
     return result
 
 
-STOPPED_NOTE = "This line of research stopped before it was finished."
-STOPPED_ON_ERROR_NOTE = "This line of research stopped early because of a technical problem."
-
 
 def plain_stop_note(reason: str) -> str:
     """The Unknowns line for a task that stopped early, without tool calls, budgets or
@@ -736,7 +738,9 @@ def _final_summary(
 def _build_result(ctx: ToolContext, messages: list[BaseMessage]) -> TaskResult:
     """`TaskResult` from the tool-call log; only summary/unresolved from the model."""
     summary, trailing = _split_summary(_last_text(messages))
-    unresolved = _unique([*ctx.unresolved, *([trailing] if trailing else [])])
+    # The prompt asks for plain notes; this makes sure of it (a live b3-r0 wrote "I
+    # exhausted my tool-call budget"). The note reaches the search tree and the answer.
+    unresolved = plain_notes([*ctx.unresolved, *([trailing] if trailing else [])], ctx.ws.documents)
     return TaskResult(
         queries_issued=_unique(ctx.queries),
         documents_fetched=_unique(ctx.fetched),

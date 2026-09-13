@@ -158,6 +158,10 @@ def test_an_unmapped_citation_is_stripped(populated) -> None:
 
     assert "[9]" not in answer.body_markdown
     assert "[1]" in answer.body_markdown  # the valid one survives
+    from prime_search import events as event_log
+
+    (dropped,) = [r["payload"] for r in event_log.replay(populated.run_id) if r["type"] == "error"]
+    assert (dropped["severity"], dropped["node"]) == ("warning", "synthesize")  # docs/02 §4
 
 
 def test_surviving_citations_are_not_renumbered(populated) -> None:

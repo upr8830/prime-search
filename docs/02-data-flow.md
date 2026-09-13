@@ -272,6 +272,7 @@ ws.unknowns: list[str]
 ws.verdicts: list[Verdict]                # one per judge run; persisted as RunRecord.verdicts
 ws.critic_reports: list[CriticReport]     # one per critic run; persisted as RunRecord.critic_reports
 ws.failed_fetches: dict[str, str]        # doc_id -> why the page could not be read; never re-fetched, not persisted
+ws.fetch_lock(doc_id) -> Lock            # held for a page's fetch, so concurrent branches fetch it once
 ws.search_tree: dict                      # branch_id -> {tasks, evidence_ids, status}
 ws.budget_remaining() -> Budget
 # helpers

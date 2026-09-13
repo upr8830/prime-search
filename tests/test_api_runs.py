@@ -213,6 +213,7 @@ def test_an_interrupted_run_ends_with_a_finish_that_is_never_written(api, monkey
     frames = _read_stream(api.client, ws.run_id)
     assert [frame["event"] for frame in frames] == ["run.started", "error", "run.finished"]
     assert frames[-1]["data"]["status"] == "failed" and frames[-1]["id"] is None
+    assert frames[1]["data"]["severity"] == "error"  # red: the run did not finish (docs/02 §4)
     assert "usage" in frames[-1]["data"]  # docs/02 §4: run.finished carries usage
     assert [record["type"] for record in events.replay(ws.run_id)] == ["run.started"]
 
@@ -231,6 +232,7 @@ def test_a_runner_that_dies_before_emitting_still_finishes_its_stream(api, monke
     frames = _read_stream(api.client, run_id)
     assert [frame["event"] for frame in frames] == ["error", "run.finished"]
     assert frames[-1]["data"]["status"] == "failed" and "usage" in frames[-1]["data"]
+    assert (frames[0]["data"]["severity"], frames[0]["data"]["node"]) == ("error", "api")
     assert api.client.get(f"/runs/{run_id}").json()["status"] == "failed"
 
 

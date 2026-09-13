@@ -749,6 +749,68 @@ def test_a_page_that_could_not_be_read_is_not_fetched_again(sandboxed_run, monke
     assert retried, "the second fetch did not say the page is not retried"
 
 
+def test_two_branches_opening_the_same_unreadable_page_at_once_fetch_it_once(sandboxed_run, monkeypatch) -> None:
+    """Spec review: the failed-page check ran before the fetch and the failure was
+    recorded after it, so two branches opening one bad page in the same round both
+    fetched it, paid for it and showed a miss."""
+    import threading
+    import time as clock
+
+    from prime_search.primitives.tavily import FetchResult
+
+    _install_fake_tavily(monkeypatch)
+    calls: list[str] = []
+
+    def slow_unreadable(target, *, docs=None, run_dir=None, **kwargs):
+        calls.append(target)
+        clock.sleep(0.3)
+        return FetchResult(document=docs[DOC_ID], error="extract yielded 0 paragraphs (< 20)")
+
+    monkeypatch.setattr(search_agent.tavily, "fetch", slow_unreadable)
+    failures: list[BaseException] = []
+
+    def branch(branch_id: str) -> None:
+        model = ScriptedChatModel(
+            script=[
+                AIMessage(content="", tool_calls=[tool_call("search", query="q")]),
+                AIMessage(content="", tool_calls=[tool_call("fetch", doc_id=DOC_ID)]),
+                AIMessage(content="Nothing readable."),
+            ]
+        )
+        try:
+            run_search_agent(_task(task_id=f"{branch_id}-r0", branch_id=branch_id), ws=sandboxed_run, model=model)
+        except BaseException as exc:  # noqa: BLE001 - surfaced by the assert below
+            failures.append(exc)
+
+    threads = [threading.Thread(target=branch, args=(branch_id,)) for branch_id in ("b1", "b2")]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+    assert failures == []
+    assert calls == [DOC_ID]
+    assert sandboxed_run.usage.fetches == 1
+    assert len([e for e in events.replay(sandboxed_run.run_id) if e["type"] == "error"]) == 1
+
+
+def test_a_task_result_carries_no_engineer_words(sandboxed_run, monkeypatch) -> None:
+    """A live sub-agent ended with "Unresolved: I exhausted my tool-call budget ..."."""
+    _install_fake_tavily(monkeypatch)
+    model = ScriptedChatModel(
+        script=[
+            AIMessage(
+                content="Found the LCD.\nUnresolved: I exhausted my tool-call budget. "
+                "The revision date was not confirmed."
+            ),
+        ]
+    )
+    result = run_search_agent(_task(), ws=sandboxed_run, model=model)
+    assert "budget" not in (result.unresolved or "")
+    assert "The revision date was not confirmed." in (result.unresolved or "")
+    assert "This line of research stopped before it was finished." in (result.unresolved or "")
+
+
 def test_orphan_tool_messages_are_dropped_with_their_parent() -> None:
     """One AIMessage can carry several tool calls. Dropping it while leaving the
     answered siblings' ToolMessages behind produces orphans the endpoint rejects just

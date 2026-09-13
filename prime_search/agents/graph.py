@@ -50,6 +50,7 @@ from prime_search.config import Budget, get_settings
 from prime_search.evidence.graph import build_claim_graph
 from prime_search.evidence.store import EvidenceStore
 from prime_search.models import structured
+from prime_search.plain_language import DEADLINE_NOTE, plain_notes
 from prime_search.prompts import render
 from prime_search.schemas import (
     Answer,
@@ -255,7 +256,7 @@ def _search_agent(payload: dict[str, Any]) -> dict[str, Any]:
     # docs/01 §9: "a checked deadline at every node boundary". The sub-agent times only
     # itself, so a task started after the run's deadline would otherwise run past it.
     if time.time() >= payload.get("deadline", float("inf")):
-        return _failed_task(payload, task, "not started: run deadline reached")
+        return _failed_task(payload, task, DEADLINE_NOTE)
     try:
         result = run_search_agent(
             task,
@@ -737,7 +738,10 @@ def _share(remaining: int, tasks: int) -> int:
 
 def _unknowns(ws: Workspace, state: PrimeState) -> list[str]:
     """What to carry into the answer's "Unknowns / not verified" section."""
-    notes = [task.result.unresolved for task in ws.tasks if task.result and task.result.unresolved]
+    # Plain words for a reader (docs/11): whatever a task wrote, no budgets or tool calls.
+    notes = plain_notes(
+        [task.result.unresolved for task in ws.tasks if task.result and task.result.unresolved], ws.documents
+    )
     covered = {item.branch_id for item in ws.evidence}
     for branch in ws.plan.branches if ws.plan else []:
         if branch.branch_id not in covered:

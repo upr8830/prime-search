@@ -28,6 +28,7 @@ from langchain_core.language_models import BaseChatModel
 from prime_search import events
 from prime_search.evidence.cite import build_citations, effective_dates_section, source_line
 from prime_search.models import root_model, token_usage
+from prime_search.plain_language import plain_doc_refs, plain_notes
 from prime_search.prompts import render
 from prime_search.schemas import Answer, Citation, Claim, CriticReport, Document, Evidence
 from prime_search.tracing import get_logger
@@ -56,8 +57,6 @@ SECTION_HEADINGS = (
 )
 
 _CITATION = re.compile(r"\[(\d{1,3})\]")
-# docs/02 §2.4's document id. A live answer's Unknowns named "doc_7e7be1abff" to a reader.
-_DOC_REF = re.compile(r"\b(doc_[0-9a-f]{10})\b")
 
 # Citation forms models actually emit instead of `[n]`, normalized before validating so
 # the answer the reader sees uses one form and docs/03 §8's check sees all of them.
@@ -120,7 +119,7 @@ def synthesize(
     """
     citations = build_citations(ws.evidence, ws.documents)
     raw_notes = unresolved if unresolved is not None else list(ws.unknowns)
-    unresolved_notes = [_plain_doc_refs(note, ws) for note in raw_notes]
+    unresolved_notes = plain_notes(raw_notes, ws.documents)
 
     # docs/03 §13: "No evidence at all: synthesis returns an answer consisting of the
     # scope warning/unknowns only; the UI shows it plainly rather than an error."
@@ -609,12 +608,7 @@ def _plain_doc_refs(text: str, ws: Workspace) -> str:
     `ws.unknowns`. A reader cannot look up `doc_7e7be1abff` (docs/11).
     """
 
-    def title(match: re.Match[str]) -> str:
-        document = ws.documents.get(match.group(1))
-        name = document.title.strip() if document is not None else ""
-        return f'"{name}"' if name else "a source document"
-
-    return _DOC_REF.sub(title, text)
+    return plain_doc_refs(text, ws.documents)
 
 
 def _ensure_budget_note(body: str, ws: Workspace) -> str:

@@ -457,6 +457,45 @@ def test_run_finished_names_the_limits_a_run_reached(sandboxed_run, monkeypatch)
     assert finished["limits_reached"] == ["max_tokens"]
 
 
+def test_a_failed_prime_run_emits_a_red_error_and_no_limits(sandboxed_run, monkeypatch) -> None:
+    """docs/02 §4: `run_prime` and `baseline` failures are severity "error"."""
+    from prime_search.agents import graph as module
+    from prime_search.events import run_dir
+    from prime_search.workspace import Workspace
+
+    def broken(ws, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        raise RuntimeError("synthesis endpoint down")
+
+    _stub_prime_nodes(monkeypatch, synthesize=broken)
+    ws = Workspace(objective="q")
+    with pytest.raises(RuntimeError):
+        module.run_prime(RunRequest(question="q"), ws=ws)
+    records = _events(run_dir(ws.run_id))
+    (error,) = _by_type(records, "error")
+    assert (error["severity"], error["node"]) == ("error", "run_prime")
+    (finished,) = _by_type(records, "run.finished")
+    assert finished["status"] == "failed" and finished["limits_reached"] == []
+
+
+def test_a_failed_baseline_run_emits_a_red_error(sandboxed_run, monkeypatch) -> None:
+    from prime_search import baseline as module
+    from prime_search import tracing
+    from prime_search.events import run_dir
+    from prime_search.workspace import Workspace
+
+    class Broken:
+        def stream(self, *args, **kwargs):  # type: ignore[no-untyped-def]
+            raise RuntimeError("model endpoint down")
+
+    monkeypatch.setattr(tracing, "_tracing_on", lambda: False)
+    monkeypatch.setattr(module, "build_baseline_agent", lambda model=None: Broken())
+    ws = Workspace(objective="q")
+    with pytest.raises(RuntimeError):
+        module.run_baseline(RunRequest(question="q", mode="baseline"), ws=ws)
+    (error,) = _by_type(_events(run_dir(ws.run_id)), "error")
+    assert (error["severity"], error["node"]) == ("error", "baseline")
+
+
 class _FakeCaller:
     def __init__(self, value) -> None:  # noqa: ANN001
         self.value = value

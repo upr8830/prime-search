@@ -213,6 +213,8 @@ class Workspace:
     # and failed; the fetch tool reads it so no branch fetches the page again (docs/02
     # §3). Not serialized: each miss is already an `error` event.
     failed_fetches: dict[str, str] = field(default_factory=dict)
+    # One lock per page (`fetch_lock`). Not serialized.
+    _fetch_locks: dict[str, threading.Lock] = field(default_factory=dict, repr=False, compare=False)
     run_id: str = field(default_factory=new_run_id)
     # Captured when the workspace is created, which is when the run begins. Timezone
     # aware, matching Document.retrieved_at.
@@ -291,6 +293,12 @@ class Workspace:
             self.usage.input_tokens += input_tokens
             self.usage.output_tokens += output_tokens
             self.tokens_estimated = self.tokens_estimated or estimated
+
+    def fetch_lock(self, doc_id: str) -> threading.Lock:
+        """The lock a fetch of this page holds, so concurrent branches fetch it once and a
+        failure one of them records is seen by the other (docs/02 §3)."""
+        with RUN_LOCK:
+            return self._fetch_locks.setdefault(doc_id, threading.Lock())
 
     # --- helpers the root calls from a cell -------------------------------------
 

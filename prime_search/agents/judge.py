@@ -213,7 +213,9 @@ def failed_verdict(ws: Workspace, judged_round: int, error: str) -> Verdict:
         coverage={
             branch: "partial" if branch in covered else "unresolved" for branch in _branch_ids(ws)
         },
-        missing=[f"judge output unusable: {error}"[:300]],
+        # The error is in the log and the warning event; the round separator a reader
+        # sees gets plain words (docs/11).
+        missing=["The check of whether the research was complete could not run this round."],
         new_tasks=[],
         reasoning="The judge failed; the run continued without a sufficiency check.",
     )
