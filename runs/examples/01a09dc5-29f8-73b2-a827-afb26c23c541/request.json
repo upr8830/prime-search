@@ -1,0 +1,8 @@
+{
+  "question": "My patient has type 2 diabetes and takes only metformin — can you approve a CGM for them?",
+  "mode": "prime",
+  "depth": "deep",
+  "question_id": "oos-002",
+  "budget_override": null,
+  "prompt_set": "base"
+}

@@ -1,0 +1,82 @@
+{
+ "experiment_name": "prime-base-holdout-20260914-0232-1acb321c",
+ "experiment_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/datasets/9dc81116-8a93-480c-9da2-29cacc1e9370/compare?selectedSessions=74673468-7163-421b-a7c1-10f29b529bc6",
+ "question_id": "oos-002",
+ "split": "holdout",
+ "scores": {
+  "answer_correctness": {
+   "score": 1.0,
+   "comment": "claims 4/4 weighted present; summary: consistent",
+   "metadata": {
+    "judge_tokens": 30512,
+    "judge_votes": 3,
+    "judge_calls": 3,
+    "judge_mode": "fenced_json+native+native_retry_1"
+   }
+  },
+  "evidence_recall": {
+   "score": null,
+   "comment": "not applicable: the answer key requires no evidence",
+   "metadata": {}
+  },
+  "citation_correctness": {
+   "score": 0.875,
+   "comment": "7/8 sampled cited sentences supported (of 13 cited); failing: [4][8] 'Dexcom ([4]) and Doko MD ([8]) are secondary/web explanations; prim...' - The cited Dexcom and Doko MD passages do not identify themselves as secondary or web explanations...",
+   "metadata": {
+    "judge_mode": "fenced_json",
+    "judge_tokens": 44424
+   }
+  },
+  "citation_completeness": {
+   "score": 0.8182,
+   "comment": "9/11 cited in Criteria / Details and Codes and documentation; uncited: 'For non\u2011insulin\u2011treated patients, the hypoglycemia pathway demands documentat...'; 'Documentation of hypoglycemia events must include glucose values <54 mg/dL (3...'",
+   "metadata": {}
+  },
+  "currency": {
+   "score": 1.0,
+   "comment": "L33822: cited; governing date 2024-10-01 stated",
+   "metadata": {}
+  },
+  "contradiction_handling": {
+   "score": null,
+   "comment": "not applicable: the answer key expects no contradiction",
+   "metadata": {}
+  },
+  "scope_handling": {
+   "score": 1.0,
+   "comment": "scope: scope_warning field; no fabricated payer criteria",
+   "metadata": {
+    "judge_mode": "fenced_json",
+    "judge_tokens": 15608
+   }
+  },
+  "primary_source_ratio": {
+   "score": 0.8889,
+   "comment": "16/18 citations at official_secondary or better; below: [4] web dexcom.com, [8] unknown doko.md",
+   "metadata": {}
+  },
+  "search_cost": {
+   "score": 17,
+   "comment": "8 searches + 9 fetches",
+   "metadata": {}
+  },
+  "latency_s": {
+   "score": 191.5,
+   "comment": "191.5s wall clock",
+   "metadata": {}
+  },
+  "tokens": {
+   "score": 436821,
+   "comment": "381493 in + 55328 out",
+   "metadata": {}
+  },
+  "search_efficiency": {
+   "score": 0.5882,
+   "comment": "answer_correctness 1.0 / max(1, 17 calls) x 10",
+   "metadata": {}
+  }
+ },
+ "composite": 0.971,
+ "evaluated_at": "2026-09-14T02:50:09.990308+00:00",
+ "evaluator_git_sha": "da7067f"
+}

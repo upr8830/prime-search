@@ -1,0 +1,79 @@
+{
+ "experiment_name": "baseline-none-holdout-20260914-0222-5487b5be",
+ "experiment_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/datasets/9dc81116-8a93-480c-9da2-29cacc1e9370/compare?selectedSessions=8a382e68-e6c4-4087-a8c9-25627b52e46d",
+ "question_id": "oos-002",
+ "split": "holdout",
+ "scores": {
+  "answer_correctness": {
+   "score": 0.5,
+   "comment": "claims 2/4 weighted present; missing: c1 (must); summary: partial",
+   "metadata": {
+    "judge_tokens": 63103,
+    "judge_votes": 3,
+    "judge_calls": 3,
+    "judge_mode": "fenced_json"
+   }
+  },
+  "evidence_recall": {
+   "score": null,
+   "comment": "not applicable: the answer key requires no evidence",
+   "metadata": {}
+  },
+  "citation_correctness": {
+   "score": 0.0,
+   "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+   "metadata": {}
+  },
+  "citation_completeness": {
+   "score": 0.1875,
+   "comment": "3/16 cited in whole answer (no Criteria / Codes sections); uncited: '**Short answer:** it depends entirely on the payer, but under **traditional M...'; 'Here is how major payers typically handle this:'; '| Payer / Program | CGM for metformin-only T2D? | Typical criteria |'",
+   "metadata": {}
+  },
+  "currency": {
+   "score": 0.0,
+   "comment": "L33822: not cited; governing date 2024-10-01 not stated",
+   "metadata": {}
+  },
+  "contradiction_handling": {
+   "score": null,
+   "comment": "not applicable: the answer key expects no contradiction",
+   "metadata": {}
+  },
+  "scope_handling": {
+   "score": 0.0,
+   "comment": "scope: not flagged; fabricated: 'Policies vary widely. Some plans still require insulin therapy; others have b...'; 'Many states limit CGM to insulin-treated individuals or type 1 diabetes. Some...'",
+   "metadata": {
+    "judge_mode": "fenced_json",
+    "judge_tokens": 17641
+   }
+  },
+  "primary_source_ratio": {
+   "score": 0.2,
+   "comment": "1/5 citations at official_secondary or better; below: [2] web dexcom.com, [3] unknown doko.md, [4] unknown uhcprovider.com, [5] unknown bcbsri.com",
+   "metadata": {}
+  },
+  "search_cost": {
+   "score": 1,
+   "comment": "1 searches + 0 fetches",
+   "metadata": {}
+  },
+  "latency_s": {
+   "score": 26.7,
+   "comment": "26.7s wall clock",
+   "metadata": {}
+  },
+  "tokens": {
+   "score": 10153,
+   "comment": "8538 in + 1615 out",
+   "metadata": {}
+  },
+  "search_efficiency": {
+   "score": 5.0,
+   "comment": "answer_correctness 0.5 / max(1, 1 calls) x 10",
+   "metadata": {}
+  }
+ },
+ "composite": 0.3,
+ "evaluated_at": "2026-09-14T02:27:39.529160+00:00",
+ "evaluator_git_sha": "70027ea"
+}

@@ -1,0 +1,2033 @@
+{
+  "run_id": "01a09dc5-29f8-73b2-a827-afb26c23c541",
+  "request": {
+    "question": "My patient has type 2 diabetes and takes only metformin — can you approve a CGM for them?",
+    "mode": "prime",
+    "depth": "deep",
+    "question_id": "oos-002",
+    "budget_override": null,
+    "prompt_set": "base"
+  },
+  "started_at": "2026-09-14T02:35:39.384692Z",
+  "finished_at": "2026-09-14T02:38:50.850786Z",
+  "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09dc5-2a0c-73a2-aef8-13aacef5077d/run/01a09dc5-2a0c-73a2-aef8-13aacef5077d?start_time=2026-09-14T02%3A35%3A39.404805%2B00%3A00",
+  "langsmith_trace_id": "01a09dc5-2a0c-73a2-aef8-13aacef5077d",
+  "plan": {
+    "understanding": {
+      "normalized_question": "Under current Medicare policy, does a beneficiary with type 2 diabetes treated only with metformin (not insulin) meet the coverage criteria for a continuous glucose monitor?",
+      "domain": "cgm",
+      "question_type": "eligibility",
+      "entities": [
+        "Medicare",
+        "CGM",
+        "type 2 diabetes",
+        "metformin",
+        "non-insulin-treated"
+      ],
+      "time_sensitivity": "high",
+      "needs_primary_sources": true,
+      "scope_warning": "This asks about a specific patient's coverage, so the answer below will be at the policy level rather than an individual coverage decision."
+    },
+    "branches": [
+      {
+        "branch_id": "b1",
+        "question": "What are the current LCD coverage criteria for a therapeutic CGM under Medicare (LCD L33822)?",
+        "hypothesis": "Criteria require insulin treatment or documented problematic hypoglycemia for coverage.",
+        "rationale": "Establish the governing policy criteria.",
+        "source_hint": "primary_policy",
+        "priority": 1,
+        "depends_on": []
+      },
+      {
+        "branch_id": "b2",
+        "question": "Do the current LCD criteria cover a beneficiary with type 2 diabetes treated only with metformin (non-insulin)?",
+        "hypothesis": "Non-insulin-treated type 2 diabetes qualifies only if documented problematic hypoglycemia is present.",
+        "rationale": "Directly addresses eligibility for the specific patient scenario.",
+        "source_hint": "primary_policy",
+        "priority": 1,
+        "depends_on": []
+      },
+      {
+        "branch_id": "b3",
+        "question": "What is the most recent revision date to LCD L33822 and what changes did it make to the insulin requirement?",
+        "hypothesis": "The April 2023 revision removed the insulin requirement and added a hypoglycemia pathway.",
+        "rationale": "Ensure we are using the current policy; the answer hinges on recency.",
+        "source_hint": "primary_policy",
+        "priority": 2,
+        "depends_on": []
+      },
+      {
+        "branch_id": "b4",
+        "question": "What diagnosis codes, documentation, and frequency requirements are specified in the companion coding article (A52464) for therapeutic CGM?",
+        "hypothesis": "The article requires a diabetes diagnosis code, proof of frequent glucose monitoring, and limits sensor frequency to every 30 days.",
+        "rationale": "Coverage in practice depends on billing and documentation rules separate from the LCD.",
+        "source_hint": "coding_article",
+        "priority": 3,
+        "depends_on": []
+      },
+      {
+        "branch_id": "b5",
+        "question": "What do non-CMS sources (e.g., beneficiary guides, supplier websites) claim about CGM coverage for non-insulin-treated type 2 diabetes under Medicare?",
+        "hypothesis": "Non-CMS sources often overstate coverage, suggesting broader eligibility than the LCD allows.",
+        "rationale": "Secondary sources may misrepresent criteria; we need to contrast them with primary policy.",
+        "source_hint": "any",
+        "priority": 4,
+        "depends_on": []
+      }
+    ],
+    "stop_criteria": "The LCD L33822 criteria are quoted with its revision date; the eligibility of a non‑insulin‑treated type 2 diabetic is resolved either way; the diagnosis, documentation, and frequency requirements are cited from the companion article A52464; and any non‑CMS claims are noted and contrasted with the primary policy.",
+    "budget": {
+      "max_searches": 30,
+      "max_fetches": 20,
+      "max_deep_reads": 30,
+      "max_agents": 6,
+      "max_rounds": 3,
+      "max_tokens": 400000,
+      "max_seconds": 180
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "b1-r0",
+      "branch_id": "b1",
+      "round": 0,
+      "instruction": "What are the current LCD coverage criteria for a therapeutic CGM under Medicare (LCD L33822)?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": "year",
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "LCD L33822 therapeutic continuous glucose monitor coverage criteria"
+        ],
+        "documents_fetched": [
+          "doc_8416d9eb4c"
+        ],
+        "evidence_ids": [
+          "ev_e024578131",
+          "ev_cb3a0972b2",
+          "ev_8809ab3900"
+        ],
+        "summary": "I fetched LCD L33822 from CMS and located the Coverage Guidance section. The document confirms that for a therapeutic CGM to be covered, the beneficiary must meet at least one of two criteria: being insulin-treated, or having a history of problematic hypoglycemia with documentation. The LCD was last revised effective October 1, 2024.",
+        "unresolved": null,
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 3,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 45336,
+          "output_tokens": 3522,
+          "wall_seconds": 42.229
+        }
+      }
+    },
+    {
+      "task_id": "b2-r0",
+      "branch_id": "b2",
+      "round": 0,
+      "instruction": "Do the current LCD criteria cover a beneficiary with type 2 diabetes treated only with metformin (non-insulin)?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": "year",
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "therapeutic continuous glucose monitor LCD coverage criteria insulin hypoglycemia non-insulin"
+        ],
+        "documents_fetched": [
+          "doc_835995b0ab"
+        ],
+        "evidence_ids": [
+          "ev_ebf72fa6e5",
+          "ev_fdd6798712"
+        ],
+        "summary": "The evidence confirms the hypothesis. Under current DME MAC policy (Noridian, revised April 2026), therapeutic CGM coverage requires the patient to be either insulin-treated or to have a documented history of problematic hypoglycemia. A beneficiary with type 2 diabetes treated only with metformin and no documented hypoglycemia would not meet the coverage criteria.\n\nEvidence recorded:\n- The patient must be insulin treated, or have a history of problematic hypoglycemia with documentation of recurrent level 2 events or one level 3 event (Noridian policy article, revised April 2026).",
+        "unresolved": "Whether the identical criteria are stated verbatim in the underlying CMS LCD document itself, as opposed to the DME MAC policy article that implements it.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 2,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 33796,
+          "output_tokens": 2964,
+          "wall_seconds": 41.164
+        }
+      }
+    },
+    {
+      "task_id": "b3-r0",
+      "branch_id": "b3",
+      "round": 0,
+      "instruction": "What is the most recent revision date to LCD L33822 and what changes did it make to the insulin requirement?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": "year",
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "LCD L33822 revision effective date insulin requirement hypoglycemia"
+        ],
+        "documents_fetched": [
+          "doc_68a1466a71"
+        ],
+        "evidence_ids": [
+          "ev_6e7a31e8f8",
+          "ev_6bc357b98c"
+        ],
+        "summary": "LCD L33822 was most recently revised effective October 1, 2024. The April 16, 2023 revision removed the specific requirement that a beneficiary be treated with “multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump” from the CGM coverage criteria. However, the current policy still lists “The beneficiary is insulin-treated” as a coverage pathway (alongside a separate history of problematic hypoglycemia pathway), so the insulin requirement was not eliminated entirely.",
+        "unresolved": "Whether the hypoglycemia pathway was added in the April 2023 revision or had been introduced in an earlier update could not be confirmed from the revision history entries examined.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 4,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 53142,
+          "output_tokens": 4558,
+          "wall_seconds": 51.966
+        }
+      }
+    },
+    {
+      "task_id": "b4-r0",
+      "branch_id": "b4",
+      "round": 0,
+      "instruction": "What diagnosis codes, documentation, and frequency requirements are specified in the companion coding article (A52464) for therapeutic CGM?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "A52464 therapeutic CGM coding article"
+        ],
+        "documents_fetched": [
+          "doc_5b6883d631"
+        ],
+        "evidence_ids": [
+          "ev_6452668064",
+          "ev_f406e190a5"
+        ],
+        "summary": "I fetched CMS Policy Article A52464 (revision date 2025-02-18) and examined its provisions for therapeutic CGM.\n\n- Documentation of frequent monitoring: The article does require proof of frequent testing. Paragraph 56 states that the beneficiary must be “actually testing at a frequency that corroborates the quantity of supplies that have been dispensed,” documented by a narrative statement or the beneficiary’s log. I recorded this as supporting evidence.\n\n- Frequency limit: The hypothesis that sensors are limited to every 30 days is refuted. The article’s revision history (paragraph 151) shows...",
+        "unresolved": "Whether article A52464 itself explicitly requires a diabetes diagnosis code, or whether that requirement resides solely in the companion LCD L33822. Also, the exact current wording of the supply-frequency guideline in the main body of the article could not be captured.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 4,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 50935,
+          "output_tokens": 4000,
+          "wall_seconds": 46.733
+        }
+      }
+    },
+    {
+      "task_id": "b5-r0",
+      "branch_id": "b5",
+      "round": 0,
+      "instruction": "What do non-CMS sources (e.g., beneficiary guides, supplier websites) claim about CGM coverage for non-insulin-treated type 2 diabetes under Medicare?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "Medicare CGM coverage type 2 diabetes not on insulin non-insulin beneficiary guide"
+        ],
+        "documents_fetched": [
+          "doc_264f4d2ace",
+          "doc_694aeb5d5d"
+        ],
+        "evidence_ids": [
+          "ev_a7743fd14f",
+          "ev_08f7cd56c8"
+        ],
+        "summary": "I reviewed two non-CMS sources: a Dexcom article and a Doko MD beneficiary guide. Both accurately stated that Medicare CGM coverage requires either insulin use or a history of problematic hypoglycemia. Neither source overstated eligibility by suggesting that non-insulin-treated type 2 diabetes without problematic hypoglycemia is covered. Therefore, within the limited sample examined, the hypothesis that non-CMS sources often overstate coverage was not supported.",
+        "unresolved": "I could not confirm whether other non-CMS sources (such as additional supplier websites or beneficiary guides beyond Dexcom and Doko MD) overstate Medicare CGM coverage for non-insulin-treated type 2 diabetes, because the search was limited to two documents.",
+        "usage": {
+          "searches": 1,
+          "fetches": 2,
+          "deep_reads": 3,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 43927,
+          "output_tokens": 5868,
+          "wall_seconds": 60.193
+        }
+      }
+    },
+    {
+      "task_id": "b2-r1",
+      "branch_id": "b2",
+      "round": 1,
+      "instruction": "Fetch the underlying CMS LCD L33822 document and confirm whether the non-insulin problematic-hypoglycemia criterion is stated verbatim in the LCD itself rather than only in the DME MAC policy article.",
+      "queries_hint": [
+        "L33822 LCD non-insulin hypoglycemia criterion text",
+        "LCD L33822 therapeutic CGM non-insulin problematic hypoglycemia"
+      ],
+      "include_domains": [
+        "cms.gov"
+      ],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "L33822 LCD therapeutic continuous glucose monitor"
+        ],
+        "documents_fetched": [
+          "doc_8416d9eb4c"
+        ],
+        "evidence_ids": [
+          "ev_77c2cb5e5f",
+          "ev_ad90239d2c"
+        ],
+        "summary": "I fetched CMS LCD L33822 (Glucose Monitors) and located the coverage criteria in the “Coverage Guidance” section. Paragraph 71 states: *“The beneficiary is insulin-treated; or,”* and paragraph 72 immediately follows with: *“The beneficiary has a history of problematic hypoglycemia with documentation of at least one of the following …”*  \n\nThis confirms that the problematic-hypoglycemia criterion is stated verbatim in the LCD itself, not only in the DME MAC policy article. The LCD presents the two criteria as alternatives: insulin-treated or history of problematic hypoglycemia. Therefore, non-i...",
+        "unresolved": "This line of research stopped before it was finished.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 4,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 51101,
+          "output_tokens": 3427,
+          "wall_seconds": 34.41
+        }
+      }
+    },
+    {
+      "task_id": "b3-r1",
+      "branch_id": "b3",
+      "round": 1,
+      "instruction": "Fetch the current revision history of LCD L33822 on cms.gov and record the most recent revision effective date and what it changed regarding the insulin requirement.",
+      "queries_hint": [
+        "L33822 LCD revision history most recent effective date",
+        "cms.gov LCD L33822 revision insulin requirement change"
+      ],
+      "include_domains": [
+        "cms.gov"
+      ],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "L33822 LCD revision history most recent effective date"
+        ],
+        "documents_fetched": [
+          "doc_725c482f7e"
+        ],
+        "evidence_ids": [
+          "ev_d84ed7e20f",
+          "ev_744bff642e",
+          "ev_9035efd128"
+        ],
+        "summary": "I fetched LCD L33822 (Glucose Monitors) from cms.gov and examined its revision history. The most recent revision effective date is 10/01/2024 (R16), which only revised HCPCS code descriptors and did not change coverage criteria.\n\nRegarding the April 2023 revision (04/16/2023): it did not remove the insulin requirement. Instead, it removed the qualifier \"with multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump\" from the CGM insulin-treated criterion. The current coverage criteria still require that \"The beneficiary is insulin-treat...",
+        "unresolved": "Whether the hypoglycemia pathway was added in the April 2023 revision or existed in earlier versions of LCD L33822 could not be confirmed from the revision history entries retrieved.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 3,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 47766,
+          "output_tokens": 6256,
+          "wall_seconds": 50.887
+        }
+      }
+    },
+    {
+      "task_id": "b4-r1",
+      "branch_id": "b4",
+      "round": 1,
+      "instruction": "Fetch policy article A52464 and record whether it explicitly requires a diabetes diagnosis code and the exact current wording of the supply-frequency guideline.",
+      "queries_hint": [
+        "A52464 diabetes diagnosis code requirement",
+        "A52464 supply frequency guideline 90 days wording"
+      ],
+      "include_domains": [
+        "cms.gov"
+      ],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "A52464 diabetes diagnosis code requirement supply frequency"
+        ],
+        "documents_fetched": [
+          "doc_5b6883d631"
+        ],
+        "evidence_ids": [
+          "ev_6ac696b207",
+          "ev_19ef5d9f5c"
+        ],
+        "summary": "I established that Policy Article A52464 explicitly requires sufficient information in the beneficiary's medical record to determine that the beneficiary has diabetes mellitus. I also established that the current supply-frequency guideline allows billing up to a maximum of ninety (90) days of supply allowance at a time for codes A4238 or A4239, which contradicts the hypothesis that sensor frequency is limited to every 30 days.",
+        "unresolved": "Whether the article currently requires proof of frequent glucose monitoring could not be confirmed with recorded evidence; the revision history indicates that language regarding frequent insulin dosing and adjustment was removed, but the current active text was not captured in an evidence item.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 4,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 38729,
+          "output_tokens": 2764,
+          "wall_seconds": 31.788
+        }
+      }
+    }
+  ],
+  "documents": {
+    "doc_1a3638b9c3": {
+      "doc_id": "doc_1a3638b9c3",
+      "url": "https://www.cms.gov/Outreach-and-Education/Medicare-Learning-Network-MLN/MLNProducts/Downloads/MedQtrlyComp-Newsletter-ICN909378print-friendly.pdf",
+      "title": "[PDF] Medicare Quarterly Provider Compliance Newsletter - CMS",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:03.790189Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_e1c54d2f39": {
+      "doc_id": "doc_e1c54d2f39",
+      "url": "https://www.cms.gov/medicare-coverage-database/attachments/lcd/38900_6/GluccoseMonitorsPA12172020.pdf",
+      "title": "[PDF] Glucose Monitor - Policy Article (A52464) Contractor Information ...",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:03.789550Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_5b6883d631": {
+      "doc_id": "doc_5b6883d631",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+      "title": "Glucose Monitor - Policy Article (A52464) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "Article",
+      "document_id_external": "A52464",
+      "effective_date": null,
+      "revision_date": "2025-02-18",
+      "retrieved_at": "2026-09-14T02:35:52.139727Z",
+      "text_path": "docs/doc_5b6883d631.txt",
+      "paragraph_count": 281,
+      "fetch_method": "extract"
+    },
+    "doc_5de935727f": {
+      "doc_id": "doc_5de935727f",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464&ver=62",
+      "title": "Glucose Monitor - Policy Article (A52464) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:35:49.962841Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_b97b2ed816": {
+      "doc_id": "doc_b97b2ed816",
+      "url": "https://www.cms.gov/files/document/esmd-home-blood-glucose-monitoring-reason-codes-and-statements.pdf",
+      "title": "[PDF] Home Blood Glucose Monitoring Reason Codes and Statements",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:03.789738Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_8416d9eb4c": {
+      "doc_id": "doc_8416d9eb4c",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822#h3HcpcsCodesHeader",
+      "title": "LCD - Glucose Monitors (L33822) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "LCD",
+      "document_id_external": "L33822",
+      "effective_date": null,
+      "revision_date": "2024-10-01",
+      "retrieved_at": "2026-09-14T02:35:52.396643Z",
+      "text_path": "docs/doc_8416d9eb4c.txt",
+      "paragraph_count": 275,
+      "fetch_method": "extract"
+    },
+    "doc_03cea007fa": {
+      "doc_id": "doc_03cea007fa",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52507&ver=139&=",
+      "title": "External Infusion Pumps - Policy Article (A52507) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:03.790764Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_2b116370bb": {
+      "doc_id": "doc_2b116370bb",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52507",
+      "title": "External Infusion Pumps - Policy Article (A52507) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:03.790954Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_694aeb5d5d": {
+      "doc_id": "doc_694aeb5d5d",
+      "url": "https://doko.md/medicare-cover-cgm-type-2-diabetes",
+      "title": "Does Medicare Cover CGM for Type 2 Diabetes in 2026? - Doko MD",
+      "source_tier": "unknown",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": "2026-07-13",
+      "retrieved_at": "2026-09-14T02:36:05.729112Z",
+      "text_path": "",
+      "paragraph_count": 94,
+      "fetch_method": "extract"
+    },
+    "doc_bfbb875bf4": {
+      "doc_id": "doc_bfbb875bf4",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7047118",
+      "title": "Current Eligibility Requirements for CGM Coverage Are ... - PMC",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:35:54.127821Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_ad44968072": {
+      "doc_id": "doc_ad44968072",
+      "url": "https://www.bcbsri.com/providers/medicalpolicies/files/glucose-monitoring-continuous",
+      "title": "[PDF] Medical Coverage Policy | Glucose Monitoring- Continuous",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:35:54.128363Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_264f4d2ace": {
+      "doc_id": "doc_264f4d2ace",
+      "url": "https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands",
+      "title": "Medicare Expands CGM Coverage for Type 2 Diabetes - Dexcom",
+      "source_tier": "web",
+      "publisher": "Dexcom",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:35:59.471465Z",
+      "text_path": "",
+      "paragraph_count": 47,
+      "fetch_method": "extract"
+    },
+    "doc_b9e190f031": {
+      "doc_id": "doc_b9e190f031",
+      "url": "https://www.bcbsri.com/providers/sites/providers/files/policies/2024/09/2024%20DRAFT%20Glucose%20Monitoring%20-%20Continuous.pdf",
+      "title": "DRAFT Medical Coverage Policy | Glucose Monitoring- ...",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:35:54.129186Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_50d855c599": {
+      "doc_id": "doc_50d855c599",
+      "url": "https://www.aarp.org/medicare/does-medicare-cover-continuous-glucose-monitors",
+      "title": "Does Medicare Cover Continuous Glucose Monitors? - AARP",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:35:54.129444Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_f999b941b3": {
+      "doc_id": "doc_f999b941b3",
+      "url": "https://www.dexcom.com/en-us/faqs/medicare",
+      "title": "Is Dexcom CGM covered by Medicare?",
+      "source_tier": "web",
+      "publisher": "Dexcom",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:35:54.129657Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_835995b0ab": {
+      "doc_id": "doc_835995b0ab",
+      "url": "https://med.noridianmedicare.com/web/jddme/policies/clinicians-corner/are-you-ordering-glucose-monitors-and-supplies",
+      "title": "Clinicians! Are You Ordering Glucose Monitors and Supplies For Your Patient - JD DME - Noridian",
+      "source_tier": "primary_policy",
+      "publisher": "Noridian",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": "2026-04-01",
+      "retrieved_at": "2026-09-14T02:35:57.394715Z",
+      "text_path": "",
+      "paragraph_count": 138,
+      "fetch_method": "extract"
+    },
+    "doc_6a32ed9fd9": {
+      "doc_id": "doc_6a32ed9fd9",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=38686&ver=14",
+      "title": "LCD - Implantable Continuous Glucose Monitors (I-CGM) (L38686)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:35:54.506254Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_7e36ca691e": {
+      "doc_id": "doc_7e36ca691e",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=38686&ver=16",
+      "title": "Implantable Continuous Glucose Monitors (I-CGM) (L38686) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:35:54.506304Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_889b48ce12": {
+      "doc_id": "doc_889b48ce12",
+      "url": "https://www.cgsmedicare.com/jb/education/qa/cgm.html",
+      "title": "Continuous Glucose Monitors (CGMs) Questions & Answers",
+      "source_tier": "primary_policy",
+      "publisher": "CGS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:35:54.506503Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_693cbc21ff": {
+      "doc_id": "doc_693cbc21ff",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=38664&ver=26&keyword=AFO&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "LCD - Implantable Continuous Glucose Monitors (I-CGM) (L38664)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:01.369011Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_68a1466a71": {
+      "doc_id": "doc_68a1466a71",
+      "url": "https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822",
+      "title": "LCD - Glucose Monitors (L33822)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "LCD",
+      "document_id_external": "L33822",
+      "effective_date": null,
+      "revision_date": "2024-10-01",
+      "retrieved_at": "2026-09-14T02:35:57.603239Z",
+      "text_path": "docs/doc_68a1466a71.txt",
+      "paragraph_count": 275,
+      "fetch_method": "extract"
+    },
+    "doc_3fa9d0cf71": {
+      "doc_id": "doc_3fa9d0cf71",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822&ver=70&keyword=DME&keywordType=starts&areaId=s53&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "LCD - Glucose Monitors (L33822)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:35:54.878443Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_3361861463": {
+      "doc_id": "doc_3361861463",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=58342",
+      "title": "Implantable Continuous Glucose Monitors (I-CGM) (A58342) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:01.368071Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_d3a0853fed": {
+      "doc_id": "doc_d3a0853fed",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=58408&ver=3&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "DL38664 Implantable Continuous Glucose Monitors (I-CGM) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:01.368453Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_ff306c595d": {
+      "doc_id": "doc_ff306c595d",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=59330&ver=6",
+      "title": "Response to Comments: Glucose Monitors – DL33822 (A59330)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:02.099274Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_f66852246c": {
+      "doc_id": "doc_f66852246c",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=58798&ver=4&keyword=DME&keywordType=starts&areaId=s20&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "Article - Response to Comments: Glucose Monitors – DL33822 (A58798)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:01.369504Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_bed81aaf16": {
+      "doc_id": "doc_bed81aaf16",
+      "url": "https://www.cms.gov/medicare-coverage-database/details/article-details.aspx?articleid=58798",
+      "title": "Response to Comments: Glucose Monitors – DL33822 - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:01.369970Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_725c482f7e": {
+      "doc_id": "doc_725c482f7e",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?LCDId=33822&DocID=L33822",
+      "title": "LCD - Glucose Monitors (L33822)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "LCD",
+      "document_id_external": "L33822",
+      "effective_date": null,
+      "revision_date": "2024-10-01",
+      "retrieved_at": "2026-09-14T02:37:03.887798Z",
+      "text_path": "docs/doc_725c482f7e.txt",
+      "paragraph_count": 275,
+      "fetch_method": "extract"
+    },
+    "doc_40878fcd1c": {
+      "doc_id": "doc_40878fcd1c",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=38900",
+      "title": "Proposed LCD - Glucose Monitors (DL33822)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:02.099172Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_e9a561d875": {
+      "doc_id": "doc_e9a561d875",
+      "url": "https://www.cms.gov/medicare-coverage-database/downloads/lcd+data+dictionary.pdf?t=639241761755134833",
+      "title": "Data Dictionary: LCD Download Database",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:02.099386Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_c1fdf4d84a": {
+      "doc_id": "doc_c1fdf4d84a",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=38664&ver=26&bc=0",
+      "title": "Implantable Continuous Glucose Monitors (I-CGM) (L38664)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:02.099607Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_5d78234b69": {
+      "doc_id": "doc_5d78234b69",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33792",
+      "title": "LCD - Wheelchair Options/Accessories (L33792)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:02.099655Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_14464f4d57": {
+      "doc_id": "doc_14464f4d57",
+      "url": "https://www.cms.gov/training-education/medicare-learning-networkr-mln/compliance/medicare-provider-compliance-tips/glucose-monitoring-supplies",
+      "title": "Glucose Monitoring Supplies - CMS",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:37:03.791434Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    }
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_ebf72fa6e5",
+      "doc_id": "doc_835995b0ab",
+      "branch_id": "b2",
+      "claim_text": "For therapeutic CGM coverage, a non-insulin-treated patient must have a history of problematic hypoglycemia with documentation",
+      "evidence_text": "The patient is insulin treated, or\n    2.   The patient has a history of problematic hypoglycemia with documentation of least one of the following:\n        *   Recurrent (more than one) level 2 hypoglycemic events (glucose <54mg/dL (3.0mmol/L)) that persists despite multiple (more than one) attempts to adjust medications(s) and/or modify the diabetes treatment plan; OR\n        *   A history of one level 3 hypoglycemic event (glucose <54mg/dL (3.0mmol/L)) characterized by altered mental and/or physical state requiring 3rd party assistance for treatment of hypoglycemia;",
+      "location": {
+        "section": "Continuous Glucose Monitors (CGMs)",
+        "paragraph_index": 73,
+        "char_start": 20400,
+        "char_end": 20974
+      },
+      "effective_date": "2026-04-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_6e7a31e8f8",
+      "doc_id": "doc_68a1466a71",
+      "branch_id": "b3",
+      "claim_text": "LCD L33822 was most recently revised effective 10/01/2024",
+      "evidence_text": "Revision Effective Date: 10/01/2024",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 145,
+        "char_start": 39367,
+        "char_end": 39402
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "context"
+    },
+    {
+      "evidence_id": "ev_6452668064",
+      "doc_id": "doc_5b6883d631",
+      "branch_id": "b4",
+      "claim_text": "Policy article A52464 requires documentation that the beneficiary is actually testing at a frequency that corroborates the quantity of supplies dispensed",
+      "evidence_text": "The beneficiary is actually testing at a frequency that corroborates the quantity of supplies that have been dispensed (e.g., a specific narrative statement that adequately documents the frequency at which the beneficiary is actually testing or a copy of the beneficiary's log).",
+      "location": {
+        "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+        "paragraph_index": 56,
+        "char_start": 13148,
+        "char_end": 13426
+      },
+      "effective_date": "2025-02-18",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_a7743fd14f",
+      "doc_id": "doc_264f4d2ace",
+      "branch_id": "b5",
+      "claim_text": "Dexcom states Medicare CGM coverage requires using insulin or having a history of problematic low blood glucose",
+      "evidence_text": "You use any type of insulin or have a history of problematic low blood glucose",
+      "location": {
+        "section": "Who benefits from the expanded Medicare coverage?",
+        "paragraph_index": 12,
+        "char_start": 1362,
+        "char_end": 1440
+      },
+      "effective_date": null,
+      "relevance": 0.8,
+      "source_quality": 0.3,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_fdd6798712",
+      "doc_id": "doc_835995b0ab",
+      "branch_id": "b2",
+      "claim_text": "Noridian glucose monitor policy article revised April 2026",
+      "evidence_text": "**November 9, 2018 - Revised April 2026**",
+      "location": {
+        "section": "November 9, 2018 - Revised April 2026",
+        "paragraph_index": 55,
+        "char_start": 16438,
+        "char_end": 16479
+      },
+      "effective_date": "2026-04-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "context"
+    },
+    {
+      "evidence_id": "ev_e024578131",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b1",
+      "claim_text": "One therapeutic CGM coverage criterion is that the beneficiary is insulin-treated",
+      "evidence_text": "The beneficiary is insulin-treated; or,",
+      "location": {
+        "section": "Coverage Guidance",
+        "paragraph_index": 71,
+        "char_start": 12420,
+        "char_end": 12459
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_cb3a0972b2",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b1",
+      "claim_text": "One therapeutic CGM coverage criterion is that the beneficiary has a history of problematic hypoglycemia with documentation",
+      "evidence_text": "The beneficiary has a history of problematic hypoglycemia with documentation of at least one of the following (see the POLICY SPECIFIC DOCUMENTATION REQUIREMENTS section of the LCD-related Policy Article (A52464)):",
+      "location": {
+        "section": "Coverage Guidance",
+        "paragraph_index": 72,
+        "char_start": 12461,
+        "char_end": 12675
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_08f7cd56c8",
+      "doc_id": "doc_694aeb5d5d",
+      "branch_id": "b5",
+      "claim_text": "Doko MD states people with type 2 diabetes may qualify for Medicare CGM coverage through insulin treatment or documented problematic hypoglycemia",
+      "evidence_text": "People with type 2 diabetes may qualify through insulin treatment or documented problematic hypoglycemia.",
+      "location": {
+        "section": "Short answer: Medicare may cover CGM under Part B",
+        "paragraph_index": 13,
+        "char_start": 1821,
+        "char_end": 1926
+      },
+      "effective_date": "2026-07-13",
+      "relevance": 0.8,
+      "source_quality": 0.3,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_f406e190a5",
+      "doc_id": "doc_5b6883d631",
+      "branch_id": "b4",
+      "claim_text": "Article A52464 no longer limits therapeutic CGM supply billing to 30 days; as of 2024 it allows up to 90 days",
+      "evidence_text": "Revision Effective Date: 01/01/2024\nCODING GUIDELINES:\nRemoved: Language regarding billing only one (1) month, thirty (30) days of the supply allowance for code A4238 or A4239\nAdded: Language regarding billing up to a maximum of three (3) months, ninety (90) days of the supply allowance for code A4238 or A4239",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 151,
+        "char_start": 103743,
+        "char_end": 104054
+      },
+      "effective_date": "2025-02-18",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "contradicts"
+    },
+    {
+      "evidence_id": "ev_6bc357b98c",
+      "doc_id": "doc_68a1466a71",
+      "branch_id": "b3",
+      "claim_text": "The April 2023 revision removed the requirement for \"multiple (three or more) daily administrations of insulin\" from CGM coverage criteria",
+      "evidence_text": "Removed: \"with multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump\" from CGM coverage criterion pertaining to beneficiary being insulin-treated",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 153,
+        "char_start": 42436,
+        "char_end": 42643
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_8809ab3900",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b1",
+      "claim_text": "LCD L33822 was last revised effective 2024-10-01",
+      "evidence_text": "Revision Effective Date: 10/01/2024",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 145,
+        "char_start": 39367,
+        "char_end": 39402
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "context"
+    },
+    {
+      "evidence_id": "ev_77c2cb5e5f",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b2",
+      "claim_text": "LCD L33822 itself states the problematic hypoglycemia criterion for CGM coverage",
+      "evidence_text": "The beneficiary has a history of problematic hypoglycemia with documentation of at least one of the following (see the POLICY SPECIFIC DOCUMENTATION REQUIREMENTS section of the LCD-related Policy Article (A52464)):",
+      "location": {
+        "section": "Coverage Guidance",
+        "paragraph_index": 72,
+        "char_start": 12461,
+        "char_end": 12675
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_6ac696b207",
+      "doc_id": "doc_5b6883d631",
+      "branch_id": "b4",
+      "claim_text": "Policy Article A52464 requires sufficient information in the medical record to determine that the beneficiary has diabetes mellitus",
+      "evidence_text": "there must be sufficient information in the beneficiary's medical record to determine that the beneficiary has diabetes mellitus (criterion 1)",
+      "location": {
+        "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+        "paragraph_index": 57,
+        "char_start": 13566,
+        "char_end": 13708
+      },
+      "effective_date": "2025-02-18",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_19ef5d9f5c",
+      "doc_id": "doc_5b6883d631",
+      "branch_id": "b4",
+      "claim_text": "Policy Article A52464 allows billing up to a maximum of 90 days of CGM supply allowance at a time, not limited to 30 days",
+      "evidence_text": "Up to a maximum of three (3) months, ninety (90) days of the supply allowance may be billed for code A4238 or A4239 to the DME MAC at a time and suppliers may not dispense more than a ninety (90) day supply.",
+      "location": {
+        "section": "CODING GUIDELINES",
+        "paragraph_index": 80,
+        "char_start": 21799,
+        "char_end": 22006
+      },
+      "effective_date": "2025-02-18",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "contradicts"
+    },
+    {
+      "evidence_id": "ev_ad90239d2c",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b2",
+      "claim_text": "LCD L33822 presents insulin treatment and problematic hypoglycemia as alternative CGM coverage criteria",
+      "evidence_text": "The beneficiary is insulin-treated; or,",
+      "location": {
+        "section": "Coverage Guidance",
+        "paragraph_index": 71,
+        "char_start": 12420,
+        "char_end": 12459
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_d84ed7e20f",
+      "doc_id": "doc_725c482f7e",
+      "branch_id": "b3",
+      "claim_text": "LCD L33822 most recent revision effective date is 10/01/2024",
+      "evidence_text": "Revision Effective Date: 10/01/2024",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 145,
+        "char_start": 39367,
+        "char_end": 39402
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "context"
+    },
+    {
+      "evidence_id": "ev_744bff642e",
+      "doc_id": "doc_725c482f7e",
+      "branch_id": "b3",
+      "claim_text": "The April 2023 revision removed the \"multiple (three or more) daily administrations\" language from the CGM insulin-treated criterion but did not eliminate the insulin requirement entirely",
+      "evidence_text": "Removed: \"with multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump\" from CGM coverage criterion pertaining to beneficiary being insulin-treated",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 153,
+        "char_start": 42436,
+        "char_end": 42643
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_9035efd128",
+      "doc_id": "doc_725c482f7e",
+      "branch_id": "b3",
+      "claim_text": "Current LCD L33822 coverage criteria still require the beneficiary to be insulin-treated",
+      "evidence_text": "The beneficiary is insulin-treated; or,",
+      "location": {
+        "section": "Coverage Guidance",
+        "paragraph_index": 71,
+        "char_start": 12420,
+        "char_end": 12459
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "contradicts"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "c1",
+      "text": "For therapeutic CGM coverage, a non-insulin-treated patient must have a history of problematic hypoglycemia with documentation",
+      "branch_id": "b2",
+      "supported_by": [
+        "ev_ebf72fa6e5"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2026-04-01"
+    },
+    {
+      "claim_id": "c2",
+      "text": "LCD L33822 was most recently revised effective 10/01/2024",
+      "branch_id": "b3",
+      "supported_by": [],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c3",
+      "text": "Policy article A52464 requires documentation that the beneficiary is actually testing at a frequency that corroborates the quantity of supplies dispensed",
+      "branch_id": "b4",
+      "supported_by": [
+        "ev_6452668064"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2025-02-18"
+    },
+    {
+      "claim_id": "c4",
+      "text": "Dexcom states Medicare CGM coverage requires using insulin or having a history of problematic low blood glucose",
+      "branch_id": "b5",
+      "supported_by": [
+        "ev_a7743fd14f"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "weak",
+      "confidence": 0.27,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c5",
+      "text": "Noridian glucose monitor policy article revised April 2026",
+      "branch_id": "b2",
+      "supported_by": [],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c6",
+      "text": "One therapeutic CGM coverage criterion is that the beneficiary is insulin-treated",
+      "branch_id": "b1",
+      "supported_by": [
+        "ev_e024578131"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c7",
+      "text": "One therapeutic CGM coverage criterion is that the beneficiary has a history of problematic hypoglycemia with documentation",
+      "branch_id": "b1",
+      "supported_by": [
+        "ev_cb3a0972b2"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c8",
+      "text": "Doko MD states people with type 2 diabetes may qualify for Medicare CGM coverage through insulin treatment or documented problematic hypoglycemia",
+      "branch_id": "b5",
+      "supported_by": [
+        "ev_08f7cd56c8"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "weak",
+      "confidence": 0.27,
+      "governing_date": "2026-07-13"
+    },
+    {
+      "claim_id": "c9",
+      "text": "Article A52464 no longer limits therapeutic CGM supply billing to 30 days; as of 2024 it allows up to 90 days",
+      "branch_id": "b4",
+      "supported_by": [],
+      "contradicted_by": [
+        "ev_f406e190a5"
+      ],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c10",
+      "text": "The April 2023 revision removed the requirement for \"multiple (three or more) daily administrations of insulin\" from CGM coverage criteria",
+      "branch_id": "b3",
+      "supported_by": [
+        "ev_6bc357b98c"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.9,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c11",
+      "text": "LCD L33822 was last revised effective 2024-10-01",
+      "branch_id": "b1",
+      "supported_by": [],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c12",
+      "text": "LCD L33822 itself states the problematic hypoglycemia criterion for CGM coverage",
+      "branch_id": "b2",
+      "supported_by": [
+        "ev_77c2cb5e5f"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c13",
+      "text": "Policy Article A52464 requires sufficient information in the medical record to determine that the beneficiary has diabetes mellitus",
+      "branch_id": "b4",
+      "supported_by": [
+        "ev_6ac696b207"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2025-02-18"
+    },
+    {
+      "claim_id": "c14",
+      "text": "Policy Article A52464 allows billing up to a maximum of 90 days of CGM supply allowance at a time, not limited to 30 days",
+      "branch_id": "b4",
+      "supported_by": [],
+      "contradicted_by": [
+        "ev_19ef5d9f5c"
+      ],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c15",
+      "text": "LCD L33822 presents insulin treatment and problematic hypoglycemia as alternative CGM coverage criteria",
+      "branch_id": "b2",
+      "supported_by": [
+        "ev_ad90239d2c"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c16",
+      "text": "LCD L33822 most recent revision effective date is 10/01/2024",
+      "branch_id": "b3",
+      "supported_by": [],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c17",
+      "text": "The April 2023 revision removed the \"multiple (three or more) daily administrations\" language from the CGM insulin-treated criterion but did not eliminate the insulin requirement entirely",
+      "branch_id": "b3",
+      "supported_by": [
+        "ev_744bff642e"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.9,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c18",
+      "text": "Current LCD L33822 coverage criteria still require the beneficiary to be insulin-treated",
+      "branch_id": "b3",
+      "supported_by": [],
+      "contradicted_by": [
+        "ev_9035efd128"
+      ],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    }
+  ],
+  "verdicts": [
+    {
+      "round": 0,
+      "sufficient": false,
+      "coverage": {
+        "b1": "partial",
+        "b2": "partial",
+        "b3": "partial",
+        "b4": "partial",
+        "b5": "partial"
+      },
+      "missing": [
+        "most recent revision effective date of LCD L33822 (c11/c2 unresolved)",
+        "whether article A52464 explicitly requires a diabetes diagnosis code and the exact current supply-frequency wording",
+        "confirmation that the non-insulin hypoglycemia criterion is stated verbatim in the underlying LCD L33822, not only the DME MAC article"
+      ],
+      "new_tasks": [
+        {
+          "task_id": "b3-r1",
+          "branch_id": "b3",
+          "round": 1,
+          "instruction": "Fetch the current revision history of LCD L33822 on cms.gov and record the most recent revision effective date and what it changed regarding the insulin requirement.",
+          "queries_hint": [
+            "L33822 LCD revision history most recent effective date",
+            "cms.gov LCD L33822 revision insulin requirement change"
+          ],
+          "include_domains": [
+            "cms.gov"
+          ],
+          "time_range": null,
+          "status": "done",
+          "result": {
+            "queries_issued": [
+              "L33822 LCD revision history most recent effective date"
+            ],
+            "documents_fetched": [
+              "doc_725c482f7e"
+            ],
+            "evidence_ids": [
+              "ev_d84ed7e20f",
+              "ev_744bff642e",
+              "ev_9035efd128"
+            ],
+            "summary": "I fetched LCD L33822 (Glucose Monitors) from cms.gov and examined its revision history. The most recent revision effective date is 10/01/2024 (R16), which only revised HCPCS code descriptors and did not change coverage criteria.\n\nRegarding the April 2023 revision (04/16/2023): it did not remove the insulin requirement. Instead, it removed the qualifier \"with multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump\" from the CGM insulin-treated criterion. The current coverage criteria still require that \"The beneficiary is insulin-treat...",
+            "unresolved": "Whether the hypoglycemia pathway was added in the April 2023 revision or existed in earlier versions of LCD L33822 could not be confirmed from the revision history entries retrieved.",
+            "usage": {
+              "searches": 1,
+              "fetches": 1,
+              "deep_reads": 3,
+              "agents": 1,
+              "rounds": 0,
+              "input_tokens": 47766,
+              "output_tokens": 6256,
+              "wall_seconds": 50.887
+            }
+          }
+        },
+        {
+          "task_id": "b4-r1",
+          "branch_id": "b4",
+          "round": 1,
+          "instruction": "Fetch policy article A52464 and record whether it explicitly requires a diabetes diagnosis code and the exact current wording of the supply-frequency guideline.",
+          "queries_hint": [
+            "A52464 diabetes diagnosis code requirement",
+            "A52464 supply frequency guideline 90 days wording"
+          ],
+          "include_domains": [
+            "cms.gov"
+          ],
+          "time_range": null,
+          "status": "done",
+          "result": {
+            "queries_issued": [
+              "A52464 diabetes diagnosis code requirement supply frequency"
+            ],
+            "documents_fetched": [
+              "doc_5b6883d631"
+            ],
+            "evidence_ids": [
+              "ev_6ac696b207",
+              "ev_19ef5d9f5c"
+            ],
+            "summary": "I established that Policy Article A52464 explicitly requires sufficient information in the beneficiary's medical record to determine that the beneficiary has diabetes mellitus. I also established that the current supply-frequency guideline allows billing up to a maximum of ninety (90) days of supply allowance at a time for codes A4238 or A4239, which contradicts the hypothesis that sensor frequency is limited to every 30 days.",
+            "unresolved": "Whether the article currently requires proof of frequent glucose monitoring could not be confirmed with recorded evidence; the revision history indicates that language regarding frequent insulin dosing and adjustment was removed, but the current active text was not captured in an evidence item.",
+            "usage": {
+              "searches": 1,
+              "fetches": 1,
+              "deep_reads": 4,
+              "agents": 1,
+              "rounds": 0,
+              "input_tokens": 38729,
+              "output_tokens": 2764,
+              "wall_seconds": 31.788
+            }
+          }
+        },
+        {
+          "task_id": "b2-r1",
+          "branch_id": "b2",
+          "round": 1,
+          "instruction": "Fetch the underlying CMS LCD L33822 document and confirm whether the non-insulin problematic-hypoglycemia criterion is stated verbatim in the LCD itself rather than only in the DME MAC policy article.",
+          "queries_hint": [
+            "L33822 LCD non-insulin hypoglycemia criterion text",
+            "LCD L33822 therapeutic CGM non-insulin problematic hypoglycemia"
+          ],
+          "include_domains": [
+            "cms.gov"
+          ],
+          "time_range": null,
+          "status": "done",
+          "result": {
+            "queries_issued": [
+              "L33822 LCD therapeutic continuous glucose monitor"
+            ],
+            "documents_fetched": [
+              "doc_8416d9eb4c"
+            ],
+            "evidence_ids": [
+              "ev_77c2cb5e5f",
+              "ev_ad90239d2c"
+            ],
+            "summary": "I fetched CMS LCD L33822 (Glucose Monitors) and located the coverage criteria in the “Coverage Guidance” section. Paragraph 71 states: *“The beneficiary is insulin-treated; or,”* and paragraph 72 immediately follows with: *“The beneficiary has a history of problematic hypoglycemia with documentation of at least one of the following …”*  \n\nThis confirms that the problematic-hypoglycemia criterion is stated verbatim in the LCD itself, not only in the DME MAC policy article. The LCD presents the two criteria as alternatives: insulin-treated or history of problematic hypoglycemia. Therefore, non-i...",
+            "unresolved": "This line of research stopped before it was finished.",
+            "usage": {
+              "searches": 1,
+              "fetches": 1,
+              "deep_reads": 4,
+              "agents": 1,
+              "rounds": 0,
+              "input_tokens": 51101,
+              "output_tokens": 3427,
+              "wall_seconds": 34.41
+            }
+          }
+        }
+      ],
+      "reasoning": "The core eligibility answer (non-insulin T2D on metformin qualifies only with documented problematic hypoglycemia) is essentially in hand via c1/c6/c7, but the stop criteria are not fully met: the LCD revision date is unresolved (c11/c2), the A52464 diagnosis-code and supply-frequency specifics are incomplete (c9 contested), and the LCD-vs-DME-article verbatim concern remains. All branches are therefore partial, and three targeted primary-policy fetches should close the gaps."
+    },
+    {
+      "round": 1,
+      "sufficient": true,
+      "coverage": {
+        "b1": "resolved",
+        "b2": "resolved",
+        "b3": "partial",
+        "b4": "partial",
+        "b5": "partial"
+      },
+      "missing": [],
+      "new_tasks": [],
+      "reasoning": "The core question is answered: b1 and b2 establish from dated primary policy (governing 2024-10-01) that a non-insulin-treated type 2 diabetic on metformin qualifies for therapeutic CGM only if they have a documented history of problematic hypoglycemia, with insulin treatment and problematic hypoglycemia as alternative criteria. The remaining gaps (exact revision-date confirmation, whether the hypoglycemia pathway predates April 2023, the 90-day supply billing detail, and weak non-CMS claims) are peripheral and cannot change the answer, so the stop criteria are met."
+    }
+  ],
+  "critic_reports": [
+    {
+      "weak_claims": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8"
+      ],
+      "missing_interpretations": [
+        "The plan did not distinguish between therapeutic CGM (covered under Medicare Part B as DME) and non-therapeutic CGM (which may have different coverage rules under Part D or be non-covered).",
+        "The plan did not note that LCD L33822 applies only to the Noridian jurisdiction; other DME MACs may have separate LCDs with varying criteria."
+      ],
+      "source_independence_issues": [
+        "doc_8416d9eb4c",
+        "doc_68a1466a71",
+        "doc_725c482f7e"
+      ],
+      "secondary_when_primary_exists": [
+        "c1",
+        "c4",
+        "c8"
+      ],
+      "outdated_sources": [],
+      "contradictions": [
+        "Claim c18 states that current LCD L33822 still requires the beneficiary to be insulin-treated, but the LCD L33822 (primary policy, revised 2024-10-01) actually states 'The beneficiary is insulin-treated; or,' showing insulin treatment is only one alternative."
+      ],
+      "recommended_searches": [
+        {
+          "task_id": "b3-r2-critic1",
+          "branch_id": "b3",
+          "round": 2,
+          "instruction": "Fetch the CMS LCD L33822 revision history and identify the latest effective date and any modifications to the problematic hypoglycemia criterion.",
+          "queries_hint": [
+            "LCD L33822 revision history 2025 problematic hypoglycemia",
+            "L33822 update 2026 hypoglycemia",
+            "LCD L33822 CGM non-insulin hypoglycemia documentation"
+          ],
+          "include_domains": [
+            "cms.gov"
+          ],
+          "time_range": null,
+          "status": "pending",
+          "result": null
+        }
+      ],
+      "completion_probability": 0.3,
+      "reasoning": "Many claims rely on single sources, there are unresolved contradictions, and key interpretive distinctions (Part B vs Part D, jurisdiction-specific LCDs) are missing, reducing confidence in a complete answer."
+    }
+  ],
+  "answer": {
+    "summary": "Under current Medicare policy, a beneficiary with type 2 diabetes who uses only metformin (non‑insulin) may obtain coverage for a therapeutic continuous glucose monitor only if they have a documented history of problematic hypoglycemia; without such documentation they do not meet the coverage criteria. The alternative pathway is insulin treatment, which the patient does not have.",
+    "body_markdown": "## Answer\nThis asks about a specific patient's coverage, so the answer below will be at the policy level rather than an individual coverage decision. \nUnder current Medicare policy, a beneficiary with type 2 diabetes who uses only metformin (non‑insulin) may obtain coverage for a therapeutic continuous glucose monitor only if they have a documented history of problematic hypoglycemia; without such documentation they do not meet the coverage criteria. \nThe alternative pathway is insulin treatment, which the patient does not have. \n\n## Criteria / Details\n- Therapeutic CGM coverage requires either insulin treatment **or** a documented history of problematic hypoglycemia (see LCD L33822, revision effective 2024-10-01) {[6][7][12][15]}. \n- For non‑insulin‑treated patients, the hypoglycemia pathway demands documentation of at least one level‑2 or level‑3 hypoglycemic event as defined in the policy (see Clinicians! Are You Ordering Glucose Monitors..., revision effective 2026-04-01) {[1]}. \n- The beneficiary must have sufficient information in the medical record to confirm a diagnosis of diabetes mellitus (see Article A52464, revision effective 2025-02-18) {[13]}. \n- Documentation must show that the beneficiary is actually testing at a frequency that corroborates the quantity of CGM supplies dispensed (see Article A52464, revision effective 2025-02-18) {[3]}. \n- When supplied, up to a maximum of three months (90 days) of CGM supply allowance may be billed at a time (see Article A52464 coding guidelines, revision effective 2025-02-18) {[14]}. \n\n## Codes and documentation\n- Documentation of hypoglycemia events must include glucose values <54 mg/dL (3.0 mmol/L) with either recurrent level‑2 events or a single level‑3 event requiring third‑party assistance (see Clinicians! Are You Ordering Glucose Monitors..., revision effective 2026-04-01) {[1]}. \n- Proof of diabetes mellitus must be present in the medical record (see Article A52464, revision effective 2025-02-18) {[13]}. \n- Supply‑frequency documentation can be a narrative statement or a copy of the beneficiary’s log showing testing frequency that matches dispensed quantities (see Article A52464, revision effective 2025-02-18) {[3]}. \n- Up to 90 days of CGM supply (codes A4238 or A4239) may be billed at a time (see Article A52464 coding guidelines, revision effective 2025-02-18) {[14]}. \n\n## Effective dates relied on\n- Clinicians! Are You Ordering Glucose Monitors and Supplies For Your Patient - JD DME - Noridian, revision effective 2026-04-01 \n- LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, revision effective 2024-10-01 \n- Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, revision effective 2025-02-18 \n\n## Contradictions and caveats\n- The reviewer noted a contradiction where claim c18 stated that LCD L33822 still requires the beneficiary to be insulin‑treated, but the LCD actually reads “The beneficiary is insulin‑treated; or,” showing insulin treatment is only one alternative. The LCD therefore presents insulin treatment and problematic hypoglycemia as alternative criteria, not a sole requirement, and this 2024‑10‑01 revision governs {[6][7][12][15]}. \n- Dexcom ([4]) and Doko MD ([8]) are secondary/web explanations; primary policy documents (LCD L33822, Clinicians! article, Article A52464) take precedence when they conflict. \n- The April 2023 revision removed the “multiple (three or more) daily administrations of insulin” language from the insulin‑treated criterion but did not eliminate the insulin requirement itself {[10][17]}. \n- Claim c1 (non‑insulin‑treated patient must have a history of problematic hypoglycemia with documentation) is supported by the primary policy Clinicians! article {[1]}. \n\n## Unknowns / not verified\n- Whether the identical criteria are stated verbatim in the underlying CMS LCD document itself, as opposed to the DME MAC policy article that implements it, could not be confirmed. \n- Whether the hypoglycemia pathway was added in the April 2023 revision or had been introduced in an earlier update could not be confirmed from the revision history entries examined. \n- Whether article A52464 itself explicitly requires a diabetes diagnosis code, or whether that requirement resides solely in the companion LCD L33822, could not be confirmed. \n- The exact current wording of the supply‑frequency guideline in the main body of article A52464 could not be captured. \n- Whether other non‑CMS sources (such as additional supplier websites or beneficiary guides) overstate Medicare CGM coverage for non‑insulin‑treated type 2 diabetes could not be confirmed because the search was limited to two documents. \n- Whether the hypoglycemia pathway was added in the April 2023 revision or existed in earlier versions of LCD L33822 could not be confirmed from the revision history entries retrieved. \n- Whether the article currently requires proof of frequent glucose monitoring could not be confirmed with recorded evidence; the revision history indicates that language regarding frequent insulin dosing and adjustment was removed, but the current active text was not captured in an evidence item.\n- The research stopped at its time limit, so this answer uses only the sources found by then.\n- The research reached its processing limit, so some leads were not followed up.\n\n## Sources\n\n[1] Clinicians! Are You Ordering Glucose Monitors and Supplies For Your Patient - JD DME - Noridian, §Continuous Glucose Monitors (CGMs), revision effective 2026-04-01. Noridian. primary_policy.\n    https://med.noridianmedicare.com/web/jddme/policies/clinicians-corner/are-you-ordering-glucose-monitors-and-supplies\n[2] LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822\n[3] Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §POLICY SPECIFIC DOCUMENTATION REQUIREMENTS, revision effective 2025-02-18. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464\n[4] Medicare Expands CGM Coverage for Type 2 Diabetes - Dexcom, §Who benefits from the expanded Medicare coverage?. Dexcom. web.\n    https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands\n[5] Clinicians! Are You Ordering Glucose Monitors and Supplies For Your Patient - JD DME - Noridian, §November 9, 2018 - Revised April 2026, revision effective 2026-04-01. Noridian. primary_policy.\n    https://med.noridianmedicare.com/web/jddme/policies/clinicians-corner/are-you-ordering-glucose-monitors-and-supplies\n[6] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822#h3HcpcsCodesHeader\n[7] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822#h3HcpcsCodesHeader\n[8] Does Medicare Cover CGM for Type 2 Diabetes in 2026? - Doko MD, §Short answer: Medicare may cover CGM under Part B, revision effective 2026-07-13. CMS. unknown.\n    https://doko.md/medicare-cover-cgm-type-2-diabetes\n[9] Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §Revision History Information, revision effective 2025-02-18. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464\n[10] LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822\n[11] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Revision History Information, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822#h3HcpcsCodesHeader\n[12] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822#h3HcpcsCodesHeader\n[13] Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §POLICY SPECIFIC DOCUMENTATION REQUIREMENTS, revision effective 2025-02-18. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464\n[14] Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §CODING GUIDELINES, revision effective 2025-02-18. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464\n[15] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822#h3HcpcsCodesHeader\n[16] LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?LCDId=33822&DocID=L33822\n[17] LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?LCDId=33822&DocID=L33822\n[18] LCD L33822 - LCD - Glucose Monitors (L33822), §Coverage Guidance, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?LCDId=33822&DocID=L33822\n",
+    "claims": [
+      {
+        "claim_id": "c1",
+        "text": "For therapeutic CGM coverage, a non-insulin-treated patient must have a history of problematic hypoglycemia with documentation",
+        "branch_id": "b2",
+        "supported_by": [
+          "ev_ebf72fa6e5"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2026-04-01"
+      },
+      {
+        "claim_id": "c2",
+        "text": "LCD L33822 was most recently revised effective 10/01/2024",
+        "branch_id": "b3",
+        "supported_by": [],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c3",
+        "text": "Policy article A52464 requires documentation that the beneficiary is actually testing at a frequency that corroborates the quantity of supplies dispensed",
+        "branch_id": "b4",
+        "supported_by": [
+          "ev_6452668064"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2025-02-18"
+      },
+      {
+        "claim_id": "c4",
+        "text": "Dexcom states Medicare CGM coverage requires using insulin or having a history of problematic low blood glucose",
+        "branch_id": "b5",
+        "supported_by": [
+          "ev_a7743fd14f"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "weak",
+        "confidence": 0.27,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c5",
+        "text": "Noridian glucose monitor policy article revised April 2026",
+        "branch_id": "b2",
+        "supported_by": [],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c6",
+        "text": "One therapeutic CGM coverage criterion is that the beneficiary is insulin-treated",
+        "branch_id": "b1",
+        "supported_by": [
+          "ev_e024578131"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c7",
+        "text": "One therapeutic CGM coverage criterion is that the beneficiary has a history of problematic hypoglycemia with documentation",
+        "branch_id": "b1",
+        "supported_by": [
+          "ev_cb3a0972b2"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c8",
+        "text": "Doko MD states people with type 2 diabetes may qualify for Medicare CGM coverage through insulin treatment or documented problematic hypoglycemia",
+        "branch_id": "b5",
+        "supported_by": [
+          "ev_08f7cd56c8"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "weak",
+        "confidence": 0.27,
+        "governing_date": "2026-07-13"
+      },
+      {
+        "claim_id": "c9",
+        "text": "Article A52464 no longer limits therapeutic CGM supply billing to 30 days; as of 2024 it allows up to 90 days",
+        "branch_id": "b4",
+        "supported_by": [],
+        "contradicted_by": [
+          "ev_f406e190a5"
+        ],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c10",
+        "text": "The April 2023 revision removed the requirement for \"multiple (three or more) daily administrations of insulin\" from CGM coverage criteria",
+        "branch_id": "b3",
+        "supported_by": [
+          "ev_6bc357b98c"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.9,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c11",
+        "text": "LCD L33822 was last revised effective 2024-10-01",
+        "branch_id": "b1",
+        "supported_by": [],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c12",
+        "text": "LCD L33822 itself states the problematic hypoglycemia criterion for CGM coverage",
+        "branch_id": "b2",
+        "supported_by": [
+          "ev_77c2cb5e5f"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c13",
+        "text": "Policy Article A52464 requires sufficient information in the medical record to determine that the beneficiary has diabetes mellitus",
+        "branch_id": "b4",
+        "supported_by": [
+          "ev_6ac696b207"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2025-02-18"
+      },
+      {
+        "claim_id": "c14",
+        "text": "Policy Article A52464 allows billing up to a maximum of 90 days of CGM supply allowance at a time, not limited to 30 days",
+        "branch_id": "b4",
+        "supported_by": [],
+        "contradicted_by": [
+          "ev_19ef5d9f5c"
+        ],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c15",
+        "text": "LCD L33822 presents insulin treatment and problematic hypoglycemia as alternative CGM coverage criteria",
+        "branch_id": "b2",
+        "supported_by": [
+          "ev_ad90239d2c"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c16",
+        "text": "LCD L33822 most recent revision effective date is 10/01/2024",
+        "branch_id": "b3",
+        "supported_by": [],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c17",
+        "text": "The April 2023 revision removed the \"multiple (three or more) daily administrations\" language from the CGM insulin-treated criterion but did not eliminate the insulin requirement entirely",
+        "branch_id": "b3",
+        "supported_by": [
+          "ev_744bff642e"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.9,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c18",
+        "text": "Current LCD L33822 coverage criteria still require the beneficiary to be insulin-treated",
+        "branch_id": "b3",
+        "supported_by": [],
+        "contradicted_by": [
+          "ev_9035efd128"
+        ],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      }
+    ],
+    "citations": [
+      {
+        "n": 1,
+        "evidence_id": "ev_ebf72fa6e5",
+        "doc_id": "doc_835995b0ab",
+        "url": "https://med.noridianmedicare.com/web/jddme/policies/clinicians-corner/are-you-ordering-glucose-monitors-and-supplies",
+        "label": "Clinicians! Are You Ordering Glucose Monitors and Supplies For Your Patient - JD DME - Noridian, §Continuous Glucose Monitors (CGMs), revision effective 2026-04-01"
+      },
+      {
+        "n": 2,
+        "evidence_id": "ev_6e7a31e8f8",
+        "doc_id": "doc_68a1466a71",
+        "url": "https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01"
+      },
+      {
+        "n": 3,
+        "evidence_id": "ev_6452668064",
+        "doc_id": "doc_5b6883d631",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+        "label": "Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §POLICY SPECIFIC DOCUMENTATION REQUIREMENTS, revision effective 2025-02-18"
+      },
+      {
+        "n": 4,
+        "evidence_id": "ev_a7743fd14f",
+        "doc_id": "doc_264f4d2ace",
+        "url": "https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands",
+        "label": "Medicare Expands CGM Coverage for Type 2 Diabetes - Dexcom, §Who benefits from the expanded Medicare coverage?"
+      },
+      {
+        "n": 5,
+        "evidence_id": "ev_fdd6798712",
+        "doc_id": "doc_835995b0ab",
+        "url": "https://med.noridianmedicare.com/web/jddme/policies/clinicians-corner/are-you-ordering-glucose-monitors-and-supplies",
+        "label": "Clinicians! Are You Ordering Glucose Monitors and Supplies For Your Patient - JD DME - Noridian, §November 9, 2018 - Revised April 2026, revision effective 2026-04-01"
+      },
+      {
+        "n": 6,
+        "evidence_id": "ev_e024578131",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822#h3HcpcsCodesHeader",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01"
+      },
+      {
+        "n": 7,
+        "evidence_id": "ev_cb3a0972b2",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822#h3HcpcsCodesHeader",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01"
+      },
+      {
+        "n": 8,
+        "evidence_id": "ev_08f7cd56c8",
+        "doc_id": "doc_694aeb5d5d",
+        "url": "https://doko.md/medicare-cover-cgm-type-2-diabetes",
+        "label": "Does Medicare Cover CGM for Type 2 Diabetes in 2026? - Doko MD, §Short answer: Medicare may cover CGM under Part B, revision effective 2026-07-13"
+      },
+      {
+        "n": 9,
+        "evidence_id": "ev_f406e190a5",
+        "doc_id": "doc_5b6883d631",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+        "label": "Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §Revision History Information, revision effective 2025-02-18"
+      },
+      {
+        "n": 10,
+        "evidence_id": "ev_6bc357b98c",
+        "doc_id": "doc_68a1466a71",
+        "url": "https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01"
+      },
+      {
+        "n": 11,
+        "evidence_id": "ev_8809ab3900",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822#h3HcpcsCodesHeader",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Revision History Information, revision effective 2024-10-01"
+      },
+      {
+        "n": 12,
+        "evidence_id": "ev_77c2cb5e5f",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822#h3HcpcsCodesHeader",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01"
+      },
+      {
+        "n": 13,
+        "evidence_id": "ev_6ac696b207",
+        "doc_id": "doc_5b6883d631",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+        "label": "Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §POLICY SPECIFIC DOCUMENTATION REQUIREMENTS, revision effective 2025-02-18"
+      },
+      {
+        "n": 14,
+        "evidence_id": "ev_19ef5d9f5c",
+        "doc_id": "doc_5b6883d631",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+        "label": "Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §CODING GUIDELINES, revision effective 2025-02-18"
+      },
+      {
+        "n": 15,
+        "evidence_id": "ev_ad90239d2c",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822#h3HcpcsCodesHeader",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01"
+      },
+      {
+        "n": 16,
+        "evidence_id": "ev_d84ed7e20f",
+        "doc_id": "doc_725c482f7e",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?LCDId=33822&DocID=L33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01"
+      },
+      {
+        "n": 17,
+        "evidence_id": "ev_744bff642e",
+        "doc_id": "doc_725c482f7e",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?LCDId=33822&DocID=L33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01"
+      },
+      {
+        "n": 18,
+        "evidence_id": "ev_9035efd128",
+        "doc_id": "doc_725c482f7e",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?LCDId=33822&DocID=L33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822), §Coverage Guidance, revision effective 2024-10-01"
+      }
+    ],
+    "effective_dates": [
+      "Clinicians! Are You Ordering Glucose Monitors and Supplies For Your Patient - JD DME - Noridian: revision effective 2026-04-01",
+      "L33822: revision effective 2024-10-01",
+      "A52464: revision effective 2025-02-18",
+      "L33822: revision effective 2024-10-01",
+      "Does Medicare Cover CGM for Type 2 Diabetes in 2026? - Doko MD: revision effective 2026-07-13",
+      "L33822: revision effective 2024-10-01"
+    ],
+    "contradictions": [
+      "Claim c18 states that current LCD L33822 still requires the beneficiary to be insulin-treated, but the LCD L33822 (primary policy, revised 2024-10-01) actually states 'The beneficiary is insulin-treated; or,' showing insulin treatment is only one alternative."
+    ],
+    "unknowns": [
+      "Whether the identical criteria are stated verbatim in the underlying CMS LCD document itself, as opposed to the DME MAC policy article that implements it.",
+      "Whether the hypoglycemia pathway was added in the April 2023 revision or had been introduced in an earlier update could not be confirmed from the revision history entries examined.",
+      "Whether article A52464 itself explicitly requires a diabetes diagnosis code, or whether that requirement resides solely in the companion LCD L33822. Also, the exact current wording of the supply-frequency guideline in the main body of the article could not be captured.",
+      "I could not confirm whether other non-CMS sources (such as additional supplier websites or beneficiary guides beyond Dexcom and Doko MD) overstate Medicare CGM coverage for non-insulin-treated type 2 diabetes, because the search was limited to two documents.",
+      "Whether the hypoglycemia pathway was added in the April 2023 revision or existed in earlier versions of LCD L33822 could not be confirmed from the revision history entries retrieved.",
+      "Whether the article currently requires proof of frequent glucose monitoring could not be confirmed with recorded evidence; the revision history indicates that language regarding frequent insulin dosing and adjustment was removed, but the current active text was not captured in an evidence item.",
+      "The research reached its processing limit, so some leads were not followed up.",
+      "This line of research stopped before it was finished."
+    ],
+    "confidence": 0.939,
+    "scope_warning": "This asks about a specific patient's coverage, so the answer below will be at the policy level rather than an individual coverage decision."
+  },
+  "usage": {
+    "searches": 8,
+    "fetches": 9,
+    "deep_reads": 27,
+    "agents": 8,
+    "rounds": 2,
+    "input_tokens": 381493,
+    "output_tokens": 55328,
+    "wall_seconds": 191.5
+  },
+  "status": "budget_exhausted",
+  "error": null
+}

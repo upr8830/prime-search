@@ -1,0 +1,112 @@
+{"ts": "2026-09-14T02:22:27.497112+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "run.started", "seq": 0, "payload": {"run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "question": "I read that Medicare requires three or more insulin injections per day before it will cover a CGM. Is that still true?", "mode": "baseline", "depth": "deep", "trace_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-1185-7f83-9b7e-12fc9eef892c/run/01a09db9-1185-7f83-9b7e-12fc9eef892c?start_time=2026-09-14T02%3A22%3A26.693205%2B00%3A00"}}
+{"ts": "2026-09-14T02:22:29.229969+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 1, "payload": {"text": " "}}
+{"ts": "2026-09-14T02:22:29.366748+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "search", "seq": 2, "payload": {"task_id": null, "query": "Medicare CGM coverage requirements three insulin injections per day 2024 2025", "n_results": null, "cached": false, "tool": "tavily_search"}}
+{"ts": "2026-09-14T02:22:33.247354+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "search", "seq": 3, "payload": {"task_id": null, "query": "", "n_results": 10, "cached": false, "tool": "tavily_search"}}
+{"ts": "2026-09-14T02:22:35.631781+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 4, "payload": {"text": " **No—that"}}
+{"ts": "2026-09-14T02:22:35.640027+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 5, "payload": {"text": " is no longer true"}}
+{"ts": "2026-09-14T02:22:35.651043+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 6, "payload": {"text": ".**"}}
+{"ts": "2026-09-14T02:22:35.659454+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 7, "payload": {"text": " Medicare removed the \""}}
+{"ts": "2026-09-14T02:22:35.666915+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 8, "payload": {"text": "three injections"}}
+{"ts": "2026-09-14T02:22:35.680692+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 9, "payload": {"text": " per day\" requirement"}}
+{"ts": "2026-09-14T02:22:35.689763+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 10, "payload": {"text": " in "}}
+{"ts": "2026-09-14T02:22:35.695509+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 11, "payload": {"text": "2023.\n\nAs"}}
+{"ts": "2026-09-14T02:22:35.701338+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 12, "payload": {"text": " of April 16"}}
+{"ts": "2026-09-14T02:22:35.711673+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 13, "payload": {"text": ", 2023"}}
+{"ts": "2026-09-14T02:22:35.719876+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 14, "payload": {"text": ", Medicare's"}}
+{"ts": "2026-09-14T02:22:35.729840+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 15, "payload": {"text": " updated"}}
+{"ts": "2026-09-14T02:22:35.735920+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 16, "payload": {"text": " criteria"}}
+{"ts": "2026-09-14T02:22:35.954940+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 17, "payload": {"text": " removed"}}
+{"ts": "2026-09-14T02:22:35.962509+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 18, "payload": {"text": " the language"}}
+{"ts": "2026-09-14T02:22:35.972276+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 19, "payload": {"text": " requiring"}}
+{"ts": "2026-09-14T02:22:35.982282+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 20, "payload": {"text": " beneficiaries"}}
+{"ts": "2026-09-14T02:22:35.992348+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 21, "payload": {"text": " to be \"ins"}}
+{"ts": "2026-09-14T02:22:36.001395+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 22, "payload": {"text": "ulin-treated with multiple"}}
+{"ts": "2026-09-14T02:22:36.013802+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 23, "payload": {"text": " (three or more"}}
+{"ts": "2026-09-14T02:22:36.021935+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 24, "payload": {"text": ") daily administrations"}}
+{"ts": "2026-09-14T02:22:36.031724+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 25, "payload": {"text": "\""}}
+{"ts": "2026-09-14T02:22:36.042882+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 26, "payload": {"text": " to"}}
+{"ts": "2026-09-14T02:22:36.053730+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 27, "payload": {"text": " qualify for a CGM"}}
+{"ts": "2026-09-14T02:22:36.061444+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 28, "payload": {"text": ". Current"}}
+{"ts": "2026-09-14T02:22:36.071196+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 29, "payload": {"text": " Medicare"}}
+{"ts": "2026-09-14T02:22:36.082732+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 30, "payload": {"text": " coverage standards"}}
+{"ts": "2026-09-14T02:22:36.091730+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 31, "payload": {"text": " generally"}}
+{"ts": "2026-09-14T02:22:36.101343+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 32, "payload": {"text": " require only"}}
+{"ts": "2026-09-14T02:22:36.111967+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 33, "payload": {"text": " that"}}
+{"ts": "2026-09-14T02:22:36.121770+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 34, "payload": {"text": " you"}}
+{"ts": "2026-09-14T02:22:36.130958+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 35, "payload": {"text": ":\n\n- Been"}}
+{"ts": "2026-09-14T02:22:36.141577+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 36, "payload": {"text": " diagnosed with diabetes,"}}
+{"ts": "2026-09-14T02:22:36.150765+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 37, "payload": {"text": " **"}}
+{"ts": "2026-09-14T02:22:36.163379+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 38, "payload": {"text": "and**\n- Are"}}
+{"ts": "2026-09-14T02:22:36.171208+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 39, "payload": {"text": " treated"}}
+{"ts": "2026-09-14T02:22:36.180064+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 40, "payload": {"text": " with insulin"}}
+{"ts": "2026-09-14T02:22:36.190578+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 41, "payload": {"text": " (any"}}
+{"ts": "2026-09-14T02:22:36.200899+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 42, "payload": {"text": " insulin"}}
+{"ts": "2026-09-14T02:22:36.209435+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 43, "payload": {"text": " regimen"}}
+{"ts": "2026-09-14T02:22:36.219230+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 44, "payload": {"text": ", including"}}
+{"ts": "2026-09-14T02:22:36.229792+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 45, "payload": {"text": " fewer"}}
+{"ts": "2026-09-14T02:22:36.239610+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 46, "payload": {"text": " than"}}
+{"ts": "2026-09-14T02:22:36.249157+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 47, "payload": {"text": " three injections or a"}}
+{"ts": "2026-09-14T02:22:36.260308+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 48, "payload": {"text": " pump), **or"}}
+{"ts": "2026-09-14T02:22:36.269430+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 49, "payload": {"text": "**"}}
+{"ts": "2026-09-14T02:22:36.280010+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 50, "payload": {"text": " \n"}}
+{"ts": "2026-09-14T02:22:36.289528+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 51, "payload": {"text": "- Have a documented"}}
+{"ts": "2026-09-14T02:22:36.298382+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 52, "payload": {"text": " history of \"problem"}}
+{"ts": "2026-09-14T02:22:36.309251+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 53, "payload": {"text": "atic hypoglyce"}}
+{"ts": "2026-09-14T02:22:36.318549+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 54, "payload": {"text": "mia\" (rec"}}
+{"ts": "2026-09-14T02:22:36.328959+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 55, "payload": {"text": "urrent"}}
+{"ts": "2026-09-14T02:22:36.338276+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 56, "payload": {"text": " severe"}}
+{"ts": "2026-09-14T02:22:36.348642+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 57, "payload": {"text": " low"}}
+{"ts": "2026-09-14T02:22:36.358649+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 58, "payload": {"text": " blood sugars"}}
+{"ts": "2026-09-14T02:22:36.368567+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 59, "payload": {"text": ")"}}
+{"ts": "2026-09-14T02:22:36.379111+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 60, "payload": {"text": " even if not on"}}
+{"ts": "2026-09-14T02:22:36.388220+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 61, "payload": {"text": " insulin.\n\n"}}
+{"ts": "2026-09-14T02:22:36.398071+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 62, "payload": {"text": "**Sources:**\n-"}}
+{"ts": "2026-09-14T02:22:36.408248+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 63, "payload": {"text": " Centers"}}
+{"ts": "2026-09-14T02:22:36.417411+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 64, "payload": {"text": " for Medicare & Medicaid"}}
+{"ts": "2026-09-14T02:22:36.427542+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 65, "payload": {"text": " Services (LCD"}}
+{"ts": "2026-09-14T02:22:36.436766+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 66, "payload": {"text": " L"}}
+{"ts": "2026-09-14T02:22:36.449934+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 67, "payload": {"text": "33822): ["}}
+{"ts": "2026-09-14T02:22:36.456868+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 68, "payload": {"text": "cms"}}
+{"ts": "2026-09-14T02:22:36.466906+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 69, "payload": {"text": ".gov/medicare"}}
+{"ts": "2026-09-14T02:22:36.478680+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 70, "payload": {"text": "-coverage-database/view"}}
+{"ts": "2026-09-14T02:22:36.485961+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 71, "payload": {"text": "/lcd.aspx?"}}
+{"ts": "2026-09-14T02:22:36.498660+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 72, "payload": {"text": "lcd"}}
+{"ts": "2026-09-14T02:22:36.507539+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 73, "payload": {"text": "id=33822"}}
+{"ts": "2026-09-14T02:22:36.517304+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 74, "payload": {"text": "](https://www"}}
+{"ts": "2026-09-14T02:22:36.557964+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 75, "payload": {"text": ".cms.gov/m"}}
+{"ts": "2026-09-14T02:22:36.559255+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 76, "payload": {"text": "edicare-coverage"}}
+{"ts": "2026-09-14T02:22:36.559704+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 77, "payload": {"text": "-database/view/lcd"}}
+{"ts": "2026-09-14T02:22:36.560480+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 78, "payload": {"text": ".aspx?lcd"}}
+{"ts": "2026-09-14T02:22:36.567783+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 79, "payload": {"text": "id=33822"}}
+{"ts": "2026-09-14T02:22:36.579101+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 80, "payload": {"text": ")\n- American Diabetes"}}
+{"ts": "2026-09-14T02:22:36.587863+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 81, "payload": {"text": " Association webinar on"}}
+{"ts": "2026-09-14T02:22:36.596998+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 82, "payload": {"text": " "}}
+{"ts": "2026-09-14T02:22:36.605979+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 83, "payload": {"text": "2023 Medicare"}}
+{"ts": "2026-09-14T02:22:36.615995+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 84, "payload": {"text": " changes: [youtube"}}
+{"ts": "2026-09-14T02:22:36.629376+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 85, "payload": {"text": ".com/watch?v="}}
+{"ts": "2026-09-14T02:22:36.636151+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 86, "payload": {"text": "GZ"}}
+{"ts": "2026-09-14T02:22:36.646182+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 87, "payload": {"text": "2mEZt"}}
+{"ts": "2026-09-14T02:22:36.656128+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 88, "payload": {"text": "G7UA]("}}
+{"ts": "2026-09-14T02:22:36.667619+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 89, "payload": {"text": "https://www.youtube"}}
+{"ts": "2026-09-14T02:22:36.676250+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 90, "payload": {"text": ".com/watch?v="}}
+{"ts": "2026-09-14T02:22:36.686719+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 91, "payload": {"text": "GZ"}}
+{"ts": "2026-09-14T02:22:36.695800+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 92, "payload": {"text": "2mEZt"}}
+{"ts": "2026-09-14T02:22:36.706477+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 93, "payload": {"text": "G7UA)\n"}}
+{"ts": "2026-09-14T02:22:36.717107+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 94, "payload": {"text": "- Dex"}}
+{"ts": "2026-09-14T02:22:36.727053+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 95, "payload": {"text": "com summary"}}
+{"ts": "2026-09-14T02:22:36.737625+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 96, "payload": {"text": " of"}}
+{"ts": "2026-09-14T02:22:36.748008+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 97, "payload": {"text": " expanded coverage: ["}}
+{"ts": "2026-09-14T02:22:36.756707+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 98, "payload": {"text": "dexcom.com/en"}}
+{"ts": "2026-09-14T02:22:36.765533+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 99, "payload": {"text": "-us/all-access/cl"}}
+{"ts": "2026-09-14T02:22:36.776635+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 100, "payload": {"text": "inical-corner/medic"}}
+{"ts": "2026-09-14T02:22:36.789079+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 101, "payload": {"text": "are-coverage-exp"}}
+{"ts": "2026-09-14T02:22:36.796068+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 102, "payload": {"text": "ands](https://"}}
+{"ts": "2026-09-14T02:22:36.807265+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 103, "payload": {"text": "www.dex"}}
+{"ts": "2026-09-14T02:22:36.815228+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 104, "payload": {"text": "com.com/en-us"}}
+{"ts": "2026-09-14T02:22:36.825511+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 105, "payload": {"text": "/all-access/clinical"}}
+{"ts": "2026-09-14T02:22:36.836606+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 106, "payload": {"text": "-corner/medicare"}}
+{"ts": "2026-09-14T02:22:36.845636+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 107, "payload": {"text": "-coverage-expands"}}
+{"ts": "2026-09-14T02:22:36.858092+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "token", "seq": 108, "payload": {"text": ")"}}
+{"ts": "2026-09-14T02:22:36.864284+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "answer", "seq": 109, "payload": {"summary": "**No—that is no longer true.** Medicare removed the \"three injections per day\" requirement in 2023. As of April 16, 2023, Medicare's updated criteria removed the language requiring beneficiaries to be \"insulin-treated with multiple (three or more) daily administrations\" to qualify for a CGM. Current Medicare coverage standards generally require only that you: - Been diagnosed with diabetes, **and** - Are treated with insulin (any insulin regimen, including fewer than three injections or a pump), **or** - Have a documented history of \"problematic hypoglycemia\" (recurrent severe low blood sugars) even if not on insulin. **Sources:** - Centers for Medicare & Medicaid Services (LCD L33822): [cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822](https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822) - American Diabetes Association webinar on 2023 Medicare changes: [youtube.com/watch?v=GZ2mEZtG7UA](https://www.youtube.com/watch?v=GZ2mEZtG7UA) - Dexcom summary of ex", "body_markdown": "**No—that is no longer true.** Medicare removed the \"three injections per day\" requirement in 2023.\n\nAs of April 16, 2023, Medicare's updated criteria removed the language requiring beneficiaries to be \"insulin-treated with multiple (three or more) daily administrations\" to qualify for a CGM. Current Medicare coverage standards generally require only that you:\n\n- Been diagnosed with diabetes, **and**\n- Are treated with insulin (any insulin regimen, including fewer than three injections or a pump), **or** \n- Have a documented history of \"problematic hypoglycemia\" (recurrent severe low blood sugars) even if not on insulin.\n\n**Sources:**\n- Centers for Medicare & Medicaid Services (LCD L33822): [cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822](https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822)\n- American Diabetes Association webinar on 2023 Medicare changes: [youtube.com/watch?v=GZ2mEZtG7UA](https://www.youtube.com/watch?v=GZ2mEZtG7UA)\n- Dexcom summary of expanded coverage: [dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands](https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands)", "claims": [], "citations": [{"n": 1, "evidence_id": "", "doc_id": "", "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822", "label": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822"}, {"n": 2, "evidence_id": "", "doc_id": "", "url": "https://www.youtube.com/watch?v=GZ2mEZtG7UA", "label": "https://www.youtube.com/watch?v=GZ2mEZtG7UA"}, {"n": 3, "evidence_id": "", "doc_id": "", "url": "https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands", "label": "https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands"}], "effective_dates": [], "contradictions": [], "unknowns": [], "confidence": 0.0, "scope_warning": null}}
+{"ts": "2026-09-14T02:22:36.864812+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "usage", "seq": 110, "payload": {"searches": 1, "fetches": 0, "deep_reads": 0, "agents": 0, "rounds": 0, "input_tokens": 7859, "output_tokens": 669, "wall_seconds": 10.7}}
+{"ts": "2026-09-14T02:22:36.876171+00:00", "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531", "type": "run.finished", "seq": 111, "payload": {"status": "completed", "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-1185-7f83-9b7e-12fc9eef892c/run/01a09db9-1185-7f83-9b7e-12fc9eef892c?start_time=2026-09-14T02%3A22%3A26.693205%2B00%3A00", "usage": {"searches": 1, "fetches": 0, "deep_reads": 0, "agents": 0, "rounds": 0, "input_tokens": 7859, "output_tokens": 669, "wall_seconds": 10.7}}}

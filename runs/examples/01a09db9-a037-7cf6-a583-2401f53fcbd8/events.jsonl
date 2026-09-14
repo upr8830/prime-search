@@ -1,0 +1,139 @@
+{"ts": "2026-09-14T02:23:03.575460+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "run.started", "seq": 0, "payload": {"run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "question": "What practitioner visit requirements must be met for initial and continued Medicare coverage of a CGM?", "mode": "baseline", "depth": "deep", "trace_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-a03d-7b72-a144-d4410ea132a6/run/01a09db9-a03d-7b72-a144-d4410ea132a6?start_time=2026-09-14T02%3A23%3A03.229289%2B00%3A00"}}
+{"ts": "2026-09-14T02:23:05.534752+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 1, "payload": {"text": " "}}
+{"ts": "2026-09-14T02:23:06.049863+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "search", "seq": 2, "payload": {"task_id": null, "query": "Medicare CGM continuous glucose monitor practitioner visit requirements initial continued coverage", "n_results": null, "cached": false, "tool": "tavily_search"}}
+{"ts": "2026-09-14T02:23:11.579174+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "search", "seq": 3, "payload": {"task_id": null, "query": "", "n_results": 10, "cached": false, "tool": "tavily_search"}}
+{"ts": "2026-09-14T02:23:15.740380+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 4, "payload": {"text": " For"}}
+{"ts": "2026-09-14T02:23:15.768804+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 5, "payload": {"text": " Medicare to"}}
+{"ts": "2026-09-14T02:23:15.795755+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 6, "payload": {"text": " cover a Continuous Gl"}}
+{"ts": "2026-09-14T02:23:15.824774+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 7, "payload": {"text": "ucose Monitor (CG"}}
+{"ts": "2026-09-14T02:23:15.853859+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 8, "payload": {"text": "M),"}}
+{"ts": "2026-09-14T02:23:15.899284+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 9, "payload": {"text": " the"}}
+{"ts": "2026-09-14T02:23:15.976299+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 10, "payload": {"text": " following practitioner visit"}}
+{"ts": "2026-09-14T02:23:15.977221+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 11, "payload": {"text": " requirements must be met"}}
+{"ts": "2026-09-14T02:23:15.977657+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 12, "payload": {"text": ":\n\n## Initial Coverage"}}
+{"ts": "2026-09-14T02:23:15.997741+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 13, "payload": {"text": " Visit"}}
+{"ts": "2026-09-14T02:23:16.025924+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 14, "payload": {"text": "\nAs"}}
+{"ts": "2026-09-14T02:23:16.052380+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 15, "payload": {"text": " part of the **"}}
+{"ts": "2026-09-14T02:23:16.080866+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 16, "payload": {"text": "initial provision**"}}
+{"ts": "2026-09-14T02:23:16.109876+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 17, "payload": {"text": " of a CGM,"}}
+{"ts": "2026-09-14T02:23:16.137746+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 18, "payload": {"text": " the treating practitioner must"}}
+{"ts": "2026-09-14T02:23:16.168011+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 19, "payload": {"text": " conduct an **in"}}
+{"ts": "2026-09-14T02:23:16.195590+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 20, "payload": {"text": "-person or Medicare-approved"}}
+{"ts": "2026-09-14T02:23:16.224115+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 21, "payload": {"text": " telehealth visit**"}}
+{"ts": "2026-09-14T02:23:16.254283+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 22, "payload": {"text": " with the beneficiary."}}
+{"ts": "2026-09-14T02:23:16.282237+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 23, "payload": {"text": " The medical record from"}}
+{"ts": "2026-09-14T02:23:16.309703+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 24, "payload": {"text": " that"}}
+{"ts": "2026-09-14T02:23:16.337779+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 25, "payload": {"text": " visit must document"}}
+{"ts": "2026-09-14T02:23:16.367188+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 26, "payload": {"text": " that:\n"}}
+{"ts": "2026-09-14T02:23:16.395118+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 27, "payload": {"text": "1"}}
+{"ts": "2026-09-14T02:23:16.423259+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 28, "payload": {"text": ". The beneficiary"}}
+{"ts": "2026-09-14T02:23:16.451386+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 29, "payload": {"text": " has **"}}
+{"ts": "2026-09-14T02:23:16.481328+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 30, "payload": {"text": "diabetes mellitus"}}
+{"ts": "2026-09-14T02:23:16.508855+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 31, "payload": {"text": "**\n2. The"}}
+{"ts": "2026-09-14T02:23:16.537476+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 32, "payload": {"text": " beneficiary (or caregiver"}}
+{"ts": "2026-09-14T02:23:16.565852+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 33, "payload": {"text": ") has received"}}
+{"ts": "2026-09-14T02:23:16.593578+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 34, "payload": {"text": " **appropriate training**"}}
+{"ts": "2026-09-14T02:23:16.623323+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 35, "payload": {"text": " in the use"}}
+{"ts": "2026-09-14T02:23:16.651445+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 36, "payload": {"text": " of the CGM"}}
+{"ts": "2026-09-14T02:23:16.679734+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 37, "payload": {"text": ", evidenced"}}
+{"ts": "2026-09-14T02:23:16.708051+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 38, "payload": {"text": " by a prescription\n"}}
+{"ts": "2026-09-14T02:23:16.736651+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 39, "payload": {"text": "3. The CGM"}}
+{"ts": "2026-09-14T02:23:16.764715+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 40, "payload": {"text": " is prescribed in"}}
+{"ts": "2026-09-14T02:23:16.794067+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 41, "payload": {"text": " accordance with **FDA"}}
+{"ts": "2026-09-14T02:23:16.822014+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 42, "payload": {"text": " indications for use**\n"}}
+{"ts": "2026-09-14T02:23:16.851027+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 43, "payload": {"text": "4. The CGM"}}
+{"ts": "2026-09-14T02:23:16.878766+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 44, "payload": {"text": " is prescribed to improve"}}
+{"ts": "2026-09-14T02:23:16.907983+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 45, "payload": {"text": " gly"}}
+{"ts": "2026-09-14T02:23:16.935881+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 46, "payload": {"text": "cemic control for a"}}
+{"ts": "2026-09-14T02:23:16.965425+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 47, "payload": {"text": " beneficiary who is **"}}
+{"ts": "2026-09-14T02:23:16.994175+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 48, "payload": {"text": "insulin-treated**"}}
+{"ts": "2026-09-14T02:23:17.024624+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 49, "payload": {"text": " or has a **"}}
+{"ts": "2026-09-14T02:23:17.050935+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 50, "payload": {"text": "history of problematic hyp"}}
+{"ts": "2026-09-14T02:23:17.079889+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 51, "payload": {"text": "oglycemia**\n\n"}}
+{"ts": "2026-09-14T02:23:17.109074+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 52, "payload": {"text": "## Continued Coverage"}}
+{"ts": "2026-09-14T02:23:17.138123+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 53, "payload": {"text": " Visit\nTo"}}
+{"ts": "2026-09-14T02:23:17.166360+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 54, "payload": {"text": " justify"}}
+{"ts": "2026-09-14T02:23:17.194990+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 55, "payload": {"text": " **"}}
+{"ts": "2026-09-14T02:23:17.223931+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 56, "payload": {"text": "contin"}}
+{"ts": "2026-09-14T02:23:17.253525+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 57, "payload": {"text": "ued coverage**, the"}}
+{"ts": "2026-09-14T02:23:17.281191+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 58, "payload": {"text": " treating"}}
+{"ts": "2026-09-14T02:23:17.312617+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 59, "payload": {"text": " practitioner must conduct an"}}
+{"ts": "2026-09-14T02:23:17.340705+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 60, "payload": {"text": " **in-person or"}}
+{"ts": "2026-09-14T02:23:17.369057+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 61, "payload": {"text": " Medicare-approved telehealth"}}
+{"ts": "2026-09-14T02:23:17.396242+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 62, "payload": {"text": " visit with"}}
+{"ts": "2026-09-14T02:23:17.424567+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 63, "payload": {"text": " the beneficiary"}}
+{"ts": "2026-09-14T02:23:17.453680+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 64, "payload": {"text": " every 6 months"}}
+{"ts": "2026-09-14T02:23:17.482273+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 65, "payload": {"text": "** following the initial"}}
+{"ts": "2026-09-14T02:23:17.510802+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 66, "payload": {"text": " prescription. The visit"}}
+{"ts": "2026-09-14T02:23:17.541092+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 67, "payload": {"text": " must document"}}
+{"ts": "2026-09-14T02:23:17.569432+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 68, "payload": {"text": ":\n- The beneficiary"}}
+{"ts": "2026-09-14T02:23:17.595953+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 69, "payload": {"text": "'s"}}
+{"ts": "2026-09-14T02:23:17.625293+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 70, "payload": {"text": " **adherence to"}}
+{"ts": "2026-09-14T02:23:17.654719+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 71, "payload": {"text": " their CGM regimen and"}}
+{"ts": "2026-09-14T02:23:17.681837+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 72, "payload": {"text": " diabetes treatment plan**\n"}}
+{"ts": "2026-09-14T02:23:17.712030+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 73, "payload": {"text": "- That"}}
+{"ts": "2026-09-14T02:23:17.739389+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 74, "payload": {"text": " the"}}
+{"ts": "2026-09-14T02:23:17.768327+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 75, "payload": {"text": " supplies remain **"}}
+{"ts": "2026-09-14T02:23:17.796031+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 76, "payload": {"text": "medically necessary**\n\n"}}
+{"ts": "2026-09-14T02:23:17.828654+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 77, "payload": {"text": "**Note"}}
+{"ts": "2026-09-14T02:23:17.854350+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 78, "payload": {"text": ":** There is no"}}
+{"ts": "2026-09-14T02:23:17.883926+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 79, "payload": {"text": " requirement for"}}
+{"ts": "2026-09-14T02:23:17.921552+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 80, "payload": {"text": " the practitioner to re"}}
+{"ts": "2026-09-14T02:23:17.939104+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 81, "payload": {"text": "confirm that the"}}
+{"ts": "2026-09-14T02:23:17.969955+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 82, "payload": {"text": " initial coverage criteria are"}}
+{"ts": "2026-09-14T02:23:17.996703+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 83, "payload": {"text": " met"}}
+{"ts": "2026-09-14T02:23:18.024141+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 84, "payload": {"text": " for continued coverage—"}}
+{"ts": "2026-09-14T02:23:18.055071+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 85, "payload": {"text": "only the "}}
+{"ts": "2026-09-14T02:23:18.282633+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 86, "payload": {"text": "6-month adherence"}}
+{"ts": "2026-09-14T02:23:18.300847+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 87, "payload": {"text": " visit"}}
+{"ts": "2026-09-14T02:23:18.330964+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 88, "payload": {"text": " is required.\n\nFailure"}}
+{"ts": "2026-09-14T02:23:18.360059+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 89, "payload": {"text": " to document this "}}
+{"ts": "2026-09-14T02:23:18.390075+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 90, "payload": {"text": "6-month visit can"}}
+{"ts": "2026-09-14T02:23:18.417390+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 91, "payload": {"text": " result in insufficient documentation"}}
+{"ts": "2026-09-14T02:23:18.445729+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 92, "payload": {"text": " errors and payment rec"}}
+{"ts": "2026-09-14T02:23:18.476844+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 93, "payload": {"text": "oupment.\n\nSources"}}
+{"ts": "2026-09-14T02:23:18.505245+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 94, "payload": {"text": ":\n- CMS"}}
+{"ts": "2026-09-14T02:23:18.532376+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 95, "payload": {"text": " Glucose Monitors"}}
+{"ts": "2026-09-14T02:23:18.561016+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 96, "payload": {"text": " LCD ("}}
+{"ts": "2026-09-14T02:23:18.588972+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 97, "payload": {"text": "L33822):"}}
+{"ts": "2026-09-14T02:23:18.620201+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 98, "payload": {"text": " https"}}
+{"ts": "2026-09-14T02:23:18.648871+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 99, "payload": {"text": "://www.cms"}}
+{"ts": "2026-09-14T02:23:18.675864+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 100, "payload": {"text": ".gov/medicare"}}
+{"ts": "2026-09-14T02:23:18.704210+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 101, "payload": {"text": "-coverage-database/view"}}
+{"ts": "2026-09-14T02:23:18.735069+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 102, "payload": {"text": "/lcd.aspx?"}}
+{"ts": "2026-09-14T02:23:18.764205+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 103, "payload": {"text": "lcd"}}
+{"ts": "2026-09-14T02:23:18.790919+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 104, "payload": {"text": "id=338"}}
+{"ts": "2026-09-14T02:23:18.820061+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 105, "payload": {"text": "22\n- CMS"}}
+{"ts": "2026-09-14T02:23:18.851854+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 106, "payload": {"text": " Policy"}}
+{"ts": "2026-09-14T02:23:18.878933+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 107, "payload": {"text": " Article A"}}
+{"ts": "2026-09-14T02:23:18.906315+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 108, "payload": {"text": "52464: https"}}
+{"ts": "2026-09-14T02:23:18.939477+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 109, "payload": {"text": "://www.cms"}}
+{"ts": "2026-09-14T02:23:18.969895+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 110, "payload": {"text": ".gov/medicare"}}
+{"ts": "2026-09-14T02:23:18.991858+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 111, "payload": {"text": "-coverage-database/view"}}
+{"ts": "2026-09-14T02:23:19.032866+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 112, "payload": {"text": "/article.aspx?article"}}
+{"ts": "2026-09-14T02:23:19.048890+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 113, "payload": {"text": "id=52464"}}
+{"ts": "2026-09-14T02:23:19.079732+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 114, "payload": {"text": "\n- CMS Response"}}
+{"ts": "2026-09-14T02:23:19.110312+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 115, "payload": {"text": " to Comments ("}}
+{"ts": "2026-09-14T02:23:19.143152+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 116, "payload": {"text": "A59330):"}}
+{"ts": "2026-09-14T02:23:19.166796+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 117, "payload": {"text": " https://www.c"}}
+{"ts": "2026-09-14T02:23:19.193477+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 118, "payload": {"text": "ms.gov/medic"}}
+{"ts": "2026-09-14T02:23:19.221130+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 119, "payload": {"text": "are-coverage-database"}}
+{"ts": "2026-09-14T02:23:19.249800+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 120, "payload": {"text": "/view/article.aspx?"}}
+{"ts": "2026-09-14T02:23:19.280270+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 121, "payload": {"text": "articleId=593"}}
+{"ts": "2026-09-14T02:23:19.308784+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 122, "payload": {"text": "30&ver="}}
+{"ts": "2026-09-14T02:23:19.336223+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 123, "payload": {"text": "6\n- CMS"}}
+{"ts": "2026-09-14T02:23:19.365977+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 124, "payload": {"text": " Compliance"}}
+{"ts": "2026-09-14T02:23:19.394895+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 125, "payload": {"text": " Tips for"}}
+{"ts": "2026-09-14T02:23:19.424289+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 126, "payload": {"text": " Glucose Monitoring Supplies"}}
+{"ts": "2026-09-14T02:23:19.450976+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 127, "payload": {"text": ": https://www"}}
+{"ts": "2026-09-14T02:23:19.481254+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 128, "payload": {"text": ".cms.gov/tr"}}
+{"ts": "2026-09-14T02:23:19.510316+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 129, "payload": {"text": "aining-education/m"}}
+{"ts": "2026-09-14T02:23:19.538131+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 130, "payload": {"text": "edicare-learning-network"}}
+{"ts": "2026-09-14T02:23:19.566746+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 131, "payload": {"text": "r-mln"}}
+{"ts": "2026-09-14T02:23:19.594940+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 132, "payload": {"text": "/compliance/medic"}}
+{"ts": "2026-09-14T02:23:19.622549+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 133, "payload": {"text": "are-provider-compliance"}}
+{"ts": "2026-09-14T02:23:19.653771+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 134, "payload": {"text": "-tips/glucose"}}
+{"ts": "2026-09-14T02:23:19.680195+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "token", "seq": 135, "payload": {"text": "-monitoring-supplies"}}
+{"ts": "2026-09-14T02:23:19.718283+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "answer", "seq": 136, "payload": {"summary": "For Medicare to cover a Continuous Glucose Monitor (CGM), the following practitioner visit requirements must be met: ## Initial Coverage Visit As part of the **initial provision** of a CGM, the treating practitioner must conduct an **in-person or Medicare-approved telehealth visit** with the beneficiary. The medical record from that visit must document that: 1. The beneficiary has **diabetes mellitus** 2. The beneficiary (or caregiver) has received **appropriate training** in the use of the CGM, evidenced by a prescription 3. The CGM is prescribed in accordance with **FDA indications for use** 4. The CGM is prescribed to improve glycemic control for a beneficiary who is **insulin-treated** or has a **history of problematic hypoglycemia** ## Continued Coverage Visit To justify **continued coverage**, the treating practitioner must conduct an **in-person or Medicare-approved telehealth visit with the beneficiary every 6 months** following the initial prescription. The visit must document", "body_markdown": "For Medicare to cover a Continuous Glucose Monitor (CGM), the following practitioner visit requirements must be met:\n\n## Initial Coverage Visit\nAs part of the **initial provision** of a CGM, the treating practitioner must conduct an **in-person or Medicare-approved telehealth visit** with the beneficiary. The medical record from that visit must document that:\n1. The beneficiary has **diabetes mellitus**\n2. The beneficiary (or caregiver) has received **appropriate training** in the use of the CGM, evidenced by a prescription\n3. The CGM is prescribed in accordance with **FDA indications for use**\n4. The CGM is prescribed to improve glycemic control for a beneficiary who is **insulin-treated** or has a **history of problematic hypoglycemia**\n\n## Continued Coverage Visit\nTo justify **continued coverage**, the treating practitioner must conduct an **in-person or Medicare-approved telehealth visit with the beneficiary every 6 months** following the initial prescription. The visit must document:\n- The beneficiary's **adherence to their CGM regimen and diabetes treatment plan**\n- That the supplies remain **medically necessary**\n\n**Note:** There is no requirement for the practitioner to reconfirm that the initial coverage criteria are met for continued coverage—only the 6-month adherence visit is required.\n\nFailure to document this 6-month visit can result in insufficient documentation errors and payment recoupment.\n\nSources:\n- CMS Glucose Monitors LCD (L33822): https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n- CMS Policy Article A52464: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464\n- CMS Response to Comments (A59330): https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=59330&ver=6\n- CMS Compliance Tips for Glucose Monitoring Supplies: https://www.cms.gov/training-education/medicare-learning-networkr-mln/compliance/medicare-provider-compliance-tips/glucose-monitoring-supplies", "claims": [], "citations": [{"n": 1, "evidence_id": "", "doc_id": "", "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822", "label": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822"}, {"n": 2, "evidence_id": "", "doc_id": "", "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464", "label": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464"}, {"n": 3, "evidence_id": "", "doc_id": "", "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=59330&ver=6", "label": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=59330&ver=6"}, {"n": 4, "evidence_id": "", "doc_id": "", "url": "https://www.cms.gov/training-education/medicare-learning-networkr-mln/compliance/medicare-provider-compliance-tips/glucose-monitoring-supplies", "label": "https://www.cms.gov/training-education/medicare-learning-networkr-mln/compliance/medicare-provider-compliance-tips/glucose-monitoring-supplies"}], "effective_dates": [], "contradictions": [], "unknowns": [], "confidence": 0.0, "scope_warning": null}}
+{"ts": "2026-09-14T02:23:19.718995+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "usage", "seq": 137, "payload": {"searches": 1, "fetches": 0, "deep_reads": 0, "agents": 0, "rounds": 0, "input_tokens": 7263, "output_tokens": 825, "wall_seconds": 16.5}}
+{"ts": "2026-09-14T02:23:19.721521+00:00", "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8", "type": "run.finished", "seq": 138, "payload": {"status": "completed", "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-a03d-7b72-a144-d4410ea132a6/run/01a09db9-a03d-7b72-a144-d4410ea132a6?start_time=2026-09-14T02%3A23%3A03.229289%2B00%3A00", "usage": {"searches": 1, "fetches": 0, "deep_reads": 0, "agents": 0, "rounds": 0, "input_tokens": 7263, "output_tokens": 825, "wall_seconds": 16.5}}}

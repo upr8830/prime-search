@@ -1,0 +1,29 @@
+{
+ "document": {
+  "doc_id": "doc_a3fe310292",
+  "url": "https://www.cms.gov/medicare-coverage-database/attachments/lcd/39794_5/KaufmanMD.pdf",
+  "title": "[PDF] 1 April 11, 2023 Alicia Campbell, MD First Coast Service Opfions ...",
+  "source_tier": "primary_policy",
+  "publisher": "CMS",
+  "doc_type": "LCD",
+  "document_id_external": "L33822",
+  "effective_date": null,
+  "revision_date": null,
+  "retrieved_at": "2026-09-14T02:33:04.079620Z",
+  "text_path": "<repo>\\runs\\01a09dc2-3070-7fca-a68a-4ca0be2b2caa\\docs\\doc_a3fe310292.txt",
+  "paragraph_count": 1,
+  "fetch_method": "extract"
+ },
+ "text_sha1": "a996335645ebe3f04936be945cd31964a1e7622b",
+ "extra_dates": {},
+ "sections": [],
+ "paragraphs": [
+  {
+   "index": 0,
+   "char_start": 0,
+   "char_end": 18349,
+   "section": null,
+   "boilerplate": false
+  }
+ ]
+}

@@ -1,0 +1,2247 @@
+{
+  "run_id": "01a09dc8-0c79-7e9e-b79a-4b8862d2ec0b",
+  "request": {
+    "question": "What practitioner visit requirements must be met for initial and continued Medicare coverage of a CGM?",
+    "mode": "prime",
+    "depth": "deep",
+    "question_id": "cgm-elig-003",
+    "budget_override": null,
+    "prompt_set": "base"
+  },
+  "started_at": "2026-09-14T02:38:48.441057Z",
+  "finished_at": "2026-09-14T02:42:07.228051Z",
+  "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09dc8-0c8b-7b80-9d18-682496d8cc14/run/01a09dc8-0c8b-7b80-9d18-682496d8cc14?start_time=2026-09-14T02%3A38%3A48.459366%2B00%3A00",
+  "langsmith_trace_id": "01a09dc8-0c8b-7b80-9d18-682496d8cc14",
+  "plan": {
+    "understanding": {
+      "normalized_question": "Under current Medicare policy, what practitioner (clinician) visit requirements must be met for a beneficiary to qualify for initial coverage of a continuous glucose monitor, and what visit requirements apply for continued coverage?",
+      "domain": "cgm",
+      "question_type": "eligibility",
+      "entities": [
+        "Medicare",
+        "CGM",
+        "practitioner visit requirements",
+        "initial coverage",
+        "continued coverage"
+      ],
+      "time_sensitivity": "medium",
+      "needs_primary_sources": true,
+      "scope_warning": null
+    },
+    "branches": [
+      {
+        "branch_id": "b1",
+        "question": "What practitioner visit requirements must be met for initial Medicare coverage of a continuous glucose monitor (CGM) according to the current DME MAC LCD L33822?",
+        "hypothesis": "Initial coverage requires an in‑person visit with the treating practitioner within the 6 months prior to the CGM prescription, during which the beneficiary’s diabetes treatment regimen is evaluated.",
+        "rationale": "This defines the eligibility gate for initial CGM coverage; without it the claim is denied.",
+        "source_hint": "primary_policy",
+        "priority": 1,
+        "depends_on": []
+      },
+      {
+        "branch_id": "b2",
+        "question": "What practitioner visit requirements must be met for continued Medicare coverage of a CGM after the initial period, per LCD L33822?",
+        "hypothesis": "Continued coverage requires a follow‑up visit with the treating practitioner at least every 6 months to assess ongoing benefit and adjust therapy.",
+        "rationale": "Ongoing payment hinges on periodic practitioner review; missing the visit triggers non‑coverage.",
+        "source_hint": "primary_policy",
+        "priority": 1,
+        "depends_on": []
+      },
+      {
+        "branch_id": "b3",
+        "question": "What is the most recent revision date of DME MAC LCD L33822 for CGM and what changes did it make to practitioner visit requirements?",
+        "hypothesis": "The April 2023 revision removed the insulin‑use requirement but left the visit frequency unchanged.",
+        "rationale": "Ensures we are citing the current policy; any outdated revision would give wrong visit rules.",
+        "source_hint": "primary_policy",
+        "priority": 2,
+        "depends_on": []
+      },
+      {
+        "branch_id": "b4",
+        "question": "What documentation, frequency, or visit‑related requirements does the companion coding article A52464 impose for CGM billing and coverage?",
+        "hypothesis": "A52464 requires proof of the practitioner visit (e.g., visit note) and limits CGM supplies to a 3‑month dispensing interval unless a new visit is documented.",
+        "rationale": "Coverage in practice depends on the coding article’s billing rules, which may add visit‑based documentation beyond the LCD.",
+        "source_hint": "coding_article",
+        "priority": 3,
+        "depends_on": []
+      },
+      {
+        "branch_id": "b5",
+        "question": "What do non‑CMS sources (beneficiary guides, supplier websites, news articles) say about the practitioner visit requirements for initial and continued CGM coverage under Medicare?",
+        "hypothesis": "Non‑CMS sources often simplify the rule to ‘a doctor visit every 6 months’ and may omit the initial‑visit timing nuance.",
+        "rationale": "Secondary sources frequently over‑state or simplify coverage; the final answer must contrast them with the primary policy.",
+        "source_hint": "any",
+        "priority": 4,
+        "depends_on": []
+      }
+    ],
+    "stop_criteria": "Initial and continued practitioner visit requirements are quoted from the current LCD L33822 with its revision date; any visit‑related documentation or frequency rules are cited from the coding article A52464; and the answer notes where non‑CMS sources agree or differ.",
+    "budget": {
+      "max_searches": 30,
+      "max_fetches": 20,
+      "max_deep_reads": 30,
+      "max_agents": 6,
+      "max_rounds": 3,
+      "max_tokens": 400000,
+      "max_seconds": 180
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "b1-r0",
+      "branch_id": "b1",
+      "round": 0,
+      "instruction": "What practitioner visit requirements must be met for initial Medicare coverage of a continuous glucose monitor (CGM) according to the current DME MAC LCD L33822?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": "year",
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "LCD L33822 continuous glucose monitor",
+          "L33822 Glucose Monitors LCD",
+          "L33822 Glucose Monitors site:cms.gov"
+        ],
+        "documents_fetched": [
+          "doc_8416d9eb4c"
+        ],
+        "evidence_ids": [
+          "ev_2ab25b021d",
+          "ev_2a5a34eeb6"
+        ],
+        "summary": "I fetched CMS LCD L33822 (Glucose Monitors) and located the initial coverage criteria for continuous glucose monitors. Paragraph 73 of the policy states that within six months prior to ordering the CGM, the treating practitioner must have an in-person or Medicare-approved telehealth visit with the beneficiary to evaluate their diabetes control and confirm that other criteria are met. This supports the hypothesis that a visit within 6 months is required, with the nuance that the visit may be either in-person or a Medicare-approved telehealth visit—not strictly in-person. The policy was last rev...",
+        "unresolved": null,
+        "usage": {
+          "searches": 3,
+          "fetches": 1,
+          "deep_reads": 2,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 53435,
+          "output_tokens": 2967,
+          "wall_seconds": 41.568
+        }
+      }
+    },
+    {
+      "task_id": "b2-r0",
+      "branch_id": "b2",
+      "round": 0,
+      "instruction": "What practitioner visit requirements must be met for continued Medicare coverage of a CGM after the initial period, per LCD L33822?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "L33822 CGM continued coverage follow-up visit practitioner"
+        ],
+        "documents_fetched": [
+          "doc_8416d9eb4c"
+        ],
+        "evidence_ids": [
+          "ev_46f7ad474a",
+          "ev_24c83811a9",
+          "ev_9be3687e08"
+        ],
+        "summary": "LCD L33822 (revised effective 2024-10-01) confirms that for continued CGM coverage, the treating practitioner must conduct an in-person or Medicare-approved telehealth visit with the beneficiary every six months following the initial prescription. The purpose of this visit is to document adherence to the CGM regimen and diabetes treatment plan.",
+        "unresolved": "Whether the six-month follow-up visit must explicitly include assessing ongoing benefit and adjusting therapy, as the LCD language focuses on documenting adherence to the regimen and treatment plan rather than explicitly requiring therapy adjustment.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 2,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 41988,
+          "output_tokens": 2851,
+          "wall_seconds": 41.844
+        }
+      }
+    },
+    {
+      "task_id": "b3-r0",
+      "branch_id": "b3",
+      "round": 0,
+      "instruction": "What is the most recent revision date of DME MAC LCD L33822 for CGM and what changes did it make to practitioner visit requirements?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": "year",
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "DME MAC LCD L33822 continuous glucose monitor CGM"
+        ],
+        "documents_fetched": [
+          "doc_3fa9d0cf71"
+        ],
+        "evidence_ids": [
+          "ev_8dff98a861",
+          "ev_bb0a73ab70"
+        ],
+        "summary": "I established that LCD L33822's most recent revision date is 10/01/2024, not April 2023. I also confirmed that the April 16, 2023 revision removed the insulin-treated requirement (specifically the language about \"multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump\") from the CGM coverage criteria. However, I could not confirm from the revision history whether the April 2023 revision specifically left practitioner visit frequency unchanged, though the current policy still requires an in-person or telehealth visit every six months f...",
+        "unresolved": "Whether the April 2023 revision made any changes to practitioner visit frequency requirements or left them unchanged could not be confirmed from the revision history entries reviewed.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 4,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 50697,
+          "output_tokens": 2683,
+          "wall_seconds": 40.331
+        }
+      }
+    },
+    {
+      "task_id": "b4-r0",
+      "branch_id": "b4",
+      "round": 0,
+      "instruction": "What documentation, frequency, or visit‑related requirements does the companion coding article A52464 impose for CGM billing and coverage?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "A52464 CGM coding article documentation frequency visit requirements"
+        ],
+        "documents_fetched": [
+          "doc_546c6b8042"
+        ],
+        "evidence_ids": [
+          "ev_e942cb89a4",
+          "ev_437a28323d",
+          "ev_a04e020a02"
+        ],
+        "summary": "I established that CMS Article A52464 (revision effective 2025-02-18) requires documentation every six months of an in-person or Medicare-approved telehealth visit to verify ongoing CGM adherence and medical necessity. It also imposes a hard maximum of 90 days (three months) for billing and dispensing CGM replacement supplies (A4238/A4239) at one time. The article does not state that the 3-month supply limit is waived or extended by documentation of a new visit; the visit requirement and supply limit operate independently.",
+        "unresolved": "Whether documentation of a new practitioner visit at the time of dispensing would permit billing or dispensing of CGM supplies beyond the 90-day maximum.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 3,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 49060,
+          "output_tokens": 8552,
+          "wall_seconds": 79.158
+        }
+      }
+    },
+    {
+      "task_id": "b5-r0",
+      "branch_id": "b5",
+      "round": 0,
+      "instruction": "What do non‑CMS sources (beneficiary guides, supplier websites, news articles) say about the practitioner visit requirements for initial and continued CGM coverage under Medicare?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": "year",
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "Medicare CGM coverage doctor visit every 6 months practitioner requirements beneficiary guide",
+          "\"doctor visit every 6 months\" Medicare CGM beneficiary guide supplier"
+        ],
+        "documents_fetched": [
+          "doc_2219a844e2",
+          "doc_694aeb5d5d"
+        ],
+        "evidence_ids": [
+          "ev_2da38fe685",
+          "ev_00dde02e83"
+        ],
+        "summary": "I examined two non-CMS sources (CoveredUSA and Doko MD) regarding Medicare CGM practitioner visit requirements. Both sources explicitly include the initial-visit timing nuance, not just the continued-coverage interval. CoveredUSA states the treating practitioner must see the beneficiary \"within the 6 months before ordering the CGM\" and that \"Every 6 months after that, a follow-up visit is required.\" Doko MD similarly states the practitioner must have a visit \"within the 6 months before ordering the CGM.\" For these two sources, the hypothesis is contradicted—they do not simplify the rule to onl...",
+        "unresolved": "I could not confirm whether other non-CMS sources (such as the ADCES danatech page, Abbott supplier materials, or ACU-Serve guidance) omit the initial-visit timing requirement, because those documents were not fetched and examined.",
+        "usage": {
+          "searches": 2,
+          "fetches": 2,
+          "deep_reads": 2,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 49016,
+          "output_tokens": 5297,
+          "wall_seconds": 59.054
+        }
+      }
+    },
+    {
+      "task_id": "b2-r1",
+      "branch_id": "b2",
+      "round": 1,
+      "instruction": "In LCD L33822, determine whether the six-month follow-up visit must explicitly include assessing ongoing benefit and adjusting therapy, or only document adherence to the CGM regimen and diabetes treatment plan.",
+      "queries_hint": [
+        "L33822 CGM follow-up visit assess ongoing benefit adjust therapy",
+        "L33822 CGM continued coverage documentation adherence treatment plan"
+      ],
+      "include_domains": [
+        "cms.gov"
+      ],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "L33822 CGM follow-up visit assess ongoing benefit adjust therapy"
+        ],
+        "documents_fetched": [
+          "doc_8416d9eb4c"
+        ],
+        "evidence_ids": [
+          "ev_44c7d13081",
+          "ev_24c83811a9",
+          "ev_7399f52192"
+        ],
+        "summary": "The hypothesis is refuted. LCD L33822 (revision effective 2024-10-01) states that the six-month follow-up visit for CGM continued coverage requires the treating practitioner to document adherence to their CGM regimen and diabetes treatment plan — it does not require the visit to explicitly assess ongoing benefit or adjust therapy. I found no language in the LCD imposing a requirement to assess ongoing benefit or adjust therapy at the six-month follow-up.",
+        "unresolved": null,
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 3,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 44984,
+          "output_tokens": 6511,
+          "wall_seconds": 64.915
+        }
+      }
+    },
+    {
+      "task_id": "b3-r1",
+      "branch_id": "b3",
+      "round": 1,
+      "instruction": "Fetch the current LCD L33822 revision history and record its most recent revision effective date (claimed 10/01/2024) and whether the April 16, 2023 revision changed practitioner visit frequency requirements or left them unchanged.",
+      "queries_hint": [
+        "L33822 revision history effective date 10/01/2024",
+        "L33822 LCD revision April 2023 insulin-treated requirement visit frequency"
+      ],
+      "include_domains": [
+        "cms.gov"
+      ],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "L33822 revision history effective date"
+        ],
+        "documents_fetched": [
+          "doc_8416d9eb4c"
+        ],
+        "evidence_ids": [
+          "ev_5235820113",
+          "ev_cc14d86f13"
+        ],
+        "summary": "I confirmed that LCD L33822’s most recent revision effective date is 10/01/2024. I also confirmed that the April 16, 2023 revision removed the requirement for “multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump” from the CGM coverage criteria. However, the revision history entry for that date was truncated and did not mention any changes to practitioner visit frequency, so I could not determine whether those requirements were modified or left unchanged.",
+        "unresolved": "Whether the April 16, 2023 revision changed practitioner visit frequency requirements or left them unchanged.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 4,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 47429,
+          "output_tokens": 7222,
+          "wall_seconds": 68.716
+        }
+      }
+    },
+    {
+      "task_id": "b5-r1",
+      "branch_id": "b5",
+      "round": 1,
+      "instruction": "Fetch the ADCES danatech page, Abbott supplier materials, and ACU-Serve guidance on Medicare CGM coverage and record whether they state the initial-visit-within-6-months timing requirement or omit it.",
+      "queries_hint": [
+        "ADCES danatech CGM Medicare coverage visit requirements",
+        "Abbott Medicare CGM coverage initial visit 6 months practitioner"
+      ],
+      "include_domains": [],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "ADCES danatech CGM Medicare coverage visit requirements",
+          "Abbott Medicare CGM coverage initial visit 6 months practitioner",
+          "ACU-Serve Medicare CGM coverage visit requirements"
+        ],
+        "documents_fetched": [
+          "doc_3efe468f7a",
+          "doc_ade88a2d36"
+        ],
+        "evidence_ids": [
+          "ev_0e45dc411e"
+        ],
+        "summary": "I examined the ADCES danatech page on CGM candidate selection and found that it does state the initial-visit timing requirement explicitly. It lists: \"Within six (6) months prior to ordering the CGM, the treating practitioner has an in-person or Medicare-approved telehealth visit with the beneficiary to evaluate their diabetes control…\" It also separately lists the continued-coverage rule (\"Every six (6) months following the initial prescription…\"). Thus, this non-CMS source does not simplify the rule to only \"a doctor visit every 6 months\" and does not omit the initial-visit nuance.\n\nI was un...",
+        "unresolved": "Abbott supplier materials on Medicare CGM coverage and ACU-Serve guidance on CGM documentation requirements could not be examined to confirm whether they state or omit the initial-visit-within-6-months timing requirement.",
+        "usage": {
+          "searches": 3,
+          "fetches": 2,
+          "deep_reads": 1,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 48044,
+          "output_tokens": 6120,
+          "wall_seconds": 75.72
+        }
+      }
+    }
+  ],
+  "documents": {
+    "doc_63d75a595c": {
+      "doc_id": "doc_63d75a595c",
+      "url": "https://med.noridianmedicare.com/web/jddme/policies/dmd-articles/2026/kf-modifier-use-correct-coding-revised",
+      "title": "KF Modifier Use - Correct Coding - Revised - JD DME - Noridian",
+      "source_tier": "primary_policy",
+      "publisher": "Noridian",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:04.741345Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_ad44968072": {
+      "doc_id": "doc_ad44968072",
+      "url": "https://www.bcbsri.com/providers/medicalpolicies/files/glucose-monitoring-continuous",
+      "title": "[PDF] Medical Coverage Policy | Glucose Monitoring- Continuous",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:47.499859Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_da2fe5aabd": {
+      "doc_id": "doc_da2fe5aabd",
+      "url": "https://wadcdnstorageprod.blob.core.windows.net/bswhp/Pharmacy/Medicare_cgm_quantity_limit_exception_criteria.pdf",
+      "title": "[PDF] Medicare Continuous Glucose Monitors (CGM) Quantity Limit ...",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:02.109467Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_ca2a754628": {
+      "doc_id": "doc_ca2a754628",
+      "url": "http://mcgs.bcbsfl.com/MCG?mcgId=09-E0000-14&pv=false",
+      "title": "[PDF] Subject: Blood Glucose Monitors and Supplies",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:02.109697Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_14464f4d57": {
+      "doc_id": "doc_14464f4d57",
+      "url": "https://www.cms.gov/training-education/medicare-learning-networkr-mln/compliance/medicare-provider-compliance-tips/glucose-monitoring-supplies",
+      "title": "Glucose Monitoring Supplies - CMS",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:47.499655Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_242066c5af": {
+      "doc_id": "doc_242066c5af",
+      "url": "https://med.noridianmedicare.com/documents/2230703/16619307/Clinician+Checklist+Blood+Glucose+Monitors+and+Related+Supplies.pdf",
+      "title": "[PDF] Clinician Checklist for Glucose Monitors and Related Supplies",
+      "source_tier": "primary_policy",
+      "publisher": "Noridian",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:02.110174Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_835995b0ab": {
+      "doc_id": "doc_835995b0ab",
+      "url": "https://med.noridianmedicare.com/web/jddme/policies/clinicians-corner/are-you-ordering-glucose-monitors-and-supplies",
+      "title": "Clinicians! Are You Ordering Glucose Monitors and Supplies For ...",
+      "source_tier": "primary_policy",
+      "publisher": "Noridian",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:24.036571Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_694aeb5d5d": {
+      "doc_id": "doc_694aeb5d5d",
+      "url": "https://doko.md/medicare-cover-cgm-type-2-diabetes",
+      "title": "Does Medicare Cover CGM for Type 2 Diabetes in 2026? - Doko MD",
+      "source_tier": "unknown",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": "2026-07-13",
+      "retrieved_at": "2026-09-14T02:39:27.971638Z",
+      "text_path": "",
+      "paragraph_count": 94,
+      "fetch_method": "extract"
+    },
+    "doc_e6a23ee3f7": {
+      "doc_id": "doc_e6a23ee3f7",
+      "url": "https://acuservecorp.com/cms-additional-guidance-cgm-documentation-requirements",
+      "title": "CMS Updates CGM Documentation Guidance - ACU-Serve",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:41:10.991700Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_3efe468f7a": {
+      "doc_id": "doc_3efe468f7a",
+      "url": "https://www.adces.org/education/danatech/glucose-monitoring/continuous-glucose-monitors-(cgm)/cgm-selection-training/candidate-selection-characteristics-(cgm)",
+      "title": "CGM l Candidate Identification Criteria l danatech",
+      "source_tier": "unknown",
+      "publisher": "adces.org",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:32.802171Z",
+      "text_path": "",
+      "paragraph_count": 126,
+      "fetch_method": "extract"
+    },
+    "doc_889b48ce12": {
+      "doc_id": "doc_889b48ce12",
+      "url": "https://www.cgsmedicare.com/jb/education/qa/cgm.html",
+      "title": "Continuous Glucose Monitors (CGMs) Questions & Answers",
+      "source_tier": "primary_policy",
+      "publisher": "CGS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:24.035602Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_2219a844e2": {
+      "doc_id": "doc_2219a844e2",
+      "url": "https://coveredusa.org/en/qa/does-medicare-cover-cgm",
+      "title": "Does Medicare Cover CGMs (Dexcom/Libre) in 2026? | CoveredUSA",
+      "source_tier": "unknown",
+      "publisher": "CMS",
+      "doc_type": "Article",
+      "document_id_external": "A52464",
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:07.713791Z",
+      "text_path": "",
+      "paragraph_count": 60,
+      "fetch_method": "extract"
+    },
+    "doc_fe3d04ed76": {
+      "doc_id": "doc_fe3d04ed76",
+      "url": "https://scienceinsights.org/what-cgm-does-medicare-cover-and-who-qualifies",
+      "title": "What CGM Does Medicare Cover and Who Qualifies - ScienceInsights",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:02.781997Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_81ad70ae9a": {
+      "doc_id": "doc_81ad70ae9a",
+      "url": "https://hcpf.colorado.gov/preferred-diabetic-supply-list",
+      "title": "Preferred Diabetic Supply List (PDSL) | Department of Health Care Policy and Financing",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:02.782155Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_3fa9d0cf71": {
+      "doc_id": "doc_3fa9d0cf71",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822&ver=70&keyword=continuous+glucose+monitor&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2CF&contractOption=all&sortBy=relevance&bc=1",
+      "title": "LCD - Glucose Monitors (L33822)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "LCD",
+      "document_id_external": "L33822",
+      "effective_date": null,
+      "revision_date": "2024-10-01",
+      "retrieved_at": "2026-09-14T02:39:07.165716Z",
+      "text_path": "docs/doc_3fa9d0cf71.txt",
+      "paragraph_count": 275,
+      "fetch_method": "extract"
+    },
+    "doc_68a1466a71": {
+      "doc_id": "doc_68a1466a71",
+      "url": "https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822",
+      "title": "LCD - Glucose Monitors (L33822)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:04.740735Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_8416d9eb4c": {
+      "doc_id": "doc_8416d9eb4c",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+      "title": "LCD - Glucose Monitors (L33822) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "LCD",
+      "document_id_external": "L33822",
+      "effective_date": null,
+      "revision_date": "2024-10-01",
+      "retrieved_at": "2026-09-14T02:39:09.946181Z",
+      "text_path": "docs/doc_8416d9eb4c.txt",
+      "paragraph_count": 275,
+      "fetch_method": "extract"
+    },
+    "doc_693cbc21ff": {
+      "doc_id": "doc_693cbc21ff",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=38664&ver=26&keyword=AFO&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "LCD - Implantable Continuous Glucose Monitors (I-CGM) (L38664)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:11.492646Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_546c6b8042": {
+      "doc_id": "doc_546c6b8042",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "Article - Glucose Monitor - Policy Article (A52464)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "Article",
+      "document_id_external": "A52464",
+      "effective_date": "2015-10-01",
+      "revision_date": "2025-02-18",
+      "retrieved_at": "2026-09-14T02:39:07.256123Z",
+      "text_path": "docs/doc_546c6b8042.txt",
+      "paragraph_count": 412,
+      "fetch_method": "extract"
+    },
+    "doc_646b7c40e6": {
+      "doc_id": "doc_646b7c40e6",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=65&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "Article - Glucose Monitor - Policy Article (A52464)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:04.892815Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_015266da11": {
+      "doc_id": "doc_015266da11",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&amp%3Bver=49&amp%3BcontractorName=all&amp%3BsortBy=updated&amp%3Bbc=13",
+      "title": "Article - Glucose Monitor - Policy Article (A52464)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:04.892913Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_5b6883d631": {
+      "doc_id": "doc_5b6883d631",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+      "title": "Glucose Monitor - Policy Article (A52464) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:41:10.992164Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_ce2c051c56": {
+      "doc_id": "doc_ce2c051c56",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&stateRegion=s66&contractorNumber=all&articleStatus=all&sortBy=title&bc=5",
+      "title": "Article - Glucose Monitor - Policy Article (A52464)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:04.893171Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_478c6d521e": {
+      "doc_id": "doc_478c6d521e",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33794&ver=164",
+      "title": "LCD - External Infusion Pumps (L33794) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:05.150627Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_d3cc40f0b4": {
+      "doc_id": "doc_d3cc40f0b4",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=55426",
+      "title": "Standard Documentation Requirements for All Claims Submitted to ...",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:05.150679Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_a80d7e2613": {
+      "doc_id": "doc_a80d7e2613",
+      "url": "https://med.noridianmedicare.com/web/jddme/article-detail/-/view/2230715/continued-coverage-for-continuous-glucose-monitor-cgm-",
+      "title": "Article Detail - JD DME - Noridian",
+      "source_tier": "primary_policy",
+      "publisher": "Noridian",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:07.063286Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_f4d95c3f6e": {
+      "doc_id": "doc_f4d95c3f6e",
+      "url": "https://www.cgsmedicare.com/jc/pubs/news/2023/09/cope143638.html",
+      "title": "Did You Know the Treating Practitioner Must Conduct and Sign Any ...",
+      "source_tier": "primary_policy",
+      "publisher": "CGS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:07.064496Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_0ecc2356b2": {
+      "doc_id": "doc_0ecc2356b2",
+      "url": "https://med.noridianmedicare.com/web/jddme/dmepos/glucose",
+      "title": "Glucose Monitors - JD DME - Noridian",
+      "source_tier": "primary_policy",
+      "publisher": "Noridian",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:07.064566Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_1a3638b9c3": {
+      "doc_id": "doc_1a3638b9c3",
+      "url": "https://www.cms.gov/Outreach-and-Education/Medicare-Learning-Network-MLN/MLNProducts/Downloads/MedQtrlyComp-Newsletter-ICN909378print-friendly.pdf",
+      "title": "[PDF] Medicare Quarterly Provider Compliance Newsletter - CMS",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:29.938652Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_3361861463": {
+      "doc_id": "doc_3361861463",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=58342",
+      "title": "Implantable Continuous Glucose Monitors (I-CGM) (A58342) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:29.937182Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_c1fdf4d84a": {
+      "doc_id": "doc_c1fdf4d84a",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=38664&ver=26&bc=0",
+      "title": "Implantable Continuous Glucose Monitors (I-CGM) (L38664) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:29.336261Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_bed81aaf16": {
+      "doc_id": "doc_bed81aaf16",
+      "url": "https://www.cms.gov/medicare-coverage-database/details/article-details.aspx?articleid=58798",
+      "title": "Response to Comments: Glucose Monitors – DL33822 - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:29.938186Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_f66852246c": {
+      "doc_id": "doc_f66852246c",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=58798&ver=4&keyword=pet&keywordType=starts&areaId=s27&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "Response to Comments: Glucose Monitors – DL33822 - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:11.493501Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_7e3af57189": {
+      "doc_id": "doc_7e3af57189",
+      "url": "https://smilesmed.com/humana-choicecare-cgm",
+      "title": "Humana ChoiceCare CGM (In-Network) Supplier - Affordable Pricing",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:24.034349Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_57ffae2d20": {
+      "doc_id": "doc_57ffae2d20",
+      "url": "https://www.freestyleprovider.abbott/content/dam/adc/freestyleprovider/countries/us-en/office-care/documents/ADC-75351_Flyer_MedicareCoverage_FreeStyleLibre2.pdf",
+      "title": "[PDF] The #1 CGM prescribed for Medicare patients*†1,2",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:24.036107Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_413694e62d": {
+      "doc_id": "doc_413694e62d",
+      "url": "https://seniorcgmsupport.com/medicare-cgm-coverage-2025-complete-guide-for-seniors",
+      "title": "Medicare CGM Coverage: Complete Guide for Seniors - Senior CGM Support",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:39:24.037020Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_ff306c595d": {
+      "doc_id": "doc_ff306c595d",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=59330&ver=6",
+      "title": "Response to Comments: Glucose Monitors – DL33822 (A59330)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:29.936554Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_6d3f4bd21d": {
+      "doc_id": "doc_6d3f4bd21d",
+      "url": "https://www.cms.gov/research-statistics-data-and-systems/monitoring-programs/medicare-ffs-compliance-programs/recovery-audit-program/approved-rac-topics-items/0014-automated-glucose-monitor-when-billed-with-same-date-of-services-as-glucose-monitor-supplies-unbundling",
+      "title": "0014 - Glucose Monitor Supplies Billed With Same Dates of ... - CMS",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:29.336026Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_b97b2ed816": {
+      "doc_id": "doc_b97b2ed816",
+      "url": "https://www.cms.gov/files/document/esmd-home-blood-glucose-monitoring-reason-codes-and-statements.pdf",
+      "title": "[PDF] Home Blood Glucose Monitoring Reason Codes and Statements",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:29.937699Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_a3fe310292": {
+      "doc_id": "doc_a3fe310292",
+      "url": "https://www.cms.gov/medicare-coverage-database/attachments/lcd/39794_5/KaufmanMD.pdf",
+      "title": "[PDF] 1 April 11, 2023 Alicia Campbell, MD First Coast Service Opfions ...",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:29.936799Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_6a1a5681b6": {
+      "doc_id": "doc_6a1a5681b6",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=58408",
+      "title": "DL38664 Implantable Continuous Glucose Monitors (I-CGM) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:29.938965Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_fba5a197d1": {
+      "doc_id": "doc_fba5a197d1",
+      "url": "https://www.adces.org/education/danatech/glucose-monitoring/continuous-glucose-monitors-(cgm)/cgms-in-professional-practice/cgm-the-dces-role",
+      "title": "CGM l The Role of the DCES l Danatech",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:29.999575Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_67a4e2b00d": {
+      "doc_id": "doc_67a4e2b00d",
+      "url": "https://myehcs.com/medicarecriteria",
+      "title": "Medicare Criteria for CGM",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:41:10.992101Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_1578fff693": {
+      "doc_id": "doc_1578fff693",
+      "url": "https://www.adces.org/education/danatech/latest-news/danatech-latest-news/2023/04/07/final-medicare-continuous-glucose-monitor-(cgm)-policy-goes-into-effect-april-16th",
+      "title": "Final Medicare Continuous Glucose Monitor (CGM) Policy Goes into Effect April 16th",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:30.001449Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_d36ed64188": {
+      "doc_id": "doc_d36ed64188",
+      "url": "https://www.adces.org/education/danatech/glucose-monitoring/continuous-glucose-monitors-(cgm)/cgms-in-professional-practice/obtaining-cgms-supplies",
+      "title": "CGM l Getting Supplies for Your Practice l Danatech",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:30.001527Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_ca9b6648d9": {
+      "doc_id": "doc_ca9b6648d9",
+      "url": "https://www.adces.org/education/danatech/glucose-monitoring/continuous-glucose-monitors-(cgm)/cgm-insurance-coverage-look-up",
+      "title": "CGM Insurance Coverage Look-Up Tool",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:30.001987Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_4f8648ab24": {
+      "doc_id": "doc_4f8648ab24",
+      "url": "https://diabetes.org/advocacy/cgm-continuous-glucose-monitors/faqs-medicare-coverage",
+      "title": "FAQs on CGM Coverage Criteria Changes in Medicare | ADA",
+      "source_tier": "professional",
+      "publisher": "American Diabetes Association",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:30.002122Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_ade88a2d36": {
+      "doc_id": "doc_ade88a2d36",
+      "url": "https://medschool.cuanschutz.edu/docs/librariesprovider294/prepare-4-cgm/5-9medicarecgm4d474f0e6302864d9a5bfff0a001ce385.pdf?sfvrsn=1b5c94ba_2",
+      "title": "[PDF] Medicare Eligibility Requirements for personal CGM",
+      "source_tier": "unknown",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:41:05.331232Z",
+      "text_path": "",
+      "paragraph_count": 1,
+      "fetch_method": "extract"
+    },
+    "doc_fccbfd8e1e": {
+      "doc_id": "doc_fccbfd8e1e",
+      "url": "https://endoconnection.com/getattachment/0aad1d4f-6e41-4623-8bf0-515a38d99dfc/CGM-coverage-March-2024.aspx",
+      "title": "Insurance Coverage for Continuous Glucose Monitors",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:47.499936Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_8123588b2a": {
+      "doc_id": "doc_8123588b2a",
+      "url": "https://www.aafp.org/fpm/2024/0100/continuous-glucose-monitoring",
+      "title": "Medicare Coverage of Continuous Glucose Monitoring - AAFP",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:47.500308Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_0600760879": {
+      "doc_id": "doc_0600760879",
+      "url": "https://medschool.cuanschutz.edu/docs/librariesprovider294/prepare-4-cgm/5-9medicarecgm4.pdf?sfvrsn=3a9883ba_2",
+      "title": "[PDF] Updated Medicare Eligibility Requirements for personal CGM",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:47.500748Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_a329b25ce9": {
+      "doc_id": "doc_a329b25ce9",
+      "url": "https://smilesmed.com/cgm-medicare-eligibility",
+      "title": "CGM Medicare Eligibility - Find out if you qualify for a CGM with Medicare",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:47.501226Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_fb84501b70": {
+      "doc_id": "doc_fb84501b70",
+      "url": "https://www.youtube.com/watch?v=GZ2mEZtG7UA",
+      "title": "CGM Coverage Criteria Changes in Medicare - YouTube",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:40:47.501724Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_cf9c545bc7": {
+      "doc_id": "doc_cf9c545bc7",
+      "url": "https://acuservecorp.com/category/compliance-corner",
+      "title": "Compliance Corner Archives",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:41:10.992737Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_bb937988f2": {
+      "doc_id": "doc_bb937988f2",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12303738",
+      "title": "Expanding Access to Continuous Glucose Monitoring in Medicare Patients Receiving Specialty Diabetes Care: A Quality Improvement Project - PMC",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:41:10.993108Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_17e69d3c83": {
+      "doc_id": "doc_17e69d3c83",
+      "url": "https://www.scanhealthplan.com/en/providers/joining-the-scan-network/prior-authorizations/continuous-glucose-monitor-training",
+      "title": "Continuous Glucose Monitor (GCM) Training - SCAN Health Plan",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:41:10.993358Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_f7c9bc3c0b": {
+      "doc_id": "doc_f7c9bc3c0b",
+      "url": "https://www.freestyle.abbott/us-en/medicare.html",
+      "title": "Medicare Coverage for FreeStyle Libre Systems",
+      "source_tier": "web",
+      "publisher": "Abbott",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:41:10.993493Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    }
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_2da38fe685",
+      "doc_id": "doc_2219a844e2",
+      "branch_id": "b5",
+      "claim_text": "Non-CMS source CoveredUSA states initial CGM order requires practitioner visit within 6 months before ordering, plus follow-up every 6 months for continued coverage",
+      "evidence_text": "Your treating practitioner must have seen you in person or through a Medicare-approved telehealth visit within the 6 months before ordering the CGM, and must document in your medical record that you have diabetes, meet one of the two pathways above, and have received training on using the device correctly. Every 6 months after that, a follow-up visit is required to justify continued coverage.",
+      "location": {
+        "section": "Who Qualifies: The 2023 CGM Eligibility Expansion",
+        "paragraph_index": 19,
+        "char_start": 5530,
+        "char_end": 5925
+      },
+      "effective_date": null,
+      "relevance": 0.8,
+      "source_quality": 0.3,
+      "confidence": 0.85,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_46f7ad474a",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b2",
+      "claim_text": "Continued CGM coverage requires a treating practitioner visit every six months following the initial prescription",
+      "evidence_text": "Every six (6) months following the initial prescription of the CGM, the treating practitioner conducts an in-person or Medicare-approved telehealth visit with the beneficiary",
+      "location": {
+        "section": "Coverage Guidance",
+        "paragraph_index": 75,
+        "char_start": 12940,
+        "char_end": 13114
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_8dff98a861",
+      "doc_id": "doc_3fa9d0cf71",
+      "branch_id": "b3",
+      "claim_text": "LCD L33822 was most recently revised effective 10/01/2024",
+      "evidence_text": "Revision Effective Date: 10/01/2024",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 145,
+        "char_start": 39367,
+        "char_end": 39402
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "context"
+    },
+    {
+      "evidence_id": "ev_2ab25b021d",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b1",
+      "claim_text": "Initial CGM coverage requires an in-person or Medicare-approved telehealth visit within 6 months prior to ordering",
+      "evidence_text": "Within six (6) months prior to ordering the CGM, the treating practitioner has an in-person or Medicare-approved telehealth visit with the beneficiary to evaluate their diabetes control and determined that criteria (1)-(4) above are met.",
+      "location": {
+        "section": "Coverage Guidance",
+        "paragraph_index": 73,
+        "char_start": 12677,
+        "char_end": 12914
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_24c83811a9",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b2",
+      "claim_text": "LCD L33822 was last revised effective 2024-10-01",
+      "evidence_text": "Revision Effective Date: 10/01/2024",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 145,
+        "char_start": 39367,
+        "char_end": 39402
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "context"
+    },
+    {
+      "evidence_id": "ev_bb0a73ab70",
+      "doc_id": "doc_3fa9d0cf71",
+      "branch_id": "b3",
+      "claim_text": "The April 16, 2023 revision removed the insulin-treated requirement from CGM coverage criteria",
+      "evidence_text": "Removed: \"with multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump\" from CGM coverage criterion pertaining to beneficiary being insulin-treated",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 153,
+        "char_start": 42436,
+        "char_end": 42643
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_9be3687e08",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b2",
+      "claim_text": "The six-month follow-up visit must document adherence to the CGM regimen and diabetes treatment plan",
+      "evidence_text": "to document adherence to their CGM regimen and diabetes treatment plan",
+      "location": {
+        "section": "Coverage Guidance",
+        "paragraph_index": 75,
+        "char_start": 13115,
+        "char_end": 13185
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_2a5a34eeb6",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b1",
+      "claim_text": "LCD L33822 was revised effective 2024-10-01",
+      "evidence_text": "Revision Effective Date: 10/01/2024",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 145,
+        "char_start": 39367,
+        "char_end": 39402
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "context"
+    },
+    {
+      "evidence_id": "ev_e942cb89a4",
+      "doc_id": "doc_546c6b8042",
+      "branch_id": "b4",
+      "claim_text": "Following the initial CGM prescription, A52464 requires documentation every six months of an in-person or Medicare-approved telehealth visit",
+      "evidence_text": "following the initial CGM prescription, there must be documentation every six (6) months of an in-person or Medicare-approved telehealth visit with the beneficiary. The purpose of this visit is to document the beneficiary's adherence to their CGM regimen and diabetes treatment and to support that the supplies remain medically necessary and are essential for the effective use of the base DME.",
+      "location": {
+        "section": "REPLACEMENT OF SUPPLIES FOR MEDICARE-PAID, BENEFICIARY-OWNED EQUIPMENT",
+        "paragraph_index": 137,
+        "char_start": 48911,
+        "char_end": 49305
+      },
+      "effective_date": "2025-02-18",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_00dde02e83",
+      "doc_id": "doc_694aeb5d5d",
+      "branch_id": "b5",
+      "claim_text": "Non-CMS source Doko MD states initial CGM order requires practitioner visit within 6 months before ordering",
+      "evidence_text": "The treating practitioner has an in-person or Medicare-approved telehealth visit with the patient within the 6 months before ordering the CGM.",
+      "location": {
+        "section": "Who may qualify in 2026",
+        "paragraph_index": 19,
+        "char_start": 3318,
+        "char_end": 3460
+      },
+      "effective_date": "2026-07-13",
+      "relevance": 0.8,
+      "source_quality": 0.3,
+      "confidence": 0.85,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_437a28323d",
+      "doc_id": "doc_546c6b8042",
+      "branch_id": "b4",
+      "claim_text": "A52464 limits CGM supply billing to a maximum three-month (90-day) dispensing interval",
+      "evidence_text": "Up to a maximum of three (3) months, ninety (90) days of the supply allowance may be billed for code A4238 or A4239 to the DME MAC at a time and suppliers may not dispense more than a ninety (90) day supply.",
+      "location": {
+        "section": "CODING GUIDELINES",
+        "paragraph_index": 155,
+        "char_start": 55111,
+        "char_end": 55318
+      },
+      "effective_date": "2025-02-18",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_a04e020a02",
+      "doc_id": "doc_546c6b8042",
+      "branch_id": "b4",
+      "claim_text": "A52464 requires sufficient information in the medical record from the treating practitioner visit to show ongoing CGM adherence",
+      "evidence_text": "For the in-person or Medicare-approved telehealth treating practitioner visit that is required as part of the ongoing provision of a CGM, there must be sufficient information in the beneficiary's medical record to determine that the beneficiary continues to adhere to their diabetes treatment regimen and use of the CGM device.",
+      "location": {
+        "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+        "paragraph_index": 135,
+        "char_start": 48233,
+        "char_end": 48560
+      },
+      "effective_date": "2025-02-18",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_0e45dc411e",
+      "doc_id": "doc_3efe468f7a",
+      "branch_id": "b5",
+      "claim_text": "ADCES danatech states the initial-visit timing requirement: within 6 months prior to ordering CGM",
+      "evidence_text": "Within six (6) months prior to ordering the CGM, the treating practitioner has an in-person or Medicare-approved telehealth visit with the beneficiary to evaluate their diabetes control and determined that criteria (1)-(4) above are met.",
+      "location": {
+        "section": "The criteria set down by CMS in 2023",
+        "paragraph_index": 83,
+        "char_start": 11015,
+        "char_end": 11252
+      },
+      "effective_date": null,
+      "relevance": 0.8,
+      "source_quality": 0.3,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_44c7d13081",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b2",
+      "claim_text": "CGM continued coverage requires a six-month follow-up visit to document adherence to the CGM regimen and diabetes treatment plan",
+      "evidence_text": "Every six (6) months following the initial prescription of the CGM, the treating practitioner conducts an in-person or Medicare-approved telehealth visit with the beneficiary to document adherence to their CGM regimen and diabetes treatment plan.",
+      "location": {
+        "section": "Coverage Guidance",
+        "paragraph_index": 75,
+        "char_start": 12940,
+        "char_end": 13186
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_5235820113",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b3",
+      "claim_text": "LCD L33822 most recent revision effective date is 10/01/2024",
+      "evidence_text": "Revision Effective Date: 10/01/2024",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 145,
+        "char_start": 39367,
+        "char_end": 39402
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "context"
+    },
+    {
+      "evidence_id": "ev_7399f52192",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b2",
+      "claim_text": "Continued coverage requires a six-month follow-up visit to assess ongoing benefit and adjust therapy",
+      "evidence_text": "Every six (6) months following the initial prescription of the CGM, the treating practitioner conducts an in-person or Medicare-approved telehealth visit with the beneficiary to document adherence to their CGM regimen and diabetes treatment plan.",
+      "location": {
+        "section": "Coverage Guidance",
+        "paragraph_index": 75,
+        "char_start": 12940,
+        "char_end": 13186
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "contradicts"
+    },
+    {
+      "evidence_id": "ev_cc14d86f13",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b3",
+      "claim_text": "The April 16, 2023 revision removed the requirement for multiple daily insulin administrations from CGM coverage criteria",
+      "evidence_text": "Removed: \"with multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump\" from CGM coverage criterion pertaining to beneficiary being insulin-treated",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 153,
+        "char_start": 42436,
+        "char_end": 42643
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.9,
+      "stance": "supports"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "c1",
+      "text": "Non-CMS source CoveredUSA states initial CGM order requires practitioner visit within 6 months before ordering, plus follow-up every 6 months for continued coverage",
+      "branch_id": "b5",
+      "supported_by": [
+        "ev_2da38fe685",
+        "ev_00dde02e83"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "weak",
+      "confidence": 0.255,
+      "governing_date": "2026-07-13"
+    },
+    {
+      "claim_id": "c2",
+      "text": "Continued CGM coverage requires a treating practitioner visit every six months following the initial prescription",
+      "branch_id": "b2",
+      "supported_by": [
+        "ev_46f7ad474a"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c3",
+      "text": "LCD L33822 was most recently revised effective 10/01/2024",
+      "branch_id": "b3",
+      "supported_by": [],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c4",
+      "text": "Initial CGM coverage requires an in-person or Medicare-approved telehealth visit within 6 months prior to ordering",
+      "branch_id": "b1",
+      "supported_by": [
+        "ev_2ab25b021d"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c5",
+      "text": "LCD L33822 was last revised effective 2024-10-01",
+      "branch_id": "b2",
+      "supported_by": [],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c6",
+      "text": "The April 16, 2023 revision removed the requirement for multiple daily insulin administrations from CGM coverage criteria",
+      "branch_id": "b3",
+      "supported_by": [
+        "ev_bb0a73ab70",
+        "ev_cc14d86f13"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.9,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c7",
+      "text": "CGM continued coverage requires a six-month follow-up visit to document adherence to the CGM regimen and diabetes treatment plan",
+      "branch_id": "b2",
+      "supported_by": [
+        "ev_9be3687e08",
+        "ev_44c7d13081"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c8",
+      "text": "LCD L33822 was revised effective 2024-10-01",
+      "branch_id": "b1",
+      "supported_by": [],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c9",
+      "text": "Following the initial CGM prescription, A52464 requires documentation every six months of an in-person or Medicare-approved telehealth visit",
+      "branch_id": "b4",
+      "supported_by": [
+        "ev_e942cb89a4"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2025-02-18"
+    },
+    {
+      "claim_id": "c10",
+      "text": "A52464 limits CGM supply billing to a maximum three-month (90-day) dispensing interval",
+      "branch_id": "b4",
+      "supported_by": [
+        "ev_437a28323d"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2025-02-18"
+    },
+    {
+      "claim_id": "c11",
+      "text": "A52464 requires sufficient information in the medical record from the treating practitioner visit to show ongoing CGM adherence",
+      "branch_id": "b4",
+      "supported_by": [
+        "ev_a04e020a02"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.9,
+      "governing_date": "2025-02-18"
+    },
+    {
+      "claim_id": "c12",
+      "text": "ADCES danatech states the initial-visit timing requirement: within 6 months prior to ordering CGM",
+      "branch_id": "b5",
+      "supported_by": [
+        "ev_0e45dc411e"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "weak",
+      "confidence": 0.285,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c13",
+      "text": "LCD L33822 most recent revision effective date is 10/01/2024",
+      "branch_id": "b3",
+      "supported_by": [],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c14",
+      "text": "Continued coverage requires a six-month follow-up visit to assess ongoing benefit and adjust therapy",
+      "branch_id": "b2",
+      "supported_by": [],
+      "contradicted_by": [
+        "ev_7399f52192"
+      ],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    }
+  ],
+  "verdicts": [
+    {
+      "round": 0,
+      "sufficient": false,
+      "coverage": {
+        "b1": "resolved",
+        "b2": "partial",
+        "b3": "partial",
+        "b4": "resolved",
+        "b5": "partial"
+      },
+      "missing": [
+        "confirm the current revision effective date (10/01/2024) of LCD L33822",
+        "confirm whether the April 2023 revision changed practitioner visit frequency requirements",
+        "confirm whether the six-month follow-up visit must explicitly include assessing ongoing benefit and adjusting therapy",
+        "confirm whether non-CMS sources (ADCES danatech, Abbott, ACU-Serve) omit the initial-visit timing requirement"
+      ],
+      "new_tasks": [
+        {
+          "task_id": "b3-r1",
+          "branch_id": "b3",
+          "round": 1,
+          "instruction": "Fetch the current LCD L33822 revision history and record its most recent revision effective date (claimed 10/01/2024) and whether the April 16, 2023 revision changed practitioner visit frequency requirements or left them unchanged.",
+          "queries_hint": [
+            "L33822 revision history effective date 10/01/2024",
+            "L33822 LCD revision April 2023 insulin-treated requirement visit frequency"
+          ],
+          "include_domains": [
+            "cms.gov"
+          ],
+          "time_range": null,
+          "status": "done",
+          "result": {
+            "queries_issued": [
+              "L33822 revision history effective date"
+            ],
+            "documents_fetched": [
+              "doc_8416d9eb4c"
+            ],
+            "evidence_ids": [
+              "ev_5235820113",
+              "ev_cc14d86f13"
+            ],
+            "summary": "I confirmed that LCD L33822’s most recent revision effective date is 10/01/2024. I also confirmed that the April 16, 2023 revision removed the requirement for “multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump” from the CGM coverage criteria. However, the revision history entry for that date was truncated and did not mention any changes to practitioner visit frequency, so I could not determine whether those requirements were modified or left unchanged.",
+            "unresolved": "Whether the April 16, 2023 revision changed practitioner visit frequency requirements or left them unchanged.",
+            "usage": {
+              "searches": 1,
+              "fetches": 1,
+              "deep_reads": 4,
+              "agents": 1,
+              "rounds": 0,
+              "input_tokens": 47429,
+              "output_tokens": 7222,
+              "wall_seconds": 68.716
+            }
+          }
+        },
+        {
+          "task_id": "b2-r1",
+          "branch_id": "b2",
+          "round": 1,
+          "instruction": "In LCD L33822, determine whether the six-month follow-up visit must explicitly include assessing ongoing benefit and adjusting therapy, or only document adherence to the CGM regimen and diabetes treatment plan.",
+          "queries_hint": [
+            "L33822 CGM follow-up visit assess ongoing benefit adjust therapy",
+            "L33822 CGM continued coverage documentation adherence treatment plan"
+          ],
+          "include_domains": [
+            "cms.gov"
+          ],
+          "time_range": null,
+          "status": "done",
+          "result": {
+            "queries_issued": [
+              "L33822 CGM follow-up visit assess ongoing benefit adjust therapy"
+            ],
+            "documents_fetched": [
+              "doc_8416d9eb4c"
+            ],
+            "evidence_ids": [
+              "ev_44c7d13081",
+              "ev_24c83811a9",
+              "ev_7399f52192"
+            ],
+            "summary": "The hypothesis is refuted. LCD L33822 (revision effective 2024-10-01) states that the six-month follow-up visit for CGM continued coverage requires the treating practitioner to document adherence to their CGM regimen and diabetes treatment plan — it does not require the visit to explicitly assess ongoing benefit or adjust therapy. I found no language in the LCD imposing a requirement to assess ongoing benefit or adjust therapy at the six-month follow-up.",
+            "unresolved": null,
+            "usage": {
+              "searches": 1,
+              "fetches": 1,
+              "deep_reads": 3,
+              "agents": 1,
+              "rounds": 0,
+              "input_tokens": 44984,
+              "output_tokens": 6511,
+              "wall_seconds": 64.915
+            }
+          }
+        },
+        {
+          "task_id": "b5-r1",
+          "branch_id": "b5",
+          "round": 1,
+          "instruction": "Fetch the ADCES danatech page, Abbott supplier materials, and ACU-Serve guidance on Medicare CGM coverage and record whether they state the initial-visit-within-6-months timing requirement or omit it.",
+          "queries_hint": [
+            "ADCES danatech CGM Medicare coverage visit requirements",
+            "Abbott Medicare CGM coverage initial visit 6 months practitioner"
+          ],
+          "include_domains": [],
+          "time_range": null,
+          "status": "done",
+          "result": {
+            "queries_issued": [
+              "ADCES danatech CGM Medicare coverage visit requirements",
+              "Abbott Medicare CGM coverage initial visit 6 months practitioner",
+              "ACU-Serve Medicare CGM coverage visit requirements"
+            ],
+            "documents_fetched": [
+              "doc_3efe468f7a",
+              "doc_ade88a2d36"
+            ],
+            "evidence_ids": [
+              "ev_0e45dc411e"
+            ],
+            "summary": "I examined the ADCES danatech page on CGM candidate selection and found that it does state the initial-visit timing requirement explicitly. It lists: \"Within six (6) months prior to ordering the CGM, the treating practitioner has an in-person or Medicare-approved telehealth visit with the beneficiary to evaluate their diabetes control…\" It also separately lists the continued-coverage rule (\"Every six (6) months following the initial prescription…\"). Thus, this non-CMS source does not simplify the rule to only \"a doctor visit every 6 months\" and does not omit the initial-visit nuance.\n\nI was un...",
+            "unresolved": "Abbott supplier materials on Medicare CGM coverage and ACU-Serve guidance on CGM documentation requirements could not be examined to confirm whether they state or omit the initial-visit-within-6-months timing requirement.",
+            "usage": {
+              "searches": 3,
+              "fetches": 2,
+              "deep_reads": 1,
+              "agents": 1,
+              "rounds": 0,
+              "input_tokens": 48044,
+              "output_tokens": 6120,
+              "wall_seconds": 75.72
+            }
+          }
+        }
+      ],
+      "reasoning": "b1 and b4 are answered by dated primary_policy claims, so they are resolved. b2, b3, and b5 remain partial: the current LCD revision date is unconfirmed (required by the stop criteria), the April 2023 visit-frequency change and the therapy-adjustment nuance are unresolved, and b5 rests only on a weak unknown-source claim. Three targeted tasks address the remaining gaps within budget."
+    },
+    {
+      "round": 1,
+      "sufficient": false,
+      "coverage": {
+        "b1": "resolved",
+        "b2": "partial",
+        "b3": "unresolved",
+        "b4": "resolved",
+        "b5": "partial"
+      },
+      "missing": [
+        "the most recent revision effective date of LCD L33822 (claimed 10/01/2024) is not confirmed",
+        "whether the six-month follow-up visit must explicitly include assessing ongoing benefit and adjusting therapy",
+        "non-CMS sources only support weak/unknown-tier claims"
+      ],
+      "new_tasks": [],
+      "reasoning": "b1 and b4 are answered by dated primary-policy claims, but the stop criterion requiring the current LCD L33822 revision date is unmet (b3 unresolved) and b2 retains an unresolved nuance about whether the follow-up visit must include therapy adjustment. b5 only has weak unknown-tier claims, so non-CMS agreement/difference is not firmly established. No new tasks are permitted, so the gaps are reported as missing."
+    }
+  ],
+  "critic_reports": [
+    {
+      "weak_claims": [
+        "c1",
+        "c3",
+        "c5",
+        "c8",
+        "c12",
+        "c13",
+        "c14"
+      ],
+      "missing_interpretations": [
+        "The LCD L33822 governs DME MAC coverage under Medicare Part B, not Part D, which does not cover CGM as a drug.",
+        "The companion coding article A52464 provides billing and documentation rules, not coverage criteria; coverage criteria are contained in the LCD."
+      ],
+      "source_independence_issues": [
+        "ev_bb0a73ab70",
+        "ev_cc14d86f13",
+        "ev_9be3687e08",
+        "ev_44c7d13081"
+      ],
+      "secondary_when_primary_exists": [
+        "c1",
+        "c12"
+      ],
+      "outdated_sources": [],
+      "contradictions": [
+        "A non-CMS source (CoveredUSA) states that the six-month follow-up visit must assess ongoing benefit and adjust therapy; the LCD L33822 (primary policy, revised 2024-10-01) requires the visit to document adherence to the CGM regimen and diabetes treatment plan, without explicitly requiring assessment"
+      ],
+      "recommended_searches": [
+        {
+          "task_id": "b3-r2-critic1",
+          "branch_id": "b3",
+          "round": 2,
+          "instruction": "Fetch the revision history of LCD L33822 to confirm the most recent effective date and any changes to practitioner visit frequency or purpose, and locate the exact language describing the follow-up visit’s purpose.",
+          "queries_hint": [
+            "LCD L33822 revision history effective date",
+            "L33822 CGM follow-up visit assess ongoing benefit adjust therapy",
+            "L33822 practitioner visit requirements CGM"
+          ],
+          "include_domains": [
+            "cms.gov"
+          ],
+          "time_range": null,
+          "status": "pending",
+          "result": null
+        }
+      ],
+      "completion_probability": 0.6,
+      "reasoning": "The LCD L33822 is fetched but its revision history is not confirmed, leaving the most recent effective date uncertain. Non‑CMS sources provide only weak, unsupported claims about visit requirements, and a contradiction exists between those sources and the LCD regarding the purpose of the six‑month follow‑up visit. Without resolving these gaps, the answer cannot be considered complete or highly reliable."
+    }
+  ],
+  "answer": {
+    "summary": "For initial Medicare coverage of a CGM, the beneficiary must have an in‑person or Medicare‑approved telehealth visit with the treating practitioner within 6 months before ordering the device. For continued coverage, a follow‑up visit is required every 6 months after the initial prescription, also in‑person or via Medicare‑approved telehealth, to document adherence to the CGM regimen and diabetes treatment plan. While some non‑CMS sources describe the follow‑up as assessing ongoing benefit and adjusting therapy, the LCD L33822 (the governing primary policy, effective 2024‑10‑01) specifies the visit’s purpose as documenting adherence, not therapy adjustment.",
+    "body_markdown": "## Answer\nFor initial Medicare coverage of a CGM, the beneficiary must have an in‑person or Medicare‑approved telehealth visit with the treating practitioner within 6 months before ordering the device[4]. For continued coverage, a follow‑up visit is required every 6 months after the initial prescription, also in‑person or via Medicare‑approved telehealth, to document adherence to the CGM regimen and diabetes treatment plan[2][9][14]. While some non‑CMS sources describe the follow‑up as assessing ongoing benefit and adjusting therapy[1][16], the LCD L33822 (the governing primary policy, effective 2024‑10‑01) specifies the visit’s purpose as documenting adherence, not therapy adjustment[2][7][14].\n\n## Criteria / Details\n- **Initial coverage:** Treating practitioner must have seen the beneficiary in person or through a Medicare‑approved telehealth visit within 6 months prior to ordering the CGM[4] (also noted by CoveredUSA[1], Doko MD[10], and danatech[13]). \n- **Continued coverage:** Every 6 months following the initial CGM prescription, the treating practitioner must conduct an in‑person or Medicare‑approved telehealth visit with the beneficiary[2][14]. \n- **Purpose of the 6‑month follow‑up visit:** To document the beneficiary’s adherence to the CGM regimen and diabetes treatment plan (and to support continued medical necessity)[7][9][14]. \n- **Alternative description (non‑CMS):** Some sources state the visit assesses ongoing benefit and adjusts therapy[1][16], but the LCD L33822 governs and specifies documentation of adherence as the required purpose[2][7]. \n\n## Codes and documentation\n- A52464 limits CGM supply billing to a maximum of three (3) months (90 days) per claim[11]. \n- For each six‑month practitioner visit, the medical record must contain sufficient information to determine that the beneficiary continues to adhere to their diabetes treatment regimen and use of the CGM device[12]. \n- Documentation of the six‑month in‑person or telehealth visit is required every six months after the initial prescription[9]. \n\n## Effective dates relied on\n- LCD L33822 – Glucose Monitors (L33822) – CMS, revision effective 2024‑10‑01[2][4][7][14][16]. \n- Article A52464 – Article – Glucose Monitor – Policy Article (A52464), revision effective 2025‑02‑18[9][11][12]. \n\n## Contradictions and caveats\n- The LCD L33822 (effective 2024‑10‑01) states that the six‑month follow‑up visit must **document adherence** to the CGM regimen and diabetes treatment plan[2][7][14]. \n- A non‑CMS source (CoveredUSA) and a contradictory interpretation of the same LCD passage claim the visit must **assess ongoing benefit and adjust therapy**[1][16]. \n- Because the LCD is a primary policy document with a later effective date, it governs over the secondary source; therefore, the required purpose of the follow‑up visit is documentation of adherence, not explicit therapy adjustment. \n- The April 16, 2023 revision of LCD L33822 removed the insulin‑treated requirement but the evidence does not confirm whether it changed practitioner visit frequency[6][17]. \n\n## Unknowns / not verified\n- Whether the April 2023 revision of LCD L33822 altered practitioner visit frequency requirements or left them unchanged could not be confirmed from the revision history entries reviewed. \n- Whether documentation of a new practitioner visit at the time of dispensing would permit billing or dispensing of CGM supplies beyond the 90‑day maximum established in A52464[11] remains unverified. \n- It could not be confirmed whether other non‑CMS sources (e.g., ADCES danatech, Abbott supplier materials, ACU‑Serve guidance) omit or differ on the initial‑visit‑within‑6‑months timing requirement, as those documents were not fetched. \n- Whether the LCD’s wording about “document adherence” implicitly includes any assessment of ongoing benefit or therapy adjustment is not settled by the evidence.\n- The research stopped at its time limit, so this answer uses only the sources found by then.\n- The research reached its processing limit, so some leads were not followed up.\n\n## Sources\n\n[1] Article A52464 - Does Medicare Cover CGMs (Dexcom/Libre) in 2026? | CoveredUSA, §Who Qualifies: The 2023 CGM Eligibility Expansion. CMS. unknown.\n    https://coveredusa.org/en/qa/does-medicare-cover-cgm\n[2] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n[4] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n[6] LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822&ver=70&keyword=continuous+glucose+monitor&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2CF&contractOption=all&sortBy=relevance&bc=1\n[7] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n[9] Article A52464 - Article - Glucose Monitor - Policy Article (A52464), §REPLACEMENT OF SUPPLIES FOR MEDICARE-PAID, BENEFICIARY-OWNED EQUIPMENT, revision effective 2025-02-18. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1\n[10] Does Medicare Cover CGM for Type 2 Diabetes in 2026? - Doko MD, §Who may qualify in 2026, revision effective 2026-07-13. CMS. unknown.\n    https://doko.md/medicare-cover-cgm-type-2-diabetes\n[11] Article A52464 - Article - Glucose Monitor - Policy Article (A52464), §CODING GUIDELINES, revision effective 2025-02-18. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1\n[12] Article A52464 - Article - Glucose Monitor - Policy Article (A52464), §POLICY SPECIFIC DOCUMENTATION REQUIREMENTS, revision effective 2025-02-18. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1\n[13] CGM l Candidate Identification Criteria l danatech, §The criteria set down by CMS in 2023. adces.org. unknown.\n    https://www.adces.org/education/danatech/glucose-monitoring/continuous-glucose-monitors-(cgm)/cgm-selection-training/candidate-selection-characteristics-(cgm)\n[14] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n[16] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n[17] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Revision History Information, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n",
+    "claims": [
+      {
+        "claim_id": "c1",
+        "text": "Non-CMS source CoveredUSA states initial CGM order requires practitioner visit within 6 months before ordering, plus follow-up every 6 months for continued coverage",
+        "branch_id": "b5",
+        "supported_by": [
+          "ev_2da38fe685",
+          "ev_00dde02e83"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "weak",
+        "confidence": 0.255,
+        "governing_date": "2026-07-13"
+      },
+      {
+        "claim_id": "c2",
+        "text": "Continued CGM coverage requires a treating practitioner visit every six months following the initial prescription",
+        "branch_id": "b2",
+        "supported_by": [
+          "ev_46f7ad474a"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c3",
+        "text": "LCD L33822 was most recently revised effective 10/01/2024",
+        "branch_id": "b3",
+        "supported_by": [],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c4",
+        "text": "Initial CGM coverage requires an in-person or Medicare-approved telehealth visit within 6 months prior to ordering",
+        "branch_id": "b1",
+        "supported_by": [
+          "ev_2ab25b021d"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c5",
+        "text": "LCD L33822 was last revised effective 2024-10-01",
+        "branch_id": "b2",
+        "supported_by": [],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c6",
+        "text": "The April 16, 2023 revision removed the requirement for multiple daily insulin administrations from CGM coverage criteria",
+        "branch_id": "b3",
+        "supported_by": [
+          "ev_bb0a73ab70",
+          "ev_cc14d86f13"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.9,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c7",
+        "text": "CGM continued coverage requires a six-month follow-up visit to document adherence to the CGM regimen and diabetes treatment plan",
+        "branch_id": "b2",
+        "supported_by": [
+          "ev_9be3687e08",
+          "ev_44c7d13081"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c8",
+        "text": "LCD L33822 was revised effective 2024-10-01",
+        "branch_id": "b1",
+        "supported_by": [],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c9",
+        "text": "Following the initial CGM prescription, A52464 requires documentation every six months of an in-person or Medicare-approved telehealth visit",
+        "branch_id": "b4",
+        "supported_by": [
+          "ev_e942cb89a4"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2025-02-18"
+      },
+      {
+        "claim_id": "c10",
+        "text": "A52464 limits CGM supply billing to a maximum three-month (90-day) dispensing interval",
+        "branch_id": "b4",
+        "supported_by": [
+          "ev_437a28323d"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2025-02-18"
+      },
+      {
+        "claim_id": "c11",
+        "text": "A52464 requires sufficient information in the medical record from the treating practitioner visit to show ongoing CGM adherence",
+        "branch_id": "b4",
+        "supported_by": [
+          "ev_a04e020a02"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.9,
+        "governing_date": "2025-02-18"
+      },
+      {
+        "claim_id": "c12",
+        "text": "ADCES danatech states the initial-visit timing requirement: within 6 months prior to ordering CGM",
+        "branch_id": "b5",
+        "supported_by": [
+          "ev_0e45dc411e"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "weak",
+        "confidence": 0.285,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c13",
+        "text": "LCD L33822 most recent revision effective date is 10/01/2024",
+        "branch_id": "b3",
+        "supported_by": [],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c14",
+        "text": "Continued coverage requires a six-month follow-up visit to assess ongoing benefit and adjust therapy",
+        "branch_id": "b2",
+        "supported_by": [],
+        "contradicted_by": [
+          "ev_7399f52192"
+        ],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      }
+    ],
+    "citations": [
+      {
+        "n": 1,
+        "evidence_id": "ev_2da38fe685",
+        "doc_id": "doc_2219a844e2",
+        "url": "https://coveredusa.org/en/qa/does-medicare-cover-cgm",
+        "label": "Article A52464 - Does Medicare Cover CGMs (Dexcom/Libre) in 2026? | CoveredUSA, §Who Qualifies: The 2023 CGM Eligibility Expansion"
+      },
+      {
+        "n": 2,
+        "evidence_id": "ev_46f7ad474a",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01"
+      },
+      {
+        "n": 4,
+        "evidence_id": "ev_2ab25b021d",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01"
+      },
+      {
+        "n": 6,
+        "evidence_id": "ev_bb0a73ab70",
+        "doc_id": "doc_3fa9d0cf71",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822&ver=70&keyword=continuous+glucose+monitor&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2CF&contractOption=all&sortBy=relevance&bc=1",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01"
+      },
+      {
+        "n": 7,
+        "evidence_id": "ev_9be3687e08",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01"
+      },
+      {
+        "n": 9,
+        "evidence_id": "ev_e942cb89a4",
+        "doc_id": "doc_546c6b8042",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+        "label": "Article A52464 - Article - Glucose Monitor - Policy Article (A52464), §REPLACEMENT OF SUPPLIES FOR MEDICARE-PAID, BENEFICIARY-OWNED EQUIPMENT, revision effective 2025-02-18"
+      },
+      {
+        "n": 10,
+        "evidence_id": "ev_00dde02e83",
+        "doc_id": "doc_694aeb5d5d",
+        "url": "https://doko.md/medicare-cover-cgm-type-2-diabetes",
+        "label": "Does Medicare Cover CGM for Type 2 Diabetes in 2026? - Doko MD, §Who may qualify in 2026, revision effective 2026-07-13"
+      },
+      {
+        "n": 11,
+        "evidence_id": "ev_437a28323d",
+        "doc_id": "doc_546c6b8042",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+        "label": "Article A52464 - Article - Glucose Monitor - Policy Article (A52464), §CODING GUIDELINES, revision effective 2025-02-18"
+      },
+      {
+        "n": 12,
+        "evidence_id": "ev_a04e020a02",
+        "doc_id": "doc_546c6b8042",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+        "label": "Article A52464 - Article - Glucose Monitor - Policy Article (A52464), §POLICY SPECIFIC DOCUMENTATION REQUIREMENTS, revision effective 2025-02-18"
+      },
+      {
+        "n": 13,
+        "evidence_id": "ev_0e45dc411e",
+        "doc_id": "doc_3efe468f7a",
+        "url": "https://www.adces.org/education/danatech/glucose-monitoring/continuous-glucose-monitors-(cgm)/cgm-selection-training/candidate-selection-characteristics-(cgm)",
+        "label": "CGM l Candidate Identification Criteria l danatech, §The criteria set down by CMS in 2023"
+      },
+      {
+        "n": 14,
+        "evidence_id": "ev_44c7d13081",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01"
+      },
+      {
+        "n": 16,
+        "evidence_id": "ev_7399f52192",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01"
+      },
+      {
+        "n": 17,
+        "evidence_id": "ev_cc14d86f13",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Revision History Information, revision effective 2024-10-01"
+      }
+    ],
+    "effective_dates": [
+      "L33822: revision effective 2024-10-01",
+      "L33822: revision effective 2024-10-01",
+      "A52464: revision effective 2025-02-18",
+      "Does Medicare Cover CGM for Type 2 Diabetes in 2026? - Doko MD: revision effective 2026-07-13"
+    ],
+    "contradictions": [
+      "A non-CMS source (CoveredUSA) states that the six-month follow-up visit must assess ongoing benefit and adjust therapy; the LCD L33822 (primary policy, revised 2024-10-01) requires the visit to document adherence to the CGM regimen and diabetes treatment plan, without explicitly requiring assessment"
+    ],
+    "unknowns": [
+      "Whether the six-month follow-up visit must explicitly include assessing ongoing benefit and adjusting therapy, as the LCD language focuses on documenting adherence to the regimen and treatment plan rather than explicitly requiring therapy adjustment.",
+      "Whether the April 2023 revision made any changes to practitioner visit frequency requirements or left them unchanged could not be confirmed from the revision history entries reviewed.",
+      "Whether documentation of a new practitioner visit at the time of dispensing would permit billing or dispensing of CGM supplies beyond the 90-day maximum.",
+      "I could not confirm whether other non-CMS sources (such as the ADCES danatech page, Abbott supplier materials, or ACU-Serve guidance) omit the initial-visit timing requirement, because those documents were not fetched and examined.",
+      "Whether the April 16, 2023 revision changed practitioner visit frequency requirements or left them unchanged.",
+      "Abbott supplier materials on Medicare CGM coverage and ACU-Serve guidance on CGM documentation requirements could not be examined to confirm whether they state or omit the initial-visit-within-6-months timing requirement.",
+      "The research reached its processing limit, so some leads were not followed up."
+    ],
+    "confidence": 0.936,
+    "scope_warning": null
+  },
+  "usage": {
+    "searches": 13,
+    "fetches": 10,
+    "deep_reads": 21,
+    "agents": 8,
+    "rounds": 2,
+    "input_tokens": 396492,
+    "output_tokens": 52216,
+    "wall_seconds": 198.8
+  },
+  "status": "budget_exhausted",
+  "error": null
+}

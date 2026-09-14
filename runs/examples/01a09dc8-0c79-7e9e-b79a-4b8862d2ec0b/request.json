@@ -1,0 +1,8 @@
+{
+  "question": "What practitioner visit requirements must be met for initial and continued Medicare coverage of a CGM?",
+  "mode": "prime",
+  "depth": "deep",
+  "question_id": "cgm-elig-003",
+  "budget_override": null,
+  "prompt_set": "base"
+}

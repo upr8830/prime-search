@@ -1,0 +1,87 @@
+{
+ "experiment_name": "prime-base-holdout-20260914-0232-1acb321c",
+ "experiment_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/datasets/9dc81116-8a93-480c-9da2-29cacc1e9370/compare?selectedSessions=74673468-7163-421b-a7c1-10f29b529bc6",
+ "question_id": "adv-cgm-002",
+ "split": "holdout",
+ "scores": {
+  "answer_correctness": {
+   "score": 1.0,
+   "comment": "claims 6/6 weighted present; summary: consistent",
+   "metadata": {
+    "judge_tokens": 20211,
+    "judge_votes": 3,
+    "judge_calls": 3,
+    "judge_mode": "fenced_json+native"
+   }
+  },
+  "evidence_recall": {
+   "score": 1.0,
+   "comment": "matched e1 (must) via id (ev_6e7a31e8f8)",
+   "metadata": {
+    "matched": {
+     "e1": "id"
+    },
+    "needs_review": []
+   }
+  },
+  "citation_correctness": {
+   "score": 0.5714,
+   "comment": "4/7 sampled cited sentences supported (of 7 cited); failing: [5] 'LCD L33822 \u2013 Glucose Monitors (L33822), revision effective 2024\u201110\u2011...' - The passage does not mention an April 2023 revision or date.; [10] 'Article A52464 \u2013 Glucose Monitor \u2013 Policy Article (A52464), revisio...' - The passage does not mention an April 2023 revision or date.; [6] 'Modifier KX must be used on CGM claims for insulin\u2011treated benefici...' - The passage does not specify that modifier KX must be used on CGM claims; it only states to use m...",
+   "metadata": {
+    "judge_mode": "native_retry_1",
+    "judge_tokens": 20168
+   }
+  },
+  "citation_completeness": {
+   "score": 1.0,
+   "comment": "6/6 cited in Criteria / Details and Codes and documentation",
+   "metadata": {}
+  },
+  "currency": {
+   "score": 1.0,
+   "comment": "L33822: cited; governing date 2024-10-01 stated",
+   "metadata": {}
+  },
+  "contradiction_handling": {
+   "score": 1.0,
+   "comment": "x1 'Older pages state the MDI requirement; the current LCD do...': surfaced, governing stated",
+   "metadata": {
+    "judge_mode": "native_retry_1",
+    "judge_tokens": 3995
+   }
+  },
+  "scope_handling": {
+   "score": null,
+   "comment": "not applicable: the answer key expects no scope warning",
+   "metadata": {}
+  },
+  "primary_source_ratio": {
+   "score": 0.75,
+   "comment": "9/12 citations at official_secondary or better; below: [2] unknown diabeticsupplieshub.com, [4] unknown aeroflowdiabetes.com, [7] unknown aeroflowdiabetes.com",
+   "metadata": {}
+  },
+  "search_cost": {
+   "score": 21,
+   "comment": "11 searches + 10 fetches",
+   "metadata": {}
+  },
+  "latency_s": {
+   "score": 192.1,
+   "comment": "192.1s wall clock",
+   "metadata": {}
+  },
+  "tokens": {
+   "score": 394105,
+   "comment": "352938 in + 41167 out",
+   "metadata": {}
+  },
+  "search_efficiency": {
+   "score": 0.4762,
+   "comment": "answer_correctness 1.0 / max(1, 21 calls) x 10",
+   "metadata": {}
+  }
+ },
+ "composite": 0.9023,
+ "evaluated_at": "2026-09-14T02:50:09.990308+00:00",
+ "evaluator_git_sha": "da7067f"
+}

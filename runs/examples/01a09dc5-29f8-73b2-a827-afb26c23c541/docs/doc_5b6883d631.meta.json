@@ -1,0 +1,2033 @@
+{
+ "document": {
+  "doc_id": "doc_5b6883d631",
+  "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+  "title": "Glucose Monitor - Policy Article (A52464) - CMS",
+  "source_tier": "primary_policy",
+  "publisher": "CMS",
+  "doc_type": "Article",
+  "document_id_external": "A52464",
+  "effective_date": null,
+  "revision_date": "2025-02-18",
+  "retrieved_at": "2026-09-14T02:35:52.139727Z",
+  "text_path": "<repo>\\runs\\01a09dc5-29f8-73b2-a827-afb26c23c541\\docs\\doc_5b6883d631.txt",
+  "paragraph_count": 281,
+  "fetch_method": "extract"
+ },
+ "text_sha1": "9c8e4c432dc68fbadce6ed85b72f3c32c8d969ff",
+ "extra_dates": {},
+ "sections": [
+  "Glucose Monitor - Policy Article",
+  "Document Note",
+  "Note History",
+  "Contractor Information",
+  "Article Information",
+  "General Information",
+  "CMS National Coverage Policy",
+  "Article Guidance",
+  "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+  "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+  "REPLACEMENT OF SUPPLIES FOR MEDICARE-PAID, BENEFICIARY-OWNED EQUIPMENT",
+  "MODIFIERS",
+  "CODING GUIDELINES",
+  "Response To Comments",
+  "Coding Information",
+  "Bill Type Codes",
+  "Please accept the License to see the codes.",
+  "Revenue Codes",
+  "CPT/HCPCS Codes",
+  "CPT/HCPCS Modifiers",
+  "Group 1",
+  "ICD-10-CM Codes that Support Medical Necessity",
+  "ICD-10-CM Codes that DO NOT Support Medical Necessity",
+  "ICD-10-PCS Codes",
+  "Additional ICD-10 Information",
+  "Other Coding Information",
+  "Coding Table Information",
+  "Revision History Information",
+  "Associated Documents",
+  "Keywords",
+  "Introduction",
+  "Finding a specific code",
+  "More information",
+  "Are you a provider and have a question about billing or coding?",
+  "Do you have questions related to the content of a specific Local Coverage Determination (LCD) or an Article?",
+  "Are you a beneficiary and have questions about your coverage?",
+  "Are you looking for codes? (e.g., CPT/HCPCS, ICD-10)",
+  "Local Coverage",
+  "National Coverage",
+  "How do I find out if a specific CPT code is covered in my state?",
+  "Did you receive a Medicare coverage denial?",
+  "It is Thursday and the weekly MCD data isn't refreshed?",
+  "Are you having technical issues with the Medicare Coverage Database (MCD)?"
+ ],
+ "paragraphs": [
+  {
+   "index": 0,
+   "char_start": 0,
+   "char_end": 479,
+   "section": null,
+   "boilerplate": true
+  },
+  {
+   "index": 1,
+   "char_start": 481,
+   "char_end": 581,
+   "section": null,
+   "boilerplate": false
+  },
+  {
+   "index": 2,
+   "char_start": 583,
+   "char_end": 634,
+   "section": null,
+   "boilerplate": true
+  },
+  {
+   "index": 3,
+   "char_start": 636,
+   "char_end": 655,
+   "section": null,
+   "boilerplate": false
+  },
+  {
+   "index": 4,
+   "char_start": 657,
+   "char_end": 754,
+   "section": null,
+   "boilerplate": false
+  },
+  {
+   "index": 5,
+   "char_start": 756,
+   "char_end": 874,
+   "section": "Official websites use .gov",
+   "boilerplate": true
+  },
+  {
+   "index": 6,
+   "char_start": 876,
+   "char_end": 969,
+   "section": "Official websites use .gov",
+   "boilerplate": true
+  },
+  {
+   "index": 7,
+   "char_start": 971,
+   "char_end": 1018,
+   "section": "Secure .gov websites use HTTPS",
+   "boilerplate": true
+  },
+  {
+   "index": 8,
+   "char_start": 1020,
+   "char_end": 1044,
+   "section": "Secure .gov websites use HTTPS",
+   "boilerplate": true
+  },
+  {
+   "index": 9,
+   "char_start": 1046,
+   "char_end": 1177,
+   "section": "Secure .gov websites use HTTPS",
+   "boilerplate": true
+  },
+  {
+   "index": 10,
+   "char_start": 1179,
+   "char_end": 1489,
+   "section": "Secure .gov websites use HTTPS",
+   "boilerplate": true
+  },
+  {
+   "index": 11,
+   "char_start": 1491,
+   "char_end": 1505,
+   "section": "Main header",
+   "boilerplate": true
+  },
+  {
+   "index": 12,
+   "char_start": 1507,
+   "char_end": 1519,
+   "section": "Contents",
+   "boilerplate": true
+  },
+  {
+   "index": 13,
+   "char_start": 1521,
+   "char_end": 1533,
+   "section": "Contents",
+   "boilerplate": true
+  },
+  {
+   "index": 14,
+   "char_start": 1535,
+   "char_end": 1569,
+   "section": "Glucose Monitor - Policy Article",
+   "boilerplate": false
+  },
+  {
+   "index": 15,
+   "char_start": 1571,
+   "char_end": 1577,
+   "section": "Glucose Monitor - Policy Article",
+   "boilerplate": false
+  },
+  {
+   "index": 16,
+   "char_start": 1579,
+   "char_end": 1595,
+   "section": "Document Note",
+   "boilerplate": false
+  },
+  {
+   "index": 17,
+   "char_start": 1597,
+   "char_end": 1613,
+   "section": "Note History",
+   "boilerplate": false
+  },
+  {
+   "index": 18,
+   "char_start": 1615,
+   "char_end": 1640,
+   "section": "Contractor Information",
+   "boilerplate": false
+  },
+  {
+   "index": 19,
+   "char_start": 1642,
+   "char_end": 2659,
+   "section": "Contractor Information",
+   "boilerplate": false
+  },
+  {
+   "index": 20,
+   "char_start": 2661,
+   "char_end": 2683,
+   "section": "Article Information",
+   "boilerplate": false
+  },
+  {
+   "index": 21,
+   "char_start": 2685,
+   "char_end": 2708,
+   "section": "General Information",
+   "boilerplate": false
+  },
+  {
+   "index": 22,
+   "char_start": 2710,
+   "char_end": 3227,
+   "section": "General Information",
+   "boilerplate": true
+  },
+  {
+   "index": 23,
+   "char_start": 3229,
+   "char_end": 3312,
+   "section": "General Information",
+   "boilerplate": false
+  },
+  {
+   "index": 24,
+   "char_start": 3314,
+   "char_end": 3876,
+   "section": "General Information",
+   "boilerplate": false
+  },
+  {
+   "index": 25,
+   "char_start": 3878,
+   "char_end": 4851,
+   "section": "General Information",
+   "boilerplate": false
+  },
+  {
+   "index": 26,
+   "char_start": 4853,
+   "char_end": 4885,
+   "section": "CMS National Coverage Policy",
+   "boilerplate": false
+  },
+  {
+   "index": 27,
+   "char_start": 4887,
+   "char_end": 4907,
+   "section": "Article Guidance",
+   "boilerplate": false
+  },
+  {
+   "index": 28,
+   "char_start": 4909,
+   "char_end": 4961,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 29,
+   "char_start": 4963,
+   "char_end": 5465,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 30,
+   "char_start": 5467,
+   "char_end": 5934,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 31,
+   "char_start": 5936,
+   "char_end": 6202,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 32,
+   "char_start": 6204,
+   "char_end": 6802,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 33,
+   "char_start": 6804,
+   "char_end": 7262,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 34,
+   "char_start": 7264,
+   "char_end": 7820,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 35,
+   "char_start": 7822,
+   "char_end": 8302,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 36,
+   "char_start": 8304,
+   "char_end": 8530,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 37,
+   "char_start": 8532,
+   "char_end": 8725,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 38,
+   "char_start": 8727,
+   "char_end": 8872,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 39,
+   "char_start": 8874,
+   "char_end": 9132,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 40,
+   "char_start": 9134,
+   "char_end": 9984,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 41,
+   "char_start": 9986,
+   "char_end": 10180,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 42,
+   "char_start": 10182,
+   "char_end": 10295,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 43,
+   "char_start": 10297,
+   "char_end": 10550,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 44,
+   "char_start": 10552,
+   "char_end": 10699,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 45,
+   "char_start": 10701,
+   "char_end": 10849,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 46,
+   "char_start": 10851,
+   "char_end": 10943,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 47,
+   "char_start": 10945,
+   "char_end": 11467,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 48,
+   "char_start": 11469,
+   "char_end": 11744,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 49,
+   "char_start": 11746,
+   "char_end": 12143,
+   "section": "NON-MEDICAL NECESSITY COVERAGE AND PAYMENT RULES",
+   "boilerplate": false
+  },
+  {
+   "index": 50,
+   "char_start": 12145,
+   "char_end": 12191,
+   "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+   "boilerplate": false
+  },
+  {
+   "index": 51,
+   "char_start": 12193,
+   "char_end": 12433,
+   "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+   "boilerplate": false
+  },
+  {
+   "index": 52,
+   "char_start": 12435,
+   "char_end": 12750,
+   "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+   "boilerplate": false
+  },
+  {
+   "index": 53,
+   "char_start": 12752,
+   "char_end": 12927,
+   "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+   "boilerplate": false
+  },
+  {
+   "index": 54,
+   "char_start": 12929,
+   "char_end": 13066,
+   "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+   "boilerplate": false
+  },
+  {
+   "index": 55,
+   "char_start": 13068,
+   "char_end": 13146,
+   "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+   "boilerplate": false
+  },
+  {
+   "index": 56,
+   "char_start": 13148,
+   "char_end": 13426,
+   "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+   "boilerplate": false
+  },
+  {
+   "index": 57,
+   "char_start": 13428,
+   "char_end": 14141,
+   "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+   "boilerplate": false
+  },
+  {
+   "index": 58,
+   "char_start": 14143,
+   "char_end": 14334,
+   "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+   "boilerplate": false
+  },
+  {
+   "index": 59,
+   "char_start": 14336,
+   "char_end": 14663,
+   "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+   "boilerplate": false
+  },
+  {
+   "index": 60,
+   "char_start": 14665,
+   "char_end": 14739,
+   "section": "REPLACEMENT OF SUPPLIES FOR MEDICARE-PAID, BENEFICIARY-OWNED EQUIPMENT",
+   "boilerplate": false
+  },
+  {
+   "index": 61,
+   "char_start": 14741,
+   "char_end": 15408,
+   "section": "REPLACEMENT OF SUPPLIES FOR MEDICARE-PAID, BENEFICIARY-OWNED EQUIPMENT",
+   "boilerplate": false
+  },
+  {
+   "index": 62,
+   "char_start": 15410,
+   "char_end": 15718,
+   "section": "REPLACEMENT OF SUPPLIES FOR MEDICARE-PAID, BENEFICIARY-OWNED EQUIPMENT",
+   "boilerplate": false
+  },
+  {
+   "index": 63,
+   "char_start": 15720,
+   "char_end": 15733,
+   "section": "MODIFIERS",
+   "boilerplate": false
+  },
+  {
+   "index": 64,
+   "char_start": 15735,
+   "char_end": 15763,
+   "section": "MODIFIERS",
+   "boilerplate": false
+  },
+  {
+   "index": 65,
+   "char_start": 15765,
+   "char_end": 16127,
+   "section": "MODIFIERS",
+   "boilerplate": false
+  },
+  {
+   "index": 66,
+   "char_start": 16129,
+   "char_end": 16187,
+   "section": "MODIFIERS",
+   "boilerplate": false
+  },
+  {
+   "index": 67,
+   "char_start": 16189,
+   "char_end": 16247,
+   "section": "MODIFIERS",
+   "boilerplate": false
+  },
+  {
+   "index": 68,
+   "char_start": 16249,
+   "char_end": 16357,
+   "section": "MODIFIERS",
+   "boilerplate": false
+  },
+  {
+   "index": 69,
+   "char_start": 16359,
+   "char_end": 16902,
+   "section": "MODIFIERS",
+   "boilerplate": false
+  },
+  {
+   "index": 70,
+   "char_start": 16904,
+   "char_end": 17647,
+   "section": "MODIFIERS",
+   "boilerplate": false
+  },
+  {
+   "index": 71,
+   "char_start": 17649,
+   "char_end": 17916,
+   "section": "MODIFIERS",
+   "boilerplate": false
+  },
+  {
+   "index": 72,
+   "char_start": 17918,
+   "char_end": 18408,
+   "section": "MODIFIERS",
+   "boilerplate": false
+  },
+  {
+   "index": 73,
+   "char_start": 18410,
+   "char_end": 18431,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 74,
+   "char_start": 18433,
+   "char_end": 18865,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 75,
+   "char_start": 18867,
+   "char_end": 19630,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 76,
+   "char_start": 19632,
+   "char_end": 20326,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 77,
+   "char_start": 20328,
+   "char_end": 20594,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 78,
+   "char_start": 20596,
+   "char_end": 21075,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 79,
+   "char_start": 21077,
+   "char_end": 21797,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 80,
+   "char_start": 21799,
+   "char_end": 22006,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 81,
+   "char_start": 22008,
+   "char_end": 22668,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 82,
+   "char_start": 22670,
+   "char_end": 23054,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 83,
+   "char_start": 23056,
+   "char_end": 23468,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 84,
+   "char_start": 23470,
+   "char_end": 24001,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 85,
+   "char_start": 24003,
+   "char_end": 24168,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 86,
+   "char_start": 24170,
+   "char_end": 24283,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 87,
+   "char_start": 24285,
+   "char_end": 24630,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 88,
+   "char_start": 24632,
+   "char_end": 24895,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 89,
+   "char_start": 24897,
+   "char_end": 25053,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 90,
+   "char_start": 25055,
+   "char_end": 25182,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 91,
+   "char_start": 25184,
+   "char_end": 25374,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 92,
+   "char_start": 25376,
+   "char_end": 25557,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 93,
+   "char_start": 25559,
+   "char_end": 25696,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 94,
+   "char_start": 25698,
+   "char_end": 26037,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 95,
+   "char_start": 26039,
+   "char_end": 26153,
+   "section": "CODING GUIDELINES",
+   "boilerplate": false
+  },
+  {
+   "index": 96,
+   "char_start": 26155,
+   "char_end": 26178,
+   "section": "Response To Comments",
+   "boilerplate": false
+  },
+  {
+   "index": 97,
+   "char_start": 26180,
+   "char_end": 26243,
+   "section": "Response To Comments",
+   "boilerplate": false
+  },
+  {
+   "index": 98,
+   "char_start": 26245,
+   "char_end": 26266,
+   "section": "Coding Information",
+   "boilerplate": false
+  },
+  {
+   "index": 99,
+   "char_start": 26268,
+   "char_end": 26287,
+   "section": "Bill Type Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 100,
+   "char_start": 26289,
+   "char_end": 26373,
+   "section": "Bill Type Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 101,
+   "char_start": 26375,
+   "char_end": 26423,
+   "section": "Please accept the License to see the codes.",
+   "boilerplate": false
+  },
+  {
+   "index": 102,
+   "char_start": 26425,
+   "char_end": 26442,
+   "section": "Revenue Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 103,
+   "char_start": 26444,
+   "char_end": 26528,
+   "section": "Revenue Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 104,
+   "char_start": 26530,
+   "char_end": 26578,
+   "section": "Please accept the License to see the codes.",
+   "boilerplate": false
+  },
+  {
+   "index": 105,
+   "char_start": 26580,
+   "char_end": 26599,
+   "section": "CPT/HCPCS Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 106,
+   "char_start": 26601,
+   "char_end": 26649,
+   "section": "Please accept the License to see the codes.",
+   "boilerplate": false
+  },
+  {
+   "index": 107,
+   "char_start": 26651,
+   "char_end": 26674,
+   "section": "CPT/HCPCS Modifiers",
+   "boilerplate": false
+  },
+  {
+   "index": 108,
+   "char_start": 26676,
+   "char_end": 26688,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 109,
+   "char_start": 26690,
+   "char_end": 26693,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 110,
+   "char_start": 26695,
+   "char_end": 26698,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 111,
+   "char_start": 26700,
+   "char_end": 26750,
+   "section": "ICD-10-CM Codes that Support Medical Necessity",
+   "boilerplate": false
+  },
+  {
+   "index": 112,
+   "char_start": 26752,
+   "char_end": 26764,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 113,
+   "char_start": 26766,
+   "char_end": 27014,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 114,
+   "char_start": 27016,
+   "char_end": 78966,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 115,
+   "char_start": 78968,
+   "char_end": 79025,
+   "section": "ICD-10-CM Codes that DO NOT Support Medical Necessity",
+   "boilerplate": false
+  },
+  {
+   "index": 116,
+   "char_start": 79027,
+   "char_end": 79039,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 117,
+   "char_start": 79041,
+   "char_end": 79101,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 118,
+   "char_start": 79103,
+   "char_end": 79106,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 119,
+   "char_start": 79108,
+   "char_end": 79128,
+   "section": "ICD-10-PCS Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 120,
+   "char_start": 79130,
+   "char_end": 79142,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 121,
+   "char_start": 79144,
+   "char_end": 79147,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 122,
+   "char_start": 79149,
+   "char_end": 79152,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 123,
+   "char_start": 79154,
+   "char_end": 79187,
+   "section": "Additional ICD-10 Information",
+   "boilerplate": false
+  },
+  {
+   "index": 124,
+   "char_start": 79189,
+   "char_end": 79208,
+   "section": "Bill Type Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 125,
+   "char_start": 79210,
+   "char_end": 79576,
+   "section": "Bill Type Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 126,
+   "char_start": 79578,
+   "char_end": 79662,
+   "section": "Bill Type Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 127,
+   "char_start": 79664,
+   "char_end": 79712,
+   "section": "Please accept the License to see the codes.",
+   "boilerplate": false
+  },
+  {
+   "index": 128,
+   "char_start": 79714,
+   "char_end": 79731,
+   "section": "Revenue Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 129,
+   "char_start": 79733,
+   "char_end": 80207,
+   "section": "Revenue Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 130,
+   "char_start": 80209,
+   "char_end": 80293,
+   "section": "Revenue Codes",
+   "boilerplate": false
+  },
+  {
+   "index": 131,
+   "char_start": 80295,
+   "char_end": 80343,
+   "section": "Please accept the License to see the codes.",
+   "boilerplate": false
+  },
+  {
+   "index": 132,
+   "char_start": 80345,
+   "char_end": 80373,
+   "section": "Other Coding Information",
+   "boilerplate": false
+  },
+  {
+   "index": 133,
+   "char_start": 80375,
+   "char_end": 80387,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 134,
+   "char_start": 80389,
+   "char_end": 80392,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 135,
+   "char_start": 80394,
+   "char_end": 80397,
+   "section": "Group 1",
+   "boilerplate": false
+  },
+  {
+   "index": 136,
+   "char_start": 80399,
+   "char_end": 80426,
+   "section": "Coding Table Information",
+   "boilerplate": false
+  },
+  {
+   "index": 137,
+   "char_start": 80428,
+   "char_end": 80621,
+   "section": "Coding Table Information",
+   "boilerplate": false
+  },
+  {
+   "index": 138,
+   "char_start": 80623,
+   "char_end": 80790,
+   "section": "Coding Table Information",
+   "boilerplate": false
+  },
+  {
+   "index": 139,
+   "char_start": 80792,
+   "char_end": 80823,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 140,
+   "char_start": 80825,
+   "char_end": 99689,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 141,
+   "char_start": 99691,
+   "char_end": 100053,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 142,
+   "char_start": 100055,
+   "char_end": 100245,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 143,
+   "char_start": 100247,
+   "char_end": 100507,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 144,
+   "char_start": 100509,
+   "char_end": 100703,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 145,
+   "char_start": 100705,
+   "char_end": 100818,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 146,
+   "char_start": 100820,
+   "char_end": 101014,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 147,
+   "char_start": 101016,
+   "char_end": 101196,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 148,
+   "char_start": 101198,
+   "char_end": 101392,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 149,
+   "char_start": 101394,
+   "char_end": 103545,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 150,
+   "char_start": 103547,
+   "char_end": 103741,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 151,
+   "char_start": 103743,
+   "char_end": 104054,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 152,
+   "char_start": 104056,
+   "char_end": 104250,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 153,
+   "char_start": 104252,
+   "char_end": 106603,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 154,
+   "char_start": 106605,
+   "char_end": 106799,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 155,
+   "char_start": 106801,
+   "char_end": 109784,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 156,
+   "char_start": 109786,
+   "char_end": 109980,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 157,
+   "char_start": 109982,
+   "char_end": 110337,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 158,
+   "char_start": 110339,
+   "char_end": 110533,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 159,
+   "char_start": 110535,
+   "char_end": 113160,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 160,
+   "char_start": 113162,
+   "char_end": 113356,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 161,
+   "char_start": 113358,
+   "char_end": 113972,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 162,
+   "char_start": 113974,
+   "char_end": 114164,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 163,
+   "char_start": 114166,
+   "char_end": 115135,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 164,
+   "char_start": 115137,
+   "char_end": 115327,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 165,
+   "char_start": 115329,
+   "char_end": 115553,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 166,
+   "char_start": 115555,
+   "char_end": 115745,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 167,
+   "char_start": 115747,
+   "char_end": 115943,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 168,
+   "char_start": 115945,
+   "char_end": 116158,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 169,
+   "char_start": 116160,
+   "char_end": 116364,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 170,
+   "char_start": 116366,
+   "char_end": 116580,
+   "section": "Revision History Information",
+   "boilerplate": false
+  },
+  {
+   "index": 171,
+   "char_start": 116582,
+   "char_end": 116605,
+   "section": "Associated Documents",
+   "boilerplate": false
+  },
+  {
+   "index": 172,
+   "char_start": 116607,
+   "char_end": 117102,
+   "section": "Associated Documents",
+   "boilerplate": false
+  },
+  {
+   "index": 173,
+   "char_start": 117104,
+   "char_end": 117115,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 174,
+   "char_start": 117117,
+   "char_end": 117149,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 175,
+   "char_start": 117151,
+   "char_end": 117198,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 176,
+   "char_start": 117200,
+   "char_end": 117807,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 177,
+   "char_start": 117809,
+   "char_end": 117819,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 178,
+   "char_start": 117821,
+   "char_end": 117838,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 179,
+   "char_start": 117840,
+   "char_end": 117858,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 180,
+   "char_start": 117860,
+   "char_end": 117881,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 181,
+   "char_start": 117883,
+   "char_end": 118099,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 182,
+   "char_start": 118101,
+   "char_end": 118526,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 183,
+   "char_start": 118528,
+   "char_end": 118967,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 184,
+   "char_start": 118969,
+   "char_end": 118987,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 185,
+   "char_start": 118989,
+   "char_end": 119007,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 186,
+   "char_start": 119009,
+   "char_end": 119068,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 187,
+   "char_start": 119070,
+   "char_end": 119124,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 188,
+   "char_start": 119126,
+   "char_end": 119166,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 189,
+   "char_start": 119168,
+   "char_end": 119257,
+   "section": "Keywords",
+   "boilerplate": false
+  },
+  {
+   "index": 190,
+   "char_start": 119259,
+   "char_end": 119338,
+   "section": "License For Use Of Current Procedural Terminology, Fourth Edition (\"CPT®\")",
+   "boilerplate": true
+  },
+  {
+   "index": 191,
+   "char_start": 119340,
+   "char_end": 119421,
+   "section": "License For Use Of Current Procedural Terminology, Fourth Edition (\"CPT®\")",
+   "boilerplate": true
+  },
+  {
+   "index": 192,
+   "char_start": 119423,
+   "char_end": 119652,
+   "section": "License For Use Of Current Procedural Terminology, Fourth Edition (\"CPT®\")",
+   "boilerplate": true
+  },
+  {
+   "index": 193,
+   "char_start": 119654,
+   "char_end": 120507,
+   "section": "License For Use Of Current Procedural Terminology, Fourth Edition (\"CPT®\")",
+   "boilerplate": true
+  },
+  {
+   "index": 194,
+   "char_start": 120509,
+   "char_end": 120562,
+   "section": "License For Use Of Current Procedural Terminology, Fourth Edition (\"CPT®\")",
+   "boilerplate": true
+  },
+  {
+   "index": 195,
+   "char_start": 120564,
+   "char_end": 121419,
+   "section": "License For Use Of Current Procedural Terminology, Fourth Edition (\"CPT®\")",
+   "boilerplate": true
+  },
+  {
+   "index": 196,
+   "char_start": 121421,
+   "char_end": 121469,
+   "section": "AMA Disclaimer of Warranties and Liabilities",
+   "boilerplate": true
+  },
+  {
+   "index": 197,
+   "char_start": 121471,
+   "char_end": 122375,
+   "section": "AMA Disclaimer of Warranties and Liabilities",
+   "boilerplate": true
+  },
+  {
+   "index": 198,
+   "char_start": 122377,
+   "char_end": 122395,
+   "section": "CMS Disclaimer",
+   "boilerplate": true
+  },
+  {
+   "index": 199,
+   "char_start": 122397,
+   "char_end": 123012,
+   "section": "CMS Disclaimer",
+   "boilerplate": true
+  },
+  {
+   "index": 200,
+   "char_start": 123014,
+   "char_end": 123173,
+   "section": "CMS Disclaimer",
+   "boilerplate": true
+  },
+  {
+   "index": 201,
+   "char_start": 123175,
+   "char_end": 123231,
+   "section": "License For Use of Current Dental Terminology (CDTTM)",
+   "boilerplate": true
+  },
+  {
+   "index": 202,
+   "char_start": 123233,
+   "char_end": 123290,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 203,
+   "char_start": 123292,
+   "char_end": 123454,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 204,
+   "char_start": 123456,
+   "char_end": 123905,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 205,
+   "char_start": 123907,
+   "char_end": 124249,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 206,
+   "char_start": 124251,
+   "char_end": 128973,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 207,
+   "char_start": 128975,
+   "char_end": 129724,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 208,
+   "char_start": 129726,
+   "char_end": 130558,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 209,
+   "char_start": 130560,
+   "char_end": 131726,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 210,
+   "char_start": 131728,
+   "char_end": 132090,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 211,
+   "char_start": 132092,
+   "char_end": 133013,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 212,
+   "char_start": 133015,
+   "char_end": 133678,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 213,
+   "char_start": 133680,
+   "char_end": 134123,
+   "section": "License For Use of Current Dental Terminology (CDT™)",
+   "boilerplate": true
+  },
+  {
+   "index": 214,
+   "char_start": 134125,
+   "char_end": 134194,
+   "section": "License For Use of National Uniform Billing Committee (NUBC) UB-04",
+   "boilerplate": true
+  },
+  {
+   "index": 215,
+   "char_start": 134196,
+   "char_end": 134267,
+   "section": "License For Use of National Uniform Billing Committee (NUBC) UB-04",
+   "boilerplate": true
+  },
+  {
+   "index": 216,
+   "char_start": 134269,
+   "char_end": 134406,
+   "section": "License For Use of National Uniform Billing Committee (NUBC) UB-04",
+   "boilerplate": true
+  },
+  {
+   "index": 217,
+   "char_start": 134408,
+   "char_end": 134711,
+   "section": "License For Use of National Uniform Billing Committee (NUBC) UB-04",
+   "boilerplate": true
+  },
+  {
+   "index": 218,
+   "char_start": 134713,
+   "char_end": 135212,
+   "section": "License For Use of National Uniform Billing Committee (NUBC) UB-04",
+   "boilerplate": true
+  },
+  {
+   "index": 219,
+   "char_start": 135214,
+   "char_end": 135282,
+   "section": "Page Help for Article - Glucose Monitor - Policy Article (A52464)",
+   "boilerplate": true
+  },
+  {
+   "index": 220,
+   "char_start": 135284,
+   "char_end": 135299,
+   "section": "Introduction",
+   "boilerplate": false
+  },
+  {
+   "index": 221,
+   "char_start": 135301,
+   "char_end": 135553,
+   "section": "Introduction",
+   "boilerplate": false
+  },
+  {
+   "index": 222,
+   "char_start": 135555,
+   "char_end": 135771,
+   "section": "Introduction",
+   "boilerplate": false
+  },
+  {
+   "index": 223,
+   "char_start": 135773,
+   "char_end": 135799,
+   "section": "Finding a specific code",
+   "boilerplate": false
+  },
+  {
+   "index": 224,
+   "char_start": 135801,
+   "char_end": 136244,
+   "section": "Finding a specific code",
+   "boilerplate": false
+  },
+  {
+   "index": 225,
+   "char_start": 136246,
+   "char_end": 136265,
+   "section": "More information",
+   "boilerplate": false
+  },
+  {
+   "index": 226,
+   "char_start": 136267,
+   "char_end": 136702,
+   "section": "More information",
+   "boilerplate": false
+  },
+  {
+   "index": 227,
+   "char_start": 136704,
+   "char_end": 137125,
+   "section": "More information",
+   "boilerplate": false
+  },
+  {
+   "index": 228,
+   "char_start": 137127,
+   "char_end": 137161,
+   "section": "More information",
+   "boilerplate": false
+  },
+  {
+   "index": 229,
+   "char_start": 137163,
+   "char_end": 138928,
+   "section": "More information",
+   "boilerplate": false
+  },
+  {
+   "index": 230,
+   "char_start": 138930,
+   "char_end": 139065,
+   "section": "More information",
+   "boilerplate": false
+  },
+  {
+   "index": 231,
+   "char_start": 139067,
+   "char_end": 139200,
+   "section": "More information",
+   "boilerplate": false
+  },
+  {
+   "index": 232,
+   "char_start": 139202,
+   "char_end": 139228,
+   "section": "Creating a document PDF",
+   "boilerplate": true
+  },
+  {
+   "index": 233,
+   "char_start": 139230,
+   "char_end": 139567,
+   "section": "Creating a document PDF",
+   "boilerplate": true
+  },
+  {
+   "index": 234,
+   "char_start": 139569,
+   "char_end": 139678,
+   "section": "Creating a document PDF",
+   "boilerplate": true
+  },
+  {
+   "index": 235,
+   "char_start": 139680,
+   "char_end": 139812,
+   "section": "Creating a document PDF",
+   "boilerplate": true
+  },
+  {
+   "index": 236,
+   "char_start": 139814,
+   "char_end": 139979,
+   "section": "Creating a document PDF",
+   "boilerplate": true
+  },
+  {
+   "index": 237,
+   "char_start": 139981,
+   "char_end": 140375,
+   "section": "Creating a document PDF",
+   "boilerplate": true
+  },
+  {
+   "index": 238,
+   "char_start": 140377,
+   "char_end": 140486,
+   "section": "Creating a document PDF",
+   "boilerplate": true
+  },
+  {
+   "index": 239,
+   "char_start": 140488,
+   "char_end": 140504,
+   "section": "Subscriptions",
+   "boilerplate": true
+  },
+  {
+   "index": 240,
+   "char_start": 140506,
+   "char_end": 141033,
+   "section": "Subscriptions",
+   "boilerplate": true
+  },
+  {
+   "index": 241,
+   "char_start": 141035,
+   "char_end": 141055,
+   "section": "Get email updates",
+   "boilerplate": true
+  },
+  {
+   "index": 242,
+   "char_start": 141057,
+   "char_end": 141172,
+   "section": "Get email updates",
+   "boilerplate": true
+  },
+  {
+   "index": 243,
+   "char_start": 141174,
+   "char_end": 141335,
+   "section": "Get email updates",
+   "boilerplate": true
+  },
+  {
+   "index": 244,
+   "char_start": 141337,
+   "char_end": 141356,
+   "section": "Connect with CMS",
+   "boilerplate": true
+  },
+  {
+   "index": 245,
+   "char_start": 141358,
+   "char_end": 141461,
+   "section": "Connect with CMS",
+   "boilerplate": true
+  },
+  {
+   "index": 246,
+   "char_start": 141463,
+   "char_end": 141507,
+   "section": "Connect with CMS",
+   "boilerplate": true
+  },
+  {
+   "index": 247,
+   "char_start": 141509,
+   "char_end": 141542,
+   "section": "Connect with CMS",
+   "boilerplate": true
+  },
+  {
+   "index": 248,
+   "char_start": 141544,
+   "char_end": 141610,
+   "section": "Are you a provider and have a question about billing or coding?",
+   "boilerplate": false
+  },
+  {
+   "index": 249,
+   "char_start": 141612,
+   "char_end": 141890,
+   "section": "Are you a provider and have a question about billing or coding?",
+   "boilerplate": false
+  },
+  {
+   "index": 250,
+   "char_start": 141892,
+   "char_end": 142003,
+   "section": "Do you have questions related to the content of a specific Local Coverage Determination (LCD) or an Article?",
+   "boilerplate": false
+  },
+  {
+   "index": 251,
+   "char_start": 142005,
+   "char_end": 142069,
+   "section": "Are you a beneficiary and have questions about your coverage?",
+   "boilerplate": false
+  },
+  {
+   "index": 252,
+   "char_start": 142071,
+   "char_end": 142126,
+   "section": "Are you looking for codes? (e.g., CPT/HCPCS, ICD-10)",
+   "boilerplate": false
+  },
+  {
+   "index": 253,
+   "char_start": 142128,
+   "char_end": 142146,
+   "section": "Local Coverage",
+   "boilerplate": false
+  },
+  {
+   "index": 254,
+   "char_start": 142148,
+   "char_end": 142563,
+   "section": "Local Coverage",
+   "boilerplate": false
+  },
+  {
+   "index": 255,
+   "char_start": 142565,
+   "char_end": 142807,
+   "section": "Local Coverage",
+   "boilerplate": false
+  },
+  {
+   "index": 256,
+   "char_start": 142809,
+   "char_end": 142830,
+   "section": "National Coverage",
+   "boilerplate": false
+  },
+  {
+   "index": 257,
+   "char_start": 142832,
+   "char_end": 143218,
+   "section": "National Coverage",
+   "boilerplate": false
+  },
+  {
+   "index": 258,
+   "char_start": 143220,
+   "char_end": 143992,
+   "section": "National Coverage",
+   "boilerplate": false
+  },
+  {
+   "index": 259,
+   "char_start": 143994,
+   "char_end": 144061,
+   "section": "How do I find out if a specific CPT code is covered in my state?",
+   "boilerplate": false
+  },
+  {
+   "index": 260,
+   "char_start": 144063,
+   "char_end": 144446,
+   "section": "How do I find out if a specific CPT code is covered in my state?",
+   "boilerplate": false
+  },
+  {
+   "index": 261,
+   "char_start": 144448,
+   "char_end": 144720,
+   "section": "How do I find out if a specific CPT code is covered in my state?",
+   "boilerplate": false
+  },
+  {
+   "index": 262,
+   "char_start": 144722,
+   "char_end": 144961,
+   "section": "How do I find out if a specific CPT code is covered in my state?",
+   "boilerplate": false
+  },
+  {
+   "index": 263,
+   "char_start": 144963,
+   "char_end": 145009,
+   "section": "Did you receive a Medicare coverage denial?",
+   "boilerplate": false
+  },
+  {
+   "index": 264,
+   "char_start": 145011,
+   "char_end": 145097,
+   "section": "Did you receive a Medicare coverage denial?",
+   "boilerplate": false
+  },
+  {
+   "index": 265,
+   "char_start": 145099,
+   "char_end": 145218,
+   "section": "Did you receive a Medicare coverage denial?",
+   "boilerplate": false
+  },
+  {
+   "index": 266,
+   "char_start": 145220,
+   "char_end": 145664,
+   "section": "Did you receive a Medicare coverage denial?",
+   "boilerplate": false
+  },
+  {
+   "index": 267,
+   "char_start": 145666,
+   "char_end": 145857,
+   "section": "Did you receive a Medicare coverage denial?",
+   "boilerplate": false
+  },
+  {
+   "index": 268,
+   "char_start": 145859,
+   "char_end": 145909,
+   "section": "Did you receive a Medicare coverage denial?",
+   "boilerplate": false
+  },
+  {
+   "index": 269,
+   "char_start": 145911,
+   "char_end": 145969,
+   "section": "It is Thursday and the weekly MCD data isn't refreshed?",
+   "boilerplate": false
+  },
+  {
+   "index": 270,
+   "char_start": 145971,
+   "char_end": 146048,
+   "section": "Are you having technical issues with the Medicare Coverage Database (MCD)?",
+   "boilerplate": false
+  },
+  {
+   "index": 271,
+   "char_start": 146050,
+   "char_end": 146080,
+   "section": "Are you having technical issues with the Medicare Coverage Database (MCD)?",
+   "boilerplate": false
+  },
+  {
+   "index": 272,
+   "char_start": 146082,
+   "char_end": 146328,
+   "section": "Are you having technical issues with the Medicare Coverage Database (MCD)?",
+   "boilerplate": false
+  },
+  {
+   "index": 273,
+   "char_start": 146330,
+   "char_end": 146351,
+   "section": "Are you having technical issues with the Medicare Coverage Database (MCD)?",
+   "boilerplate": false
+  },
+  {
+   "index": 274,
+   "char_start": 146353,
+   "char_end": 146499,
+   "section": "Are you having technical issues with the Medicare Coverage Database (MCD)?",
+   "boilerplate": false
+  },
+  {
+   "index": 275,
+   "char_start": 146501,
+   "char_end": 146507,
+   "section": "Are you having technical issues with the Medicare Coverage Database (MCD)?",
+   "boilerplate": false
+  },
+  {
+   "index": 276,
+   "char_start": 146509,
+   "char_end": 146515,
+   "section": "Are you having technical issues with the Medicare Coverage Database (MCD)?",
+   "boilerplate": false
+  },
+  {
+   "index": 277,
+   "char_start": 146517,
+   "char_end": 146526,
+   "section": "Are you having technical issues with the Medicare Coverage Database (MCD)?",
+   "boilerplate": false
+  },
+  {
+   "index": 278,
+   "char_start": 146528,
+   "char_end": 146547,
+   "section": "Subscriptions",
+   "boilerplate": true
+  },
+  {
+   "index": 279,
+   "char_start": 146549,
+   "char_end": 146882,
+   "section": "Subscriptions",
+   "boilerplate": true
+  },
+  {
+   "index": 280,
+   "char_start": 146884,
+   "char_end": 146975,
+   "section": "Subscriptions",
+   "boilerplate": true
+  }
+ ]
+}

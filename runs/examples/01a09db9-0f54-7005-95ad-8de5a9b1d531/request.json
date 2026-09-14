@@ -1,0 +1,8 @@
+{
+  "question": "I read that Medicare requires three or more insulin injections per day before it will cover a CGM. Is that still true?",
+  "mode": "baseline",
+  "depth": "deep",
+  "question_id": "adv-cgm-002",
+  "budget_override": null,
+  "prompt_set": "base"
+}

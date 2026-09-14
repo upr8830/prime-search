@@ -1,0 +1,84 @@
+{
+ "experiment_name": "prime-base-holdout-20260914-0232-1acb321c",
+ "experiment_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/datasets/9dc81116-8a93-480c-9da2-29cacc1e9370/compare?selectedSessions=74673468-7163-421b-a7c1-10f29b529bc6",
+ "question_id": "cgm-elig-003",
+ "split": "holdout",
+ "scores": {
+  "answer_correctness": {
+   "score": 1.0,
+   "comment": "claims 5/5 weighted present; summary: consistent",
+   "metadata": {
+    "judge_tokens": 23795,
+    "judge_votes": 3,
+    "judge_calls": 3,
+    "judge_mode": "fenced_json+native"
+   }
+  },
+  "evidence_recall": {
+   "score": 1.0,
+   "comment": "matched e1 (must) via id (ev_46f7ad474a)",
+   "metadata": {
+    "matched": {
+     "e1": "id"
+    },
+    "needs_review": []
+   }
+  },
+  "citation_correctness": {
+   "score": 0.375,
+   "comment": "3/8 sampled cited sentences supported (of 14 cited); failing: [1][16][2][7][14] 'While some non\u2011CMS sources describe the follow\u2011up as assessing ongo...' - Passages [1] and [16] do not describe the follow-up as assessing ongoing benefit and adjusting th...; [1][16][2][7] '**Alternative description (non\u2011CMS):** Some sources state the visit...' - Passages [1] and [16] do not state that the visit assesses ongoing benefit and adjusts therapy.; [11] 'A52464 limits CGM supply billing to a maximum of three (3) months (...' - Passage [11] does not mention CGM supplies or characterize the supply limit as applying to CGM su...; [1][16] 'A non\u2011CMS source (CoveredUSA) and a contradictory interpretation of...' - Passages [1] and [16] do not claim the visit must assess ongoing benefit and adjust therapy.; [11] 'Whether documentation of a new practitioner visit at the time of di...' - Passage [11] does not mention CGM supplies, so the sentence\u2019s reference to a 90\u2011day maximum for C...",
+   "metadata": {
+    "judge_mode": "fenced_json",
+    "judge_tokens": 41357
+   }
+  },
+  "citation_completeness": {
+   "score": 1.0,
+   "comment": "7/7 cited in Criteria / Details and Codes and documentation",
+   "metadata": {}
+  },
+  "currency": {
+   "score": 1.0,
+   "comment": "L33822: cited; governing date 2024-10-01 stated",
+   "metadata": {}
+  },
+  "contradiction_handling": {
+   "score": null,
+   "comment": "not applicable: the answer key expects no contradiction",
+   "metadata": {}
+  },
+  "scope_handling": {
+   "score": null,
+   "comment": "not applicable: the answer key expects no scope warning",
+   "metadata": {}
+  },
+  "primary_source_ratio": {
+   "score": 0.7692,
+   "comment": "10/13 citations at official_secondary or better; below: [1] unknown coveredusa.org, [10] unknown doko.md, [13] unknown adces.org",
+   "metadata": {}
+  },
+  "search_cost": {
+   "score": 23,
+   "comment": "13 searches + 10 fetches",
+   "metadata": {}
+  },
+  "latency_s": {
+   "score": 198.8,
+   "comment": "198.8s wall clock",
+   "metadata": {}
+  },
+  "tokens": {
+   "score": 448708,
+   "comment": "396492 in + 52216 out",
+   "metadata": {}
+  },
+  "search_efficiency": {
+   "score": 0.4348,
+   "comment": "answer_correctness 1.0 / max(1, 23 calls) x 10",
+   "metadata": {}
+  }
+ },
+ "composite": 0.859,
+ "evaluated_at": "2026-09-14T02:50:09.990308+00:00",
+ "evaluator_git_sha": "da7067f"
+}

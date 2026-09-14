@@ -1,0 +1,76 @@
+{
+ "experiment_name": "baseline-none-holdout-20260914-0222-5487b5be",
+ "experiment_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/datasets/9dc81116-8a93-480c-9da2-29cacc1e9370/compare?selectedSessions=8a382e68-e6c4-4087-a8c9-25627b52e46d",
+ "question_id": "cgm-elig-003",
+ "split": "holdout",
+ "scores": {
+  "answer_correctness": {
+   "score": 0.58,
+   "comment": "claims 3/5 weighted present; missing: c1 (must); summary: partial",
+   "metadata": {
+    "judge_tokens": 26426,
+    "judge_votes": 3,
+    "judge_calls": 3,
+    "judge_mode": "fenced_json+native"
+   }
+  },
+  "evidence_recall": {
+   "score": 0.0,
+   "comment": "baseline: citations are URLs with no stored passage, so no required evidence can be matched - 0 by construction",
+   "metadata": {}
+  },
+  "citation_correctness": {
+   "score": 0.0,
+   "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+   "metadata": {}
+  },
+  "citation_completeness": {
+   "score": 0.2222,
+   "comment": "4/18 cited in whole answer (no Criteria / Codes sections); uncited: 'For Medicare to cover a Continuous Glucose Monitor (CGM), the following pract...'; 'As part of the **initial provision** of a CGM, the treating practitioner must...'; 'The medical record from that visit must document that:'",
+   "metadata": {}
+  },
+  "currency": {
+   "score": 0.5,
+   "comment": "L33822: cited; governing date 2024-10-01 not stated",
+   "metadata": {}
+  },
+  "contradiction_handling": {
+   "score": null,
+   "comment": "not applicable: the answer key expects no contradiction",
+   "metadata": {}
+  },
+  "scope_handling": {
+   "score": null,
+   "comment": "not applicable: the answer key expects no scope warning",
+   "metadata": {}
+  },
+  "primary_source_ratio": {
+   "score": 1.0,
+   "comment": "4/4 citations at official_secondary or better",
+   "metadata": {}
+  },
+  "search_cost": {
+   "score": 1,
+   "comment": "1 searches + 0 fetches",
+   "metadata": {}
+  },
+  "latency_s": {
+   "score": 16.5,
+   "comment": "16.5s wall clock",
+   "metadata": {}
+  },
+  "tokens": {
+   "score": 8088,
+   "comment": "7263 in + 825 out",
+   "metadata": {}
+  },
+  "search_efficiency": {
+   "score": 5.8,
+   "comment": "answer_correctness 0.58 / max(1, 1 calls) x 10",
+   "metadata": {}
+  }
+ },
+ "composite": 0.34,
+ "evaluated_at": "2026-09-14T02:27:39.529160+00:00",
+ "evaluator_git_sha": "70027ea"
+}

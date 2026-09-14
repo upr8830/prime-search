@@ -1,0 +1,67 @@
+{
+  "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531",
+  "request": {
+    "question": "I read that Medicare requires three or more insulin injections per day before it will cover a CGM. Is that still true?",
+    "mode": "baseline",
+    "depth": "deep",
+    "question_id": "adv-cgm-002",
+    "budget_override": null,
+    "prompt_set": "base"
+  },
+  "started_at": "2026-09-14T02:22:26.132197Z",
+  "finished_at": "2026-09-14T02:22:36.865263Z",
+  "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-1185-7f83-9b7e-12fc9eef892c/run/01a09db9-1185-7f83-9b7e-12fc9eef892c?start_time=2026-09-14T02%3A22%3A26.693205%2B00%3A00",
+  "langsmith_trace_id": "01a09db9-1185-7f83-9b7e-12fc9eef892c",
+  "plan": null,
+  "tasks": [],
+  "documents": {},
+  "evidence": [],
+  "claims": [],
+  "verdicts": [],
+  "critic_reports": [],
+  "answer": {
+    "summary": "**No—that is no longer true.** Medicare removed the \"three injections per day\" requirement in 2023. As of April 16, 2023, Medicare's updated criteria removed the language requiring beneficiaries to be \"insulin-treated with multiple (three or more) daily administrations\" to qualify for a CGM. Current Medicare coverage standards generally require only that you: - Been diagnosed with diabetes, **and** - Are treated with insulin (any insulin regimen, including fewer than three injections or a pump), **or** - Have a documented history of \"problematic hypoglycemia\" (recurrent severe low blood sugars) even if not on insulin. **Sources:** - Centers for Medicare & Medicaid Services (LCD L33822): [cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822](https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822) - American Diabetes Association webinar on 2023 Medicare changes: [youtube.com/watch?v=GZ2mEZtG7UA](https://www.youtube.com/watch?v=GZ2mEZtG7UA) - Dexcom summary of ex",
+    "body_markdown": "**No—that is no longer true.** Medicare removed the \"three injections per day\" requirement in 2023.\n\nAs of April 16, 2023, Medicare's updated criteria removed the language requiring beneficiaries to be \"insulin-treated with multiple (three or more) daily administrations\" to qualify for a CGM. Current Medicare coverage standards generally require only that you:\n\n- Been diagnosed with diabetes, **and**\n- Are treated with insulin (any insulin regimen, including fewer than three injections or a pump), **or** \n- Have a documented history of \"problematic hypoglycemia\" (recurrent severe low blood sugars) even if not on insulin.\n\n**Sources:**\n- Centers for Medicare & Medicaid Services (LCD L33822): [cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822](https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822)\n- American Diabetes Association webinar on 2023 Medicare changes: [youtube.com/watch?v=GZ2mEZtG7UA](https://www.youtube.com/watch?v=GZ2mEZtG7UA)\n- Dexcom summary of expanded coverage: [dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands](https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands)",
+    "claims": [],
+    "citations": [
+      {
+        "n": 1,
+        "evidence_id": "",
+        "doc_id": "",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+        "label": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822"
+      },
+      {
+        "n": 2,
+        "evidence_id": "",
+        "doc_id": "",
+        "url": "https://www.youtube.com/watch?v=GZ2mEZtG7UA",
+        "label": "https://www.youtube.com/watch?v=GZ2mEZtG7UA"
+      },
+      {
+        "n": 3,
+        "evidence_id": "",
+        "doc_id": "",
+        "url": "https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands",
+        "label": "https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands"
+      }
+    ],
+    "effective_dates": [],
+    "contradictions": [],
+    "unknowns": [],
+    "confidence": 0.0,
+    "scope_warning": null
+  },
+  "usage": {
+    "searches": 1,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 7859,
+    "output_tokens": 669,
+    "wall_seconds": 10.7
+  },
+  "status": "completed",
+  "error": null
+}

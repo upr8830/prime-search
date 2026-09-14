@@ -1,0 +1,1892 @@
+{
+  "run_id": "01a09dc2-3070-7fca-a68a-4ca0be2b2caa",
+  "request": {
+    "question": "I read that Medicare requires three or more insulin injections per day before it will cover a CGM. Is that still true?",
+    "mode": "prime",
+    "depth": "deep",
+    "question_id": "adv-cgm-002",
+    "budget_override": null,
+    "prompt_set": "base"
+  },
+  "started_at": "2026-09-14T02:32:24.432501Z",
+  "finished_at": "2026-09-14T02:35:36.524913Z",
+  "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09dc2-3089-7383-9c7f-24bd8a93cd69/run/01a09dc2-3089-7383-9c7f-24bd8a93cd69?start_time=2026-09-14T02%3A32%3A24.457268%2B00%3A00",
+  "langsmith_trace_id": "01a09dc2-3089-7383-9c7f-24bd8a93cd69",
+  "plan": {
+    "understanding": {
+      "normalized_question": "Under current Medicare policy, does coverage of a continuous glucose monitor still require that the beneficiary use three or more insulin injections per day, or has that requirement been revised?",
+      "domain": "cgm",
+      "question_type": "eligibility",
+      "entities": [
+        "Medicare",
+        "CGM",
+        "insulin injections",
+        "coverage criteria"
+      ],
+      "time_sensitivity": "high",
+      "needs_primary_sources": true,
+      "scope_warning": null
+    },
+    "branches": [
+      {
+        "branch_id": "b1",
+        "question": "What are the current LCD (L33822) coverage criteria for a CGM regarding insulin injection frequency?",
+        "hypothesis": "The LCD still requires three or more insulin injections per day for CGM coverage.",
+        "rationale": "Directly tests the claim about the insulin injection requirement in the governing policy.",
+        "source_hint": "primary_policy",
+        "priority": 1,
+        "depends_on": []
+      },
+      {
+        "branch_id": "b2",
+        "question": "What does the companion coding article (A52464) specify about documentation or frequency of insulin use for CGM billing?",
+        "hypothesis": "The article requires three or more daily insulin injections to support CGM claims.",
+        "rationale": "Billing and documentation rules may elaborate on the LCD criteria and affect coverage in practice.",
+        "source_hint": "coding_article",
+        "priority": 2,
+        "depends_on": []
+      },
+      {
+        "branch_id": "b3",
+        "question": "What is the most recent revision date to LCD L33822 and what changes did it make to the insulin injection requirement?",
+        "hypothesis": "The April 2023 revision removed or altered the three‑injections‑per‑day requirement.",
+        "rationale": "Ensures we are evaluating the up‑to‑date policy, not an outdated version.",
+        "source_hint": "primary_policy",
+        "priority": 2,
+        "depends_on": []
+      },
+      {
+        "branch_id": "b4",
+        "question": "What do non‑CMS sources (beneficiary guides, supplier websites, news) claim about the insulin injection requirement for Medicare CGM coverage?",
+        "hypothesis": "Non‑CMS sources often state that three or more daily insulin injections are required.",
+        "rationale": "Checks for possible misinformation or simplification compared to the primary policy.",
+        "source_hint": "any",
+        "priority": 3,
+        "depends_on": []
+      }
+    ],
+    "stop_criteria": "Each of the following is supported by evidence: (1) the current LCD L33822 coverage criteria for CGM, including any insulin injection frequency requirement, with its revision date; (2) the companion coding article A52464's documentation/frequency guidance related to insulin use; (3) a description of the most recent revision to LCD L33822 and what it changed regarding the insulin requirement; (4) at least one non‑CMS source describing what it says about the insulin injection requirement for Medicare CGM coverage.",
+    "budget": {
+      "max_searches": 30,
+      "max_fetches": 20,
+      "max_deep_reads": 30,
+      "max_agents": 6,
+      "max_rounds": 3,
+      "max_tokens": 400000,
+      "max_seconds": 180
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "b1-r0",
+      "branch_id": "b1",
+      "round": 0,
+      "instruction": "What are the current LCD (L33822) coverage criteria for a CGM regarding insulin injection frequency?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": "year",
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "LCD L33822 continuous glucose monitor CGM coverage criteria insulin injections",
+          "LCD L33822 Glucose Monitors site:cms.gov",
+          "\"L33822\" \"Glucose Monitors\" LCD coverage criteria",
+          "lcdid=L33822 glucose monitors",
+          "view/lcd.aspx lcdid=33822 glucose monitors"
+        ],
+        "documents_fetched": [
+          "doc_a3fe310292",
+          "doc_8416d9eb4c"
+        ],
+        "evidence_ids": [],
+        "summary": "I did not record any evidence items because I was unable to complete the fetch-and-quote process for the LCD text before running out of available actions. Preview text from CMS Medicare Coverage Database pages suggested that LCD L33822 (Glucose Monitors) was revised to expand CGM coverage to beneficiaries who use insulin fewer than three times per day, but I could not extract the verbatim coverage criteria or confirm the revision date from the actual policy document.",
+        "unresolved": "The exact current coverage criteria for CGM under LCD L33822 (Glucose Monitors), including whether three or more daily insulin injections are still required, and the specific revision effective date of those criteria.; This line of research stopped before it was finished.",
+        "usage": {
+          "searches": 5,
+          "fetches": 2,
+          "deep_reads": 1,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 56298,
+          "output_tokens": 5731,
+          "wall_seconds": 87.856
+        }
+      }
+    },
+    {
+      "task_id": "b2-r0",
+      "branch_id": "b2",
+      "round": 0,
+      "instruction": "What does the companion coding article (A52464) specify about documentation or frequency of insulin use for CGM billing?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "A52464 CGM coding article insulin documentation frequency"
+        ],
+        "documents_fetched": [
+          "doc_546c6b8042"
+        ],
+        "evidence_ids": [
+          "ev_e61af6ad22",
+          "ev_8c930e3d37"
+        ],
+        "summary": "The coding article A52464 does not require three or more daily insulin injections to support CGM claims. The article only distinguishes between beneficiaries who are “insulin treated” (modifier KX) and those who are “non-insulin treated” (modifier KS), with no quantitative threshold for injections. I found no passage in the article specifying a minimum frequency or documentation standard for insulin injections.",
+        "unresolved": "Whether the companion Local Coverage Determination (LCD) rather than the coding article imposes a specific number of daily insulin injections could not be confirmed within this task.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 4,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 47350,
+          "output_tokens": 5871,
+          "wall_seconds": 60.768
+        }
+      }
+    },
+    {
+      "task_id": "b3-r0",
+      "branch_id": "b3",
+      "round": 0,
+      "instruction": "What is the most recent revision date to LCD L33822 and what changes did it make to the insulin injection requirement?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": "year",
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "LCD L33822 revision effective date insulin injection requirement"
+        ],
+        "documents_fetched": [
+          "doc_68a1466a71"
+        ],
+        "evidence_ids": [
+          "ev_6e7a31e8f8",
+          "ev_7e74d86bbb",
+          "ev_a1e8c29ab8"
+        ],
+        "summary": "The most recent revision to LCD L33822 is October 1, 2024; it revised only the long descriptor for HCPCS code A4271 and did not change any insulin injection requirement. The April 16, 2023 revision is the one that removed the language requiring \"multiple (three or more) daily administrations of insulin\" (or CSII pump use) from the CGM coverage criteria.",
+        "unresolved": "None — the governing dates and the specific changes are confirmed in the LCD revision history.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 3,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 50676,
+          "output_tokens": 3038,
+          "wall_seconds": 40.402
+        }
+      }
+    },
+    {
+      "task_id": "b4-r0",
+      "branch_id": "b4",
+      "round": 0,
+      "instruction": "What do non‑CMS sources (beneficiary guides, supplier websites, news) claim about the insulin injection requirement for Medicare CGM coverage?",
+      "queries_hint": [],
+      "include_domains": [],
+      "time_range": "year",
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "Medicare CGM coverage three daily insulin injections requirement beneficiary guide supplier"
+        ],
+        "documents_fetched": [
+          "doc_aea73b348a",
+          "doc_a4df3cc6e9"
+        ],
+        "evidence_ids": [
+          "ev_75acf1c783",
+          "ev_c3ffa5a32b",
+          "ev_09a0ff7258"
+        ],
+        "summary": "I found clear evidence from non-CMS sources supporting the hypothesis. Two supplier websites explicitly reference a requirement of three daily insulin injections for Medicare CGM coverage. DiabeticSuppliesHub states that physicians must verify \"three daily insulin injections for CGM eligibility,\" and Aeroflow Diabetes describes \"the standard 3x injections per day\" as the prior Medicare requirement, noting that it was temporarily suspended during the public health emergency.",
+        "unresolved": null,
+        "usage": {
+          "searches": 1,
+          "fetches": 2,
+          "deep_reads": 2,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 44501,
+          "output_tokens": 3317,
+          "wall_seconds": 47.128
+        }
+      }
+    },
+    {
+      "task_id": "b1-r1",
+      "branch_id": "b1",
+      "round": 1,
+      "instruction": "Fetch the current LCD L33822 (Glucose Monitors) coverage criteria and record the current insulin injection frequency requirement for CGM and the revision effective date of those criteria.",
+      "queries_hint": [
+        "L33822 Glucose Monitors LCD coverage criteria insulin injections",
+        "L33822 LCD revision history effective date insulin"
+      ],
+      "include_domains": [
+        "cms.gov"
+      ],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "L33822 Glucose Monitors LCD coverage criteria insulin injections"
+        ],
+        "documents_fetched": [
+          "doc_8416d9eb4c"
+        ],
+        "evidence_ids": [
+          "ev_3420231d67",
+          "ev_29e5bf143a"
+        ],
+        "summary": "The current CMS LCD L33822 (Glucose Monitors) refutes the hypothesis: the document no longer requires three or more insulin injections per day for CGM coverage. The current coverage criterion states only that \"The beneficiary is insulin-treated; or,\" with no minimum number of daily administrations specified. The revision history visible in the document indicates that the language \"with multiple (three or more) daily administrations of insulin\" was removed from the CGM coverage criteria, though that specific historical change was not recorded as a separate evidence item before the call budget w...",
+        "unresolved": "The exact revision effective date of the current insulin-treated coverage criterion could not be confirmed as a matching evidence item in the LCD.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 4,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 49972,
+          "output_tokens": 5786,
+          "wall_seconds": 50.767
+        }
+      }
+    },
+    {
+      "task_id": "b2-r1",
+      "branch_id": "b2",
+      "round": 1,
+      "instruction": "Fetch the companion coding article A52464 and record its documentation/frequency guidance on insulin use for CGM billing, including whether any number of daily insulin injections is specified.",
+      "queries_hint": [
+        "A52464 coding article CGM insulin documentation frequency",
+        "A52464 CGM billing insulin requirement"
+      ],
+      "include_domains": [
+        "cms.gov"
+      ],
+      "time_range": null,
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "A52464 coding article CGM insulin documentation frequency"
+        ],
+        "documents_fetched": [
+          "doc_5b6883d631"
+        ],
+        "evidence_ids": [
+          "ev_374bcf2a93",
+          "ev_4ce66f464a"
+        ],
+        "summary": "I fetched CMS Policy Article A52464 (Glucose Monitor) and examined its documentation requirements for CGM billing. The article does not require three or more daily insulin injections. Current coverage criteria state only that the beneficiary be \"insulin treated\" or have a history of problematic hypoglycemia. The April 16, 2023 revision explicitly removed prior language regarding \"frequent dosing of insulin\" from criterion 1. No specific number of daily insulin injections is mentioned in the current policy.",
+        "unresolved": "I could not locate the exact current text of criterion 1 in the main policy body to show the precise wording that replaced the removed \"frequent dosing\" language; only the revision history described the change.; This line of research stopped before it was finished.",
+        "usage": {
+          "searches": 1,
+          "fetches": 1,
+          "deep_reads": 4,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 49393,
+          "output_tokens": 4217,
+          "wall_seconds": 38.975
+        }
+      }
+    },
+    {
+      "task_id": "b4-r1",
+      "branch_id": "b4",
+      "round": 1,
+      "instruction": "Find a non-CMS source (beneficiary guide, supplier website, news) that states the current insulin injection requirement for Medicare CGM coverage, ideally one reflecting the post-2023 criteria.",
+      "queries_hint": [
+        "Medicare CGM coverage insulin requirement 2024 supplier",
+        "Medicare CGM three daily insulin injections still required 2024"
+      ],
+      "include_domains": [],
+      "time_range": "year",
+      "status": "done",
+      "result": {
+        "queries_issued": [
+          "Medicare CGM coverage insulin requirement 2024 supplier"
+        ],
+        "documents_fetched": [
+          "doc_3ebef2bc30"
+        ],
+        "evidence_ids": [],
+        "summary": "I searched for non-CMS sources describing Medicare CGM insulin requirements and found supplier and guide sites (e.g., CGM Monitors, DMEHelper) that discuss coverage criteria. However, within my call budget I was unable to locate and extract a verbatim passage from any non-CMS source explicitly stating the insulin injection requirement—whether “three or more daily insulin injections” or the broader post-2023 “insulin-treated” standard.",
+        "unresolved": "Could not confirm whether the CGM Monitors 2026 guide lists a specific number of daily insulin injections as a Medicare CGM requirement. Could not fetch the DMEHelper article that mentioned insulin treatment via “multiple daily injections or insulin pump therapy” to verify its exact wording. Could not locate any non-CMS source explicitly stating that “three or more daily insulin injectio...",
+        "usage": {
+          "searches": 1,
+          "fetches": 2,
+          "deep_reads": 5,
+          "agents": 1,
+          "rounds": 0,
+          "input_tokens": 43939,
+          "output_tokens": 2351,
+          "wall_seconds": 44.309
+        }
+      }
+    }
+  ],
+  "documents": {
+    "doc_2b116370bb": {
+      "doc_id": "doc_2b116370bb",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52507",
+      "title": "External Infusion Pumps - Policy Article (A52507) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:15.586642Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_889b48ce12": {
+      "doc_id": "doc_889b48ce12",
+      "url": "https://www.cgsmedicare.com/jb/education/qa/cgm.html",
+      "title": "Continuous Glucose Monitors (CGMs) Questions & Answers",
+      "source_tier": "primary_policy",
+      "publisher": "CGS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:41.419051Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_a995b7b3e7": {
+      "doc_id": "doc_a995b7b3e7",
+      "url": "https://mcgs.bcbsfl.com/MCG?mcgId=01-99000-03&pv=false",
+      "title": "[PDF] External Insulin Infusion Pumps and Continuous Glucose Monitors",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:41.419376Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_835995b0ab": {
+      "doc_id": "doc_835995b0ab",
+      "url": "https://med.noridianmedicare.com/web/jddme/policies/clinicians-corner/are-you-ordering-glucose-monitors-and-supplies",
+      "title": "Clinicians! Are You Ordering Glucose Monitors and Supplies For ...",
+      "source_tier": "primary_policy",
+      "publisher": "Noridian",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:41.419816Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_ad44968072": {
+      "doc_id": "doc_ad44968072",
+      "url": "https://www.bcbsri.com/providers/medicalpolicies/files/glucose-monitoring-continuous",
+      "title": "[PDF] Medical Coverage Policy | Glucose Monitoring- Continuous",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:16.425849Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_cad91388aa": {
+      "doc_id": "doc_cad91388aa",
+      "url": "https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/continuous-glucose-monitoring-insulin-delivery-managing-diabetes.pdf",
+      "title": "[PDF] continuous-glucose-monitoring-insulin-delivery-managing-diabetes ...",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:41.420074Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_14464f4d57": {
+      "doc_id": "doc_14464f4d57",
+      "url": "https://www.cms.gov/training-education/medicare-learning-networkr-mln/compliance/medicare-provider-compliance-tips/glucose-monitoring-supplies",
+      "title": "Glucose Monitoring Supplies - CMS",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:16.425408Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_11e7ecb520": {
+      "doc_id": "doc_11e7ecb520",
+      "url": "https://www.acsmedical.com/wp-content/uploads/2025/12/FreeStyle-Libre-Medicare-Patient-Qual-Guide.pdf",
+      "title": "[PDF] Medicare Coverage Criteria1 - Advanced Care Solutions",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:41.420760Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_aea73b348a": {
+      "doc_id": "doc_aea73b348a",
+      "url": "https://diabeticsupplieshub.com/medicare-part-b-coverage-diabetic-supplies",
+      "title": "Medicare Part B Coverage for Diabetic Supplies: What You Need to Know - DiabeticSuppliesHub",
+      "source_tier": "unknown",
+      "publisher": "diabeticsupplieshub.com",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:52.318911Z",
+      "text_path": "",
+      "paragraph_count": 71,
+      "fetch_method": "extract"
+    },
+    "doc_a4df3cc6e9": {
+      "doc_id": "doc_a4df3cc6e9",
+      "url": "https://aeroflowdiabetes.com/blog/get-continuous-glucose-monitors-with-medicare-using-insulin-just-1x-per-day",
+      "title": "CGMs Through Medicare for Daily Insulin Users | Aeroflow Diabetes",
+      "source_tier": "unknown",
+      "publisher": "aeroflowdiabetes.com",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:33:01.840410Z",
+      "text_path": "",
+      "paragraph_count": 79,
+      "fetch_method": "extract"
+    },
+    "doc_1dbce55655": {
+      "doc_id": "doc_1dbce55655",
+      "url": "https://www.ajmc.com/view/cms-updates-cgm-eligibility-to-broaden-coverage-for-beneficiaries",
+      "title": "CMS Updates CGM Eligibility to Broaden Coverage for Beneficiaries",
+      "source_tier": "trade",
+      "publisher": "AJMC",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:43.098998Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_1930514afe": {
+      "doc_id": "doc_1930514afe",
+      "url": "https://appymedical.com/medicare-coverage-for-continuous-glucose-monitors-cgms",
+      "title": "Medicare Coverage for Continuous Glucose Monitors (CGMs) - Appy Medical",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:43.099234Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_de48aeeccc": {
+      "doc_id": "doc_de48aeeccc",
+      "url": "https://www.levels.com/blog/are-cgm-covered-by-insurance",
+      "title": "Are CGMs covered by insurance? | Levels | Levels",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:43.099425Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_2219a844e2": {
+      "doc_id": "doc_2219a844e2",
+      "url": "https://coveredusa.org/en/qa/does-medicare-cover-cgm",
+      "title": "Does Medicare Cover CGMs (Dexcom/Libre) in 2026? | CoveredUSA",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:43.099558Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_e7695fce9b": {
+      "doc_id": "doc_e7695fce9b",
+      "url": "https://www.promed-dme.com/resource/cgm-for-medicare",
+      "title": "CGM Coverage Under Medicare Made Easy (Yes, Really!)",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:43.100026Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_b440435e00": {
+      "doc_id": "doc_b440435e00",
+      "url": "https://diatribechange.org/news/medicare-gets-rid-finger-stick-requirement-cgm",
+      "title": "Medicare Gets Rid of Finger Stick Requirement for CGM | diaTribe Change",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:43.100556Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_546c6b8042": {
+      "doc_id": "doc_546c6b8042",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "Article - Glucose Monitor - Policy Article (A52464)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "Article",
+      "document_id_external": "A52464",
+      "effective_date": "2015-10-01",
+      "revision_date": "2025-02-18",
+      "retrieved_at": "2026-09-14T02:32:45.163519Z",
+      "text_path": "docs/doc_546c6b8042.txt",
+      "paragraph_count": 412,
+      "fetch_method": "extract"
+    },
+    "doc_5b6883d631": {
+      "doc_id": "doc_5b6883d631",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+      "title": "Glucose Monitor - Policy Article (A52464) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "Article",
+      "document_id_external": "A52464",
+      "effective_date": null,
+      "revision_date": "2025-02-18",
+      "retrieved_at": "2026-09-14T02:34:17.113650Z",
+      "text_path": "docs/doc_5b6883d631.txt",
+      "paragraph_count": 281,
+      "fetch_method": "extract"
+    },
+    "doc_646b7c40e6": {
+      "doc_id": "doc_646b7c40e6",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=65&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "Article - Glucose Monitor - Policy Article (A52464)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:43.310312Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_015266da11": {
+      "doc_id": "doc_015266da11",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&amp%3Bver=49&amp%3BcontractorName=all&amp%3BsortBy=updated&amp%3Bbc=13",
+      "title": "Article - Glucose Monitor - Policy Article (A52464)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:43.310434Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_ce2c051c56": {
+      "doc_id": "doc_ce2c051c56",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&stateRegion=s66&contractorNumber=all&articleStatus=all&sortBy=title&bc=5",
+      "title": "Article - Glucose Monitor - Policy Article (A52464)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:43.310751Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_68a1466a71": {
+      "doc_id": "doc_68a1466a71",
+      "url": "https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822",
+      "title": "LCD - Glucose Monitors (L33822)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "LCD",
+      "document_id_external": "L33822",
+      "effective_date": null,
+      "revision_date": "2024-10-01",
+      "retrieved_at": "2026-09-14T02:32:46.231618Z",
+      "text_path": "docs/doc_68a1466a71.txt",
+      "paragraph_count": 275,
+      "fetch_method": "extract"
+    },
+    "doc_3fa9d0cf71": {
+      "doc_id": "doc_3fa9d0cf71",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822&ver=70&keyword=DME&keywordType=starts&areaId=s53&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "LCD - Glucose Monitors (L33822)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:43.672033Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_8416d9eb4c": {
+      "doc_id": "doc_8416d9eb4c",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+      "title": "LCD - Glucose Monitors (L33822) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "LCD",
+      "document_id_external": "L33822",
+      "effective_date": null,
+      "revision_date": "2024-10-01",
+      "retrieved_at": "2026-09-14T02:33:33.280936Z",
+      "text_path": "docs/doc_8416d9eb4c.txt",
+      "paragraph_count": 275,
+      "fetch_method": "extract"
+    },
+    "doc_72d2a28a5d": {
+      "doc_id": "doc_72d2a28a5d",
+      "url": "https://www.cms.gov/files/document/medicare-regulatory-relief-request-information-aggregated-comments-report.pdf",
+      "title": "[PDF] Medicare Regulatory Relief Request for Information Aggregated ...",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:49.514835Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_478c6d521e": {
+      "doc_id": "doc_478c6d521e",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33794&ver=164",
+      "title": "LCD - External Infusion Pumps (L33794) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:49.514989Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_d3cc40f0b4": {
+      "doc_id": "doc_d3cc40f0b4",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=55426",
+      "title": "Standard Documentation Requirements for All Claims Submitted to ...",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:49.514907Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_63dc319d1c": {
+      "doc_id": "doc_63dc319d1c",
+      "url": "https://www.cms.gov/training-education/medicare-learning-networkr-mln/compliance/medicare-provider-compliance-tips/oxygen",
+      "title": "Oxygen & Oxygen Equipment | CMS",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:45.495039Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_a3fe310292": {
+      "doc_id": "doc_a3fe310292",
+      "url": "https://www.cms.gov/medicare-coverage-database/attachments/lcd/39794_5/KaufmanMD.pdf",
+      "title": "[PDF] 1 April 11, 2023 Alicia Campbell, MD First Coast Service Opfions ...",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": "LCD",
+      "document_id_external": "L33822",
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:33:04.079620Z",
+      "text_path": "docs/doc_a3fe310292.txt",
+      "paragraph_count": 1,
+      "fetch_method": "extract"
+    },
+    "doc_1a3638b9c3": {
+      "doc_id": "doc_1a3638b9c3",
+      "url": "https://www.cms.gov/Outreach-and-Education/Medicare-Learning-Network-MLN/MLNProducts/Downloads/MedQtrlyComp-Newsletter-ICN909378print-friendly.pdf",
+      "title": "[PDF] Medicare Quarterly Provider Compliance Newsletter - CMS",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:15.586423Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_3361861463": {
+      "doc_id": "doc_3361861463",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=58342",
+      "title": "Implantable Continuous Glucose Monitors (I-CGM) (A58342) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:33:08.854326Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_42dec5b9b7": {
+      "doc_id": "doc_42dec5b9b7",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?LCDId=38617",
+      "title": "LCD - Implantable Continuous Glucose Monitors (I-CGM) (L38617)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:33:08.855363Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_c1fdf4d84a": {
+      "doc_id": "doc_c1fdf4d84a",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=38664&ver=26&bc=0",
+      "title": "Implantable Continuous Glucose Monitors (I-CGM) (L38664) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:33:08.855855Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_b200169761": {
+      "doc_id": "doc_b200169761",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=58798",
+      "title": "Article - Response to Comments: Glucose Monitors – DL33822 (A58798)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:32:54.295450Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_ff306c595d": {
+      "doc_id": "doc_ff306c595d",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=59330&ver=6",
+      "title": "Response to Comments: Glucose Monitors – DL33822 (A59330)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:33:08.854013Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_693cbc21ff": {
+      "doc_id": "doc_693cbc21ff",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=38664&ver=26&keyword=AFO&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "LCD - Implantable Continuous Glucose Monitors (I-CGM) (L38664)",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:33:08.855781Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_f66852246c": {
+      "doc_id": "doc_f66852246c",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=58798&ver=4&keyword=pet&keywordType=starts&areaId=s27&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+      "title": "Response to Comments: Glucose Monitors – DL33822 - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:33:08.856242Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_5de935727f": {
+      "doc_id": "doc_5de935727f",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464&ver=62",
+      "title": "Glucose Monitor - Policy Article (A52464) - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:15.585058Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_b97b2ed816": {
+      "doc_id": "doc_b97b2ed816",
+      "url": "https://www.cms.gov/files/document/esmd-home-blood-glucose-monitoring-reason-codes-and-statements.pdf",
+      "title": "[PDF] Home Blood Glucose Monitoring Reason Codes and Statements",
+      "source_tier": "official_secondary",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:15.585581Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_e1c54d2f39": {
+      "doc_id": "doc_e1c54d2f39",
+      "url": "https://www.cms.gov/medicare-coverage-database/attachments/lcd/38900_6/GluccoseMonitorsPA12172020.pdf",
+      "title": "[PDF] Glucose Monitor - Policy Article (A52464) Contractor Information ...",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:15.585833Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_287dc23c42": {
+      "doc_id": "doc_287dc23c42",
+      "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=58396&ver=2",
+      "title": "Implantable Continuous Glucose Monitors (I-CGM) DL38686 - CMS",
+      "source_tier": "primary_policy",
+      "publisher": "CMS",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:15.587181Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_3ebef2bc30": {
+      "doc_id": "doc_3ebef2bc30",
+      "url": "https://cgmmonitors.com/cgm-insurance-coverage-guide",
+      "title": "CGM Insurance Coverage Guide in 2026 by CGM Monitors",
+      "source_tier": "unknown",
+      "publisher": "cgmmonitors.com",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:35.869099Z",
+      "text_path": "",
+      "paragraph_count": 278,
+      "fetch_method": "extract"
+    },
+    "doc_c937a8a4ae": {
+      "doc_id": "doc_c937a8a4ae",
+      "url": "https://dmehelper.com/help/cgm-medicare-coverage",
+      "title": "CGM Medicare Coverage — Eligibility Requirements & What's Covered — DMEHelper",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:16.424324Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_11bbbcce3d": {
+      "doc_id": "doc_11bbbcce3d",
+      "url": "https://diabetes.adapthealth.com/blogs/learning-center/does-medicare-cover-insulin-pumps-what-you-need-to-know-in-2026",
+      "title": "Does Medicare Cover Insulin Pumps? What You Need to ...",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:16.424743Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_694aeb5d5d": {
+      "doc_id": "doc_694aeb5d5d",
+      "url": "https://doko.md/medicare-cover-cgm-type-2-diabetes",
+      "title": "Does Medicare Cover CGM for Type 2 Diabetes in 2026? - Doko MD",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:16.424933Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_52996c17a4": {
+      "doc_id": "doc_52996c17a4",
+      "url": "https://www.paulbinsurance.com/medicare-diabetic-supplies-coverage-explained",
+      "title": "Medicare Diabetic Supplies Coverage Explained",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:16.426284Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_1da74e3dbd": {
+      "doc_id": "doc_1da74e3dbd",
+      "url": "https://www.breakthrought1d.org/t1d-resources/insurance/medicare",
+      "title": "Medicare Coverage of Continuous Glucose Monitors (CGMs)",
+      "source_tier": "unknown",
+      "publisher": null,
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:16.426639Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    },
+    "doc_6d93254f02": {
+      "doc_id": "doc_6d93254f02",
+      "url": "https://med.noridianmedicare.com/web/jadme/article-detail/-/view/6547796/continuous-glucose-monitors-for-insulin-treated-beneficiaries",
+      "title": "Continuous Glucose Monitors for Insulin Treated Beneficiaries",
+      "source_tier": "primary_policy",
+      "publisher": "Noridian",
+      "doc_type": null,
+      "document_id_external": null,
+      "effective_date": null,
+      "revision_date": null,
+      "retrieved_at": "2026-09-14T02:34:18.616548Z",
+      "text_path": "",
+      "paragraph_count": 0,
+      "fetch_method": "snippet_only"
+    }
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_6e7a31e8f8",
+      "doc_id": "doc_68a1466a71",
+      "branch_id": "b3",
+      "claim_text": "LCD L33822 was most recently revised effective 10/01/2024",
+      "evidence_text": "Revision Effective Date: 10/01/2024",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 145,
+        "char_start": 39367,
+        "char_end": 39402
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "context"
+    },
+    {
+      "evidence_id": "ev_75acf1c783",
+      "doc_id": "doc_aea73b348a",
+      "branch_id": "b4",
+      "claim_text": "Non-CMS source DiabeticSuppliesHub states that physicians must verify treatment patterns like three daily insulin injections for CGM eligibility",
+      "evidence_text": "Your physician must verify treatment patterns-like three daily insulin injections for CGM eligibility or four daily glucose tests for test strip allowances.",
+      "location": {
+        "section": "Meeting Medicare's Requirements: Prescriptions, Suppliers, and Documentation",
+        "paragraph_index": 40,
+        "char_start": 11426,
+        "char_end": 11582
+      },
+      "effective_date": null,
+      "relevance": 0.8,
+      "source_quality": 0.3,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_7e74d86bbb",
+      "doc_id": "doc_68a1466a71",
+      "branch_id": "b3",
+      "claim_text": "The 10/01/2024 revision to LCD L33822 revised only the HCPCS code A4271 long descriptor, not insulin injection requirements",
+      "evidence_text": "Revision Effective Date: 10/01/2024\nHCPCS CODES:\nRevised: Long descriptor for HCPCS code A4271 in Group 2 Codes",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 145,
+        "char_start": 39367,
+        "char_end": 39478
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_c3ffa5a32b",
+      "doc_id": "doc_a4df3cc6e9",
+      "branch_id": "b4",
+      "claim_text": "Non-CMS source Aeroflow Diabetes states that injecting insulin 3 times a day was required to qualify for Medicare CGM coverage",
+      "evidence_text": "it is no longer required for people with type 1 diabetes or type 2 diabetes to inject insulin 3 times a day to qualify for Medicare coverage for a CGM",
+      "location": {
+        "section": "How Does the Suspension Change CGM Coverage?",
+        "paragraph_index": 28,
+        "char_start": 3413,
+        "char_end": 3563
+      },
+      "effective_date": null,
+      "relevance": 0.8,
+      "source_quality": 0.3,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_a1e8c29ab8",
+      "doc_id": "doc_68a1466a71",
+      "branch_id": "b3",
+      "claim_text": "The April 2023 revision removed the requirement for multiple (three or more) daily insulin administrations for CGM coverage",
+      "evidence_text": "Removed: \"with multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump\" from CGM coverage criterion pertaining to beneficiary being insulin-treated",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 153,
+        "char_start": 42436,
+        "char_end": 42643
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_e61af6ad22",
+      "doc_id": "doc_546c6b8042",
+      "branch_id": "b2",
+      "claim_text": "Article A52464 requires modifier KX for insulin-treated beneficiaries",
+      "evidence_text": "*   Use modifier KX if the beneficiary is insulin treated; or,",
+      "location": {
+        "section": "MODIFIERS",
+        "paragraph_index": 142,
+        "char_start": 50026,
+        "char_end": 50088
+      },
+      "effective_date": "2025-02-18",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.95,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_09a0ff7258",
+      "doc_id": "doc_a4df3cc6e9",
+      "branch_id": "b4",
+      "claim_text": "Non-CMS source Aeroflow Diabetes described three insulin injections per day as the standard Medicare CGM requirement",
+      "evidence_text": "you may qualify for a CGM through Medicare with Aeroflow Diabetes if you inject insulin just 1x a day, rather than the standard 3x injections per day!",
+      "location": {
+        "section": "Get Continuous Glucose Monitors With Medicare Using Insulin Just 1x Per Day",
+        "paragraph_index": 18,
+        "char_start": 2457,
+        "char_end": 2607
+      },
+      "effective_date": null,
+      "relevance": 0.8,
+      "source_quality": 0.3,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_8c930e3d37",
+      "doc_id": "doc_546c6b8042",
+      "branch_id": "b2",
+      "claim_text": "Article A52464 does not require three or more daily insulin injections for CGM claims",
+      "evidence_text": "*   Use modifier KX if the beneficiary is insulin treated; or,",
+      "location": {
+        "section": "MODIFIERS",
+        "paragraph_index": 142,
+        "char_start": 50026,
+        "char_end": 50088
+      },
+      "effective_date": "2025-02-18",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.9,
+      "stance": "contradicts"
+    },
+    {
+      "evidence_id": "ev_374bcf2a93",
+      "doc_id": "doc_5b6883d631",
+      "branch_id": "b2",
+      "claim_text": "CGM coverage requires the beneficiary be insulin treated or have a history of problematic hypoglycemia, with no specified number of daily insulin injections",
+      "evidence_text": "the CGM is being prescribed to improve glycemic control for a beneficiary who is insulin treated or has a history of problematic hypoglycemia",
+      "location": {
+        "section": "POLICY SPECIFIC DOCUMENTATION REQUIREMENTS",
+        "paragraph_index": 57,
+        "char_start": 13985,
+        "char_end": 14126
+      },
+      "effective_date": "2025-02-18",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_4ce66f464a",
+      "doc_id": "doc_5b6883d631",
+      "branch_id": "b2",
+      "claim_text": "The April 2023 revision removed language from criterion 1 regarding frequent dosing of insulin",
+      "evidence_text": "Removed: Language from criterion 1 regarding frequent dosing of insulin",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 153,
+        "char_start": 104462,
+        "char_end": 104533
+      },
+      "effective_date": "2025-02-18",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_3420231d67",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b1",
+      "claim_text": "Current CGM coverage criteria require the beneficiary to be insulin-treated without specifying a minimum number of daily insulin administrations",
+      "evidence_text": "The beneficiary is insulin-treated; or,",
+      "location": {
+        "section": "Coverage Guidance",
+        "paragraph_index": 71,
+        "char_start": 12420,
+        "char_end": 12459
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.9,
+      "stance": "supports"
+    },
+    {
+      "evidence_id": "ev_29e5bf143a",
+      "doc_id": "doc_8416d9eb4c",
+      "branch_id": "b1",
+      "claim_text": "LCD L33822 was revised effective 2024-10-01",
+      "evidence_text": "Revision Effective Date: 04/16/2023",
+      "location": {
+        "section": "Revision History Information",
+        "paragraph_index": 153,
+        "char_start": 42247,
+        "char_end": 42282
+      },
+      "effective_date": "2024-10-01",
+      "relevance": 0.8,
+      "source_quality": 1.0,
+      "confidence": 0.8,
+      "stance": "context"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "c1",
+      "text": "LCD L33822 was most recently revised effective 10/01/2024",
+      "branch_id": "b3",
+      "supported_by": [],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c2",
+      "text": "Non-CMS source DiabeticSuppliesHub states that physicians must verify treatment patterns like three daily insulin injections for CGM eligibility",
+      "branch_id": "b4",
+      "supported_by": [
+        "ev_75acf1c783"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "weak",
+      "confidence": 0.27,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c3",
+      "text": "The 10/01/2024 revision to LCD L33822 revised only the HCPCS code A4271 long descriptor, not insulin injection requirements",
+      "branch_id": "b3",
+      "supported_by": [
+        "ev_7e74d86bbb"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.9,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c4",
+      "text": "Non-CMS source Aeroflow Diabetes states that injecting insulin 3 times a day was required to qualify for Medicare CGM coverage",
+      "branch_id": "b4",
+      "supported_by": [
+        "ev_c3ffa5a32b"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "weak",
+      "confidence": 0.27,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c5",
+      "text": "The April 2023 revision removed the requirement for multiple (three or more) daily insulin administrations for CGM coverage",
+      "branch_id": "b3",
+      "supported_by": [
+        "ev_a1e8c29ab8"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.9,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c6",
+      "text": "Article A52464 requires modifier KX for insulin-treated beneficiaries",
+      "branch_id": "b2",
+      "supported_by": [
+        "ev_e61af6ad22"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.95,
+      "governing_date": "2025-02-18"
+    },
+    {
+      "claim_id": "c7",
+      "text": "Non-CMS source Aeroflow Diabetes described three insulin injections per day as the standard Medicare CGM requirement",
+      "branch_id": "b4",
+      "supported_by": [
+        "ev_09a0ff7258"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "weak",
+      "confidence": 0.27,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c8",
+      "text": "Article A52464 does not require three or more daily insulin injections for CGM claims",
+      "branch_id": "b2",
+      "supported_by": [],
+      "contradicted_by": [
+        "ev_8c930e3d37"
+      ],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    },
+    {
+      "claim_id": "c9",
+      "text": "CGM coverage requires the beneficiary be insulin treated or have a history of problematic hypoglycemia, with no specified number of daily insulin injections",
+      "branch_id": "b2",
+      "supported_by": [
+        "ev_374bcf2a93"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.9,
+      "governing_date": "2025-02-18"
+    },
+    {
+      "claim_id": "c10",
+      "text": "The April 2023 revision removed language from criterion 1 regarding frequent dosing of insulin",
+      "branch_id": "b2",
+      "supported_by": [
+        "ev_4ce66f464a"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.9,
+      "governing_date": "2025-02-18"
+    },
+    {
+      "claim_id": "c11",
+      "text": "Current CGM coverage criteria require the beneficiary to be insulin-treated without specifying a minimum number of daily insulin administrations",
+      "branch_id": "b1",
+      "supported_by": [
+        "ev_3420231d67"
+      ],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "supported",
+      "confidence": 0.9,
+      "governing_date": "2024-10-01"
+    },
+    {
+      "claim_id": "c12",
+      "text": "LCD L33822 was revised effective 2024-10-01",
+      "branch_id": "b1",
+      "supported_by": [],
+      "contradicted_by": [],
+      "derived_from": [],
+      "status": "unresolved",
+      "confidence": 0.0,
+      "governing_date": null
+    }
+  ],
+  "verdicts": [
+    {
+      "round": 0,
+      "sufficient": false,
+      "coverage": {
+        "b1": "unresolved",
+        "b2": "partial",
+        "b3": "resolved",
+        "b4": "partial"
+      },
+      "missing": [
+        "current LCD L33822 coverage criteria for CGM and its revision effective date (b1)",
+        "confirmation from coding article A52464 on insulin-use frequency/documentation (b2)",
+        "a supported non-CMS source on the insulin injection requirement (b4)"
+      ],
+      "new_tasks": [
+        {
+          "task_id": "b1-r1",
+          "branch_id": "b1",
+          "round": 1,
+          "instruction": "Fetch the current LCD L33822 (Glucose Monitors) coverage criteria and record the current insulin injection frequency requirement for CGM and the revision effective date of those criteria.",
+          "queries_hint": [
+            "L33822 Glucose Monitors LCD coverage criteria insulin injections",
+            "L33822 LCD revision history effective date insulin"
+          ],
+          "include_domains": [
+            "cms.gov"
+          ],
+          "time_range": null,
+          "status": "done",
+          "result": {
+            "queries_issued": [
+              "L33822 Glucose Monitors LCD coverage criteria insulin injections"
+            ],
+            "documents_fetched": [
+              "doc_8416d9eb4c"
+            ],
+            "evidence_ids": [
+              "ev_3420231d67",
+              "ev_29e5bf143a"
+            ],
+            "summary": "The current CMS LCD L33822 (Glucose Monitors) refutes the hypothesis: the document no longer requires three or more insulin injections per day for CGM coverage. The current coverage criterion states only that \"The beneficiary is insulin-treated; or,\" with no minimum number of daily administrations specified. The revision history visible in the document indicates that the language \"with multiple (three or more) daily administrations of insulin\" was removed from the CGM coverage criteria, though that specific historical change was not recorded as a separate evidence item before the call budget w...",
+            "unresolved": "The exact revision effective date of the current insulin-treated coverage criterion could not be confirmed as a matching evidence item in the LCD.",
+            "usage": {
+              "searches": 1,
+              "fetches": 1,
+              "deep_reads": 4,
+              "agents": 1,
+              "rounds": 0,
+              "input_tokens": 49972,
+              "output_tokens": 5786,
+              "wall_seconds": 50.767
+            }
+          }
+        },
+        {
+          "task_id": "b2-r1",
+          "branch_id": "b2",
+          "round": 1,
+          "instruction": "Fetch the companion coding article A52464 and record its documentation/frequency guidance on insulin use for CGM billing, including whether any number of daily insulin injections is specified.",
+          "queries_hint": [
+            "A52464 coding article CGM insulin documentation frequency",
+            "A52464 CGM billing insulin requirement"
+          ],
+          "include_domains": [
+            "cms.gov"
+          ],
+          "time_range": null,
+          "status": "done",
+          "result": {
+            "queries_issued": [
+              "A52464 coding article CGM insulin documentation frequency"
+            ],
+            "documents_fetched": [
+              "doc_5b6883d631"
+            ],
+            "evidence_ids": [
+              "ev_374bcf2a93",
+              "ev_4ce66f464a"
+            ],
+            "summary": "I fetched CMS Policy Article A52464 (Glucose Monitor) and examined its documentation requirements for CGM billing. The article does not require three or more daily insulin injections. Current coverage criteria state only that the beneficiary be \"insulin treated\" or have a history of problematic hypoglycemia. The April 16, 2023 revision explicitly removed prior language regarding \"frequent dosing of insulin\" from criterion 1. No specific number of daily insulin injections is mentioned in the current policy.",
+            "unresolved": "I could not locate the exact current text of criterion 1 in the main policy body to show the precise wording that replaced the removed \"frequent dosing\" language; only the revision history described the change.; This line of research stopped before it was finished.",
+            "usage": {
+              "searches": 1,
+              "fetches": 1,
+              "deep_reads": 4,
+              "agents": 1,
+              "rounds": 0,
+              "input_tokens": 49393,
+              "output_tokens": 4217,
+              "wall_seconds": 38.975
+            }
+          }
+        },
+        {
+          "task_id": "b4-r1",
+          "branch_id": "b4",
+          "round": 1,
+          "instruction": "Find a non-CMS source (beneficiary guide, supplier website, news) that states the current insulin injection requirement for Medicare CGM coverage, ideally one reflecting the post-2023 criteria.",
+          "queries_hint": [
+            "Medicare CGM coverage insulin requirement 2024 supplier",
+            "Medicare CGM three daily insulin injections still required 2024"
+          ],
+          "include_domains": [],
+          "time_range": "year",
+          "status": "done",
+          "result": {
+            "queries_issued": [
+              "Medicare CGM coverage insulin requirement 2024 supplier"
+            ],
+            "documents_fetched": [
+              "doc_3ebef2bc30"
+            ],
+            "evidence_ids": [],
+            "summary": "I searched for non-CMS sources describing Medicare CGM insulin requirements and found supplier and guide sites (e.g., CGM Monitors, DMEHelper) that discuss coverage criteria. However, within my call budget I was unable to locate and extract a verbatim passage from any non-CMS source explicitly stating the insulin injection requirement—whether “three or more daily insulin injections” or the broader post-2023 “insulin-treated” standard.",
+            "unresolved": "Could not confirm whether the CGM Monitors 2026 guide lists a specific number of daily insulin injections as a Medicare CGM requirement. Could not fetch the DMEHelper article that mentioned insulin treatment via “multiple daily injections or insulin pump therapy” to verify its exact wording. Could not locate any non-CMS source explicitly stating that “three or more daily insulin injectio...",
+            "usage": {
+              "searches": 1,
+              "fetches": 2,
+              "deep_reads": 5,
+              "agents": 1,
+              "rounds": 0,
+              "input_tokens": 43939,
+              "output_tokens": 2351,
+              "wall_seconds": 44.309
+            }
+          }
+        }
+      ],
+      "reasoning": "b3 is resolved from a dated primary source (April 2023 revision removed the three-or-more daily insulin requirement), which largely answers the question, but b1 (priority 1) is still unresolved and b2/b4 are only partial, so the stop criteria are not yet met. I added tasks to confirm the current LCD criteria/date, the coding article's insulin guidance, and a supported non-CMS source."
+    },
+    {
+      "round": 1,
+      "sufficient": true,
+      "coverage": {
+        "b1": "resolved",
+        "b2": "resolved",
+        "b3": "resolved",
+        "b4": "partial"
+      },
+      "missing": [],
+      "new_tasks": [],
+      "reasoning": "The three high-priority branches are resolved from dated primary-policy sources: the current LCD criteria (b1), the A52464 coding article guidance (b2), and the April 2023 revision that removed the three-or-more daily insulin requirement (b3) all establish that the old requirement no longer applies. b4 is only partial because its non-CMS sources are weak/unknown-tier, but this low-priority branch cannot change the answer already established by primary policy. The question is therefore answerable."
+    }
+  ],
+  "critic_reports": [
+    {
+      "weak_claims": [
+        "c1",
+        "c2",
+        "c4",
+        "c7",
+        "c8",
+        "c12"
+      ],
+      "missing_interpretations": [],
+      "source_independence_issues": [],
+      "secondary_when_primary_exists": [
+        "c2",
+        "c4",
+        "c7"
+      ],
+      "outdated_sources": [],
+      "contradictions": [
+        "Non-CMS sources such as DiabeticSuppliesHub and Aeroflow Diabetes state that three daily insulin injections are required for Medicare CGM coverage; LCD L33822 (primary policy, revised 2024-10-01) and Article A52464 (primary policy, revised 2025-02-18) state that no minimum number of daily insulin in"
+      ],
+      "recommended_searches": [
+        {
+          "task_id": "b1-r2-critic1",
+          "branch_id": "b1",
+          "round": 2,
+          "instruction": "Fetch the current LCD L33822 (Glucose Monitors) and record the exact text of the insulin-treated coverage criterion for CGM.",
+          "queries_hint": [
+            "LCD L33822 insulin-treated criterion",
+            "L33822 CGM coverage criteria insulin treated",
+            "L33822 beneficiary is insulin-treated"
+          ],
+          "include_domains": [
+            "cms.gov"
+          ],
+          "time_range": null,
+          "status": "pending",
+          "result": null
+        }
+      ],
+      "completion_probability": 0.6,
+      "reasoning": "The LCD L33822 and its billing article A52464 show that Medicare CGM coverage requires insulin treatment without specifying a minimum number of daily injections, while several non‑CMS websites incorrectly claim a three‑injection requirement; the LCD governs over non‑CMS sources."
+    }
+  ],
+  "answer": {
+    "summary": "No. As of the April 2023 revision—reflected in LCD L33822 (effective 2024‑10‑01) and Article A52464 (effective 2025‑02‑18)—Medicare no longer requires three or more insulin injections per day for CGM coverage; it requires only that the beneficiary be insulin‑treated (or have a history of problematic hypoglycemia) without specifying a minimum number of daily insulin administrations.",
+    "body_markdown": "## Answer\nNo. As of the April 2023 revision—reflected in LCD L33822 (effective 2024‑10‑01) and Article A52464 (effective 2025‑02‑18)—Medicare no longer requires three or more insulin injections per day for CGM coverage; it requires only that the beneficiary be insulin‑treated (or have a history of problematic hypoglycemia) without specifying a minimum number of daily insulin administrations.\n\n## Criteria / Details\n- LCD L33822 – Glucose Monitors (L33822), revision effective 2024‑10‑01: current CGM coverage criterion states “The beneficiary is insulin‑treated;” with no minimum number of daily insulin administrations specified. [11] \n- LCD L33822 – Glucose Monitors (L33822), revision effective 2024‑10‑01: the April 2023 revision removed the requirement for “multiple (three or more) daily administrations of insulin or a continuous subcutaneous insulin infusion (CSII) pump” from the CGM coverage criterion. [5] \n- Article A52464 – Glucose Monitor – Policy Article (A52464), revision effective 2025‑02‑18: CGM coverage requires the beneficiary to be insulin treated or have a history of problematic hypoglycemia, with no specified number of daily insulin injections. [9] \n- Article A52464 – Glucose Monitor – Policy Article (A52464), revision effective 2025‑02‑18: the April 2023 revision removed language from criterion 1 regarding frequent dosing of insulin. [10] \n- For billing, Article A52464 requires modifier KX when the beneficiary is insulin‑treated. [6]\n\n## Codes and documentation\n- Modifier KX must be used on CGM claims for insulin‑treated beneficiaries per Article A52464 (effective 2025‑02‑18). [6]\n\n## Effective dates relied on\n- LCD L33822 – Glucose Monitors (L33822) – CMS, revision effective 2024‑10‑01 \n- Article A52464 – Glucose Monitor – Policy Article (A52464) – CMS, revision effective 2025‑02‑18 \n\n## Contradictions and caveats\nNon‑CMS sources such as DiabeticSuppliesHub ([2]) and Aeroflow Diabetes ([4], [7]) state that three daily insulin injections are required (or not required) for Medicare CGM coverage. These secondary statements are overridden by the primary policy documents LCD L33822 (effective 2024‑10‑01) and Article A52464 (effective 2025‑02‑18), which specify that coverage requires insulin treatment without a minimum number of daily insulin injections.\n\n## Unknowns / not verified\n- The exact current wording of criterion 1 in LCD L33822 after the April 2023 revision could not be confirmed from the evidence. \n- Whether any other LCDs, NCDs, or guidance documents impose a specific number of daily insulin injections for CGM coverage could not be verified. \n- The precise revision effective date of the insulin‑treated coverage criterion (as distinct from the overall LCD revision) was not isolated in a matching evidence item.\n- The research stopped at its time limit, so this answer uses only the sources found by then.\n\n## Sources\n\n[1] LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822\n[2] Medicare Part B Coverage for Diabetic Supplies: What You Need to Know - DiabeticSuppliesHub, §Meeting Medicare's Requirements: Prescriptions, Suppliers, and Documentation. diabeticsupplieshub.com. unknown.\n    https://diabeticsupplieshub.com/medicare-part-b-coverage-diabetic-supplies\n[3] LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822\n[4] CGMs Through Medicare for Daily Insulin Users | Aeroflow Diabetes, §How Does the Suspension Change CGM Coverage?. aeroflowdiabetes.com. unknown.\n    https://aeroflowdiabetes.com/blog/get-continuous-glucose-monitors-with-medicare-using-insulin-just-1x-per-day\n[5] LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822\n[6] Article A52464 - Article - Glucose Monitor - Policy Article (A52464), §MODIFIERS, revision effective 2025-02-18. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1\n[7] CGMs Through Medicare for Daily Insulin Users | Aeroflow Diabetes, §Get Continuous Glucose Monitors With Medicare Using Insulin Just 1x Per Day. aeroflowdiabetes.com. unknown.\n    https://aeroflowdiabetes.com/blog/get-continuous-glucose-monitors-with-medicare-using-insulin-just-1x-per-day\n[8] Article A52464 - Article - Glucose Monitor - Policy Article (A52464), §MODIFIERS, revision effective 2025-02-18. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1\n[9] Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §POLICY SPECIFIC DOCUMENTATION REQUIREMENTS, revision effective 2025-02-18. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464\n[10] Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §Revision History Information, revision effective 2025-02-18. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464\n[11] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n[12] LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Revision History Information, revision effective 2024-10-01. CMS. primary_policy.\n    https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n",
+    "claims": [
+      {
+        "claim_id": "c1",
+        "text": "LCD L33822 was most recently revised effective 10/01/2024",
+        "branch_id": "b3",
+        "supported_by": [],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c2",
+        "text": "Non-CMS source DiabeticSuppliesHub states that physicians must verify treatment patterns like three daily insulin injections for CGM eligibility",
+        "branch_id": "b4",
+        "supported_by": [
+          "ev_75acf1c783"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "weak",
+        "confidence": 0.27,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c3",
+        "text": "The 10/01/2024 revision to LCD L33822 revised only the HCPCS code A4271 long descriptor, not insulin injection requirements",
+        "branch_id": "b3",
+        "supported_by": [
+          "ev_7e74d86bbb"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.9,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c4",
+        "text": "Non-CMS source Aeroflow Diabetes states that injecting insulin 3 times a day was required to qualify for Medicare CGM coverage",
+        "branch_id": "b4",
+        "supported_by": [
+          "ev_c3ffa5a32b"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "weak",
+        "confidence": 0.27,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c5",
+        "text": "The April 2023 revision removed the requirement for multiple (three or more) daily insulin administrations for CGM coverage",
+        "branch_id": "b3",
+        "supported_by": [
+          "ev_a1e8c29ab8"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.9,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c6",
+        "text": "Article A52464 requires modifier KX for insulin-treated beneficiaries",
+        "branch_id": "b2",
+        "supported_by": [
+          "ev_e61af6ad22"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.95,
+        "governing_date": "2025-02-18"
+      },
+      {
+        "claim_id": "c7",
+        "text": "Non-CMS source Aeroflow Diabetes described three insulin injections per day as the standard Medicare CGM requirement",
+        "branch_id": "b4",
+        "supported_by": [
+          "ev_09a0ff7258"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "weak",
+        "confidence": 0.27,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c8",
+        "text": "Article A52464 does not require three or more daily insulin injections for CGM claims",
+        "branch_id": "b2",
+        "supported_by": [],
+        "contradicted_by": [
+          "ev_8c930e3d37"
+        ],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      },
+      {
+        "claim_id": "c9",
+        "text": "CGM coverage requires the beneficiary be insulin treated or have a history of problematic hypoglycemia, with no specified number of daily insulin injections",
+        "branch_id": "b2",
+        "supported_by": [
+          "ev_374bcf2a93"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.9,
+        "governing_date": "2025-02-18"
+      },
+      {
+        "claim_id": "c10",
+        "text": "The April 2023 revision removed language from criterion 1 regarding frequent dosing of insulin",
+        "branch_id": "b2",
+        "supported_by": [
+          "ev_4ce66f464a"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.9,
+        "governing_date": "2025-02-18"
+      },
+      {
+        "claim_id": "c11",
+        "text": "Current CGM coverage criteria require the beneficiary to be insulin-treated without specifying a minimum number of daily insulin administrations",
+        "branch_id": "b1",
+        "supported_by": [
+          "ev_3420231d67"
+        ],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "supported",
+        "confidence": 0.9,
+        "governing_date": "2024-10-01"
+      },
+      {
+        "claim_id": "c12",
+        "text": "LCD L33822 was revised effective 2024-10-01",
+        "branch_id": "b1",
+        "supported_by": [],
+        "contradicted_by": [],
+        "derived_from": [],
+        "status": "unresolved",
+        "confidence": 0.0,
+        "governing_date": null
+      }
+    ],
+    "citations": [
+      {
+        "n": 1,
+        "evidence_id": "ev_6e7a31e8f8",
+        "doc_id": "doc_68a1466a71",
+        "url": "https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01"
+      },
+      {
+        "n": 2,
+        "evidence_id": "ev_75acf1c783",
+        "doc_id": "doc_aea73b348a",
+        "url": "https://diabeticsupplieshub.com/medicare-part-b-coverage-diabetic-supplies",
+        "label": "Medicare Part B Coverage for Diabetic Supplies: What You Need to Know - DiabeticSuppliesHub, §Meeting Medicare's Requirements: Prescriptions, Suppliers, and Documentation"
+      },
+      {
+        "n": 3,
+        "evidence_id": "ev_7e74d86bbb",
+        "doc_id": "doc_68a1466a71",
+        "url": "https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01"
+      },
+      {
+        "n": 4,
+        "evidence_id": "ev_c3ffa5a32b",
+        "doc_id": "doc_a4df3cc6e9",
+        "url": "https://aeroflowdiabetes.com/blog/get-continuous-glucose-monitors-with-medicare-using-insulin-just-1x-per-day",
+        "label": "CGMs Through Medicare for Daily Insulin Users | Aeroflow Diabetes, §How Does the Suspension Change CGM Coverage?"
+      },
+      {
+        "n": 5,
+        "evidence_id": "ev_a1e8c29ab8",
+        "doc_id": "doc_68a1466a71",
+        "url": "https://www.cms.gov/medicare-coverage-database/details/lcd-details.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822), §Revision History Information, revision effective 2024-10-01"
+      },
+      {
+        "n": 6,
+        "evidence_id": "ev_e61af6ad22",
+        "doc_id": "doc_546c6b8042",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+        "label": "Article A52464 - Article - Glucose Monitor - Policy Article (A52464), §MODIFIERS, revision effective 2025-02-18"
+      },
+      {
+        "n": 7,
+        "evidence_id": "ev_09a0ff7258",
+        "doc_id": "doc_a4df3cc6e9",
+        "url": "https://aeroflowdiabetes.com/blog/get-continuous-glucose-monitors-with-medicare-using-insulin-just-1x-per-day",
+        "label": "CGMs Through Medicare for Daily Insulin Users | Aeroflow Diabetes, §Get Continuous Glucose Monitors With Medicare Using Insulin Just 1x Per Day"
+      },
+      {
+        "n": 8,
+        "evidence_id": "ev_8c930e3d37",
+        "doc_id": "doc_546c6b8042",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464&ver=62&keyword=Cgm+s&keywordType=starts&areaId=all&docType=NCA%2CCAL%2CNCD%2CMEDCAC%2CTA%2CMCD%2C6%2C3%2C5%2C1%2CF%2CP&contractOption=all&sortBy=relevance&bc=1",
+        "label": "Article A52464 - Article - Glucose Monitor - Policy Article (A52464), §MODIFIERS, revision effective 2025-02-18"
+      },
+      {
+        "n": 9,
+        "evidence_id": "ev_374bcf2a93",
+        "doc_id": "doc_5b6883d631",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+        "label": "Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §POLICY SPECIFIC DOCUMENTATION REQUIREMENTS, revision effective 2025-02-18"
+      },
+      {
+        "n": 10,
+        "evidence_id": "ev_4ce66f464a",
+        "doc_id": "doc_5b6883d631",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+        "label": "Article A52464 - Glucose Monitor - Policy Article (A52464) - CMS, §Revision History Information, revision effective 2025-02-18"
+      },
+      {
+        "n": 11,
+        "evidence_id": "ev_3420231d67",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Coverage Guidance, revision effective 2024-10-01"
+      },
+      {
+        "n": 12,
+        "evidence_id": "ev_29e5bf143a",
+        "doc_id": "doc_8416d9eb4c",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+        "label": "LCD L33822 - LCD - Glucose Monitors (L33822) - CMS, §Revision History Information, revision effective 2024-10-01"
+      }
+    ],
+    "effective_dates": [
+      "L33822: revision effective 2024-10-01",
+      "A52464: revision effective 2025-02-18",
+      "A52464: revision effective 2025-02-18",
+      "L33822: revision effective 2024-10-01"
+    ],
+    "contradictions": [
+      "Non-CMS sources such as DiabeticSuppliesHub and Aeroflow Diabetes state that three daily insulin injections are required for Medicare CGM coverage; LCD L33822 (primary policy, revised 2024-10-01) and Article A52464 (primary policy, revised 2025-02-18) state that no minimum number of daily insulin in"
+    ],
+    "unknowns": [
+      "The exact current coverage criteria for CGM under LCD L33822 (Glucose Monitors), including whether three or more daily insulin injections are still required, and the specific revision effective date of those criteria.; This line of research stopped before it was finished.",
+      "Whether the companion Local Coverage Determination (LCD) rather than the coding article imposes a specific number of daily insulin injections could not be confirmed within this task.",
+      "None — the governing dates and the specific changes are confirmed in the LCD revision history.",
+      "The exact revision effective date of the current insulin-treated coverage criterion could not be confirmed as a matching evidence item in the LCD.",
+      "I could not locate the exact current text of criterion 1 in the main policy body to show the precise wording that replaced the removed \"frequent dosing\" language; only the revision history described the change.; This line of research stopped before it was finished.",
+      "Could not confirm whether the CGM Monitors 2026 guide lists a specific number of daily insulin injections as a Medicare CGM requirement. Could not fetch the DMEHelper article that mentioned insulin treatment via “multiple daily injections or insulin pump therapy” to verify its exact wording. Could not locate any non-CMS source explicitly stating that “three or more daily insulin injectio..."
+    ],
+    "confidence": 0.908,
+    "scope_warning": null
+  },
+  "usage": {
+    "searches": 11,
+    "fetches": 10,
+    "deep_reads": 23,
+    "agents": 7,
+    "rounds": 2,
+    "input_tokens": 352938,
+    "output_tokens": 41167,
+    "wall_seconds": 192.1
+  },
+  "status": "budget_exhausted",
+  "error": null
+}

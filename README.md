@@ -49,6 +49,16 @@ the problem, the design, the holdout evidence and the decisions behind them. In 
 - **What comes next.** Raise citation correctness first: about one cited sentence in three is not yet
   supported by its passage.
 
+**Try it without API keys.** [`runs/examples/`](runs/examples/) contains pre-recorded runs of the three
+worked-example questions, the starter and PRIME from holdout pass 1. They can be viewed in the UI without
+API keys: start the API and the UI (steps 8 and 9 below) and open `/runs`.
+
+Fetched document text is included only for .gov sources such as CMS. Other documents in those runs show
+that their text is not stored.
+
+**Check your environment.** With your keys in `.env`, `make setup && make smoke` installs everything and
+verifies each model role, Tavily and LangSmith.
+
 ---
 
 ## Where to start: reading order

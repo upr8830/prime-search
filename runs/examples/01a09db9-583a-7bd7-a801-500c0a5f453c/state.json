@@ -1,0 +1,81 @@
+{
+  "run_id": "01a09db9-583a-7bd7-a801-500c0a5f453c",
+  "request": {
+    "question": "My patient has type 2 diabetes and takes only metformin — can you approve a CGM for them?",
+    "mode": "baseline",
+    "depth": "deep",
+    "question_id": "oos-002",
+    "budget_override": null,
+    "prompt_set": "base"
+  },
+  "started_at": "2026-09-14T02:22:44.794584Z",
+  "finished_at": "2026-09-14T02:23:11.487248Z",
+  "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-5843-73f0-9d91-ee46e9198206/run/01a09db9-5843-73f0-9d91-ee46e9198206?start_time=2026-09-14T02%3A22%3A44.803162%2B00%3A00",
+  "langsmith_trace_id": "01a09db9-5843-73f0-9d91-ee46e9198206",
+  "plan": null,
+  "tasks": [],
+  "documents": {},
+  "evidence": [],
+  "claims": [],
+  "verdicts": [],
+  "critic_reports": [],
+  "answer": {
+    "summary": "**Short answer:** it depends entirely on the payer, but under **traditional Medicare criteria, generally no** for a patient with type 2 diabetes who is on metformin alone and does **not** have documented problematic hypoglycemia. Here is how major payers typically handle this: | Payer / Program | CGM for metformin-only T2D? | Typical criteria | |---|---|---| | **Medicare (CMS)** | **Not covered** unless problematic hypoglycemia is documented | Must be **insulin-treated** **OR** have documented recurrent level 2 hypoglycemia (<54 mg/dL) despite med adjustments, or one level 3 event requiring assistance. The KX modifier must **not** be used for beneficiaries exclusively on oral agents like metformin. | | **Commercial plans** | **Sometimes**, but often requires prior authorization | Policies vary widely. Some plans still require insulin therapy; others have begun covering non–insulin-treated T2D if glycemic targets are not being met or based on plan-specific InterQual/medical necessity cr",
+    "body_markdown": "**Short answer:** it depends entirely on the payer, but under **traditional Medicare criteria, generally no** for a patient with type 2 diabetes who is on metformin alone and does **not** have documented problematic hypoglycemia.\n\nHere is how major payers typically handle this:\n\n| Payer / Program | CGM for metformin-only T2D? | Typical criteria |\n|---|---|---|\n| **Medicare (CMS)** | **Not covered** unless problematic hypoglycemia is documented | Must be **insulin-treated** **OR** have documented recurrent level 2 hypoglycemia (<54 mg/dL) despite med adjustments, or one level 3 event requiring assistance. The KX modifier must **not** be used for beneficiaries exclusively on oral agents like metformin. |\n| **Commercial plans** | **Sometimes**, but often requires prior authorization | Policies vary widely. Some plans still require insulin therapy; others have begun covering non–insulin-treated T2D if glycemic targets are not being met or based on plan-specific InterQual/medical necessity criteria. |\n| **Medicaid** | **Varies by state** | Many states limit CGM to insulin-treated individuals or type 1 diabetes. Some are broadening access, but criteria differ significantly. |\n\n### Key details from current policies:\n- **Medicare** explicitly states that beneficiaries treated **exclusively with oral hypoglycemic agents** do not meet standard therapeutic CGM coverage requirements unless they have a documented history of problematic hypoglycemia (recurrent level 2 events or a single level 3 event) ([CMS Policy Article A52464](https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464), [Dexcom Medicare FAQ](https://www.dexcom.com/en-us/faqs/medicare), [Doko MD summary](https://doko.md/medicare-cover-cgm-type-2-diabetes)).\n- **UnitedHealthcare** references 2024 evidence showing CGM improves glycemic control in non–insulin-treated type 2 diabetes, but coverage still depends on meeting plan-specific medical necessity criteria, often through prior authorization ([UnitedHealthcare policy PDF](https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/continuous-glucose-monitoring-insulin-delivery-managing-diabetes.pdf)).\n- **Over-the-counter CGMs** (e.g., Abbott Libre Rio) are now marketed specifically for adults with type 2 diabetes not using insulin, but these are typically patient-pay retail products and may not be covered by insurance as DME/pharmacy benefits ([BCBSRI policy](https://www.bcbsri.com/providers/medicalpolicies/files/glucose-monitoring-continuous)).\n\n### Bottom line for your patient:\nIf this is a **Medicare** patient on metformin alone without qualifying hypoglycemia, you likely **cannot approve** a CGM under current Medicare coverage rules.  \nIf this is a **commercially insured** patient, you should check the specific plan’s prior authorization policy—coverage for non-insulin T2D is expanding but is not universal.\n\n**Source URLs:**\n- https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464\n- https://www.dexcom.com/en-us/faqs/medicare\n- https://doko.md/medicare-cover-cgm-type-2-diabetes\n- https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/continuous-glucose-monitoring-insulin-delivery-managing-diabetes.pdf\n- https://www.bcbsri.com/providers/medicalpolicies/files/glucose-monitoring-continuous",
+    "claims": [],
+    "citations": [
+      {
+        "n": 1,
+        "evidence_id": "",
+        "doc_id": "",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+        "label": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464"
+      },
+      {
+        "n": 2,
+        "evidence_id": "",
+        "doc_id": "",
+        "url": "https://www.dexcom.com/en-us/faqs/medicare",
+        "label": "https://www.dexcom.com/en-us/faqs/medicare"
+      },
+      {
+        "n": 3,
+        "evidence_id": "",
+        "doc_id": "",
+        "url": "https://doko.md/medicare-cover-cgm-type-2-diabetes",
+        "label": "https://doko.md/medicare-cover-cgm-type-2-diabetes"
+      },
+      {
+        "n": 4,
+        "evidence_id": "",
+        "doc_id": "",
+        "url": "https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/continuous-glucose-monitoring-insulin-delivery-managing-diabetes.pdf",
+        "label": "https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/continuous-glucose-monitoring-insulin-delivery-managing-diabetes.pdf"
+      },
+      {
+        "n": 5,
+        "evidence_id": "",
+        "doc_id": "",
+        "url": "https://www.bcbsri.com/providers/medicalpolicies/files/glucose-monitoring-continuous",
+        "label": "https://www.bcbsri.com/providers/medicalpolicies/files/glucose-monitoring-continuous"
+      }
+    ],
+    "effective_dates": [],
+    "contradictions": [],
+    "unknowns": [],
+    "confidence": 0.0,
+    "scope_warning": null
+  },
+  "usage": {
+    "searches": 1,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 8538,
+    "output_tokens": 1615,
+    "wall_seconds": 26.7
+  },
+  "status": "completed",
+  "error": null
+}
