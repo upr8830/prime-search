@@ -1,48 +1,106 @@
 # PRIME Search
 
-Agentic coverage-determination search. Ask whether a treatment is covered under Medicare and get an
-answer built from **primary sources** — CMS coverage determinations (LCD/NCD), CMS articles, FDA
-labels — where every claim carries a verbatim passage, the document it came from, and the effective
-or revision date that makes it current.
+Agentic coverage-determination research. Ask whether a service or drug is covered under Medicare and get
+an answer built from **primary sources**: CMS coverage determinations (LCD/NCD), CMS articles and FDA
+labels. Every claim carries a verbatim passage, the document it came from, and the effective or revision
+date that makes it current. The answer names contradictions between sources and says what could not be
+verified. It answers at policy level and never decides an individual case.
 
-Built for the Tavily (Nebius) Head of Forward Deployed Engineering take-home: an improvement on a
-starter Tavily + LangChain search agent, kept in the repo as `--mode baseline` so the two can be
-compared side by side on the same question.
+Built for the Tavily (Nebius) Head of Forward Deployed Engineering take-home, as an improvement on a
+starter Tavily + LangChain search agent. The starter is kept in the repo as `--mode baseline`, so the two
+can be compared side by side on the same question. The case for the design is in
+[`TECHNICAL_STATEMENT.md`](TECHNICAL_STATEMENT.md).
 
-> **Status: Day 1 of 3 — in progress.** `make smoke` works; `make ask` lands at task 1.7.
-> The full quickstart below is the target interface; see `docs/09-implementation-plan.md` for
-> what is actually built.
+> **Status: Day 3.** The investigation pipeline, CLI, API, UI harness, SearchBench evaluators and GEPA
+> runner are built. GEPA found no prompt that beat the base prompts on dev (`reports/gepa-run.json`).
+> The final holdout bench (`reports/final-report.md`) is task 3.2. `docs/09-implementation-plan.md` and
+> `build-log/` record what is done.
 
-## Quickstart
+---
+
+## Build and run it, step by step
+
+### 1. Install the prerequisites
+
+| Tool | Version | Used for |
+|---|---|---|
+| [`uv`](https://docs.astral.sh/uv/) | current | Python environment and every `uv run` command |
+| Python | 3.11–3.13 | installed by `uv` if missing |
+| GNU `make` | any | the task runner (optional: every target is a one-line `uv run ...` shown below) |
+| Node.js | 20+ | the UI harness only |
+| [`pnpm`](https://pnpm.io/installation) | current | the UI harness only |
+| Git | any | cloning; on Windows, Git Bash is the shell these commands assume |
+
+On **Windows**: install GNU `make` (for example through winget), or use the `uv run` commands directly.
+Open a new terminal after installing, so `make` is on `PATH`.
+
+### 2. Get API keys
+
+| Key | Where | Required |
+|---|---|---|
+| `TAVILY_API_KEY` | <https://app.tavily.com> (starts with `tvly-`) | yes |
+| `NEBIUS_API_KEY` | <https://studio.nebius.com>, Token Factory API key | yes |
+| `LANGSMITH_API_KEY` | <https://smith.langchain.com> (starts with `lsv2_`) | for traces, the bench and feedback |
+
+Without keys you can still run the offline test suite (step 5) and browse the UI's replay pages.
+
+### 3. Clone and configure
 
 ```bash
-cp .env.example .env     # add TAVILY_API_KEY, NEBIUS_API_KEY, LANGSMITH_API_KEY
-make setup               # uv sync --all-groups
-make smoke               # verify each model role, Tavily, and LangSmith tracing
-make ask Q="Is a therapeutic CGM covered under Medicare for a type 2 diabetic not on insulin?"
+git clone https://github.com/upr8830/prime-search.git
+cd prime-search
+cp .env.example .env        # then fill in the three keys
 ```
 
-Prerequisites: [`uv`](https://docs.astral.sh/uv/), GNU `make`, Python 3.11–3.13. The UI additionally
-needs Node 20+ and `pnpm`.
+`.env` is git-ignored, and the repo's hooks refuse a commit that stages it. Settings read `.env` from the
+repo root, so run every command from there. Optional overrides (model routing, budgets, API port, Tavily
+cache) are documented in `.env.example`. Leave the model routing commented out unless you mean to change
+it.
 
-## Commands
+### 4. Install
 
-| Command | What it does |
-|---|---|
-| `make setup` | Install the Python environment (`uv sync --all-groups`) |
-| `make smoke` | Per-role model check, one Tavily search, one Tavily extract, one LangSmith trace |
-| `make test` | `pytest tests/ -x -q` — offline; tests needing keys are marked `live` and skipped |
-| `make ask Q="…"` | One investigation, cited answer to the console. `ARGS="--mode baseline"`, `ARGS="--depth fast"` |
-| `make bench` | Run the SearchBench evaluation. `ARGS="--mode prime --split dev"` |
-| `make gepa` | GEPA prompt optimization (train/dev splits only, never holdout) |
-| `make dev-api` | FastAPI + SSE on `localhost:8765` (`PRIME_API_PORT`) |
-| `make dev-ui` | Next.js harness on `localhost:3000` |
+```bash
+make setup                  # = uv sync --all-groups   (runtime, dev and the gepa group)
+```
 
-## API
+### 5. Check the build offline
 
-`make dev-api` (or `uv run python -m prime_search.api --reload`) serves the endpoints in
-`docs/07-ui-spec.md` §7 on `localhost:8765`, with the schema at `/openapi.json`. Set `PRIME_API_PORT` (and
-`PRIME_API_HOST`) in the shell or `.env` to move it. A quick check from Git Bash:
+```bash
+make test                   # = uv run pytest tests/ -x -q   (tests needing keys are marked live and skipped)
+uv run ruff check prime_search/ eval/ tests/
+```
+
+### 6. Check the keys and models
+
+```bash
+make smoke                  # = uv run prime-search smoke
+```
+
+Smoke probes each model role with the call shape it uses in production, then runs one Tavily search, one
+Tavily extract on the CGM LCD, and one LangSmith trace. Each role prints `PASS`, or `FALLBACK` with the
+model it would switch to. A fallback is a finding, not a fix. Apply one only by setting
+`PRIME_MODELS__<ROLE>` deliberately and noting it in `docs/11`.
+
+### 7. Ask a question from the command line
+
+```bash
+make ask Q="Is a therapeutic CGM covered under Medicare for a type 2 diabetic not on insulin?"
+make ask Q="..." ARGS="--mode baseline"     # the starter agent, for comparison
+make ask Q="..." ARGS="--depth fast"        # smaller budget, no critic
+```
+
+A deep run takes about 3 minutes and 300–500k tokens. The investigation streams to the console:
+understanding, plan, branches, judge rounds, critic, then the cited answer. Every run is saved under
+`runs/<run_id>/` (`state.json`, `events.jsonl`, fetched document text) and traced to LangSmith.
+
+### 8. Start the API
+
+```bash
+make dev-api                # = uv run python -m prime_search.api --reload   → http://127.0.0.1:8765
+```
+
+The port is `PRIME_API_PORT`, default 8765. Port 8000 is often held by Windows HTTP.sys. The endpoints are
+in `docs/07-ui-spec.md` §7, and the schema is at `/openapi.json`. A quick check from Git Bash:
 
 ```bash
 RUN=$(curl -s -X POST localhost:8765/run -H 'content-type: application/json' \
@@ -54,57 +112,259 @@ curl -s -X POST localhost:8765/feedback -H 'content-type: application/json' \
   -d "{\"run_id\":\"$RUN\",\"thumbs\":\"up\",\"comment\":\"clear answer\"}"
 ```
 
-Feedback reaches LangSmith when tracing is on, and is always appended to `data/feedback.jsonl`, which stays
-local.
+Feedback reaches LangSmith when tracing is on, and is always appended to `data/feedback.jsonl`, which
+stays local.
 
-## UI
+### 9. Start the UI harness
 
-The side-by-side harness (`docs/07-ui-spec.md`) runs against the API above:
+In a second terminal, with the API running:
 
 ```bash
-uv run python -m prime_search.api          # terminal 1: the API on PRIME_API_PORT (default 8765)
-cd ui && pnpm install && pnpm dev          # terminal 2: http://localhost:3000
+cd ui
+pnpm install                # first time only
+pnpm dev                    # = make dev-ui   → http://localhost:3000
 ```
 
-The UI reads `PRIME_API_HOST` / `PRIME_API_PORT` from the shell or the repo-root `.env`, the same variables
-the API reads. `/` compares the starter and PRIME on one question; `/runs`, `/runs/<id>`, `/docs/...` and
-`/bench` replay past runs and the latest bench report. In `ui/`: `pnpm test` (vitest), `pnpm lint`,
-`pnpm exec tsc --noEmit`, and `pnpm gen:types` to regenerate `src/types/api.ts` from a running API.
+| Page | What it shows |
+|---|---|
+| `/` | The starter and PRIME side by side on one question: live search tree, answer, evidence, claims, critic, plan |
+| `/runs`, `/runs/<id>` | Past runs, replayed from their event logs |
+| `/docs/<run>/<doc>` | A fetched document, with the cited paragraph highlighted |
+| `/bench` | The latest bench report (`reports/latest.json`) |
+
+The UI reads `PRIME_API_HOST` and `PRIME_API_PORT` from the shell or the repo-root `.env`, the same variables
+as the API. In `ui/`, run `pnpm test` (vitest), `pnpm lint` and `pnpm exec tsc --noEmit`. Run
+`pnpm gen:types` against a running API to regenerate `src/types/api.ts`. Run `pnpm build` only with the dev
+server stopped, because they share `.next`.
+
+### 10. Run the benchmark (SearchBench)
+
+SearchBench is 30 policy questions (`data/searchbench/searchbench_v0.jsonl`), split into train (15), dev
+(5) and holdout (10). Every answer key has been validated by a person against live primary sources. The
+runner refuses to score keys nobody validated, or a LangSmith dataset that differs from the committed file.
+
+```bash
+# a. validate the keys offline, then push the dataset to LangSmith (first time, or after editing keys)
+uv run python -m eval.searchbench.sync --check
+uv run python -m eval.searchbench.sync
+
+# b. see the plan and estimate without spending anything
+make bench ARGS="--mode prime --split dev --dry-run"
+
+# c. dev check (5 questions: a build-time check, not a result)
+make bench ARGS="--mode baseline --split dev"
+make bench ARGS="--mode prime --split dev --prompt-set base --concurrency 3"
+uv run python -m eval.report --split dev                  # → reports/dev-report.md
+
+# d. final holdout bench: two passes per configuration
+make bench ARGS="--mode baseline --split holdout --concurrency 3"      # pass 1
+make bench ARGS="--mode baseline --split holdout --concurrency 3"      # pass 2
+make bench ARGS="--mode prime --split holdout --prompt-set base --concurrency 3"   # pass 1
+make bench ARGS="--mode prime --split holdout --prompt-set base --concurrency 3"   # pass 2
+uv run python -m eval.report --split holdout --passes 2   # → reports/final-report.md, reports/latest.json
+```
+
+Each `make bench` is one LangSmith experiment (project `prime-search-bench`), written to
+`reports/bench/<experiment>.json`. `eval.report` reads only those files, so it costs nothing to rerun.
+`--rescore reports/bench/<file>.json` re-scores saved runs with the current evaluators and spends judge calls
+only.
+
+**Cost guide**, from measured runs: a PRIME deep question is about $0.60–0.95 including scoring (answer
+correctness uses three judge calls) and about 5 minutes. A baseline question is about $0.10. A holdout pass
+of PRIME is therefore about $8–10. The Tavily cache (`PRIME_TAVILY_CACHE`, on by default) makes reruns
+cheaper and comparable.
+
+---
+
+## Run another GEPA optimization
+
+GEPA (`eval/gepa/`, docs/05 §5) rewrites the prompts that decide what gets searched and when to stop:
+`plan.md`, `judge.md`, and `critic.md` if you ask for it. It runs the real PRIME graph on SearchBench
+**train** questions, uses the evaluators' comments as feedback, and selects candidates on **dev**.
+The **holdout split is never used**: the runner refuses any split but train, and the adapter refuses
+holdout records. Prompts it writes are only a proposal until they pass the holdout acceptance check in
+step 6.
+
+### 1. Preconditions
+
+- Steps 1–6 above pass, and `uv run python -m eval.searchbench.sync --check` is clean.
+- The Tavily cache is on (the default). The runner refuses to start without it.
+- Keep the previous result. The runner overwrites `reports/gepa-run.json`, so copy it first if it is
+  uncommitted:
+  ```bash
+  cp reports/gepa-run.json reports/gepa-run.$(date +%Y%m%d-%H%M).json
+  ```
+
+### 2. Dry run: plan and cost, no spend
+
+```bash
+make gepa ARGS="--dry-run"
+```
+
+It prints the components, split sizes, per-run budget (deep, 20 searches, 4 agents per round), the Tavily
+cache state, the estimated cost and time, and how far the last iteration can run past the cap.
+
+### 3. Choose the size of the run
+
+| Option | Default | Meaning |
+|---|---|---|
+| `--components` | `plan,judge` | prompts to optimize, from `plan`, `judge` and `critic` |
+| `--max-metric-calls` | `10` | the budget in scored deep runs; the last iteration can finish past it |
+| `--minibatch` | `3` | train questions per reflection step |
+| `--concurrency` | `3` | runs at a time |
+| `--seed` | `0` | GEPA's sampling seed |
+| `--run-dir` | `runs/gepa/<timestamp>` | checkpoint directory; pass an existing one to resume |
+
+How far a budget goes:
+- **10 metric calls (the default):** the base prompts' dev evaluation takes 5 and one proposal takes 6
+  (3 parent and 3 child train runs), so about one proposal.
+- **60:** several proposals, about $36–57 plus overshoot.
+- **120 on all three prompts (docs/05 §5's original configuration):** about $75–130 and 3–4 h.
+
+Run `--dry-run` with the same options first to see the estimate.
+
+### 4. Run it
+
+```bash
+make gepa                                                         # defaults: plan + judge, 10 metric calls
+make gepa ARGS="--max-metric-calls 60"                            # a longer search
+make gepa ARGS="--components plan,judge,critic --max-metric-calls 120"
+```
+
+Or, without `make`: `uv run python -m eval.gepa.run_gepa [options]`. Progress prints to the console and to
+`runs/gepa/<timestamp>/run_log.txt` (UTF-8). Every rollout is traced in the LangSmith project
+`prime-search-gepa` with the tags `source:gepa`, `gepa:<split>` and `candidate:gepa-<sha>`.
+
+If it stops partway (a crash, or Ctrl+C), resume from the checkpoint. Paid runs are not repeated:
+
+```bash
+make gepa ARGS="--run-dir runs/gepa/<timestamp>"
+```
+
+To resume with more budget, pass a higher `--max-metric-calls`. The count includes calls already spent.
+
+### 5. Read the result
+
+`reports/gepa-run.json` contains:
+- `seed_dev_score` and `best_dev_score`, and `improved_on_dev`;
+- `candidates`: each one's parent, dev scores per question, the metric call that found it, the prompts
+  it changed, and a unified diff against base;
+- `pareto_front`: the best candidate per dev question;
+- `rollouts`: every paid run's id, question, status and score (open `runs/<run_id>/state.json` for the
+  full record);
+- `optimized_prompts_written`.
+
+**When no candidate beats the base prompts on dev**, nothing is written to `prime_search/prompts/optimized/`
+and the base prompts stay in use. Report that as a negative result, as docs/05 §5 requires.
+
+**When a candidate beats base on dev**, the runner writes `prime_search/prompts/optimized/<prompt>.md`
+for each prompt it changed. Any other prompt falls back to base, and an older file for an unchanged prompt
+is removed. Try the new prompts before the acceptance check:
+
+```bash
+make ask Q="..." ARGS="--prompt-set optimized"
+```
+
+### 6. Acceptance on holdout (docs/05 §5)
+
+Optimized prompts ship only if, on holdout, **answer correctness improves** and **citation correctness
+drops by no more than 0.03**. Run the optimized configuration twice, next to the existing baseline and base
+passes, then regenerate the report:
+
+```bash
+make bench ARGS="--mode prime --split holdout --prompt-set optimized --concurrency 3"   # pass 1
+make bench ARGS="--mode prime --split holdout --prompt-set optimized --concurrency 3"   # pass 2
+uv run python -m eval.report --split holdout --passes 2
+```
+
+The report's **PRIME + GEPA** section shows the optimized configuration's answer and citation correctness
+deltas against base, and whether the check passed. The PRD targets table adds the `gepa_lift` row (target
++0.05).
+
+- **Accepted:** commit `prime_search/prompts/optimized/`, `reports/gepa-run.json`, the new bench files and
+  the report, and add a dated line to the `docs/11` decision log.
+- **Not accepted:** delete `prime_search/prompts/optimized/*.md` so the base prompts ship. Commit
+  `reports/gepa-run.json` and the report with the negative result, and log it in `docs/11`.
+
+Never optimize on holdout, and never tune prompts by hand against holdout results: either one invalidates
+the holdout comparison.
+
+---
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `make setup` | Install the Python environment (`uv sync --all-groups`) |
+| `make test` | Offline tests (`pytest tests/ -x -q`); tests marked `live` are skipped |
+| `make smoke` | Per-role model check, one Tavily search, one Tavily extract, one LangSmith trace |
+| `make ask Q="…"` | One investigation, cited answer to the console. `ARGS="--mode baseline"`, `"--depth fast"`, `"--prompt-set optimized"` |
+| `make bench ARGS="…"` | One SearchBench experiment: `--mode`, `--split`, `--prompt-set`, `--concurrency`, `--ids`, `--dry-run`, `--rescore FILE` |
+| `make gepa ARGS="…"` | GEPA prompt optimization on train and dev: `--dry-run`, `--components`, `--max-metric-calls`, `--run-dir` |
+| `make dev-api` | FastAPI + SSE on `127.0.0.1:8765` (`PRIME_API_PORT`) |
+| `make dev-ui` | Next.js harness on `localhost:3000` |
+| `uv run python -m eval.report --split holdout --passes 2` | Final report from the saved bench files |
+| `uv run python -m eval.searchbench.sync [--check]` | Validate SearchBench, or push it to LangSmith |
+
+## Troubleshooting
+
+| Symptom | Cause and fix |
+|---|---|
+| `make: command not found` right after installing it | Open a new terminal so `PATH` refreshes, or run the `uv run` command in the recipe |
+| The API will not bind to port 8000 | Windows HTTP.sys holds it. The API defaults to 8765 (`PRIME_API_PORT`) |
+| `refusing to run: LangSmith searchbench-v0 differs from the jsonl` | Run `uv run python -m eval.searchbench.sync` after editing answer keys |
+| `refusing to run: unvalidated keys [...]` | A key lacks `validated_by`. Validate it (`docs/08` §2) before scoring |
+| A smoke role prints `FALLBACK` | That model failed its production call shape. Decide on the fallback and log it in `docs/11` |
+| `UnicodeEncodeError: 'charmap'` in a long run on Windows | Fixed in the bench and GEPA runners. For other scripts, set `PYTHONIOENCODING=utf-8` |
+| A run finished over its token budget | Tokens are checked between steps, so a run can finish over the cap. The UI shows "Research limit reached" |
+| Pass `ARGS` with spaces | Quote the whole value: `make bench ARGS="--mode prime --split dev"` |
 
 ## How it works
 
-A LangGraph pipeline — `understand → plan → dispatch → search sub-agents → collect → judge →
-critic → synthesize` — where the root planner and the critic emit **code-as-action** (fenced Python
-and JSON parsed from text) rather than native tool calls, because reasoning models on the Nebius
-endpoint may reject tool calls. Retrieval is Tavily search plus Tavily extract, with BM25 over the
-paragraphs of fetched documents so evidence can be quoted exactly and validated against the
-paragraph it came from. Architecture: `docs/01-system-architecture.md`; agents: `docs/03`.
+A LangGraph pipeline: `understand → plan → dispatch → search sub-agents → collect → judge → critic →
+synthesize`. The root planner and the critic emit **code-as-action** (fenced Python and JSON parsed from
+text) rather than native tool calls, because reasoning models on the Nebius endpoint may reject tool
+calls. Retrieval is Tavily search plus Tavily extract, with BM25 over the paragraphs of fetched documents,
+so evidence can be quoted exactly and validated against the paragraph it came from. The architecture is in
+`docs/01-system-architecture.md`, and the agents in `docs/03`.
+
+Model routing (defaults in `prime_search/config.py`):
+
+| Role | Model |
+|---|---|
+| Root planner and critic | `nvidia/nemotron-3-super-120b-a12b` |
+| Judge | `deepseek-ai/DeepSeek-V4-Flash-0731` |
+| Sub-agents, extractor and evaluators | `moonshotai/Kimi-K2.6` |
+| Baseline (the starter's model) | `moonshotai/Kimi-K2.6` |
 
 ## Docs index
 
 | File | Purpose |
 |---|---|
-| `CLAUDE.md` | Build conventions, constraints, model routing, doc index |
+| `TECHNICAL_STATEMENT.md` | The ≤ 2-page case for the design, with holdout results |
+| `CLAUDE.md` | Build conventions, constraints, model routing |
 | `docs/00-prd.md` | Product requirements: problem, personas, scenarios, FRs, metrics |
 | `docs/01-system-architecture.md` | Components, config, verified model IDs and fallback rule, Tavily usage |
 | `docs/02-data-flow.md` | Pydantic schemas at every stage; SSE event contract; persistence |
 | `docs/03-agent-architecture.md` | LangGraph graph, node-by-node design, code-as-action root, prompts |
 | `docs/04-evidence-model.md` | Source tiers, document metadata, evidence rules, claim graph, citations |
-| `docs/05-evaluation-loop.md` | SearchBench, evaluators, bench runner, feedback loop, GEPA |
-| `docs/06-observability.md` | LangSmith tags/feedback, local events, debugging playbook |
+| `docs/05-evaluation-loop.md` | SearchBench, evaluators, bench runner, report, GEPA |
+| `docs/06-observability.md` | LangSmith tags and feedback, local events, debugging playbook |
 | `docs/07-ui-spec.md` | Next.js harness: routes, compare view, components, API |
 | `docs/08-synthetic-data-spec.md` | Dataset construction and validation process |
 | `docs/09-implementation-plan.md` | 3-day plan with gates and cut list |
-| `docs/10-roadmap.md` | Memory, skills, RL, commercial payers — designed, not built |
+| `docs/10-roadmap.md` | Memory, skills, RL, commercial payers: designed, not built |
 | `docs/11-assumptions-and-approach.md` | Assumptions, approach, risks, decision log (living) |
-| `docs/12-technical-statement-outline.md` | Outline for the ≤ 2-page statement |
+| `docs/12-technical-statement-outline.md` | Outline for the technical statement |
 | `docs/13-claude-code-practices.md` | How Claude Code best practices are applied (skills, hooks, review) |
 | `.claude/` | Settings, guard hooks, `/gate` `/spec-review` `/session-end` `/validate-bench` skills, spec-reviewer subagent |
-| `build-log/` | One file per build session |
-| `data/searchbench/` | 30 questions with answer keys + validation README |
+| `build-log/` | One file per build session, plus session transcripts |
+| `data/searchbench/` | 30 questions with validated answer keys, plus the validation README |
+| `reports/` | Bench files, dev and final reports, GEPA run, model selection |
 
 ## Data and scope
 
-Questions are about **policy**, not patients: no PHI, no patient records, not even synthetic ones.
-The benchmark answer keys in `data/searchbench/` start as drafts and are validated against live
-primary sources before use (`docs/08`).
+Questions are about **policy**, not patients: no PHI and no patient records, not even synthetic ones. The
+benchmark answer keys in `data/searchbench/` started as drafts. They were validated against live primary
+sources before use (`docs/08`, `reports/searchbench-drift.md`). PRIME supports a reviewer's research. A
+coverage decision for an individual stays with the plan and the clinician.
