@@ -240,9 +240,9 @@ def test_a_dry_run_prints_the_plan_and_estimate_and_spends_nothing(offline_crede
     assert run_gepa.main(["--dry-run"]) == 0
     out = capsys.readouterr().out
     assert "GEPA on plan, judge: train 15 records, dev 5" in out
-    assert "max metric calls 60" in out
+    assert "max metric calls 10" in out
     assert "20 searches, 4 agents per round" in out
-    assert "estimated cost $36-$57" in out
+    assert "estimated cost $6-$10" in out
     assert "up to 11 more past the cap" in out
 
 

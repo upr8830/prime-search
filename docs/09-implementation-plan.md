@@ -103,8 +103,8 @@ Legend: **[G]** = gate (must pass before the next phase), **[opt]** = cut first 
 ## Day 3 — GEPA, report, statement, packaging
 
 ### 3.1 GEPA — 05 §5
-- `eval/gepa/adapter.py`, `run_gepa.py`; run on train/dev with the capped budget (~2–3 h wall
-  time; work on 3.3 in parallel).
+- `eval/gepa/adapter.py`, `run_gepa.py`; run on train/dev with the capped budget and 10 metric calls
+  (~30–60 min wall time; work on 3.3 in parallel).
 - Apply acceptance guardrails; write `prompts/optimized/` and `reports/gepa-run.json`.
 
 ### 3.2 Final bench — 05 §3

@@ -175,7 +175,8 @@ Adapter (`eval/gepa/adapter.py`):
 Run configuration (`eval/gepa/run_gepa.py`):
 
 - Train split (~15), dev split (~5) for Pareto selection. Holdout never touched.
-- Budget: `max_metric_calls ≈ 120` (≈ 8 candidate evaluations over the train set). Tavily cache
+- Budget: `max_metric_calls = 10` (user decision, docs/11: the base prompts' dev evaluation plus about one
+  proposal, with the last iteration allowed to finish past the cap). Tavily cache
   on; per-run budget reduced to `max_searches=20, max_agents=4` during optimization to bound cost.
 - Reflection model: the critic/root model. Task model: the graph as configured.
 - Output: `prompts/optimized/{plan,judge,critic}.md` plus `reports/gepa-run.json` (candidate
@@ -195,7 +196,7 @@ Guardrails:
 **As built (task 3.1).** `eval/gepa/adapter.py` (`PrimeAdapter`) and `eval/gepa/run_gepa.py`.
 
 - **Scope (user decision, docs/11):** `plan.md` and `judge.md` only (the cut list's item 5), with
-  `max_metric_calls` 60. `answer_correctness` is the majority of three judge calls (§2 as built).
+  `max_metric_calls` 10. `answer_correctness` is the majority of three judge calls (§2 as built).
   `--components` and `--max-metric-calls` restore the full configuration.
 - **Candidates:** each is registered as an in-memory prompt set `gepa-<sha>` (`prompts.register_prompt_set`)
   and passed to `run_prime(prompt_set=...)`, so concurrent runs of different candidates never share text.

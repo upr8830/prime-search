@@ -31,9 +31,9 @@ from prime_search.agents.graph import _git_sha
 from prime_search.config import Budget, get_settings
 from prime_search.models import critic_model
 
-# User decision (docs/11): option B, plan and judge only, 60 metric calls.
+# User decisions (docs/11): plan and judge only (option B), 10 metric calls.
 DEFAULT_COMPONENTS = ("plan", "judge")
-DEFAULT_MAX_METRIC_CALLS = 60
+DEFAULT_MAX_METRIC_CALLS = 10
 # One scored deep run, from the Day 2 dev bench and current prices (docs/11).
 COST_PER_EVALUATION = (0.60, 0.95)
 MINUTES_PER_EVALUATION = 5.2
