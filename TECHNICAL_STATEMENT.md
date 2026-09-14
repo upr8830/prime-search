@@ -122,7 +122,8 @@ The system does the research; a person makes the decision.
   steps, and the decision log is `docs/11`.
 - **Final report:** `reports/final-report.md` (headline, PRD targets, per-question scores, three worked
   examples). GEPA: `reports/gepa-run.json`. Build record: `build-log/`.
-- **LangSmith holdout experiments** (workspace access required):
+- **LangSmith holdout experiments.** The links need workspace access; screenshots of each experiment and
+  trace are in [`reports/langsmith/`](reports/langsmith/README.md):
   - starter [pass 1](https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/datasets/9dc81116-8a93-480c-9da2-29cacc1e9370/compare?selectedSessions=8a382e68-e6c4-4087-a8c9-25627b52e46d),
     [pass 2](https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/datasets/9dc81116-8a93-480c-9da2-29cacc1e9370/compare?selectedSessions=9c3640fd-6379-48d1-826a-64067c85b6e2);
   - PRIME [pass 1](https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/datasets/9dc81116-8a93-480c-9da2-29cacc1e9370/compare?selectedSessions=74673468-7163-421b-a7c1-10f29b529bc6),
