@@ -7,30 +7,20 @@ holdout bench finishes. No number below that carries a marker is a result yet. -
 
 ## 1. The problem: guideline decisions where a wrong answer costs patients and payers
 
-Payer utilization management turns coverage guidelines into decisions: approve, deny or pend. A wrong
-decision has two costs.
-
-- **The patient.** Someone who meets the criteria is denied care or has it delayed.
-- **The payer.** A payer that approves outside the criteria pays improperly. One that denies within
-  them faces appeals, overturned decisions and regulatory exposure.
-
-The problem is documented. HHS-OIG found that 13% of sampled Medicare Advantage prior-authorization
+Payer utilization management turns coverage guidelines into decisions. A wrong decision has two costs.
+A patient who meets the criteria is denied care or has it delayed. A payer that misapplies the criteria
+pays improperly, or faces appeals, overturned decisions and regulatory exposure. The problem is
+documented. HHS-OIG found that 13% of sampled Medicare Advantage prior-authorization
 denials met Medicare coverage rules (OEI-09-18-00260, 2022). Since 2024, CMS requires MA plans to apply
 traditional Medicare's NCD and LCD criteria (CMS-4201-F). The research behind a decision has to be
 right, current and auditable.
 
 Coverage research makes that hard. "Is a CGM covered under Medicare for a type 2 diabetic who is not on
-insulin?" looks like one search, but three things complicate it:
-
-- **Two governing documents.** The answer sits in LCD L33822 and its billing article A52464, which
-  differ in content and revision dates.
-- **Change.** The 2023 revision relaxed the insulin requirement, so cached knowledge is often wrong.
-- **Unreliable secondary sources.** Supplier pages and beneficiary guides overstate or understate
-  coverage.
-
-GLP-1 questions add Part D's weight-loss exclusion, FDA labels and CMS guidance from 2024–2026. The
-starter agent returns the top-ranked page, paraphrases it and cites a URL. It never says that two
-sources disagree, so a reviewer gets a fluent answer they cannot audit.
+insulin?" looks like one search. But the answer spans LCD L33822 and its billing article A52464, which
+differ in content and revision dates. The 2023 revision changed the insulin requirement, and supplier
+pages overstate or understate coverage. GLP-1 questions add Part D's weight-loss exclusion and FDA
+labels. The starter agent paraphrases the top-ranked page, cites a URL and never says that two
+sources disagree. A reviewer gets a fluent answer they cannot audit.
 
 ## 2. What I built: an investigation that shows its evidence
 
@@ -60,23 +50,21 @@ one real run (cgm-elig-001, deep): 5 branches → round 0 judge: sufficient → 
 search → task b1-r1-critic1 → round 1 judge: sufficient → critic 80% → cited answer; 179 s, 312k tokens
 ```
 
-In the assignment's terms the improvements are:
+In the assignment's terms, PRIME improves:
 
 - **Retrieval quality:** decomposition and primary-source targeting.
-- **Source handling and citations:** evidence objects and claim-level citations.
-- **Evaluation loop:** SearchBench, 30 questions whose answer keys were checked against live CMS and
-  FDA sources and validated by a person, with train, dev and holdout splits and 12 metrics; plus GEPA
-  prompt optimization.
-- **Observability:** LangSmith traces and feedback, and a side-by-side UI next to the starter.
+- **Source handling and citations:** evidence objects.
+- **The evaluation loop:** SearchBench (30 questions with person-validated answer keys, train, dev
+  and holdout splits, 12 metrics) and GEPA.
+
+It also adds LangSmith observability and a side-by-side UI.
 
 ## 3. How I know it is better
 
-The holdout split is 10 questions never used in development, run twice and reported as mean ±
-half-range. The baseline is the starter reproduced exactly. Three metrics matter most to a payer:
-
-- **Answer correctness:** is the answer right?
-- **Citation correctness:** does each cited passage support its claim?
-- **Currency:** does the answer rest on the governing document and its date?
+The holdout is 10 questions never used in development, run in two passes and reported as mean ±
+half-range, against the starter reproduced exactly. For a payer the first three rows matter most: is
+the answer right, does each cited passage support its claim, and does the answer rest on the governing
+document and date?
 
 | metric (holdout) | baseline | PRIME | PRIME + GEPA |
 |---|---|---|---|
@@ -103,8 +91,7 @@ starter's answer, then PRIME's Contradictions section and the governing source i
   therefore use the majority of three judge calls and two passes.
 - **GEPA found no improvement.** Its one proposal rewrote the planner prompt. It did better on its 3
   train questions but worse on dev (0.707 against 0.751), including a 0.28 loss on a contradiction
-  question. The base prompts ship, so PRIME + GEPA equals PRIME. The base dev score reproduced across
-  two runs (0.752, 0.751).
+  question. The base prompts ship, so PRIME + GEPA equals PRIME.
 - **Cost.** A deep question takes about 440k tokens and 160 s, against the starter's 9k tokens and 12 s.
   That is roughly $0.60–0.95 per scored question at list prices, a cost to weigh against a decision
   that has to hold up on appeal.
@@ -118,10 +105,9 @@ starter's answer, then PRIME's Contradictions section and the governing source i
   missing phrases, "stale" claims still in force, and sources that could not be found. A person
   corrected them during validation. A benchmark written from memory would grade against stale policy,
   which is the failure the product exists to avoid.
-- **Code-as-action for the root.** Reasoning models on this endpoint were reported to return text in
-  `reasoning_content` and to reject native tool calls. The root therefore writes its plan as Python in
-  a sandbox, which makes it an executable, traceable object, with repair, structured and default-plan
-  fallbacks.
+- **Code-as-action for the root.** Reasoning models on this endpoint were reported to reject native
+  tool calls. The root therefore writes its plan as Python in a sandbox, which makes it an executable,
+  traceable object, with repair and default-plan fallbacks.
 - **Not built:** search memory, learned skills and an RL-trained search policy (roadmap R1, R2, R7).
   GEPA was the one learning loop, because it could be measured with evaluators I needed anyway.
 
@@ -132,12 +118,8 @@ the customer owns and validates against its own policies. Moving it to another d
 strategy card, source-tier rules and answer keys; the graph, evidence store, evaluators, tracing and
 harness stay the same.
 
-Next steps:
-
-- commercial payer medical policies and multi-jurisdiction MACs (R4);
-- a customer-validated SearchBench scored before go-live;
-- a security layer on fetched content (R8).
-
+The next steps are commercial payer medical policies and multi-jurisdiction MACs (R4), a
+customer-validated SearchBench scored before go-live, and a security layer on fetched content (R8).
 Throughout, the system does the research and a person makes the decision.
 
 ## Appendix
