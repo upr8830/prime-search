@@ -164,6 +164,8 @@ def summarize(label: str, passes: Sequence[dict[str, Any]]) -> dict[str, Any]:
         "judge_tokens": sum(int((score.get("metadata") or {}).get("judge_tokens") or 0) for score in scores),
         "missing_keys": [key for key in METRIC_KEYS if metrics[key]["n"] == 0],
         "_rows": rows,
+        # Every pass's rows, latest first, so subset targets average passes as the headline does.
+        "_passes": [payload["rows"] for payload in passes],
     }
 
 
@@ -173,11 +175,13 @@ def prd_targets(summaries: Sequence[dict[str, Any]], gepa: dict[str, Any] | None
     baseline_ac = baseline["metrics"]["answer_correctness"]["mean"] if baseline else None
     targets: list[dict[str, Any]] = []
     for summary in summaries:
-        rows = summary["_rows"]
-        adversarial = _mean(
-            _score(row, "contradiction_handling") for row in rows if row.get("tier") == 4
+        passes = summary.get("_passes") or [summary["_rows"]]
+        adversarial = _pass_mean(
+            passes, lambda rows: _mean(_score(row, "contradiction_handling") for row in rows if row.get("tier") == 4)
         )
-        change = _mean(_score(row, "currency") for row in rows if row.get("question_type") == "change_detection")
+        change = _pass_mean(
+            passes, lambda rows: _mean(_score(row, "currency") for row in rows if row.get("question_type") == "change_detection")
+        )
         checks = [
             ("contradiction_handling", "tier 4 with expected contradictions", adversarial, 0.6),
             ("currency", "change-detection questions", change, 0.8),
@@ -200,6 +204,12 @@ def prd_targets(summaries: Sequence[dict[str, Any]], gepa: dict[str, Any] | None
     return targets
 
 
+def _pass_mean(passes: Sequence[Sequence[dict[str, Any]]], pick) -> tuple[float | None, int]:  # noqa: ANN001
+    """A subset metric averaged over passes the way the headline is (`_across_passes`)."""
+    result = _across_passes([{"rows": rows} for rows in passes], pick)
+    return result["mean"], result["n"]
+
+
 def gepa_outcome(path: Path | str = GEPA_REPORT) -> dict[str, Any] | None:
     """What task 3.1's GEPA run concluded (docs/05 §5), from `reports/gepa-run.json`."""
     source = Path(path)
@@ -211,7 +221,13 @@ def gepa_outcome(path: Path | str = GEPA_REPORT) -> dict[str, Any] | None:
         return None
     keys = ("components", "total_metric_calls", "seed_dev_score", "best_dev_score", "improved_on_dev",
             "optimized_prompts_written", "run_dir", "git_sha")
-    return {key: data.get(key) for key in keys}
+    outcome = {key: data.get(key) for key in keys}
+    # Candidate 0 is the seed: when no proposal wins, best_dev_score is the seed's own score,
+    # so the proposals' best is reported separately rather than as "best 0.75 against base 0.75".
+    proposals = [c.get("dev_score") for c in (data.get("candidates") or [])[1:] if c.get("dev_score") is not None]
+    outcome["proposals"] = len((data.get("candidates") or [])[1:])
+    outcome["best_proposal_dev_score"] = max(proposals) if proposals else None
+    return outcome
 
 
 def _prime(summaries: Sequence[dict[str, Any]], prompt_set: str) -> dict[str, Any] | None:
@@ -258,10 +274,21 @@ def gepa_lines(summaries: Sequence[dict[str, Any]], gepa: dict[str, Any] | None)
     optimized = _prime(summaries, "optimized")
     lines: list[str] = []
     if gepa is not None:
+        components = [str(name) for name in gepa.get("components") or []]
+        named = " and ".join([", ".join(components[:-1]), components[-1]] if len(components) > 2 else components)
+        proposals = gepa.get("proposals")
+        if proposals is None:
+            found = ""
+        elif proposals == 0:
+            found = " and made no proposal"
+        else:
+            found = (
+                f" and made {proposals} proposal{'s' if proposals != 1 else ''}; the best scored "
+                f"{_fmt(gepa.get('best_proposal_dev_score'))} on dev"
+            )
         lines.append(
-            f"GEPA (task 3.1) optimized {', '.join(gepa.get('components') or []) or 'no prompts'} with "
-            f"{gepa.get('total_metric_calls')} metric calls: best dev {_fmt(gepa.get('best_dev_score'))} against "
-            f"base {_fmt(gepa.get('seed_dev_score'))} (`reports/gepa-run.json`)."
+            f"GEPA (task 3.1) optimized {named or 'no prompts'} with {gepa.get('total_metric_calls')} metric calls{found}. "
+            f"The base prompts scored {_fmt(gepa.get('seed_dev_score'))} on dev (`reports/gepa-run.json`)."
         )
     if optimized is None:
         lift = gepa_lift(summaries, gepa)
@@ -380,6 +407,10 @@ def render_markdown(
     gepa: dict[str, Any] | None = None,
 ) -> str:
     lines = [f"# SearchBench {split} report", ""]
+    latest_note = (
+        [f"_From the latest pass of each configuration; the headline and PRD targets average all {passes} passes._", ""]
+        if passes > 1 else []
+    )
     lines.append(
         f"Generated {generated_at} by `uv run python -m eval.report --split {split}"
         f"{' --passes ' + str(passes) if passes > 1 else ''}` from the local bench files listed below."
@@ -430,14 +461,14 @@ def render_markdown(
     ) + [""]
 
     for title, field in (("Per tier", "per_tier"), ("Per domain", "per_domain")):
-        lines += [f"## {title}", ""]
+        lines += [f"## {title}", "", *latest_note]
         rows = []
         for summary in summaries:
             for name, entry in summary[field].items():
                 rows.append([name, summary["config"], str(entry["n"]), *(_fmt(entry[key]) for key in BREAKDOWN_KEYS), _fmt(entry["composite"])])
         lines += _table([field.split("_")[1], "config", "n", *BREAKDOWN_KEYS, "composite"], rows) + [""]
 
-    lines += ["## Per question", ""]
+    lines += ["## Per question", "", *latest_note]
     rows = []
     question_ids = sorted({row["question_id"] for summary in summaries for row in summary["_rows"]})
     for question_id in question_ids:
@@ -450,7 +481,7 @@ def render_markdown(
                          *(_fmt(_score(row, key)) for key in BREAKDOWN_KEYS), str(row.get("status")), trace])
     lines += _table(["question", "config", "composite", *BREAKDOWN_KEYS, "status", "trace"], rows) + [""]
 
-    lines += ["## Worked examples", ""]
+    lines += ["## Worked examples", "", *latest_note]
     for kind, record in _examples(records):
         lines += [f"### {kind}: `{record.id}` (tier {record.tier}, {record.question_type})", "",
                   f"**Question.** {record.question}", "", f"**Answer key.** {record.answer_key.summary}", ""]
@@ -465,7 +496,7 @@ def render_markdown(
             trace = f" ([trace]({row['langsmith_run_url']}))" if row and row.get("langsmith_run_url") else ""
             lines += [f"**{summary['config']}**{trace}", "", *_excerpt(row), ""]
 
-    lines += ["## Cost and latency", ""]
+    lines += ["## Cost and latency", "", *latest_note]
     cost_rows = []
     for summary in summaries:
         cells = [summary["config"]]

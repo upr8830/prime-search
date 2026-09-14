@@ -1,0 +1,1684 @@
+{
+ "experiment_name": "baseline-none-holdout-20260914-0222-5487b5be",
+ "experiment_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/datasets/9dc81116-8a93-480c-9da2-29cacc1e9370/compare?selectedSessions=8a382e68-e6c4-4087-a8c9-25627b52e46d",
+ "config": {
+  "mode": "baseline",
+  "prompt_set": "none",
+  "split": "holdout",
+  "depth": "deep"
+ },
+ "metadata": {
+  "git_sha": "70027ea",
+  "models": {
+   "root": "nvidia/nemotron-3-super-120b-a12b",
+   "critic": "nvidia/nemotron-3-super-120b-a12b",
+   "subagent": "moonshotai/Kimi-K2.6",
+   "judge": "deepseek-ai/DeepSeek-V4-Flash-0731",
+   "extractor": "moonshotai/Kimi-K2.6",
+   "evaluator": "moonshotai/Kimi-K2.6",
+   "baseline": "moonshotai/Kimi-K2.6"
+  },
+  "budget": {
+   "note": "starter agent; no budget"
+  },
+  "tavily_cache": false,
+  "mode": "baseline",
+  "depth": "deep",
+  "split": "holdout",
+  "prompt_set": "none",
+  "dataset_sha": "2b33b5a37f34",
+  "evaluator_model": "moonshotai/Kimi-K2.6",
+  "n_examples": 10,
+  "subset": false
+ },
+ "started_at": "2026-09-14T02:22:25.685337+00:00",
+ "finished_at": "2026-09-14T02:27:39.529160+00:00",
+ "rows": [
+  {
+   "question_id": "adv-cgm-002",
+   "domain": "cgm",
+   "tier": 4,
+   "question_type": "contradiction",
+   "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531",
+   "target_run_id": "01a09db9-0f36-7b70-8d3a-fa1fa40f099b",
+   "status": "completed",
+   "error": null,
+   "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-1185-7f83-9b7e-12fc9eef892c/run/01a09db9-1185-7f83-9b7e-12fc9eef892c?start_time=2026-09-14T02%3A22%3A26.693205%2B00%3A00",
+   "usage": {
+    "searches": 1,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 7859,
+    "output_tokens": 669,
+    "wall_seconds": 10.7
+   },
+   "scores": {
+    "answer_correctness": {
+     "score": 0.7333,
+     "comment": "claims 4/6 weighted present; missing: c2 (must); summary: consistent",
+     "metadata": {
+      "judge_tokens": 9476,
+      "judge_votes": 3,
+      "judge_calls": 3,
+      "judge_mode": "native"
+     }
+    },
+    "evidence_recall": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage, so no required evidence can be matched - 0 by construction",
+     "metadata": {}
+    },
+    "citation_correctness": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+     "metadata": {}
+    },
+    "citation_completeness": {
+     "score": 0.3,
+     "comment": "3/10 cited in whole answer (no Criteria / Codes sections); uncited: '**No\u2014that is no longer true.** Medicare removed the \"three injections per day...'; 'As of April 16, 2023, Medicare's updated criteria removed the language requir...'; 'Current Medicare coverage standards generally require only that you:'",
+     "metadata": {}
+    },
+    "currency": {
+     "score": 0.5,
+     "comment": "L33822: cited; governing date 2024-10-01 not stated",
+     "metadata": {}
+    },
+    "contradiction_handling": {
+     "score": 1.0,
+     "comment": "x1 'Older pages state the MDI requirement; the current LCD do...': surfaced, governing stated",
+     "metadata": {
+      "judge_mode": "native_retry_1",
+      "judge_tokens": 2872
+     }
+    },
+    "scope_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no scope warning",
+     "metadata": {}
+    },
+    "primary_source_ratio": {
+     "score": 0.3333,
+     "comment": "1/3 citations at official_secondary or better; below: [2] unknown youtube.com, [3] web dexcom.com",
+     "metadata": {}
+    },
+    "search_cost": {
+     "score": 1,
+     "comment": "1 searches + 0 fetches",
+     "metadata": {}
+    },
+    "latency_s": {
+     "score": 10.7,
+     "comment": "10.7s wall clock",
+     "metadata": {}
+    },
+    "tokens": {
+     "score": 8528,
+     "comment": "7859 in + 669 out",
+     "metadata": {}
+    },
+    "search_efficiency": {
+     "score": 7.333,
+     "comment": "answer_correctness 0.7333 / max(1, 1 calls) x 10",
+     "metadata": {}
+    }
+   },
+   "composite": 0.4433,
+   "record": {
+    "run_id": "01a09db9-0f54-7005-95ad-8de5a9b1d531",
+    "request": {
+     "question": "I read that Medicare requires three or more insulin injections per day before it will cover a CGM. Is that still true?",
+     "mode": "baseline",
+     "depth": "deep",
+     "question_id": "adv-cgm-002",
+     "budget_override": null,
+     "prompt_set": "base"
+    },
+    "started_at": "2026-09-14T02:22:26.132197Z",
+    "finished_at": "2026-09-14T02:22:36.865263Z",
+    "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-1185-7f83-9b7e-12fc9eef892c/run/01a09db9-1185-7f83-9b7e-12fc9eef892c?start_time=2026-09-14T02%3A22%3A26.693205%2B00%3A00",
+    "langsmith_trace_id": "01a09db9-1185-7f83-9b7e-12fc9eef892c",
+    "plan": null,
+    "documents": {},
+    "evidence": [],
+    "claims": [],
+    "answer": {
+     "summary": "**No\u2014that is no longer true.** Medicare removed the \"three injections per day\" requirement in 2023. As of April 16, 2023, Medicare's updated criteria removed the language requiring beneficiaries to be \"insulin-treated with multiple (three or more) daily administrations\" to qualify for a CGM. Current Medicare coverage standards generally require only that you: - Been diagnosed with diabetes, **and** - Are treated with insulin (any insulin regimen, including fewer than three injections or a pump), **or** - Have a documented history of \"problematic hypoglycemia\" (recurrent severe low blood sugars) even if not on insulin. **Sources:** - Centers for Medicare & Medicaid Services (LCD L33822): [cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822](https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822) - American Diabetes Association webinar on 2023 Medicare changes: [youtube.com/watch?v=GZ2mEZtG7UA](https://www.youtube.com/watch?v=GZ2mEZtG7UA) - Dexcom summary of ex",
+     "body_markdown": "**No\u2014that is no longer true.** Medicare removed the \"three injections per day\" requirement in 2023.\n\nAs of April 16, 2023, Medicare's updated criteria removed the language requiring beneficiaries to be \"insulin-treated with multiple (three or more) daily administrations\" to qualify for a CGM. Current Medicare coverage standards generally require only that you:\n\n- Been diagnosed with diabetes, **and**\n- Are treated with insulin (any insulin regimen, including fewer than three injections or a pump), **or** \n- Have a documented history of \"problematic hypoglycemia\" (recurrent severe low blood sugars) even if not on insulin.\n\n**Sources:**\n- Centers for Medicare & Medicaid Services (LCD L33822): [cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822](https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822)\n- American Diabetes Association webinar on 2023 Medicare changes: [youtube.com/watch?v=GZ2mEZtG7UA](https://www.youtube.com/watch?v=GZ2mEZtG7UA)\n- Dexcom summary of expanded coverage: [dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands](https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands)",
+     "claims": [],
+     "citations": [
+      {
+       "n": 1,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+       "label": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822"
+      },
+      {
+       "n": 2,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.youtube.com/watch?v=GZ2mEZtG7UA",
+       "label": "https://www.youtube.com/watch?v=GZ2mEZtG7UA"
+      },
+      {
+       "n": 3,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands",
+       "label": "https://www.dexcom.com/en-us/all-access/clinical-corner/medicare-coverage-expands"
+      }
+     ],
+     "effective_dates": [],
+     "contradictions": [],
+     "unknowns": [],
+     "confidence": 0.0,
+     "scope_warning": null
+    },
+    "usage": {
+     "searches": 1,
+     "fetches": 0,
+     "deep_reads": 0,
+     "agents": 0,
+     "rounds": 0,
+     "input_tokens": 7859,
+     "output_tokens": 669,
+     "wall_seconds": 10.7
+    },
+    "status": "completed",
+    "error": null
+   }
+  },
+  {
+   "question_id": "glp1-path-004",
+   "domain": "glp1",
+   "tier": 3,
+   "question_type": "coverage_pathway",
+   "run_id": "01a09db9-0f52-7618-8b1d-1cb7430a92f8",
+   "target_run_id": "01a09db9-0f36-7c00-ac4d-a0d92fb88ac1",
+   "status": "completed",
+   "error": null,
+   "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-1187-7520-8f18-7b059874e61d/run/01a09db9-1187-7520-8f18-7b059874e61d?start_time=2026-09-14T02%3A22%3A26.695208%2B00%3A00",
+   "usage": {
+    "searches": 1,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 7996,
+    "output_tokens": 807,
+    "wall_seconds": 12.5
+   },
+   "scores": {
+    "answer_correctness": {
+     "score": 0.68,
+     "comment": "claims 3/5 weighted present; missing: c2 (must); summary: consistent",
+     "metadata": {
+      "judge_tokens": 34999,
+      "judge_votes": 3,
+      "judge_calls": 3,
+      "judge_mode": "fenced_json"
+     }
+    },
+    "evidence_recall": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage, so no required evidence can be matched - 0 by construction",
+     "metadata": {}
+    },
+    "citation_correctness": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+     "metadata": {}
+    },
+    "citation_completeness": {
+     "score": 0.0,
+     "comment": "0/14 cited in whole answer (no Criteria / Codes sections); uncited: '**Yes, Medicare can cover Zepbound (tirzepatide) for obstructive sleep apnea ...'; 'Here are the key facts:'; '**FDA approval:** In December 2024, the FDA approved Zepbound for moderate-to...'",
+     "metadata": {}
+    },
+    "currency": {
+     "score": 0.0,
+     "comment": "FDA Zepbound label: not cited; no governing date on record (search-guessed index entry); CMS 2024 Part D guidance: not cited; no governing date on record (search-guessed index entry)",
+     "metadata": {}
+    },
+    "contradiction_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no contradiction",
+     "metadata": {}
+    },
+    "scope_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no scope warning",
+     "metadata": {}
+    },
+    "primary_source_ratio": {
+     "score": 0.0,
+     "comment": "0/4 citations at official_secondary or better; below: [1] unknown drugs.com, [2] unknown nowpatient.com, [3] unknown understoodcare.com, [4] unknown formblends.com",
+     "metadata": {}
+    },
+    "search_cost": {
+     "score": 1,
+     "comment": "1 searches + 0 fetches",
+     "metadata": {}
+    },
+    "latency_s": {
+     "score": 12.5,
+     "comment": "12.5s wall clock",
+     "metadata": {}
+    },
+    "tokens": {
+     "score": 8803,
+     "comment": "7996 in + 807 out",
+     "metadata": {}
+    },
+    "search_efficiency": {
+     "score": 6.8,
+     "comment": "answer_correctness 0.68 / max(1, 1 calls) x 10",
+     "metadata": {}
+    }
+   },
+   "composite": 0.34,
+   "record": {
+    "run_id": "01a09db9-0f52-7618-8b1d-1cb7430a92f8",
+    "request": {
+     "question": "Does Medicare cover tirzepatide (Zepbound) for obstructive sleep apnea?",
+     "mode": "baseline",
+     "depth": "deep",
+     "question_id": "glp1-path-004",
+     "budget_override": null,
+     "prompt_set": "base"
+    },
+    "started_at": "2026-09-14T02:22:26.130971Z",
+    "finished_at": "2026-09-14T02:22:38.611123Z",
+    "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-1187-7520-8f18-7b059874e61d/run/01a09db9-1187-7520-8f18-7b059874e61d?start_time=2026-09-14T02%3A22%3A26.695208%2B00%3A00",
+    "langsmith_trace_id": "01a09db9-1187-7520-8f18-7b059874e61d",
+    "plan": null,
+    "documents": {},
+    "evidence": [],
+    "claims": [],
+    "answer": {
+     "summary": "**Yes, Medicare can cover Zepbound (tirzepatide) for obstructive sleep apnea (OSA), but coverage is limited and plan-specific.** Here are the key facts: - **FDA approval:** In December 2024, the FDA approved Zepbound for moderate-to-severe OSA in adults with obesity. This opened a coverage pathway separate from weight loss. - **Coverage details:** Some Medicare Part D and Medicare Advantage plans added coverage for Zepbound under the OSA indication in 2025. However, Medicare still generally **does not** cover Zepbound when prescribed solely for weight management. - **Requirements:** Coverage typically requires: - Confirmed OSA diagnosis (often AHI \u2265 15) - Documented obesity (BMI \u2265 30) - Prior authorization from your plan - Documentation of PAP therapy intolerance or concurrent treatment - **Plan variability:** Formularies and criteria differ by plan. Patients must confirm directly with their Medicare Part D or Advantage provider. **Sources:** - [Drugs.com](https://drugs.com/medical-ans",
+     "body_markdown": "**Yes, Medicare can cover Zepbound (tirzepatide) for obstructive sleep apnea (OSA), but coverage is limited and plan-specific.**\n\nHere are the key facts:\n\n- **FDA approval:** In December 2024, the FDA approved Zepbound for moderate-to-severe OSA in adults with obesity. This opened a coverage pathway separate from weight loss.\n- **Coverage details:** Some Medicare Part D and Medicare Advantage plans added coverage for Zepbound under the OSA indication in 2025. However, Medicare still generally **does not** cover Zepbound when prescribed solely for weight management.\n- **Requirements:** Coverage typically requires:\n  - Confirmed OSA diagnosis (often AHI \u2265 15)\n  - Documented obesity (BMI \u2265 30)\n  - Prior authorization from your plan\n  - Documentation of PAP therapy intolerance or concurrent treatment\n- **Plan variability:** Formularies and criteria differ by plan. Patients must confirm directly with their Medicare Part D or Advantage provider.\n\n**Sources:**\n- [Drugs.com](https://drugs.com/medical-answers/medicare-cover-zepbound-3581045)\n- [NowPatient](https://nowpatient.com/blog/zepbound-and-medicare-coverage-what-to-know)\n- [Understood Care](https://understoodcare.com/blog/glp-1-side-effects-on-medicare-when-to-call-your-advocate-vs-your-doctor)\n- [FormBlends](https://formblends.com/articles/cost-access/zepbound-insurance-sleep-apnea)",
+     "claims": [],
+     "citations": [
+      {
+       "n": 1,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://drugs.com/medical-answers/medicare-cover-zepbound-3581045",
+       "label": "https://drugs.com/medical-answers/medicare-cover-zepbound-3581045"
+      },
+      {
+       "n": 2,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://nowpatient.com/blog/zepbound-and-medicare-coverage-what-to-know",
+       "label": "https://nowpatient.com/blog/zepbound-and-medicare-coverage-what-to-know"
+      },
+      {
+       "n": 3,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://understoodcare.com/blog/glp-1-side-effects-on-medicare-when-to-call-your-advocate-vs-your-doctor",
+       "label": "https://understoodcare.com/blog/glp-1-side-effects-on-medicare-when-to-call-your-advocate-vs-your-doctor"
+      },
+      {
+       "n": 4,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://formblends.com/articles/cost-access/zepbound-insurance-sleep-apnea",
+       "label": "https://formblends.com/articles/cost-access/zepbound-insurance-sleep-apnea"
+      }
+     ],
+     "effective_dates": [],
+     "contradictions": [],
+     "unknowns": [],
+     "confidence": 0.0,
+     "scope_warning": null
+    },
+    "usage": {
+     "searches": 1,
+     "fetches": 0,
+     "deep_reads": 0,
+     "agents": 0,
+     "rounds": 0,
+     "input_tokens": 7996,
+     "output_tokens": 807,
+     "wall_seconds": 12.5
+    },
+    "status": "completed",
+    "error": null
+   }
+  },
+  {
+   "question_id": "cgm-code-004",
+   "domain": "cgm",
+   "tier": 3,
+   "question_type": "coding",
+   "run_id": "01a09db9-394e-793a-afe6-2a4167517282",
+   "target_run_id": "01a09db9-394d-7bf2-ad2b-ecf39bbfd16a",
+   "status": "completed",
+   "error": null,
+   "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-3956-7263-bd36-8fcd695bfd82/run/01a09db9-3956-7263-bd36-8fcd695bfd82?start_time=2026-09-14T02%3A22%3A36.886641%2B00%3A00",
+   "usage": {
+    "searches": 1,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 6923,
+    "output_tokens": 1062,
+    "wall_seconds": 12.3
+   },
+   "scores": {
+    "answer_correctness": {
+     "score": 0.7333,
+     "comment": "claims 2/3 weighted present; missing: c2; summary: consistent",
+     "metadata": {
+      "judge_tokens": 42648,
+      "judge_votes": 3,
+      "judge_calls": 3,
+      "judge_mode": "fenced_json"
+     }
+    },
+    "evidence_recall": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage, so no required evidence can be matched - 0 by construction",
+     "metadata": {}
+    },
+    "citation_correctness": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+     "metadata": {}
+    },
+    "citation_completeness": {
+     "score": 0.3333,
+     "comment": "3/9 cited in whole answer (no Criteria / Codes sections); uncited: '**No** \u2013 if a Medicare beneficiary reads their CGM **only** on a smartphone a...'; '**The rule is:** Medicare covers CGM supplies when the glucose data is displa...'; 'Beneficiaries *can* use a smartphone app on some days or alongside the receiv...'",
+     "metadata": {}
+    },
+    "currency": {
+     "score": 0.5,
+     "comment": "A52464: cited; governing date 2025-02-18 not stated",
+     "metadata": {}
+    },
+    "contradiction_handling": {
+     "score": 0.0,
+     "comment": "x1 'Vendor guidance may differ from the article': not surfaced",
+     "metadata": {
+      "judge_mode": "fenced_json",
+      "judge_tokens": 8209
+     }
+    },
+    "scope_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no scope warning",
+     "metadata": {}
+    },
+    "primary_source_ratio": {
+     "score": 0.3333,
+     "comment": "1/3 citations at official_secondary or better; below: [2] web dexcom.com, [3] unknown aafp.org",
+     "metadata": {}
+    },
+    "search_cost": {
+     "score": 1,
+     "comment": "1 searches + 0 fetches",
+     "metadata": {}
+    },
+    "latency_s": {
+     "score": 12.3,
+     "comment": "12.3s wall clock",
+     "metadata": {}
+    },
+    "tokens": {
+     "score": 7985,
+     "comment": "6923 in + 1062 out",
+     "metadata": {}
+    },
+    "search_efficiency": {
+     "score": 7.333,
+     "comment": "answer_correctness 0.7333 / max(1, 1 calls) x 10",
+     "metadata": {}
+    }
+   },
+   "composite": 0.3433,
+   "record": {
+    "run_id": "01a09db9-394e-793a-afe6-2a4167517282",
+    "request": {
+     "question": "If a Medicare beneficiary reads their CGM on a smartphone instead of a dedicated receiver, are the supplies still covered?",
+     "mode": "baseline",
+     "depth": "deep",
+     "question_id": "cgm-code-004",
+     "budget_override": null,
+     "prompt_set": "base"
+    },
+    "started_at": "2026-09-14T02:22:36.878287Z",
+    "finished_at": "2026-09-14T02:22:49.185058Z",
+    "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-3956-7263-bd36-8fcd695bfd82/run/01a09db9-3956-7263-bd36-8fcd695bfd82?start_time=2026-09-14T02%3A22%3A36.886641%2B00%3A00",
+    "langsmith_trace_id": "01a09db9-3956-7263-bd36-8fcd695bfd82",
+    "plan": null,
+    "documents": {},
+    "evidence": [],
+    "claims": [],
+    "answer": {
+     "summary": "**No** \u2013 if a Medicare beneficiary reads their CGM **only** on a smartphone and never uses a durable medical equipment (DME) receiver or insulin pump to display glucose data, Medicare will **not** cover the CGM supplies. **The rule is:** Medicare covers CGM supplies when the glucose data is displayed on a **stand-alone receiver classified as DME** or an **insulin infusion pump classified as DME** *at least some of the time*. Beneficiaries *can* use a smartphone app on some days or alongside the receiver, but the dedicated DME receiver must be part of their use. Smartphone-only systems do not meet Medicare\u2019s DME definition and are denied as non-covered. **Key citations:** - CMS Policy Article A52464: *\u201cIf a beneficiary never uses a DME receiver or insulin infusion pump to display CGM glucose data, the supply allowance is not covered by Medicare.\u201d* It also notes: *\u201cCGM devices that solely display results on a smartphone and do not have a stand-alone receiver or integration into an insuli",
+     "body_markdown": "**No** \u2013 if a Medicare beneficiary reads their CGM **only** on a smartphone and never uses a durable medical equipment (DME) receiver or insulin pump to display glucose data, Medicare will **not** cover the CGM supplies.\n\n**The rule is:** Medicare covers CGM supplies when the glucose data is displayed on a **stand-alone receiver classified as DME** or an **insulin infusion pump classified as DME** *at least some of the time*. Beneficiaries *can* use a smartphone app on some days or alongside the receiver, but the dedicated DME receiver must be part of their use. Smartphone-only systems do not meet Medicare\u2019s DME definition and are denied as non-covered.\n\n**Key citations:**\n- CMS Policy Article A52464: *\u201cIf a beneficiary never uses a DME receiver or insulin infusion pump to display CGM glucose data, the supply allowance is not covered by Medicare.\u201d* It also notes: *\u201cCGM devices that solely display results on a smartphone and do not have a stand-alone receiver or integration into an insulin infusion pump do not meet the definition of DME and will be denied as non-covered.\u201d* ([CMS.gov](https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464))\n- Dexcom\u2019s Medicare FAQ: *\u201cMedicare does not cover Dexcom G6 or Dexcom G7 CGM supplies that are used only with a smartphone or other mobile device. If you don\u2019t use your receiver, you\u2019ll lose Medicare coverage.\u201d* ([Dexcom.com](https://www.dexcom.com/en-us/faqs/medicare))\n- American Academy of Family Physicians: CMS allows smartphone use *\u201cin conjunction with a dedicated CGM receiver, but the receiver must be used at least some of the time in order for Medicare coverage to apply.\u201d* ([AAFP.org](https://www.aafp.org/fpm/2024/0100/continuous-glucose-monitoring))",
+     "claims": [],
+     "citations": [
+      {
+       "n": 1,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+       "label": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464"
+      },
+      {
+       "n": 2,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.dexcom.com/en-us/faqs/medicare",
+       "label": "https://www.dexcom.com/en-us/faqs/medicare"
+      },
+      {
+       "n": 3,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.aafp.org/fpm/2024/0100/continuous-glucose-monitoring",
+       "label": "https://www.aafp.org/fpm/2024/0100/continuous-glucose-monitoring"
+      }
+     ],
+     "effective_dates": [],
+     "contradictions": [],
+     "unknowns": [],
+     "confidence": 0.0,
+     "scope_warning": null
+    },
+    "usage": {
+     "searches": 1,
+     "fetches": 0,
+     "deep_reads": 0,
+     "agents": 0,
+     "rounds": 0,
+     "input_tokens": 6923,
+     "output_tokens": 1062,
+     "wall_seconds": 12.3
+    },
+    "status": "completed",
+    "error": null
+   }
+  },
+  {
+   "question_id": "chg-glp1-001",
+   "domain": "glp1",
+   "tier": 3,
+   "question_type": "change_detection",
+   "run_id": "01a09db9-0f53-7309-b410-5c244689557e",
+   "target_run_id": "01a09db9-0f35-7e13-bc13-308a03284134",
+   "status": "completed",
+   "error": null,
+   "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-1183-7691-a845-0367398ebfc0/run/01a09db9-1183-7691-a845-0367398ebfc0?start_time=2026-09-14T02%3A22%3A26.691011%2B00%3A00",
+   "usage": {
+    "searches": 1,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 8740,
+    "output_tokens": 1013,
+    "wall_seconds": 18.6
+   },
+   "scores": {
+    "answer_correctness": {
+     "score": 0.1,
+     "comment": "claims 0/6 weighted present; missing: c1 (must), c2 (must), c3 (must); summary: partial",
+     "metadata": {
+      "judge_tokens": 33474,
+      "judge_votes": 3,
+      "judge_calls": 3,
+      "judge_mode": "fenced_json+native"
+     }
+    },
+    "evidence_recall": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage, so no required evidence can be matched - 0 by construction",
+     "metadata": {}
+    },
+    "citation_correctness": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+     "metadata": {}
+    },
+    "citation_completeness": {
+     "score": 0.0,
+     "comment": "0/16 cited in whole answer (no Criteria / Codes sections); uncited: 'Here are the key Medicare changes for GLP\u20111 coverage in 2026:'; '**The Medicare GLP\u20111 Bridge Program (July 1, 2026 \u2013 Dec. 31, 2027)**'; 'For the first time, Medicare is providing a temporary but direct pathway to c...'",
+     "metadata": {}
+    },
+    "currency": {
+     "score": 0.25,
+     "comment": "CMS 2026 announcements: not cited; no governing date on record (search-guessed index entry); order: dated_not_ordered (The answer provides some dates (e.g., July 1, 2026, late 2025) but presents them out of chronological order and omits...)",
+     "metadata": {
+      "judge_mode": "fenced_json",
+      "judge_tokens": 12020
+     }
+    },
+    "contradiction_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no contradiction",
+     "metadata": {}
+    },
+    "scope_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no scope warning",
+     "metadata": {}
+    },
+    "primary_source_ratio": {
+     "score": 0.0,
+     "comment": "0/5 citations at official_secondary or better; below: [1] unknown obesityaction.org, [2] web goodrx.com, [3] unknown eu.usatoday.com, [4] unknown unitedmedicareadvisors.com, [5] unknown cvs.com",
+     "metadata": {}
+    },
+    "search_cost": {
+     "score": 1,
+     "comment": "1 searches + 0 fetches",
+     "metadata": {}
+    },
+    "latency_s": {
+     "score": 18.6,
+     "comment": "18.6s wall clock",
+     "metadata": {}
+    },
+    "tokens": {
+     "score": 9753,
+     "comment": "8740 in + 1013 out",
+     "metadata": {}
+    },
+    "search_efficiency": {
+     "score": 1.0,
+     "comment": "answer_correctness 0.1 / max(1, 1 calls) x 10",
+     "metadata": {}
+    }
+   },
+   "composite": 0.075,
+   "record": {
+    "run_id": "01a09db9-0f53-7309-b410-5c244689557e",
+    "request": {
+     "question": "What changed in Medicare coverage of GLP-1 medications during 2026?",
+     "mode": "baseline",
+     "depth": "deep",
+     "question_id": "chg-glp1-001",
+     "budget_override": null,
+     "prompt_set": "base"
+    },
+    "started_at": "2026-09-14T02:22:26.131752Z",
+    "finished_at": "2026-09-14T02:22:44.781137Z",
+    "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-1183-7691-a845-0367398ebfc0/run/01a09db9-1183-7691-a845-0367398ebfc0?start_time=2026-09-14T02%3A22%3A26.691011%2B00%3A00",
+    "langsmith_trace_id": "01a09db9-1183-7691-a845-0367398ebfc0",
+    "plan": null,
+    "documents": {},
+    "evidence": [],
+    "claims": [],
+    "answer": {
+     "summary": "Here are the key Medicare changes for GLP\u20111 coverage in 2026: **The Medicare GLP\u20111 Bridge Program (July 1, 2026 \u2013 Dec. 31, 2027)** - For the first time, Medicare is providing a temporary but direct pathway to cover GLP\u20111 medications **prescribed for weight loss** (obesity). Historically such use was excluded from Part D. - Eligible Part D enrollees can get covered drugs for a **flat $50/month copay**. - Covered medications include: - **Foundayo** (orforglipron oral tablet) - **Wegovy** (semaglutide) \u2013 pills and injections - **Zepbound** (tirzepatide) **KwikPens only** (single-use pens and vials are excluded) - Note: **Ozempic** and **Mounjaro** remain covered only for their diabetes indication under standard Part D, and are **not** included in this Bridge program for weight loss. **The BALANCE Model delayed** - CMS had announced the voluntary **BALANCE** program in late 2025 as a longer-term solution for Medicare and Medicaid to negotiate lower prices and expand GLP\u20111 access. - Due to ",
+     "body_markdown": "Here are the key Medicare changes for GLP\u20111 coverage in 2026:\n\n**The Medicare GLP\u20111 Bridge Program (July 1, 2026 \u2013 Dec. 31, 2027)**\n- For the first time, Medicare is providing a temporary but direct pathway to cover GLP\u20111 medications **prescribed for weight loss** (obesity). Historically such use was excluded from Part D.\n- Eligible Part D enrollees can get covered drugs for a **flat $50/month copay**.\n- Covered medications include:\n  - **Foundayo** (orforglipron oral tablet)\n  - **Wegovy** (semaglutide) \u2013 pills and injections\n  - **Zepbound** (tirzepatide) **KwikPens only** (single-use pens and vials are excluded)\n- Note: **Ozempic** and **Mounjaro** remain covered only for their diabetes indication under standard Part D, and are **not** included in this Bridge program for weight loss.\n\n**The BALANCE Model delayed**\n- CMS had announced the voluntary **BALANCE** program in late 2025 as a longer-term solution for Medicare and Medicaid to negotiate lower prices and expand GLP\u20111 access.\n- Due to insurer concerns, Medicare **delayed the Part D portion** of BALANCE; the **Bridge program** is serving as the interim solution. The Medicaid portion of BALANCE is still moving forward.\n\n**General Part D cost protection in 2026**\n- All Part D enrollees also benefit from a new **$2,000 annual cap on out-of-pocket prescription costs**, which helps limit total spending if a GLP\u20111 is covered under any approved indication.\n\nSources:\n- [Obesity Action Coalition](https://www.obesityaction.org/changes-are-coming-medicare-access-to-glp-1-medications)\n- [GoodRx](https://www.goodrx.com/insurance/medicare/weight-loss-drugs)\n- [USA Today](https://eu.usatoday.com/story/money/2026/04/22/medicare-changes-coverage-glp-1-weight-loss-drugs/89730766007)\n- [United Medicare Advisors](https://unitedmedicareadvisors.com/blog/medicare/part-d-glp-1-drugs)\n- [CVS](https://www.cvs.com/learn/health/weight-management/glp-1-coverage-medicare)",
+     "claims": [],
+     "citations": [
+      {
+       "n": 1,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.obesityaction.org/changes-are-coming-medicare-access-to-glp-1-medications",
+       "label": "https://www.obesityaction.org/changes-are-coming-medicare-access-to-glp-1-medications"
+      },
+      {
+       "n": 2,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.goodrx.com/insurance/medicare/weight-loss-drugs",
+       "label": "https://www.goodrx.com/insurance/medicare/weight-loss-drugs"
+      },
+      {
+       "n": 3,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://eu.usatoday.com/story/money/2026/04/22/medicare-changes-coverage-glp-1-weight-loss-drugs/89730766007",
+       "label": "https://eu.usatoday.com/story/money/2026/04/22/medicare-changes-coverage-glp-1-weight-loss-drugs/89730766007"
+      },
+      {
+       "n": 4,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://unitedmedicareadvisors.com/blog/medicare/part-d-glp-1-drugs",
+       "label": "https://unitedmedicareadvisors.com/blog/medicare/part-d-glp-1-drugs"
+      },
+      {
+       "n": 5,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cvs.com/learn/health/weight-management/glp-1-coverage-medicare",
+       "label": "https://www.cvs.com/learn/health/weight-management/glp-1-coverage-medicare"
+      }
+     ],
+     "effective_dates": [],
+     "contradictions": [],
+     "unknowns": [],
+     "confidence": 0.0,
+     "scope_warning": null
+    },
+    "usage": {
+     "searches": 1,
+     "fetches": 0,
+     "deep_reads": 0,
+     "agents": 0,
+     "rounds": 0,
+     "input_tokens": 8740,
+     "output_tokens": 1013,
+     "wall_seconds": 18.6
+    },
+    "status": "completed",
+    "error": null
+   }
+  },
+  {
+   "question_id": "cross-003",
+   "domain": "cross",
+   "tier": 3,
+   "question_type": "eligibility",
+   "run_id": "01a09db9-401f-7793-80a7-87bafd360e51",
+   "target_run_id": "01a09db9-401f-7560-a2b7-a8a65251e402",
+   "status": "completed",
+   "error": null,
+   "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-4027-73e3-a41b-38d4baf5e2a4/run/01a09db9-4027-73e3-a41b-38d4baf5e2a4?start_time=2026-09-14T02%3A22%3A38.631763%2B00%3A00",
+   "usage": {
+    "searches": 1,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 8102,
+    "output_tokens": 1257,
+    "wall_seconds": 24.6
+   },
+   "scores": {
+    "answer_correctness": {
+     "score": 0.6,
+     "comment": "claims 2/4 weighted present; missing: c2 (must); summary: consistent",
+     "metadata": {
+      "judge_tokens": 19430,
+      "judge_votes": 3,
+      "judge_calls": 3,
+      "judge_mode": "fenced_json+native+native_retry_1"
+     }
+    },
+    "evidence_recall": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage, so no required evidence can be matched - 0 by construction",
+     "metadata": {}
+    },
+    "citation_correctness": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+     "metadata": {}
+    },
+    "citation_completeness": {
+     "score": 0.2667,
+     "comment": "4/15 cited in whole answer (no Criteria / Codes sections); uncited: '**Yes\u2014if the hypoglycemia meets Medicare\u2019s definition of \u201cproblematic hypogly...'; 'Medicare covers CGMs for beneficiaries with diabetes who are **either** insul...'; 'For the non\u2011insulin pathway, CMS requires the medical record to show **at lea...'",
+     "metadata": {}
+    },
+    "currency": {
+     "score": 0.5,
+     "comment": "L33822: cited; governing date 2024-10-01 not stated",
+     "metadata": {}
+    },
+    "contradiction_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no contradiction",
+     "metadata": {}
+    },
+    "scope_handling": {
+     "score": 0.5,
+     "comment": "scope: not flagged; no fabricated payer criteria",
+     "metadata": {
+      "judge_mode": "fenced_json",
+      "judge_tokens": 10966
+     }
+    },
+    "primary_source_ratio": {
+     "score": 0.75,
+     "comment": "3/4 citations at official_secondary or better; below: [2] web dexcom.com",
+     "metadata": {}
+    },
+    "search_cost": {
+     "score": 1,
+     "comment": "1 searches + 0 fetches",
+     "metadata": {}
+    },
+    "latency_s": {
+     "score": 24.6,
+     "comment": "24.6s wall clock",
+     "metadata": {}
+    },
+    "tokens": {
+     "score": 9359,
+     "comment": "8102 in + 1257 out",
+     "metadata": {}
+    },
+    "search_efficiency": {
+     "score": 6.0,
+     "comment": "answer_correctness 0.6 / max(1, 1 calls) x 10",
+     "metadata": {}
+    }
+   },
+   "composite": 0.34,
+   "record": {
+    "run_id": "01a09db9-401f-7793-80a7-87bafd360e51",
+    "request": {
+     "question": "If a non-insulin type 2 patient starts a GLP-1 and later has severe hypoglycemia, could that make them eligible for a Medicare-covered CGM?",
+     "mode": "baseline",
+     "depth": "deep",
+     "question_id": "cross-003",
+     "budget_override": null,
+     "prompt_set": "base"
+    },
+    "started_at": "2026-09-14T02:22:38.623320Z",
+    "finished_at": "2026-09-14T02:23:03.211435Z",
+    "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-4027-73e3-a41b-38d4baf5e2a4/run/01a09db9-4027-73e3-a41b-38d4baf5e2a4?start_time=2026-09-14T02%3A22%3A38.631763%2B00%3A00",
+    "langsmith_trace_id": "01a09db9-4027-73e3-a41b-38d4baf5e2a4",
+    "plan": null,
+    "documents": {},
+    "evidence": [],
+    "claims": [],
+    "answer": {
+     "summary": "**Yes\u2014if the hypoglycemia meets Medicare\u2019s definition of \u201cproblematic hypoglycemia,\u201d a non\u2011insulin type 2 patient can qualify for a Medicare\u2011covered CGM, regardless of which medication (including a GLP\u20111) caused the event.** Medicare covers CGMs for beneficiaries with diabetes who are **either** insulin\u2011treated **or** have a documented history of problematic hypoglycemia. For the non\u2011insulin pathway, CMS requires the medical record to show **at least one** of the following: * **Level 3 hypoglycemia:** One episode with glucose < 54 mg/dL that causes altered mental/physical status and **requires third\u2011party assistance** to treat. * **Recurrent Level 2 hypoglycemia:** More than one episode with glucose < 54 mg/dL that **persists despite more than one** medication adjustment or treatment\u2011plan change. Other requirements include: * A prescription for the CGM * An in\u2011person or Medicare\u2011approved telehealth visit within 6 months before ordering to evaluate diabetes control * Ongoing routine fol",
+     "body_markdown": "**Yes\u2014if the hypoglycemia meets Medicare\u2019s definition of \u201cproblematic hypoglycemia,\u201d a non\u2011insulin type\u202f2 patient can qualify for a Medicare\u2011covered CGM, regardless of which medication (including a GLP\u20111) caused the event.**\n\nMedicare covers CGMs for beneficiaries with diabetes who are **either** insulin\u2011treated **or** have a documented history of problematic hypoglycemia. For the non\u2011insulin pathway, CMS requires the medical record to show **at least one** of the following:\n\n* **Level\u202f3 hypoglycemia:** One episode with glucose\u202f<\u202f54\u202fmg/dL that causes altered mental/physical status and **requires third\u2011party assistance** to treat.  \n* **Recurrent Level\u202f2 hypoglycemia:** More than one episode with glucose\u202f<\u202f54\u202fmg/dL that **persists despite more than one** medication adjustment or treatment\u2011plan change.\n\nOther requirements include:\n* A prescription for the CGM\n* An in\u2011person or Medicare\u2011approved telehealth visit within 6\u202fmonths before ordering to evaluate diabetes control\n* Ongoing routine follow\u2011up to review CGM data\n\nSo, if a GLP\u20111\u2011treated (or GLP\u20111 plus other non\u2011insulin therapy) patient suffers a single severe (Level\u202f3) hypoglycemic event\u2014or repeated Level\u202f2 events that don\u2019t resolve after treatment adjustments\u2014and the events are properly documented, they may meet Medicare\u2019s coverage criteria for a CGM without using insulin.\n\n**Sources:**\n* CMS National Coverage Determination (L33822): https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n* Dexcom Medicare FAQ on problematic hypoglycemia criteria: https://www.dexcom.com/en-us/faqs/medicare\n* Medicare.gov coverage overview: https://www.medicare.gov/coverage/continuous-glucose-monitors\n* CMS Policy Article (A52464) on documentation requirements: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+     "claims": [],
+     "citations": [
+      {
+       "n": 1,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+       "label": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822"
+      },
+      {
+       "n": 2,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.dexcom.com/en-us/faqs/medicare",
+       "label": "https://www.dexcom.com/en-us/faqs/medicare"
+      },
+      {
+       "n": 3,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.medicare.gov/coverage/continuous-glucose-monitors",
+       "label": "https://www.medicare.gov/coverage/continuous-glucose-monitors"
+      },
+      {
+       "n": 4,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+       "label": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464"
+      }
+     ],
+     "effective_dates": [],
+     "contradictions": [],
+     "unknowns": [],
+     "confidence": 0.0,
+     "scope_warning": null
+    },
+    "usage": {
+     "searches": 1,
+     "fetches": 0,
+     "deep_reads": 0,
+     "agents": 0,
+     "rounds": 0,
+     "input_tokens": 8102,
+     "output_tokens": 1257,
+     "wall_seconds": 24.6
+    },
+    "status": "completed",
+    "error": null
+   }
+  },
+  {
+   "question_id": "cgm-elig-006",
+   "domain": "cgm",
+   "tier": 2,
+   "question_type": "eligibility",
+   "run_id": "01a09db9-6974-7227-a2f6-9004792e3c86",
+   "target_run_id": "01a09db9-6974-7e03-8e19-b2429079b775",
+   "status": "completed",
+   "error": null,
+   "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-6979-7190-8b74-5e69ef5ab87a/run/01a09db9-6979-7190-8b74-5e69ef5ab87a?start_time=2026-09-14T02%3A22%3A49.209278%2B00%3A00",
+   "usage": {
+    "searches": 3,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 36750,
+    "output_tokens": 1947,
+    "wall_seconds": 41.4
+   },
+   "scores": {
+    "answer_correctness": {
+     "score": 0.7333,
+     "comment": "claims 4/6 weighted present; missing: c3 (must); summary: consistent",
+     "metadata": {
+      "judge_tokens": 12678,
+      "judge_votes": 3,
+      "judge_calls": 3,
+      "judge_mode": "native"
+     }
+    },
+    "evidence_recall": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage, so no required evidence can be matched - 0 by construction",
+     "metadata": {}
+    },
+    "citation_correctness": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+     "metadata": {}
+    },
+    "citation_completeness": {
+     "score": 0.3871,
+     "comment": "12/31 cited in whole answer (no Criteria / Codes sections); uncited: '**Yes, a nurse practitioner can order a continuous glucose monitor (CGM) unde...'; 'Under Medicare DMEPOS rules, a **\"treating practitioner\"** is defined as:'; 'A physician; **or**'",
+     "metadata": {}
+    },
+    "currency": {
+     "score": 0.5,
+     "comment": "L33822: cited; governing date 2024-10-01 not stated; A52464: cited; governing date 2025-02-18 not stated",
+     "metadata": {}
+    },
+    "contradiction_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no contradiction",
+     "metadata": {}
+    },
+    "scope_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no scope warning",
+     "metadata": {}
+    },
+    "primary_source_ratio": {
+     "score": 1.0,
+     "comment": "7/7 citations at official_secondary or better",
+     "metadata": {}
+    },
+    "search_cost": {
+     "score": 3,
+     "comment": "3 searches + 0 fetches",
+     "metadata": {}
+    },
+    "latency_s": {
+     "score": 41.4,
+     "comment": "41.4s wall clock",
+     "metadata": {}
+    },
+    "tokens": {
+     "score": 38697,
+     "comment": "36750 in + 1947 out",
+     "metadata": {}
+    },
+    "search_efficiency": {
+     "score": 2.4443,
+     "comment": "answer_correctness 0.7333 / max(1, 3 calls) x 10",
+     "metadata": {}
+    }
+   },
+   "composite": 0.4166,
+   "record": {
+    "run_id": "01a09db9-6974-7227-a2f6-9004792e3c86",
+    "request": {
+     "question": "Can a nurse practitioner order a CGM under Medicare, and what must the order contain?",
+     "mode": "baseline",
+     "depth": "deep",
+     "question_id": "cgm-elig-006",
+     "budget_override": null,
+     "prompt_set": "base"
+    },
+    "started_at": "2026-09-14T02:22:49.204456Z",
+    "finished_at": "2026-09-14T02:23:30.610134Z",
+    "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-6979-7190-8b74-5e69ef5ab87a/run/01a09db9-6979-7190-8b74-5e69ef5ab87a?start_time=2026-09-14T02%3A22%3A49.209278%2B00%3A00",
+    "langsmith_trace_id": "01a09db9-6979-7190-8b74-5e69ef5ab87a",
+    "plan": null,
+    "documents": {},
+    "evidence": [],
+    "claims": [],
+    "answer": {
+     "summary": "**Yes, a nurse practitioner can order a continuous glucose monitor (CGM) under Medicare** if they meet the definition of a \"treating practitioner\" and practice requirements. ## Authority to Order Under Medicare DMEPOS rules, a **\"treating practitioner\"** is defined as: - A physician; **or** - A physician assistant, **nurse practitioner**, or clinical nurse specialist (as defined in Social Security Act \u00a71861(aa)(5)) [^1^][^2^] A nurse practitioner may sign the order if they: - Are treating the beneficiary for the condition requiring the CGM - Are practicing independently of a physician - Bill Medicare for other covered services using their own provider number - Are permitted to do so under their state\u2019s scope of practice laws [^3^] ## What the Order Must Contain The order must be a **Standard Written Order (SWO)** with all of the following elements [^1^][^4^][^5^]: | Required Element | Details | |---|---| | **Beneficiary name or MBI** | Medicare Beneficiary Identifier | | **Description ",
+     "body_markdown": "**Yes, a nurse practitioner can order a continuous glucose monitor (CGM) under Medicare** if they meet the definition of a \"treating practitioner\" and practice requirements.\n\n## Authority to Order\nUnder Medicare DMEPOS rules, a **\"treating practitioner\"** is defined as:\n- A physician; **or**\n- A physician assistant, **nurse practitioner**, or clinical nurse specialist (as defined in Social Security Act \u00a71861(aa)(5)) [^1^][^2^]\n\nA nurse practitioner may sign the order if they:\n- Are treating the beneficiary for the condition requiring the CGM\n- Are practicing independently of a physician\n- Bill Medicare for other covered services using their own provider number\n- Are permitted to do so under their state\u2019s scope of practice laws [^3^]\n\n## What the Order Must Contain\nThe order must be a **Standard Written Order (SWO)** with all of the following elements [^1^][^4^][^5^]:\n\n| Required Element | Details |\n|---|---|\n| **Beneficiary name or MBI** | Medicare Beneficiary Identifier |\n| **Description of item** | General description, brand/model, HCPCS code, or narrative |\n| **Quantity** | To be dispensed (if applicable) |\n| **Order date** | Date the order is written |\n| **Treating practitioner name or NPI** | National Provider Identifier |\n| **Treating practitioner signature** | Must meet CMS signature requirements |\n\n## Additional CGM-Specific Requirements\nBefore ordering, the treating practitioner must also:\n- Conduct an **in-person or Medicare-approved telehealth visit within 6 months** prior to ordering to evaluate diabetes control and confirm eligibility [^6^][^7^]\n- Confirm the patient meets coverage criteria (e.g., insulin-treated or history of problematic hypoglycemia as defined by CMS)\n- Document that the CGM is prescribed to improve glycemic control\n\nFor continued coverage, the treating practitioner must assess the patient **every 6 months** to document adherence to the CGM regimen and diabetes treatment plan [^6^][^7^].\n\n**Sources:**\n- [^1^] CMS, SE20007 \u2014 Standard Elements for DMEPOS Order (PDF): https://www.cms.gov/files/document/se20007.pdf\n- [^2^] CMS, Medicare Program Integrity Manual, Chapter 5 (PDF): https://www.cms.gov/regulations-and-guidance/guidance/manuals/downloads/pim83c05.pdf\n- [^3^] CMS, Medicare Program Integrity Manual \u2014 Nurse Practitioner Order Rules (PDF): https://www.cms.gov/Regulations-and-Guidance/Guidance/Transmittals/Downloads/R618PI.pdf\n- [^4^] CMS, Standard Documentation Requirements for All Claims (A55426): https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=55426\n- [^5^] CGS Medicare, CGM Documentation Checklist (PDF): https://cgsmedicare.com/jc/checklists/cgms.pdf\n- [^6^] CMS, LCD \u2014 Glucose Monitors (L33822): https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n- [^7^] CMS, Glucose Monitor Policy Article (A52464): https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+     "claims": [],
+     "citations": [
+      {
+       "n": 1,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/files/document/se20007.pdf",
+       "label": "https://www.cms.gov/files/document/se20007.pdf"
+      },
+      {
+       "n": 2,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/regulations-and-guidance/guidance/manuals/downloads/pim83c05.pdf",
+       "label": "https://www.cms.gov/regulations-and-guidance/guidance/manuals/downloads/pim83c05.pdf"
+      },
+      {
+       "n": 3,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/Regulations-and-Guidance/Guidance/Transmittals/Downloads/R618PI.pdf",
+       "label": "https://www.cms.gov/Regulations-and-Guidance/Guidance/Transmittals/Downloads/R618PI.pdf"
+      },
+      {
+       "n": 4,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=55426",
+       "label": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=55426"
+      },
+      {
+       "n": 5,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://cgsmedicare.com/jc/checklists/cgms.pdf",
+       "label": "https://cgsmedicare.com/jc/checklists/cgms.pdf"
+      },
+      {
+       "n": 6,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+       "label": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822"
+      },
+      {
+       "n": 7,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+       "label": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464"
+      }
+     ],
+     "effective_dates": [],
+     "contradictions": [],
+     "unknowns": [],
+     "confidence": 0.0,
+     "scope_warning": null
+    },
+    "usage": {
+     "searches": 3,
+     "fetches": 0,
+     "deep_reads": 0,
+     "agents": 0,
+     "rounds": 0,
+     "input_tokens": 36750,
+     "output_tokens": 1947,
+     "wall_seconds": 41.4
+    },
+    "status": "completed",
+    "error": null
+   }
+  },
+  {
+   "question_id": "cgm-elig-003",
+   "domain": "cgm",
+   "tier": 2,
+   "question_type": "eligibility",
+   "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8",
+   "target_run_id": "01a09db9-a037-7402-9506-e5562fc90cb3",
+   "status": "completed",
+   "error": null,
+   "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-a03d-7b72-a144-d4410ea132a6/run/01a09db9-a03d-7b72-a144-d4410ea132a6?start_time=2026-09-14T02%3A23%3A03.229289%2B00%3A00",
+   "usage": {
+    "searches": 1,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 7263,
+    "output_tokens": 825,
+    "wall_seconds": 16.5
+   },
+   "scores": {
+    "answer_correctness": {
+     "score": 0.58,
+     "comment": "claims 3/5 weighted present; missing: c1 (must); summary: partial",
+     "metadata": {
+      "judge_tokens": 26426,
+      "judge_votes": 3,
+      "judge_calls": 3,
+      "judge_mode": "fenced_json+native"
+     }
+    },
+    "evidence_recall": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage, so no required evidence can be matched - 0 by construction",
+     "metadata": {}
+    },
+    "citation_correctness": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+     "metadata": {}
+    },
+    "citation_completeness": {
+     "score": 0.2222,
+     "comment": "4/18 cited in whole answer (no Criteria / Codes sections); uncited: 'For Medicare to cover a Continuous Glucose Monitor (CGM), the following pract...'; 'As part of the **initial provision** of a CGM, the treating practitioner must...'; 'The medical record from that visit must document that:'",
+     "metadata": {}
+    },
+    "currency": {
+     "score": 0.5,
+     "comment": "L33822: cited; governing date 2024-10-01 not stated",
+     "metadata": {}
+    },
+    "contradiction_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no contradiction",
+     "metadata": {}
+    },
+    "scope_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no scope warning",
+     "metadata": {}
+    },
+    "primary_source_ratio": {
+     "score": 1.0,
+     "comment": "4/4 citations at official_secondary or better",
+     "metadata": {}
+    },
+    "search_cost": {
+     "score": 1,
+     "comment": "1 searches + 0 fetches",
+     "metadata": {}
+    },
+    "latency_s": {
+     "score": 16.5,
+     "comment": "16.5s wall clock",
+     "metadata": {}
+    },
+    "tokens": {
+     "score": 8088,
+     "comment": "7263 in + 825 out",
+     "metadata": {}
+    },
+    "search_efficiency": {
+     "score": 5.8,
+     "comment": "answer_correctness 0.58 / max(1, 1 calls) x 10",
+     "metadata": {}
+    }
+   },
+   "composite": 0.34,
+   "record": {
+    "run_id": "01a09db9-a037-7cf6-a583-2401f53fcbd8",
+    "request": {
+     "question": "What practitioner visit requirements must be met for initial and continued Medicare coverage of a CGM?",
+     "mode": "baseline",
+     "depth": "deep",
+     "question_id": "cgm-elig-003",
+     "budget_override": null,
+     "prompt_set": "base"
+    },
+    "started_at": "2026-09-14T02:23:03.223674Z",
+    "finished_at": "2026-09-14T02:23:19.719417Z",
+    "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-a03d-7b72-a144-d4410ea132a6/run/01a09db9-a03d-7b72-a144-d4410ea132a6?start_time=2026-09-14T02%3A23%3A03.229289%2B00%3A00",
+    "langsmith_trace_id": "01a09db9-a03d-7b72-a144-d4410ea132a6",
+    "plan": null,
+    "documents": {},
+    "evidence": [],
+    "claims": [],
+    "answer": {
+     "summary": "For Medicare to cover a Continuous Glucose Monitor (CGM), the following practitioner visit requirements must be met: ## Initial Coverage Visit As part of the **initial provision** of a CGM, the treating practitioner must conduct an **in-person or Medicare-approved telehealth visit** with the beneficiary. The medical record from that visit must document that: 1. The beneficiary has **diabetes mellitus** 2. The beneficiary (or caregiver) has received **appropriate training** in the use of the CGM, evidenced by a prescription 3. The CGM is prescribed in accordance with **FDA indications for use** 4. The CGM is prescribed to improve glycemic control for a beneficiary who is **insulin-treated** or has a **history of problematic hypoglycemia** ## Continued Coverage Visit To justify **continued coverage**, the treating practitioner must conduct an **in-person or Medicare-approved telehealth visit with the beneficiary every 6 months** following the initial prescription. The visit must document",
+     "body_markdown": "For Medicare to cover a Continuous Glucose Monitor (CGM), the following practitioner visit requirements must be met:\n\n## Initial Coverage Visit\nAs part of the **initial provision** of a CGM, the treating practitioner must conduct an **in-person or Medicare-approved telehealth visit** with the beneficiary. The medical record from that visit must document that:\n1. The beneficiary has **diabetes mellitus**\n2. The beneficiary (or caregiver) has received **appropriate training** in the use of the CGM, evidenced by a prescription\n3. The CGM is prescribed in accordance with **FDA indications for use**\n4. The CGM is prescribed to improve glycemic control for a beneficiary who is **insulin-treated** or has a **history of problematic hypoglycemia**\n\n## Continued Coverage Visit\nTo justify **continued coverage**, the treating practitioner must conduct an **in-person or Medicare-approved telehealth visit with the beneficiary every 6 months** following the initial prescription. The visit must document:\n- The beneficiary's **adherence to their CGM regimen and diabetes treatment plan**\n- That the supplies remain **medically necessary**\n\n**Note:** There is no requirement for the practitioner to reconfirm that the initial coverage criteria are met for continued coverage\u2014only the 6-month adherence visit is required.\n\nFailure to document this 6-month visit can result in insufficient documentation errors and payment recoupment.\n\nSources:\n- CMS Glucose Monitors LCD (L33822): https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822\n- CMS Policy Article A52464: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464\n- CMS Response to Comments (A59330): https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=59330&ver=6\n- CMS Compliance Tips for Glucose Monitoring Supplies: https://www.cms.gov/training-education/medicare-learning-networkr-mln/compliance/medicare-provider-compliance-tips/glucose-monitoring-supplies",
+     "claims": [],
+     "citations": [
+      {
+       "n": 1,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822",
+       "label": "https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33822"
+      },
+      {
+       "n": 2,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464",
+       "label": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52464"
+      },
+      {
+       "n": 3,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=59330&ver=6",
+       "label": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=59330&ver=6"
+      },
+      {
+       "n": 4,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/training-education/medicare-learning-networkr-mln/compliance/medicare-provider-compliance-tips/glucose-monitoring-supplies",
+       "label": "https://www.cms.gov/training-education/medicare-learning-networkr-mln/compliance/medicare-provider-compliance-tips/glucose-monitoring-supplies"
+      }
+     ],
+     "effective_dates": [],
+     "contradictions": [],
+     "unknowns": [],
+     "confidence": 0.0,
+     "scope_warning": null
+    },
+    "usage": {
+     "searches": 1,
+     "fetches": 0,
+     "deep_reads": 0,
+     "agents": 0,
+     "rounds": 0,
+     "input_tokens": 7263,
+     "output_tokens": 825,
+     "wall_seconds": 16.5
+    },
+    "status": "completed",
+    "error": null
+   }
+  },
+  {
+   "question_id": "cross-002",
+   "domain": "cross",
+   "tier": 2,
+   "question_type": "coverage_pathway",
+   "run_id": "01a09db9-c083-7937-ae66-c762445c389b",
+   "target_run_id": "01a09db9-c082-7090-b233-b8a6bf79082b",
+   "status": "completed",
+   "error": null,
+   "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-c088-7e90-b050-8715cc90f993/run/01a09db9-c088-7e90-b050-8715cc90f993?start_time=2026-09-14T02%3A23%3A11.496284%2B00%3A00",
+   "usage": {
+    "searches": 3,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 17104,
+    "output_tokens": 1837,
+    "wall_seconds": 25.2
+   },
+   "scores": {
+    "answer_correctness": {
+     "score": 1.0,
+     "comment": "claims 5/5 weighted present; summary: consistent",
+     "metadata": {
+      "judge_tokens": 12658,
+      "judge_votes": 3,
+      "judge_calls": 3,
+      "judge_mode": "fenced_json+native"
+     }
+    },
+    "evidence_recall": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage, so no required evidence can be matched - 0 by construction",
+     "metadata": {}
+    },
+    "citation_correctness": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+     "metadata": {}
+    },
+    "citation_completeness": {
+     "score": 0.0833,
+     "comment": "3/36 cited in whole answer (no Criteria / Codes sections); uncited: 'I'll search for current details on Medicare coverage and cost sharing for bot...'; 'Here is how Medicare covers these two items and what that means for cost shar...'; '**Benefit category:** Covered as **durable medical equipment (DME)** under Pa...'",
+     "metadata": {}
+    },
+    "currency": {
+     "score": 0.0,
+     "comment": "Medicare.gov coverage pages: not cited; no governing date on record (search-guessed index entry)",
+     "metadata": {}
+    },
+    "contradiction_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no contradiction",
+     "metadata": {}
+    },
+    "scope_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no scope warning",
+     "metadata": {}
+    },
+    "primary_source_ratio": {
+     "score": 0.3333,
+     "comment": "2/6 citations at official_secondary or better; below: [2] unknown aarp.org, [3] unknown health.usnews.com, [4] professional kff.org, [5] unknown pmc.ncbi.nlm.nih.gov",
+     "metadata": {}
+    },
+    "search_cost": {
+     "score": 3,
+     "comment": "3 searches + 0 fetches",
+     "metadata": {}
+    },
+    "latency_s": {
+     "score": 25.2,
+     "comment": "25.2s wall clock",
+     "metadata": {}
+    },
+    "tokens": {
+     "score": 18941,
+     "comment": "17104 in + 1837 out",
+     "metadata": {}
+    },
+    "search_efficiency": {
+     "score": 3.3333,
+     "comment": "answer_correctness 1.0 / max(1, 3 calls) x 10",
+     "metadata": {}
+    }
+   },
+   "composite": 0.5,
+   "record": {
+    "run_id": "01a09db9-c083-7937-ae66-c762445c389b",
+    "request": {
+     "question": "Which part of Medicare covers a CGM versus a GLP-1 medication, and how does that affect cost sharing?",
+     "mode": "baseline",
+     "depth": "deep",
+     "question_id": "cross-002",
+     "budget_override": null,
+     "prompt_set": "base"
+    },
+    "started_at": "2026-09-14T02:23:11.491028Z",
+    "finished_at": "2026-09-14T02:23:36.647522Z",
+    "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-c088-7e90-b050-8715cc90f993/run/01a09db9-c088-7e90-b050-8715cc90f993?start_time=2026-09-14T02%3A23%3A11.496284%2B00%3A00",
+    "langsmith_trace_id": "01a09db9-c088-7e90-b050-8715cc90f993",
+    "plan": null,
+    "documents": {},
+    "evidence": [],
+    "claims": [],
+    "answer": {
+     "summary": "I'll search for current details on Medicare coverage and cost sharing for both CGMs and GLP-1 medications. Here is how Medicare covers these two items and what that means for cost sharing: ## Continuous Glucose Monitors (CGMs): **Medicare Part B** - **Benefit category:** Covered as **durable medical equipment (DME)** under Part B. - **Eligibility:** Expanded in 2023/2025 to include people with diabetes on basal insulin OR those who have documented problematic low blood glucose events. The prescribing practitioner must see the patient every 6 months. - **Cost sharing:** After you meet the annual **Part B deductible ($257 in 2025)**, you pay **20% coinsurance** of the Medicare-approved amount\u2014provided your doctor and DME supplier are enrolled in Medicare and accept assignment. - **Supplemental coverage:** If you have a Medigap plan, it may cover that 20% coinsurance, reducing your out-of-pocket cost significantly. Sources: [Medicare.gov \u2013 CGM Coverage](https://www.medicare.gov/coverage/c",
+     "body_markdown": "I'll search for current details on Medicare coverage and cost sharing for both CGMs and GLP-1 medications.  Here is how Medicare covers these two items and what that means for cost sharing:\n\n## Continuous Glucose Monitors (CGMs): **Medicare Part B**\n- **Benefit category:** Covered as **durable medical equipment (DME)** under Part B.\n- **Eligibility:** Expanded in 2023/2025 to include people with diabetes on basal insulin OR those who have documented problematic low blood glucose events. The prescribing practitioner must see the patient every 6 months.\n- **Cost sharing:** After you meet the annual **Part B deductible ($257 in 2025)**, you pay **20% coinsurance** of the Medicare-approved amount\u2014provided your doctor and DME supplier are enrolled in Medicare and accept assignment.\n- **Supplemental coverage:** If you have a Medigap plan, it may cover that 20% coinsurance, reducing your out-of-pocket cost significantly.\n\nSources: [Medicare.gov \u2013 CGM Coverage](https://www.medicare.gov/coverage/continuous-glucose-monitors), [AARP \u2013 Medicare CGM Coverage](https://www.aarp.org/medicare/does-medicare-cover-continuous-glucose-monitors)\n\n---\n\n## GLP-1 Medications: **Medicare Part D**\n- **Benefit category:** Covered under Medicare Part D (prescription drug plans), but **only when prescribed for certain FDA-approved conditions other than weight loss alone** due to a statutory exclusion. Covered indications include:\n  - **Type 2 diabetes** (e.g., Ozempic, Mounjaro, Rybelsus)\n  - **Cardiovascular risk reduction** (e.g., Wegovy for adults with heart disease + obesity/overweight)\n  - **Obstructive sleep apnea** (e.g., Zepbound)\n- **Cost sharing:** GLP-1s are often placed on **high/specialty tiers**. Plans commonly require **coinsurance of roughly 25\u201333%** of the drug\u2019s price. Depending on the drug and plan, this can mean roughly **$325\u2013$430+ per month** out of pocket before hitting the annual cap.\n- **2025 Part D cap:** Thanks to the Inflation Reduction Act, total **Part D out-of-pocket spending is capped at $2,000 per year** (2025 onward). This cap does **not** apply to drugs covered under Part B.\n- **Prior authorization:** Near-universal in 2025 for GLP-1s. Your doctor must document the covered diagnosis (e.g., diabetes, cardiovascular disease).\n\nSources: [U.S. News \u2013 Medicare GLP-1 Coverage](https://health.usnews.com/medicare/articles/does-medicare-cover-ozempic), [KFF \u2013 BALANCE Model for GLP-1s](https://www.kff.org/medicare/what-to-know-about-the-balance-model-for-glp-1s-in-medicare-and-medicaid), [JAMA Network \u2013 Part D Costs for GLP-1s](https://pmc.ncbi.nlm.nih.gov/articles/PMC12461600)\n\n---\n\n### What About Weight Loss?\nFederal law still bars standard Part D coverage for weight loss alone. However:\n- Starting **July 1, 2026**, the temporary **Medicare GLP-1 Bridge program** will allow eligible Part D enrollees to obtain certain weight-loss GLP-1s (Wegovy, Foundayo, Zepbound KwikPen) for a **$50 monthly copay**.\n- Important: That **$50 copay does NOT count** toward your Part D deductible or the $2,000 annual out-of-pocket maximum.\n\nSource: [Medicare.gov \u2013 Weight Loss Drugs](https://www.medicare.gov/coverage/weight-loss-drugs)\n\n---\n\n### Bottom Line on Cost Impact\n| Feature | CGM (Part B) | GLP-1 (Part D) |\n|---|---|---|\n| **Typical cost sharing** | 20% coinsurance after deductible | Coinsurance (often 25\u201333%) or high copays |\n| **Annual out-of-pocket cap?** | No cap under Part B | Capped at **$2,000/year** (2025+) |\n| **Medigap help?** | Often yes (covers 20%) | No standard Medigap coverage for Part D |\n| **Prior authorization** | Minimal; documentation required | Very common (99%+ in 2025) |\n\nIn short, CGM coverage under Part B tends to be more predictable and modest in cost sharing, especially if you have Medigap, while GLP-1 coverage under Part D can involve high monthly costs until you hit the $2,000 annual limit.",
+     "claims": [],
+     "citations": [
+      {
+       "n": 1,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.medicare.gov/coverage/continuous-glucose-monitors",
+       "label": "https://www.medicare.gov/coverage/continuous-glucose-monitors"
+      },
+      {
+       "n": 2,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.aarp.org/medicare/does-medicare-cover-continuous-glucose-monitors",
+       "label": "https://www.aarp.org/medicare/does-medicare-cover-continuous-glucose-monitors"
+      },
+      {
+       "n": 3,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://health.usnews.com/medicare/articles/does-medicare-cover-ozempic",
+       "label": "https://health.usnews.com/medicare/articles/does-medicare-cover-ozempic"
+      },
+      {
+       "n": 4,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.kff.org/medicare/what-to-know-about-the-balance-model-for-glp-1s-in-medicare-and-medicaid",
+       "label": "https://www.kff.org/medicare/what-to-know-about-the-balance-model-for-glp-1s-in-medicare-and-medicaid"
+      },
+      {
+       "n": 5,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12461600",
+       "label": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12461600"
+      },
+      {
+       "n": 6,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.medicare.gov/coverage/weight-loss-drugs",
+       "label": "https://www.medicare.gov/coverage/weight-loss-drugs"
+      }
+     ],
+     "effective_dates": [],
+     "contradictions": [],
+     "unknowns": [],
+     "confidence": 0.0,
+     "scope_warning": null
+    },
+    "usage": {
+     "searches": 3,
+     "fetches": 0,
+     "deep_reads": 0,
+     "agents": 0,
+     "rounds": 0,
+     "input_tokens": 17104,
+     "output_tokens": 1837,
+     "wall_seconds": 25.2
+    },
+    "status": "completed",
+    "error": null
+   }
+  },
+  {
+   "question_id": "chg-glp1-003",
+   "domain": "glp1",
+   "tier": 3,
+   "question_type": "change_detection",
+   "run_id": "01a09db9-e0ab-7358-88cb-12f7d5832f19",
+   "target_run_id": "01a09db9-e0aa-7283-a19d-99629c871bec",
+   "status": "completed",
+   "error": null,
+   "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-e0b0-79d3-abf4-69fe6e0fc17f/run/01a09db9-e0b0-79d3-abf4-69fe6e0fc17f?start_time=2026-09-14T02%3A23%3A19.728524%2B00%3A00",
+   "usage": {
+    "searches": 1,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 8642,
+    "output_tokens": 1045,
+    "wall_seconds": 15.6
+   },
+   "scores": {
+    "answer_correctness": {
+     "score": 0.16,
+     "comment": "claims 1/5 weighted present; missing: c1 (must); incorrect: c2 (must) - The answer claims the Part D portion is indefinitely delayed and replaced by a bridge program, contradicting the key ...; summary: inconsistent",
+     "metadata": {
+      "judge_tokens": 43107,
+      "judge_votes": 3,
+      "judge_calls": 3,
+      "judge_mode": "fenced_json+native_retry_1"
+     }
+    },
+    "evidence_recall": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage, so no required evidence can be matched - 0 by construction",
+     "metadata": {}
+    },
+    "citation_correctness": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+     "metadata": {}
+    },
+    "citation_completeness": {
+     "score": 0.3,
+     "comment": "3/10 cited in whole answer (no Criteria / Codes sections); uncited: 'The CMS Innovation Center model is called the **BALANCE Model** (Better Appro...'; 'It is a voluntary program in which CMS negotiates lower net prices and standa...'; '**Start Dates:**'",
+     "metadata": {}
+    },
+    "currency": {
+     "score": 0.75,
+     "comment": "CMS Innovation Center model page: cited; no governing date on record (search-guessed index entry); order: dated_not_ordered (The answer provides specific dates for Medicaid and Medicare Part D changes but places the original January 2027 Part...)",
+     "metadata": {
+      "judge_mode": "fenced_json",
+      "judge_tokens": 8405
+     }
+    },
+    "contradiction_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no contradiction",
+     "metadata": {}
+    },
+    "scope_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no scope warning",
+     "metadata": {}
+    },
+    "primary_source_ratio": {
+     "score": 0.3333,
+     "comment": "1/3 citations at official_secondary or better; below: [2] professional kff.org, [3] trade fiercehealthcare.com",
+     "metadata": {}
+    },
+    "search_cost": {
+     "score": 1,
+     "comment": "1 searches + 0 fetches",
+     "metadata": {}
+    },
+    "latency_s": {
+     "score": 15.6,
+     "comment": "15.6s wall clock",
+     "metadata": {}
+    },
+    "tokens": {
+     "score": 9687,
+     "comment": "8642 in + 1045 out",
+     "metadata": {}
+    },
+    "search_efficiency": {
+     "score": 1.6,
+     "comment": "answer_correctness 0.16 / max(1, 1 calls) x 10",
+     "metadata": {}
+    }
+   },
+   "composite": 0.155,
+   "record": {
+    "run_id": "01a09db9-e0ab-7358-88cb-12f7d5832f19",
+    "request": {
+     "question": "What is the CMS Innovation Center model for GLP-1 coverage, and when does it start for Medicaid and for Medicare Part D?",
+     "mode": "baseline",
+     "depth": "deep",
+     "question_id": "chg-glp1-003",
+     "budget_override": null,
+     "prompt_set": "base"
+    },
+    "started_at": "2026-09-14T02:23:19.723179Z",
+    "finished_at": "2026-09-14T02:23:35.311450Z",
+    "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-e0b0-79d3-abf4-69fe6e0fc17f/run/01a09db9-e0b0-79d3-abf4-69fe6e0fc17f?start_time=2026-09-14T02%3A23%3A19.728524%2B00%3A00",
+    "langsmith_trace_id": "01a09db9-e0b0-79d3-abf4-69fe6e0fc17f",
+    "plan": null,
+    "documents": {},
+    "evidence": [],
+    "claims": [],
+    "answer": {
+     "summary": "The CMS Innovation Center model is called the **BALANCE Model** (Better Approaches to Lifestyle and Nutrition for Comprehensive hEalth). It is a voluntary program in which CMS negotiates lower net prices and standardized coverage terms with GLP-1 manufacturers for weight-management and metabolic health drugs. **Start Dates:** - **Medicaid:** The BALANCE Model is scheduled to launch in **May 2026** for state Medicaid agencies that choose to participate. - **Medicare Part D:** The BALANCE Model has been **indefinitely delayed** from its original January 2027 start date due to insurer concerns. In its place, CMS is running the **Medicare GLP-1 Bridge** demonstration from **July 1, 2026, through December 31, 2027**, which provides eligible Part D beneficiaries access to certain GLP-1s outside of the standard Part D benefit while CMS collects additional utilization data. **Sources:** - CMS Innovation Center: BALANCE Model overview and participant information ([cms.gov](https://www.cms.gov/p",
+     "body_markdown": "The CMS Innovation Center model is called the **BALANCE Model** (Better Approaches to Lifestyle and Nutrition for Comprehensive hEalth). It is a voluntary program in which CMS negotiates lower net prices and standardized coverage terms with GLP-1 manufacturers for weight-management and metabolic health drugs.\n\n**Start Dates:**\n\n- **Medicaid:** The BALANCE Model is scheduled to launch in **May 2026** for state Medicaid agencies that choose to participate.  \n- **Medicare Part D:** The BALANCE Model has been **indefinitely delayed** from its original January 2027 start date due to insurer concerns. In its place, CMS is running the **Medicare GLP-1 Bridge** demonstration from **July 1, 2026, through December 31, 2027**, which provides eligible Part D beneficiaries access to certain GLP-1s outside of the standard Part D benefit while CMS collects additional utilization data.\n\n**Sources:**\n- CMS Innovation Center: BALANCE Model overview and participant information ([cms.gov](https://www.cms.gov/priorities/innovation/innovation-models/balance))\n- KFF analysis of the BALANCE Model and Medicare GLP-1 Bridge timeline ([kff.org](https://www.kff.org/medicare/what-to-know-about-the-balance-model-for-glp-1s-in-medicare-and-medicaid))\n- Fierce Healthcare reporting on the Part D delay and bridge extension ([fiercehealthcare.com](https://www.fiercehealthcare.com/payers/cms-delays-part-d-glp-1-model-amid-skepticism-insurers))",
+     "claims": [],
+     "citations": [
+      {
+       "n": 1,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/priorities/innovation/innovation-models/balance",
+       "label": "https://www.cms.gov/priorities/innovation/innovation-models/balance"
+      },
+      {
+       "n": 2,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.kff.org/medicare/what-to-know-about-the-balance-model-for-glp-1s-in-medicare-and-medicaid",
+       "label": "https://www.kff.org/medicare/what-to-know-about-the-balance-model-for-glp-1s-in-medicare-and-medicaid"
+      },
+      {
+       "n": 3,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.fiercehealthcare.com/payers/cms-delays-part-d-glp-1-model-amid-skepticism-insurers",
+       "label": "https://www.fiercehealthcare.com/payers/cms-delays-part-d-glp-1-model-amid-skepticism-insurers"
+      }
+     ],
+     "effective_dates": [],
+     "contradictions": [],
+     "unknowns": [],
+     "confidence": 0.0,
+     "scope_warning": null
+    },
+    "usage": {
+     "searches": 1,
+     "fetches": 0,
+     "deep_reads": 0,
+     "agents": 0,
+     "rounds": 0,
+     "input_tokens": 8642,
+     "output_tokens": 1045,
+     "wall_seconds": 15.6
+    },
+    "status": "completed",
+    "error": null
+   }
+  },
+  {
+   "question_id": "oos-002",
+   "domain": "other",
+   "tier": 4,
+   "question_type": "out_of_scope",
+   "run_id": "01a09db9-583a-7bd7-a801-500c0a5f453c",
+   "target_run_id": "01a09db9-5839-7eb2-8f8e-587e3de096df",
+   "status": "completed",
+   "error": null,
+   "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-5843-73f0-9d91-ee46e9198206/run/01a09db9-5843-73f0-9d91-ee46e9198206?start_time=2026-09-14T02%3A22%3A44.803162%2B00%3A00",
+   "usage": {
+    "searches": 1,
+    "fetches": 0,
+    "deep_reads": 0,
+    "agents": 0,
+    "rounds": 0,
+    "input_tokens": 8538,
+    "output_tokens": 1615,
+    "wall_seconds": 26.7
+   },
+   "scores": {
+    "answer_correctness": {
+     "score": 0.5,
+     "comment": "claims 2/4 weighted present; missing: c1 (must); summary: partial",
+     "metadata": {
+      "judge_tokens": 63103,
+      "judge_votes": 3,
+      "judge_calls": 3,
+      "judge_mode": "fenced_json"
+     }
+    },
+    "evidence_recall": {
+     "score": null,
+     "comment": "not applicable: the answer key requires no evidence",
+     "metadata": {}
+    },
+    "citation_correctness": {
+     "score": 0.0,
+     "comment": "baseline: citations are URLs with no stored passage to check a sentence against - 0 by construction",
+     "metadata": {}
+    },
+    "citation_completeness": {
+     "score": 0.1875,
+     "comment": "3/16 cited in whole answer (no Criteria / Codes sections); uncited: '**Short answer:** it depends entirely on the payer, but under **traditional M...'; 'Here is how major payers typically handle this:'; '| Payer / Program | CGM for metformin-only T2D? | Typical criteria |'",
+     "metadata": {}
+    },
+    "currency": {
+     "score": 0.0,
+     "comment": "L33822: not cited; governing date 2024-10-01 not stated",
+     "metadata": {}
+    },
+    "contradiction_handling": {
+     "score": null,
+     "comment": "not applicable: the answer key expects no contradiction",
+     "metadata": {}
+    },
+    "scope_handling": {
+     "score": 0.0,
+     "comment": "scope: not flagged; fabricated: 'Policies vary widely. Some plans still require insulin therapy; others have b...'; 'Many states limit CGM to insulin-treated individuals or type 1 diabetes. Some...'",
+     "metadata": {
+      "judge_mode": "fenced_json",
+      "judge_tokens": 17641
+     }
+    },
+    "primary_source_ratio": {
+     "score": 0.2,
+     "comment": "1/5 citations at official_secondary or better; below: [2] web dexcom.com, [3] unknown doko.md, [4] unknown uhcprovider.com, [5] unknown bcbsri.com",
+     "metadata": {}
+    },
+    "search_cost": {
+     "score": 1,
+     "comment": "1 searches + 0 fetches",
+     "metadata": {}
+    },
+    "latency_s": {
+     "score": 26.7,
+     "comment": "26.7s wall clock",
+     "metadata": {}
+    },
+    "tokens": {
+     "score": 10153,
+     "comment": "8538 in + 1615 out",
+     "metadata": {}
+    },
+    "search_efficiency": {
+     "score": 5.0,
+     "comment": "answer_correctness 0.5 / max(1, 1 calls) x 10",
+     "metadata": {}
+    }
+   },
+   "composite": 0.3,
+   "record": {
+    "run_id": "01a09db9-583a-7bd7-a801-500c0a5f453c",
+    "request": {
+     "question": "My patient has type 2 diabetes and takes only metformin \u2014 can you approve a CGM for them?",
+     "mode": "baseline",
+     "depth": "deep",
+     "question_id": "oos-002",
+     "budget_override": null,
+     "prompt_set": "base"
+    },
+    "started_at": "2026-09-14T02:22:44.794584Z",
+    "finished_at": "2026-09-14T02:23:11.487248Z",
+    "langsmith_run_url": "https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09db9-5843-73f0-9d91-ee46e9198206/run/01a09db9-5843-73f0-9d91-ee46e9198206?start_time=2026-09-14T02%3A22%3A44.803162%2B00%3A00",
+    "langsmith_trace_id": "01a09db9-5843-73f0-9d91-ee46e9198206",
+    "plan": null,
+    "documents": {},
+    "evidence": [],
+    "claims": [],
+    "answer": {
+     "summary": "**Short answer:** it depends entirely on the payer, but under **traditional Medicare criteria, generally no** for a patient with type 2 diabetes who is on metformin alone and does **not** have documented problematic hypoglycemia. Here is how major payers typically handle this: | Payer / Program | CGM for metformin-only T2D? | Typical criteria | |---|---|---| | **Medicare (CMS)** | **Not covered** unless problematic hypoglycemia is documented | Must be **insulin-treated** **OR** have documented recurrent level 2 hypoglycemia (<54 mg/dL) despite med adjustments, or one level 3 event requiring assistance. The KX modifier must **not** be used for beneficiaries exclusively on oral agents like metformin. | | **Commercial plans** | **Sometimes**, but often requires prior authorization | Policies vary widely. Some plans still require insulin therapy; others have begun covering non\u2013insulin-treated T2D if glycemic targets are not being met or based on plan-specific InterQual/medical necessity cr",
+     "body_markdown": "**Short answer:** it depends entirely on the payer, but under **traditional Medicare criteria, generally no** for a patient with type 2 diabetes who is on metformin alone and does **not** have documented problematic hypoglycemia.\n\nHere is how major payers typically handle this:\n\n| Payer / Program | CGM for metformin-only T2D? | Typical criteria |\n|---|---|---|\n| **Medicare (CMS)** | **Not covered** unless problematic hypoglycemia is documented | Must be **insulin-treated** **OR** have documented recurrent level 2 hypoglycemia (<54 mg/dL) despite med adjustments, or one level 3 event requiring assistance. The KX modifier must **not** be used for beneficiaries exclusively on oral agents like metformin. |\n| **Commercial plans** | **Sometimes**, but often requires prior authorization | Policies vary widely. Some plans still require insulin therapy; others have begun covering non\u2013insulin-treated T2D if glycemic targets are not being met or based on plan-specific InterQual/medical necessity criteria. |\n| **Medicaid** | **Varies by state** | Many states limit CGM to insulin-treated individuals or type 1 diabetes. Some are broadening access, but criteria differ significantly. |\n\n### Key details from current policies:\n- **Medicare** explicitly states that beneficiaries treated **exclusively with oral hypoglycemic agents** do not meet standard therapeutic CGM coverage requirements unless they have a documented history of problematic hypoglycemia (recurrent level 2 events or a single level 3 event) ([CMS Policy Article A52464](https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464), [Dexcom Medicare FAQ](https://www.dexcom.com/en-us/faqs/medicare), [Doko MD summary](https://doko.md/medicare-cover-cgm-type-2-diabetes)).\n- **UnitedHealthcare** references 2024 evidence showing CGM improves glycemic control in non\u2013insulin-treated type 2 diabetes, but coverage still depends on meeting plan-specific medical necessity criteria, often through prior authorization ([UnitedHealthcare policy PDF](https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/continuous-glucose-monitoring-insulin-delivery-managing-diabetes.pdf)).\n- **Over-the-counter CGMs** (e.g., Abbott Libre Rio) are now marketed specifically for adults with type 2 diabetes not using insulin, but these are typically patient-pay retail products and may not be covered by insurance as DME/pharmacy benefits ([BCBSRI policy](https://www.bcbsri.com/providers/medicalpolicies/files/glucose-monitoring-continuous)).\n\n### Bottom line for your patient:\nIf this is a **Medicare** patient on metformin alone without qualifying hypoglycemia, you likely **cannot approve** a CGM under current Medicare coverage rules.  \nIf this is a **commercially insured** patient, you should check the specific plan\u2019s prior authorization policy\u2014coverage for non-insulin T2D is expanding but is not universal.\n\n**Source URLs:**\n- https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464\n- https://www.dexcom.com/en-us/faqs/medicare\n- https://doko.md/medicare-cover-cgm-type-2-diabetes\n- https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/continuous-glucose-monitoring-insulin-delivery-managing-diabetes.pdf\n- https://www.bcbsri.com/providers/medicalpolicies/files/glucose-monitoring-continuous",
+     "claims": [],
+     "citations": [
+      {
+       "n": 1,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464",
+       "label": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleId=52464"
+      },
+      {
+       "n": 2,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.dexcom.com/en-us/faqs/medicare",
+       "label": "https://www.dexcom.com/en-us/faqs/medicare"
+      },
+      {
+       "n": 3,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://doko.md/medicare-cover-cgm-type-2-diabetes",
+       "label": "https://doko.md/medicare-cover-cgm-type-2-diabetes"
+      },
+      {
+       "n": 4,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/continuous-glucose-monitoring-insulin-delivery-managing-diabetes.pdf",
+       "label": "https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/continuous-glucose-monitoring-insulin-delivery-managing-diabetes.pdf"
+      },
+      {
+       "n": 5,
+       "evidence_id": "",
+       "doc_id": "",
+       "url": "https://www.bcbsri.com/providers/medicalpolicies/files/glucose-monitoring-continuous",
+       "label": "https://www.bcbsri.com/providers/medicalpolicies/files/glucose-monitoring-continuous"
+      }
+     ],
+     "effective_dates": [],
+     "contradictions": [],
+     "unknowns": [],
+     "confidence": 0.0,
+     "scope_warning": null
+    },
+    "usage": {
+     "searches": 1,
+     "fetches": 0,
+     "deep_reads": 0,
+     "agents": 0,
+     "rounds": 0,
+     "input_tokens": 8538,
+     "output_tokens": 1615,
+     "wall_seconds": 26.7
+    },
+    "status": "completed",
+    "error": null
+   }
+  }
+ ]
+}

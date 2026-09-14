@@ -149,7 +149,7 @@ GEPA_NO_WIN = {
 def test_gepa_outcome_reads_the_run_report_and_tolerates_its_absence(tmp_path) -> None:
     path = tmp_path / "gepa-run.json"
     path.write_text(json.dumps({**GEPA_NO_WIN, "candidates": [], "rollouts": []}), encoding="utf-8")
-    assert report.gepa_outcome(path) == GEPA_NO_WIN
+    assert report.gepa_outcome(path) == {**GEPA_NO_WIN, "proposals": 0, "best_proposal_dev_score": None}
     assert report.gepa_outcome(tmp_path / "missing.json") is None
 
 
@@ -208,3 +208,40 @@ def test_main_passes_the_gepa_outcome_to_the_report_and_latest_json(tmp_path) ->
     assert report.main([*args, "--gepa", str(tmp_path / "missing.json")]) == 0
     assert "## PRIME + GEPA" not in out.read_text(encoding="utf-8")
     assert json.loads(latest.read_text(encoding="utf-8"))["gepa"] is None
+
+
+def test_the_gepa_line_reports_the_proposals_own_dev_score(tmp_path) -> None:
+    """When no proposal wins, best_dev_score is the seed's; the line said "best dev 0.75
+    against base 0.75" on the first holdout report."""
+    path = tmp_path / "gepa-run.json"
+    candidates = [{"idx": 0, "dev_score": 0.7512}, {"idx": 1, "dev_score": 0.7069}]
+    path.write_text(json.dumps({**GEPA_NO_WIN, "candidates": candidates}), encoding="utf-8")
+    outcome = report.gepa_outcome(path)
+    assert (outcome["proposals"], outcome["best_proposal_dev_score"]) == (1, 0.7069)
+
+    summaries = _summaries(_payload("p", split="holdout"))
+    section = report.render_markdown("holdout", summaries, [], [], generated_at="now", passes=1, gepa=outcome)
+    line = section.split("## PRIME + GEPA", 1)[1].split("\n\n", 2)[1]
+    assert "optimized plan and judge with 16 metric calls and made 1 proposal; the best scored 0.71 on dev" in line
+    assert "The base prompts scored 0.75 on dev" in line
+
+
+def test_subset_targets_average_passes_like_the_headline() -> None:
+    older = _payload("p1", split="holdout", started="2026-09-13T10:00:00",
+                     rows=[_row("chg", tier=3, question_type="change_detection", scores={"currency": 0.4})])
+    newer = _payload("p2", split="holdout", started="2026-09-13T11:00:00",
+                     rows=[_row("chg", tier=3, question_type="change_detection", scores={"currency": 0.8})])
+    summaries = _summaries(older, newer, passes=2)
+    (currency,) = [t for t in report.prd_targets(summaries) if t["subset"] == "change-detection questions"]
+    assert currency["value"] == pytest.approx(0.6)
+
+
+def test_sections_drawn_from_one_pass_say_so_when_there_are_two() -> None:
+    summaries = _summaries(_payload("p1", split="holdout", started="2026-09-13T10:00:00"),
+                           _payload("p2", split="holdout", started="2026-09-13T11:00:00"), passes=2)
+    text = report.render_markdown("holdout", summaries, [], [], generated_at="now", passes=2)
+    note = "_From the latest pass of each configuration; the headline and PRD targets average all 2 passes._"
+    for heading in ("## Per tier", "## Per domain", "## Per question", "## Worked examples", "## Cost and latency"):
+        assert text.split(heading, 1)[1].lstrip().startswith(note), heading
+    single = report.render_markdown("holdout", _summaries(_payload("p", split="holdout")), [], [], generated_at="now", passes=1)
+    assert "From the latest pass" not in single

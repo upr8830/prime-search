@@ -143,6 +143,10 @@ reads `reports/gepa-run.json` (`--gepa`): GEPA's components, metric calls and de
 PRIME + GEPA equals base (no optimized prompts), or gives the optimized config's answer and citation correctness
 deltas against base with §5's acceptance check. PRD targets add docs/00 §9's `gepa_lift` row (answer correctness,
 optimized minus base, target 0.05; 0 by construction without optimized prompts). `latest.json` adds `gepa`.
+The section reports the proposals' best dev score next to the base prompts' score, because `best_dev_score`
+is the seed's own when no proposal wins. PRD targets on a subset (tier 4, change detection) average passes
+the way the headline does. The per-tier, per-domain, per-question, worked-example and cost sections come from
+the latest pass, and say so when more than one pass is reported.
 
 ## 4. Human feedback loop
 
