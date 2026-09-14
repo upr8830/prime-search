@@ -18,6 +18,81 @@ can be compared side by side on the same question. The case for the design is in
 
 ---
 
+## Where to start: reading order
+
+Read in this order. Each stage builds on the one before, and you can stop after any stage. Paths are from
+the repo root.
+
+**Stage 1: the case**
+
+1. [`TECHNICAL_STATEMENT.md`](TECHNICAL_STATEMENT.md) — the problem, what was built, how we know it is
+   better, and the decisions behind it. Two pages.
+2. [`reports/final-report.md`](reports/final-report.md) — the holdout results behind the statement: the
+   headline table, PRD targets, per-question scores and three worked examples. It comes from task 3.2.
+   Until that finishes, [`reports/dev-report.md`](reports/dev-report.md) shows the same layout on the
+   5-question dev check.
+
+**Stage 2: the problem and the approach**
+
+3. [`docs/00-prd.md`](docs/00-prd.md) — who needs this, the scenarios (eligibility, coding, change,
+   contradiction, out of scope) and the success metrics.
+4. [`docs/11-assumptions-and-approach.md`](docs/11-assumptions-and-approach.md) §1–3 — assumptions, the
+   reasoning chain, rejected alternatives and risks. §4, the dated decision log, is a reference: read an
+   entry when a later doc points to it.
+
+**Stage 3: how it works**
+
+5. [`docs/01-system-architecture.md`](docs/01-system-architecture.md) — components, configuration, model
+   routing and fallbacks, and how Tavily is used. [`reports/model-selection.md`](reports/model-selection.md)
+   is the evidence for the model choices.
+6. [`docs/03-agent-architecture.md`](docs/03-agent-architecture.md) — the LangGraph graph node by node:
+   planning as code, search sub-agents, judge, critic and synthesis.
+7. [`docs/04-evidence-model.md`](docs/04-evidence-model.md) — source tiers, how a verbatim passage becomes
+   evidence, claims, contradictions and citations. This is the core of "accurate and auditable".
+8. [`docs/02-data-flow.md`](docs/02-data-flow.md) — the schemas at every stage and the event stream. Keep
+   it open while reading code.
+
+**Stage 4: how it is measured**
+
+9. [`docs/08-synthetic-data-spec.md`](docs/08-synthetic-data-spec.md), then
+   [`data/searchbench/README.md`](data/searchbench/README.md) and
+   [`reports/searchbench-drift.md`](reports/searchbench-drift.md) — how the 30 questions and answer keys
+   were built, checked against live sources and validated.
+10. [`docs/05-evaluation-loop.md`](docs/05-evaluation-loop.md) — the evaluators, bench runner, report and
+    GEPA, each with its "as built" notes. [`reports/gepa-run.json`](reports/gepa-run.json) is the GEPA
+    result.
+11. [`docs/06-observability.md`](docs/06-observability.md) — LangSmith tags and feedback, local event
+    logs, and the debugging playbook.
+
+**Stage 5: try it**
+
+12. [`docs/07-ui-spec.md`](docs/07-ui-spec.md) — the side-by-side harness. Then follow
+    [Build and run it](#build-and-run-it-step-by-step) below and ask a question in the UI.
+
+**Stage 6: how it was built and what comes next**
+
+13. [`docs/09-implementation-plan.md`](docs/09-implementation-plan.md) — the three-day plan, its gates and
+    the cut list.
+14. [`build-log/`](build-log/) — `day1.md`, `day2.md`, … record each session: gates passed, what live runs
+    found that tests did not, and open issues. The `*-transcript.md` files are the raw sessions.
+15. [`docs/13-claude-code-practices.md`](docs/13-claude-code-practices.md) and
+    [`CLAUDE.md`](CLAUDE.md) — how the build was run with Claude Code: conventions, hooks, spec reviews.
+16. [`docs/10-roadmap.md`](docs/10-roadmap.md) — what was designed but deliberately not built: memory,
+    skills, RL and commercial payers.
+
+[`docs/12-technical-statement-outline.md`](docs/12-technical-statement-outline.md) is the outline the
+statement was written from; read it only to compare the two.
+
+**Shorter paths:**
+
+| Role | Read |
+|---|---|
+| Reviewer | 1, 2, 7, 10, then run the UI (12) |
+| Payer or policy stakeholder | 1, 3, 7, 9 |
+| Engineer building on it | 1, 5–8, 10, 11, then `CLAUDE.md` before changing code |
+
+---
+
 ## Build and run it, step by step
 
 ### 1. Install the prerequisites
