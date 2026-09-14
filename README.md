@@ -11,11 +11,6 @@ starter Tavily + LangChain search agent. The starter is kept in the repo as `--m
 can be compared side by side on the same question. The proposed solution is described in
 [`TECHNICAL_STATEMENT.md`](TECHNICAL_STATEMENT.md).
 
-> **Status: Day 3.** The investigation pipeline, CLI, API, UI harness, SearchBench evaluators and GEPA
-> runner are built. GEPA found no prompt that beat the base prompts on dev (`reports/gepa-run.json`). The
-> final holdout bench has run, with results in `reports/final-report.md`. `docs/09-implementation-plan.md` and
-> `build-log/` record what is done.
-
 ## The proposed solution
 
 **The proposed solution is [`TECHNICAL_STATEMENT.md`](TECHNICAL_STATEMENT.md). Read it first.** It sets out
