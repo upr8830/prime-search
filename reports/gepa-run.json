@@ -1,0 +1,270 @@
+{
+  "started_at": "2026-09-14T01:28:53.688361+00:00",
+  "finished_at": "2026-09-14T02:06:14.091499+00:00",
+  "git_sha": "e1174f7",
+  "models": {
+    "root": "nvidia/nemotron-3-super-120b-a12b",
+    "critic": "nvidia/nemotron-3-super-120b-a12b",
+    "subagent": "moonshotai/Kimi-K2.6",
+    "judge": "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "extractor": "moonshotai/Kimi-K2.6",
+    "evaluator": "moonshotai/Kimi-K2.6",
+    "baseline": "moonshotai/Kimi-K2.6"
+  },
+  "budget": {
+    "max_searches": 20,
+    "max_fetches": 20,
+    "max_deep_reads": 30,
+    "max_agents": 4,
+    "max_rounds": 3,
+    "max_tokens": 400000,
+    "max_seconds": 180
+  },
+  "tavily_cache": true,
+  "langsmith_project": "prime-search-gepa",
+  "components": [
+    "plan",
+    "judge"
+  ],
+  "max_metric_calls": 10,
+  "total_metric_calls": 16,
+  "num_full_val_evals": 2,
+  "reflection_minibatch_size": 3,
+  "train_ids": [
+    "cgm-elig-001",
+    "cgm-elig-002",
+    "cgm-elig-005",
+    "cgm-code-001",
+    "cgm-code-002",
+    "cgm-code-003",
+    "glp1-path-001",
+    "glp1-path-003",
+    "glp1-path-005",
+    "chg-cgm-001",
+    "chg-glp1-002",
+    "adv-cgm-001",
+    "adv-glp1-001",
+    "cross-001",
+    "oos-001"
+  ],
+  "dev_ids": [
+    "cgm-elig-004",
+    "glp1-path-002",
+    "chg-cgm-002",
+    "adv-glp1-002",
+    "oos-003"
+  ],
+  "run_dir": "runs/gepa/20260914-0128",
+  "seed_dev_score": 0.75118,
+  "best_idx": 0,
+  "best_dev_score": 0.75118,
+  "improved_on_dev": false,
+  "pareto_front": {
+    "cgm-elig-004": [
+      1
+    ],
+    "glp1-path-002": [
+      1
+    ],
+    "chg-cgm-002": [
+      1
+    ],
+    "adv-glp1-002": [
+      0
+    ],
+    "oos-003": [
+      0
+    ]
+  },
+  "candidates": [
+    {
+      "idx": 0,
+      "parents": [
+        null
+      ],
+      "prompt_set": "gepa-e4167140ea",
+      "dev_score": 0.75118,
+      "dev_scores": {
+        "cgm-elig-004": 0.668,
+        "glp1-path-002": 0.6147,
+        "chg-cgm-002": 0.8923,
+        "adv-glp1-002": 0.65,
+        "oos-003": 0.9309
+      },
+      "discovered_at_metric_call": 0,
+      "changed": [],
+      "diff": {}
+    },
+    {
+      "idx": 1,
+      "parents": [
+        0
+      ],
+      "prompt_set": "gepa-0937fe0857",
+      "dev_score": 0.70686,
+      "dev_scores": {
+        "cgm-elig-004": 0.719,
+        "glp1-path-002": 0.643,
+        "chg-cgm-002": 0.919,
+        "adv-glp1-002": 0.3693,
+        "oos-003": 0.884
+      },
+      "discovered_at_metric_call": 11,
+      "changed": [
+        "plan"
+      ],
+      "diff": {
+        "plan": "--- base/plan.md\n+++ optimized/plan.md\n@@ -60,19 +60,64 @@\n   overstate or simplify coverage; that claim is exactly what the answer has to set against\n   the primary policy, and a plan that searches only CMS never finds it.\n \n-## How to plan well\n+## How to plan well (learned from past runs)\n \n-- **Decompose by what has to be true, not by keyword.** \"Is X covered for Y?\" usually\n-  needs: the criteria themselves, whether Y satisfies them, and whether the criteria\n-  are current.\n-- **Separate the criteria from the codes.** Coverage rules and billing/documentation\n-  requirements live in different documents and one branch cannot read both well.\n-- **Put currency in its own branch when the answer turns on a date.** A branch that\n-  is also trying to establish criteria will not go looking for a revision history.\n-- **A contradiction is worth a branch.** If two sources are likely to disagree, plan\n-  to find both rather than the first.\n-- Do not plan a branch whose answer you already know. Plan the ones that would change\n-  the answer if they came out the other way.\n+1. **Decompose by what must be true, not by keywords.**  \n+   For a coverage question, you typically need: (a) the governing criteria, (b) whether the\n+   specific beneficiary/population satisfies those criteria, (c) whether the criteria are\n+   current, and (d) any separate coding/billing rules. Create a distinct branch for each\n+   of these logical pieces.\n+\n+2. **Separate criteria from coding/documentation.**  \n+   Coverage rules and billing/documentation requirements live in different documents; one\n+   branch cannot reliably extract both. Use `source_hint=\"primary_policy\"` for the LCD or\n+   NCD, and `source_hint=\"coding_article\"` for the companion article (e.g., A‑xxxx).\n+\n+3. **Put currency in its own branch when the answer turns on a date.**  \n+   A branch that also tries to establish criteria will not look for revision history.  \n+   If the question is about “current” coverage, include a branch explicitly asking for the\n+   most recent revision date and what changed.\n+\n+4. **Test both affirmation and negation when a claim could be false.**  \n+   If the answer might be “X is NOT covered” or “the LCD does NOT contain codes,” create a\n+   branch whose `question` asks for proof of the negative (e.g., “Does LCD Lxxxxx contain\n+   HCPCS codes for CGM?”) and require a citation that shows the absence (or a statement\n+   that the document does not mention them). Do not rely on a single branch to prove both\n+   sides.\n+\n+5. **Avoid redundant branches.**  \n+   Each branch’s `question` should add information that no other branch provides.  \n+   Before adding a branch, ask: “If I removed this branch, would any essential fact be\n+   missing from the plan?” If the answer is no, do not add it.\n+\n+6. **Use `hypothesis` to guide refutation.**  \n+   State what you expect to find; the search agent will try to locate evidence that\n+   contradicts it. This reduces confirmation bias and surfaces contradictions early.\n+\n+7. **Limit secondary‑source branches.**  \n+   Only add a `source_hint=\"any\"` branch when the objective explicitly asks what non‑CMS\n+   sources claim, or when you need to check for overstated/simplified coverage.  \n+   When you do add one, keep its `priority` low (e.g., 3 or higher) and consider whether\n+   you could stay within the branch budget without it.\n+\n+8. **Make `stop_criteria` citable and concrete.**  \n+   Example: “A direct quote from the LCD Lxxxxx (rev. YYYY‑MM‑DD) stating that therapeutic\n+   CGM is covered for beneficiaries with type 2 diabetes who are not on insulin, and a\n+   quote from the companion article Axxxx (rev. YYYY‑MM‑DD) listing the required HCPCS\n+   code K0554, frequency limits, and documentation requirements.”  \n+   Vague aspirations like “the answer is correct” are not acceptable.\n+\n+9. **Respect the branch budget.**  \n+   The system gives each branch an equal slice of `ws.budget`. More branches mean less\n+   time and fewer tokens per agent, which increases the chance of missed or hallucinated\n+   citations. Only create as many branches as are strictly necessary to satisfy the\n+   stop_criteria.\n+\n+10. **Check for hallucination risk.**  \n+    If you are unsure whether a document exists or contains the information you need,\n+    add a branch whose `question` asks for the document’s existence or location (e.g.,\n+    “What is the title and Federal Register citation of the November 2024 CMS proposed\n+    rule on anti‑obesity medications?”). Do not assume it exists.\n \n ## Output rule\n \n@@ -80,54 +125,22 @@\n after — any prose you write is discarded, and if there is no block the run falls back\n to a worse plan. The block must assign `ws.plan`.\n \n-## Example\n-\n-For the objective *\"Is a therapeutic CGM covered under Medicare for a type 2 diabetic\n-not on insulin?\"*:\n-\n ```python\n ws.plan = SearchPlan(\n     understanding=ws.understanding,\n     branches=[\n+        # Example structure; replace with your actual branches.\n         Branch(\n             branch_id=\"b1\",\n-            question=\"What are the current LCD coverage criteria for a therapeutic CGM?\",\n-            hypothesis=\"Criteria require insulin treatment or documented problematic hypoglycemia\",\n-            rationale=\"The criteria are the answer; everything else qualifies them.\",\n-            source_hint=\"primary_policy\",\n+            question=\"...\",\n+            hypothesis=\"...\",\n+            rationale=\"...\",\n+            source_hint=\"...\",\n             priority=1,\n         ),\n-        Branch(\n-            branch_id=\"b2\",\n-            question=\"Do the criteria cover a beneficiary with type 2 diabetes who is not treated with insulin?\",\n-            hypothesis=\"Non-insulin patients qualify only through the hypoglycemia pathway\",\n-            rationale=\"This is the specific population asked about, and it is the clause most likely to have exceptions.\",\n-            source_hint=\"primary_policy\",\n-            priority=1,\n-        ),\n-        Branch(\n-            branch_id=\"b3\",\n-            question=\"What is the most recent revision to the CGM coverage criteria and what did it change?\",\n-            rationale=\"An answer citing a superseded revision is wrong even if it quotes correctly.\",\n-            source_hint=\"primary_policy\",\n-            priority=2,\n-        ),\n-        Branch(\n-            branch_id=\"b4\",\n-            question=\"What diagnosis codes, documentation and frequency requirements apply to therapeutic CGM?\",\n-            rationale=\"Coverage in practice depends on the companion coding article, not the LCD alone.\",\n-            source_hint=\"coding_article\",\n-            priority=3,\n-        ),\n+        # ... additional branches as needed ...\n     ],\n-    stop_criteria=(\n-        \"Each coverage criterion is quoted from the governing LCD with its revision \"\n-        \"date; the insulin/hypoglycemia pathway for non-insulin type 2 patients is \"\n-        \"resolved either way; the coding and documentation requirements are cited to \"\n-        \"the companion article.\"\n-    ),\n+    stop_criteria=\"...\",\n     budget=ws.budget,\n )\n-```\n-\n-Now write the block for the objective above.\n+```"
+      }
+    }
+  ],
+  "rollouts": [
+    {
+      "prompt_set": "gepa-e4167140ea",
+      "question_id": "cgm-elig-004",
+      "run_id": "01a09d88-0ccb-7511-b04d-c44715a595a2",
+      "status": "budget_exhausted",
+      "score": 0.668,
+      "composite": 0.668,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-e4167140ea",
+      "question_id": "glp1-path-002",
+      "run_id": "01a09d88-0ccc-76d9-b850-4ed735eec60f",
+      "status": "budget_exhausted",
+      "score": 0.6147,
+      "composite": 0.6147,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-e4167140ea",
+      "question_id": "chg-cgm-002",
+      "run_id": "01a09d88-0ccc-7329-a7b4-0d232696c632",
+      "status": "budget_exhausted",
+      "score": 0.8923,
+      "composite": 0.8923,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-e4167140ea",
+      "question_id": "adv-glp1-002",
+      "run_id": "01a09d8b-83c9-77dd-9def-6ff477e5455d",
+      "status": "budget_exhausted",
+      "score": 0.65,
+      "composite": 0.65,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-e4167140ea",
+      "question_id": "oos-003",
+      "run_id": "01a09d8e-59a5-76a6-9924-4ef76a07a459",
+      "status": "budget_exhausted",
+      "score": 0.9309,
+      "composite": 0.9309,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-e4167140ea",
+      "question_id": "chg-glp1-002",
+      "run_id": "01a09d92-8f92-7289-9b8c-b2313cf1f155",
+      "status": "budget_exhausted",
+      "score": 0.5043,
+      "composite": 0.5043,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-e4167140ea",
+      "question_id": "oos-001",
+      "run_id": "01a09d92-8f92-73ac-bcb6-3536adcfc336",
+      "status": "budget_exhausted",
+      "score": 0.808,
+      "composite": 0.808,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-e4167140ea",
+      "question_id": "cgm-code-003",
+      "run_id": "01a09d92-8f93-7946-b666-702c9a624824",
+      "status": "budget_exhausted",
+      "score": 0.455,
+      "composite": 0.455,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-0937fe0857",
+      "question_id": "chg-glp1-002",
+      "run_id": "01a09d99-ae34-7f77-8afb-ea8449669912",
+      "status": "budget_exhausted",
+      "score": 0.6143,
+      "composite": 0.6143,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-0937fe0857",
+      "question_id": "oos-001",
+      "run_id": "01a09d99-ae35-7760-b92e-8e9cb01e7a81",
+      "status": "budget_exhausted",
+      "score": 0.8847,
+      "composite": 0.8847,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-0937fe0857",
+      "question_id": "cgm-code-003",
+      "run_id": "01a09d99-ae35-7de0-9b9e-7b479a485b46",
+      "status": "completed",
+      "score": 0.796,
+      "composite": 0.796,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-0937fe0857",
+      "question_id": "cgm-elig-004",
+      "run_id": "01a09d9e-f017-7a88-ad16-9a6bb509f312",
+      "status": "budget_exhausted",
+      "score": 0.719,
+      "composite": 0.719,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-0937fe0857",
+      "question_id": "glp1-path-002",
+      "run_id": "01a09d9e-f017-76b6-ac4e-ec6e87b5025b",
+      "status": "budget_exhausted",
+      "score": 0.643,
+      "composite": 0.643,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-0937fe0857",
+      "question_id": "chg-cgm-002",
+      "run_id": "01a09d9e-f017-720a-b6c1-f86e01a866e5",
+      "status": "completed",
+      "score": 0.919,
+      "composite": 0.919,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-0937fe0857",
+      "question_id": "adv-glp1-002",
+      "run_id": "01a09da3-889e-73b0-add7-65f14249d662",
+      "status": "budget_exhausted",
+      "score": 0.3693,
+      "composite": 0.3693,
+      "error": null
+    },
+    {
+      "prompt_set": "gepa-0937fe0857",
+      "question_id": "oos-003",
+      "run_id": "01a09da4-6ffc-75cb-a85c-f0a4ff645d74",
+      "status": "budget_exhausted",
+      "score": 0.884,
+      "composite": 0.884,
+      "error": null
+    }
+  ],
+  "acceptance": "pending (task 3.2): docs/05 §5 accepts the optimized prompts only if holdout answer_correctness improves and citation_correctness does not drop by more than 0.03; otherwise base ships",
+  "optimized_prompts_written": [],
+  "optimized_prompts_removed": []
+}
