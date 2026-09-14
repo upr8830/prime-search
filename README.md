@@ -8,13 +8,46 @@ verified. It answers at policy level and never decides an individual case.
 
 Built for the Tavily (Nebius) Head of Forward Deployed Engineering take-home, as an improvement on a
 starter Tavily + LangChain search agent. The starter is kept in the repo as `--mode baseline`, so the two
-can be compared side by side on the same question. The case for the design is in
+can be compared side by side on the same question. The proposed solution is described in
 [`TECHNICAL_STATEMENT.md`](TECHNICAL_STATEMENT.md).
 
 > **Status: Day 3.** The investigation pipeline, CLI, API, UI harness, SearchBench evaluators and GEPA
 > runner are built. GEPA found no prompt that beat the base prompts on dev (`reports/gepa-run.json`). The
 > final holdout bench has run, with results in `reports/final-report.md`. `docs/09-implementation-plan.md` and
 > `build-log/` record what is done.
+
+## The proposed solution
+
+**The proposed solution is [`TECHNICAL_STATEMENT.md`](TECHNICAL_STATEMENT.md). Read it first.** It sets out
+the problem, the design, the holdout evidence and the decisions behind them. In brief:
+
+- **The problem.** Payer utilization management turns coverage policy into decisions. A decision built on
+  wrong or stale research harms the patient who met the criteria, and exposes the payer to appeals,
+  overturned denials and improper payments. A single search returns a fluent answer a reviewer cannot
+  audit.
+- **The solution.** PRIME keeps the starter's stack (Tavily, LangChain and LangGraph, Nebius) and turns
+  the search call into an investigation:
+  - it plans branches aimed at primary policy;
+  - parallel sub-agents record verbatim, dated passages checked against the fetched document;
+  - a judge and a critic review the evidence;
+  - the answer cites every claim and states effective dates, contradictions and what could not be
+    verified.
+
+  It answers at policy level, and the decision stays with the reviewer.
+- **The evidence.** On the 10-question holdout, run twice, answer correctness is a tie: 0.66 for PRIME
+  against 0.64 for the starter. Only PRIME's answers can be audited:
+
+  | holdout | PRIME | starter |
+  |---|---|---|
+  | citation correctness | 0.63 | 0.00 |
+  | currency (governing document and date) | 0.94 | 0.31 |
+  | evidence recall | 0.74 | 0.00 |
+  | composite | 0.69 | 0.36 |
+
+  GEPA found no prompt that beat the base prompts, so the base prompts ship. The full results are in
+  [`reports/final-report.md`](reports/final-report.md).
+- **What comes next.** Raise citation correctness first: about one cited sentence in three is not yet
+  supported by its passage.
 
 ---
 
@@ -25,8 +58,8 @@ the repo root.
 
 **Stage 1: the case**
 
-1. [`TECHNICAL_STATEMENT.md`](TECHNICAL_STATEMENT.md) — the problem, what was built, how we know it is
-   better, and the decisions behind it. Two pages.
+1. [`TECHNICAL_STATEMENT.md`](TECHNICAL_STATEMENT.md) — the proposed solution: the problem, what was
+   built, how we know it is better, and the decisions behind it.
 2. [`reports/final-report.md`](reports/final-report.md) — the holdout results behind the statement: the
    headline table, PRD targets, per-question scores and three worked examples, from task 3.2's two holdout
    passes. [`reports/dev-report.md`](reports/dev-report.md) shows the same layout for the 5-question dev check.
@@ -416,7 +449,7 @@ Model routing (defaults in `prime_search/config.py`):
 
 | File | Purpose |
 |---|---|
-| `TECHNICAL_STATEMENT.md` | The ≤ 2-page case for the design, with holdout results |
+| `TECHNICAL_STATEMENT.md` | The proposed solution: problem, design, holdout results and decisions |
 | `CLAUDE.md` | Build conventions, constraints, model routing |
 | `docs/00-prd.md` | Product requirements: problem, personas, scenarios, FRs, metrics |
 | `docs/01-system-architecture.md` | Components, config, verified model IDs and fallback rule, Tavily usage |
