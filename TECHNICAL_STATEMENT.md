@@ -2,9 +2,8 @@
 
 *Coverage-determination research on Tavily, LangGraph, and Nebius Token Factory*
 
-<!-- DRAFT (task 3.3). Every ⟨3.2⟩ / ⟨GEPA⟩ marker is filled from reports/final-report.md and
-reports/gepa-run.json once task 3.2's holdout bench and the GEPA run finish. No number below that
-carries a marker is a result yet. -->
+<!-- DRAFT (task 3.3). Every ⟨3.2⟩ marker is filled from reports/final-report.md once task 3.2's
+holdout bench finishes. No number below that carries a marker is a result yet. -->
 
 ## 1. The problem I chose
 
@@ -88,10 +87,12 @@ answer, then PRIME's, with the Contradictions section and the governing source i
 - **Evaluator noise.** One judge call moved single-question answer correctness by 0.3–0.5 when an
   unchanged answer was re-scored. Answer correctness is therefore the majority of three judge calls,
   and the holdout is run twice.
-- **GEPA.** It optimized only the planner and judge prompts, with 10 metric calls, which is roughly one
-  proposed edit. ⟨GEPA: dev score base vs best; whether the edit passed the holdout guardrail of higher
-  answer correctness and no more than a 0.03 drop in citation correctness; otherwise base prompts
-  ship.⟩
+- **GEPA found no improvement.** With 10 metric calls on the planner and judge prompts it made one
+  proposal: a rewrite of the planner's guidance into ten rules. The rewrite beat the base prompt on its
+  three train questions but scored 0.707 on dev against the base prompts' 0.751. It won three dev
+  questions by 0.03–0.05, within run-to-run noise, and lost a contradiction question by 0.28. No
+  prompt beat base, so the PRIME + GEPA column runs the base prompts. The base dev score reproduced
+  across two independent GEPA runs (0.752, 0.751).
 - **Cost.** A deep PRIME run uses about 440k tokens and 160 s, against the starter's 9k tokens and
   12 s, which is roughly $0.60–0.95 per scored question at list prices. The budget caps searches and
   rounds; it checks tokens between steps, so runs can finish over the cap.
@@ -129,5 +130,6 @@ a customer-validated SearchBench, and a security layer on fetched content (R8) b
   decision log is `docs/11`.
 - **Build record:** `build-log/` (session logs and transcripts).
 - **Final report:** `reports/final-report.md` ⟨3.2⟩.
-- **GEPA run:** `reports/gepa-run.json` ⟨GEPA⟩.
+- **GEPA run:** `reports/gepa-run.json` (each candidate, its diff and dev scores; traces in the
+  LangSmith project `prime-search-gepa`).
 - **LangSmith experiments:** holdout ⟨3.2⟩.
