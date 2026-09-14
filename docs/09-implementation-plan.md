@@ -108,8 +108,9 @@ Legend: **[G]** = gate (must pass before the next phase), **[opt]** = cut first 
 - Apply acceptance guardrails; write `prompts/optimized/` and `reports/gepa-run.json`.
 
 ### 3.2 Final bench — 05 §3
-- Holdout × {baseline, prime-base, prime-optimized}, two passes each; `eval/report.py` →
-  `reports/final-report.md`; copy summary JSON for `/bench`.
+- Holdout × {baseline, prime-base}, two passes each. PRIME + GEPA is prime-base and is not run separately,
+  because GEPA wrote no optimized prompts (user decision, docs/11). `eval/report.py --split holdout --passes 2`
+  → `reports/final-report.md` and `reports/latest.json` for `/bench`.
 - **[G]** Report exists with the headline table and three worked examples.
 
 ### 3.3 Technical statement — 12

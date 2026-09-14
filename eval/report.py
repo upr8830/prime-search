@@ -32,6 +32,9 @@ __all__ = ["main", "prd_targets", "render_markdown", "summarize"]
 
 BENCH_DIR = Path("reports/bench")
 LATEST = Path("reports/latest.json")
+GEPA_REPORT = Path("reports/gepa-run.json")
+# docs/05 §5: accept optimized prompts only if citation correctness drops by at most this.
+ACCEPT_CITATION_DROP = 0.03
 INT_KEYS = {"search_cost", "tokens"}
 BREAKDOWN_KEYS = ("answer_correctness", "evidence_recall", "citation_correctness", "citation_completeness", "currency")
 EXCERPT_LINES = 40
@@ -164,7 +167,7 @@ def summarize(label: str, passes: Sequence[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def prd_targets(summaries: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+def prd_targets(summaries: Sequence[dict[str, Any]], gepa: dict[str, Any] | None = None) -> list[dict[str, Any]]:
     """docs/00 §9's targets, each on the subset it is defined for."""
     baseline = next((s for s in summaries if s["mode"] == "baseline"), None)
     baseline_ac = baseline["metrics"]["answer_correctness"]["mean"] if baseline else None
@@ -190,7 +193,100 @@ def prd_targets(summaries: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
                 _target(summary["config"], "answer_correctness", "delta over baseline", delta,
                         summary["metrics"]["answer_correctness"]["n"], 0.25)
             )
+    # docs/00 §9: "GEPA lift on held-out split: >= +0.05 answer correctness".
+    lift = gepa_lift(summaries, gepa)
+    if lift is not None:
+        targets.append(_target(lift["config"], "gepa_lift", lift["subset"], lift["lift"], lift["n"], 0.05))
     return targets
+
+
+def gepa_outcome(path: Path | str = GEPA_REPORT) -> dict[str, Any] | None:
+    """What task 3.1's GEPA run concluded (docs/05 §5), from `reports/gepa-run.json`."""
+    source = Path(path)
+    if not source.is_file():
+        return None
+    try:
+        data = json.loads(source.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    keys = ("components", "total_metric_calls", "seed_dev_score", "best_dev_score", "improved_on_dev",
+            "optimized_prompts_written", "run_dir", "git_sha")
+    return {key: data.get(key) for key in keys}
+
+
+def _prime(summaries: Sequence[dict[str, Any]], prompt_set: str) -> dict[str, Any] | None:
+    return next((s for s in summaries if s["mode"] == "prime" and s.get("prompt_set") == prompt_set), None)
+
+
+def gepa_lift(summaries: Sequence[dict[str, Any]], gepa: dict[str, Any] | None) -> dict[str, Any] | None:
+    """docs/00 §9's GEPA lift and docs/05 §5's acceptance check.
+
+    With no optimized experiment and a GEPA run that wrote no optimized prompts, PRIME + GEPA
+    is the base prompts, so the lift is 0 by construction rather than unknown."""
+    base = _prime(summaries, "base")
+    optimized = _prime(summaries, "optimized")
+    if base is None:
+        return None
+    if optimized is None:
+        if gepa is None or gepa.get("improved_on_dev") or gepa.get("optimized_prompts_written"):
+            return None
+        return {
+            "config": base["config"], "subset": "no optimized prompts (equals base)", "lift": 0.0,
+            "citation_delta": 0.0, "accepted": False, "equals_base": True,
+            "n": base["metrics"]["answer_correctness"]["n"],
+        }
+
+    def delta(key: str) -> float | None:
+        mine, theirs = optimized["metrics"][key]["mean"], base["metrics"][key]["mean"]
+        return None if mine is None or theirs is None else mine - theirs
+
+    lift, citation = delta("answer_correctness"), delta("citation_correctness")
+    accepted = None if lift is None or citation is None else lift > 0 and citation >= -ACCEPT_CITATION_DROP
+    return {
+        "config": optimized["config"], "subset": "optimized vs base", "lift": lift, "citation_delta": citation,
+        "accepted": accepted, "equals_base": False, "n": optimized["metrics"]["answer_correctness"]["n"],
+    }
+
+
+def _signed(value: float | None) -> str:
+    return "—" if value is None else f"{value:+.2f}"
+
+
+def gepa_lines(summaries: Sequence[dict[str, Any]], gepa: dict[str, Any] | None) -> list[str]:
+    """The report's PRIME + GEPA section (docs/05 §5)."""
+    base = _prime(summaries, "base")
+    optimized = _prime(summaries, "optimized")
+    lines: list[str] = []
+    if gepa is not None:
+        lines.append(
+            f"GEPA (task 3.1) optimized {', '.join(gepa.get('components') or []) or 'no prompts'} with "
+            f"{gepa.get('total_metric_calls')} metric calls: best dev {_fmt(gepa.get('best_dev_score'))} against "
+            f"base {_fmt(gepa.get('seed_dev_score'))} (`reports/gepa-run.json`)."
+        )
+    if optimized is None:
+        lift = gepa_lift(summaries, gepa)
+        if lift is not None and lift["equals_base"]:
+            lines.append(
+                f"No candidate beat base on dev, so GEPA wrote no optimized prompts and PRIME + GEPA is "
+                f"`{lift['config']}`. It was not run separately; its lift is 0 by construction (docs/05 §5)."
+            )
+        else:
+            lines.append("There is no `prime-optimized` experiment on this split.")
+        return lines
+    if base is None:
+        lines.append(f"`{optimized['config']}` has no `prime-base` experiment on this split to compare with.")
+        return lines
+    lift = gepa_lift(summaries, gepa) or {}
+    verdict = {True: "accepted", False: "not accepted"}.get(lift.get("accepted"), "undecided")
+    lines.append(
+        f"`{optimized['config']}` against `{base['config']}`: answer_correctness {_signed(lift.get('lift'))}, "
+        f"citation_correctness {_signed(lift.get('citation_delta'))}."
+    )
+    lines.append(
+        "docs/05 §5 acceptance (answer correctness improves and citation correctness drops at most "
+        f"{ACCEPT_CITATION_DROP:.2f}): {verdict}."
+    )
+    return lines
 
 
 def _target(config: str, metric: str, subset: str, value: float | None, n: int, target: float) -> dict[str, Any]:
@@ -281,6 +377,7 @@ def render_markdown(
     *,
     generated_at: str,
     passes: int,
+    gepa: dict[str, Any] | None = None,
 ) -> str:
     lines = [f"# SearchBench {split} report", ""]
     lines.append(
@@ -318,6 +415,9 @@ def render_markdown(
                   str(summary["judge_errors"]), str(summary["failed_runs"])]
         body_rows.append(cells)
     lines += _table(header, body_rows) + [""]
+
+    if gepa is not None or _prime(summaries, "optimized") is not None:
+        lines += ["## PRIME + GEPA", "", *gepa_lines(summaries, gepa), ""]
 
     lines += ["## PRD targets (docs/00 §9)", ""]
     lines += _table(
@@ -400,7 +500,10 @@ def render_markdown(
     return "\n".join(lines).rstrip() + "\n"
 
 
-def latest_payload(split: str, passes: int, summaries: Sequence[dict[str, Any]], targets: Sequence[dict[str, Any]], generated_at: str) -> dict[str, Any]:
+def latest_payload(
+    split: str, passes: int, summaries: Sequence[dict[str, Any]], targets: Sequence[dict[str, Any]], generated_at: str,
+    gepa: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     return {
         "generated_at": generated_at,
         "split": split,
@@ -408,6 +511,7 @@ def latest_payload(split: str, passes: int, summaries: Sequence[dict[str, Any]],
         "sources": [experiment["file"] for summary in summaries for experiment in summary["experiments"]],
         "configs": [{key: value for key, value in summary.items() if not key.startswith("_")} for summary in summaries],
         "prd_targets": list(targets),
+        "gepa": gepa,
     }
 
 
@@ -418,6 +522,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--bench-dir", default=str(BENCH_DIR))
     parser.add_argument("--out", help="markdown path (default reports/final-report.md or reports/<split>-report.md)")
     parser.add_argument("--latest", default=str(LATEST), help="summary JSON for /bench")
+    parser.add_argument("--gepa", default=str(GEPA_REPORT), help="GEPA run report (docs/05 §5)")
     args = parser.parse_args(argv)
 
     experiments = load_experiments(Path(args.bench_dir), args.split)
@@ -426,21 +531,22 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 1
     groups = group_configs(experiments, args.passes)
     summaries = [summarize(label, passes) for label, passes in groups.items()]
-    targets = prd_targets(summaries)
+    gepa = gepa_outcome(args.gepa)
+    targets = prd_targets(summaries, gepa)
     records = [record for record in load_records() if record.split == args.split]
     generated_at = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
 
     out = Path(args.out) if args.out else default_out(args.split)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(
-        render_markdown(args.split, summaries, targets, records, generated_at=generated_at, passes=args.passes),
+        render_markdown(args.split, summaries, targets, records, generated_at=generated_at, passes=args.passes, gepa=gepa),
         encoding="utf-8",
         newline="\n",
     )
     latest = Path(args.latest)
     latest.parent.mkdir(parents=True, exist_ok=True)
     latest.write_text(
-        json.dumps(latest_payload(args.split, args.passes, summaries, targets, generated_at), indent=1, default=str) + "\n",
+        json.dumps(latest_payload(args.split, args.passes, summaries, targets, generated_at, gepa), indent=1, default=str) + "\n",
         encoding="utf-8",
         newline="\n",
     )

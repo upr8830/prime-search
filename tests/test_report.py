@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from eval import report
 from eval.evaluators import METRIC_KEYS
 from eval.searchbench.schema import load_records
@@ -134,3 +136,75 @@ def test_main_writes_the_dev_report_and_latest_json(tmp_path) -> None:
 def test_main_reports_no_experiments(tmp_path, capsys) -> None:
     assert report.main(["--split", "dev", "--bench-dir", str(tmp_path)]) == 1
     assert "no bench experiments" in capsys.readouterr().err
+
+
+# --- PRIME + GEPA (docs/05 §5, task 3.2) ------------------------------------------------------
+
+GEPA_NO_WIN = {
+    "components": ["plan", "judge"], "total_metric_calls": 16, "seed_dev_score": 0.7512, "best_dev_score": 0.7069,
+    "improved_on_dev": False, "optimized_prompts_written": [], "run_dir": "runs/gepa/x", "git_sha": "abc",
+}
+
+
+def test_gepa_outcome_reads_the_run_report_and_tolerates_its_absence(tmp_path) -> None:
+    path = tmp_path / "gepa-run.json"
+    path.write_text(json.dumps({**GEPA_NO_WIN, "candidates": [], "rollouts": []}), encoding="utf-8")
+    assert report.gepa_outcome(path) == GEPA_NO_WIN
+    assert report.gepa_outcome(tmp_path / "missing.json") is None
+
+
+def test_without_optimized_prompts_prime_plus_gepa_is_base_and_its_lift_is_zero() -> None:
+    summaries = _summaries(_payload("b", mode="baseline", split="holdout"), _payload("p", split="holdout"))
+    targets = report.prd_targets(summaries, GEPA_NO_WIN)
+    (lift,) = [t for t in targets if t["metric"] == "gepa_lift"]
+    assert (lift["config"], lift["value"], lift["target"], lift["met"]) == ("prime-base-deep", 0.0, 0.05, False)
+    assert lift["subset"] == "no optimized prompts (equals base)"
+
+    text = report.render_markdown("holdout", summaries, targets, [], generated_at="now", passes=2, gepa=GEPA_NO_WIN)
+    section = text.split("## PRIME + GEPA", 1)[1].split("## PRD targets", 1)[0]
+    assert "GEPA wrote no optimized prompts" in section and "`prime-base-deep`" in section
+    assert "16 metric calls" in section
+
+
+def test_an_optimized_config_gets_its_lift_and_the_acceptance_check() -> None:
+    base = _payload("p", split="holdout", rows=[_row("q1", scores={"answer_correctness": 0.60, "citation_correctness": 0.80})])
+    optimized = _payload("o", split="holdout", rows=[_row("q1", scores={"answer_correctness": 0.70, "citation_correctness": 0.78})])
+    optimized["config"]["prompt_set"] = "optimized"
+    improved = {**GEPA_NO_WIN, "improved_on_dev": True, "optimized_prompts_written": ["prime_search/prompts/optimized/plan.md"]}
+    summaries = _summaries(_payload("b", mode="baseline", split="holdout"), base, optimized)
+
+    lift = report.gepa_lift(summaries, improved)
+    assert lift["lift"] == pytest.approx(0.10) and lift["citation_delta"] == pytest.approx(-0.02)
+    assert lift["accepted"] is True
+    (row,) = [t for t in report.prd_targets(summaries, improved) if t["metric"] == "gepa_lift"]
+    assert (row["config"], row["met"]) == ("prime-optimized-deep", True)
+    text = report.render_markdown("holdout", summaries, [], [], generated_at="now", passes=1, gepa=improved)
+    assert "citation correctness drops at most 0.03): accepted." in text
+
+
+def test_a_citation_drop_past_the_guardrail_is_not_accepted() -> None:
+    base = _payload("p", split="holdout", rows=[_row("q1", scores={"answer_correctness": 0.60, "citation_correctness": 0.80})])
+    optimized = _payload("o", split="holdout", rows=[_row("q1", scores={"answer_correctness": 0.70, "citation_correctness": 0.70})])
+    optimized["config"]["prompt_set"] = "optimized"
+    summaries = _summaries(base, optimized)
+    assert report.gepa_lift(summaries, None)["accepted"] is False
+
+
+def test_main_passes_the_gepa_outcome_to_the_report_and_latest_json(tmp_path) -> None:
+    bench = tmp_path / "bench"
+    bench.mkdir()
+    rows = [_row("cgm-elig-003", tier=2)]
+    (bench / "b.json").write_text(json.dumps(_payload("b", mode="baseline", rows=rows, split="holdout")), encoding="utf-8")
+    (bench / "p.json").write_text(json.dumps(_payload("p", rows=rows, split="holdout")), encoding="utf-8")
+    gepa = tmp_path / "gepa-run.json"
+    gepa.write_text(json.dumps(GEPA_NO_WIN), encoding="utf-8")
+    out, latest = tmp_path / "final-report.md", tmp_path / "latest.json"
+    args = ["--split", "holdout", "--bench-dir", str(bench), "--out", str(out), "--latest", str(latest)]
+
+    assert report.main([*args, "--gepa", str(gepa)]) == 0
+    assert "## PRIME + GEPA" in out.read_text(encoding="utf-8")
+    assert json.loads(latest.read_text(encoding="utf-8"))["gepa"]["improved_on_dev"] is False
+
+    assert report.main([*args, "--gepa", str(tmp_path / "missing.json")]) == 0
+    assert "## PRIME + GEPA" not in out.read_text(encoding="utf-8")
+    assert json.loads(latest.read_text(encoding="utf-8"))["gepa"] is None
