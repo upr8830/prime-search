@@ -213,7 +213,10 @@ class PrimeAdapter:
             rollouts = [known[record.id] or fresh[record.id] for record in batch]
         with self._lock:
             for rollout in paid:
-                self._memo[(name, rollout.question_id)] = rollout
+                # A run that raised is not reused: a later batch runs it again rather than
+                # carrying its 0 forward (the first live run lost two train runs to a crash).
+                if rollout.error is None:
+                    self._memo[(name, rollout.question_id)] = rollout
             self.log.extend(
                 {
                     "prompt_set": name,
@@ -245,14 +248,21 @@ class PrimeAdapter:
                 "started_at": self.started_at,
             }
 
-    def set_adapter_state(self, state: Mapping[str, Any]) -> None:
+    def set_adapter_state(self, state: Mapping[str, Any] | None) -> None:
+        """GEPA calls this on every start, after the seed's dev evaluation, with an empty
+        state on a fresh run. Replacing the log then dropped those dev rollouts from the
+        report (the first live run), so an empty state is ignored and a restored one is
+        merged ahead of what this process has already run."""
+        if not state:
+            return
         with self._lock:
-            self.log = [dict(entry) for entry in state.get("log", [])]
-            self._memo = {}
+            live = {entry.get("run_id") for entry in self.log}
+            restored = [dict(entry) for entry in state.get("log", []) if entry.get("run_id") not in live]
+            self.log = [*restored, *self.log]
             for item in state.get("memo", []):
                 data = dict(item)
                 prompt_set = data.pop("prompt_set")
-                self._memo[(prompt_set, data["question_id"])] = Rollout(**data)
+                self._memo.setdefault((prompt_set, data["question_id"]), Rollout(**data))
             if state.get("started_at"):
                 self.started_at = state["started_at"]
 

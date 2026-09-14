@@ -175,8 +175,10 @@ def test_gepa_proposes_and_keeps_a_better_candidate_through_the_adapter(tmp_path
     train = TRAIN[:4]
     dev = [record for record in RECORDS if record.split == "dev"][:2]
     reflections: list[str] = []
+    runs: list[str] = []
 
     def runner(request, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        runs.append(request.question_id)
         record = _record(request, kwargs["ws"].run_id)
         prompt_set = kwargs["prompt_set"]
         edited = "Rule " in prompts.load("plan", prompt_set) + prompts.load("judge", prompt_set)
@@ -209,6 +211,7 @@ def test_gepa_proposes_and_keeps_a_better_candidate_through_the_adapter(tmp_path
         module_selector="round_robin",
         max_metric_calls=14,
         cache_evaluation=True,
+        logger=run_gepa.Utf8Logger(tmp_path / "gepa" / "run_log.txt"),
         run_dir=str(tmp_path / "gepa"),
         seed=0,
         raise_on_exception=True,
@@ -223,6 +226,74 @@ def test_gepa_proposes_and_keeps_a_better_candidate_through_the_adapter(tmp_path
     # GEPA's engine counts every dev record it sends, even one the adapter reuses, so its
     # count is never below the paid runs: the cap can stop early, never overspend.
     assert 0 < len(adapter.log) <= result.total_metric_calls
+    # Every paid run is in the log, the seed's dev evaluation included (GEPA restores an
+    # empty adapter state right after it on a fresh run).
+    assert len(adapter.log) == len(runs)
+    assert {entry['question_id'] for entry in adapter.log} >= {record.id for record in dev}
+
+
+def test_restoring_an_empty_state_keeps_the_rollouts_already_run(fakes) -> None:
+    """GEPA 0.1.4 evaluates the seed on dev, then calls set_adapter_state with an empty
+    state on a fresh run: the first live run's report lost all five dev rollouts."""
+    adapter = PrimeAdapter(TRAIN, budget=Budget(), runner=fakes.runner, scorer=fakes.scorer)
+    candidate = _candidate()
+    try:
+        adapter.evaluate(TRAIN[:2], candidate)
+        adapter.set_adapter_state({})
+        adapter.set_adapter_state(None)
+        again = adapter.evaluate(TRAIN[:2], candidate)
+    finally:
+        prompts.unregister_prompt_set(prompt_set_name(candidate))
+    assert len(adapter.log) == 2
+    assert again.num_metric_calls == 0  # the memo survived too
+
+
+def test_a_run_that_raised_is_run_again_not_reused(fakes) -> None:
+    """The first live run lost two train runs to an encoding crash; a reused 0 would have
+    carried that crash into every later minibatch."""
+    calls = {"n": 0}
+
+    def flaky(request, **kwargs):  # noqa: ANN001, ANN003, ANN202
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise UnicodeEncodeError("charmap", "\u2011", 0, 1, "character maps to <undefined>")
+        return fakes.runner(request, **kwargs)
+
+    def scorer(record, bench):  # noqa: ANN001, ANN202
+        if record is None:
+            return {"answer_correctness": Score("answer_correctness", 0.0, "the run failed")}
+        return fakes.scorer(record, bench)
+
+    adapter = PrimeAdapter(TRAIN, budget=Budget(), runner=flaky, scorer=scorer)
+    candidate = _candidate()
+    try:
+        first = adapter.evaluate(TRAIN[:1], candidate)
+        second = adapter.evaluate(TRAIN[:1], candidate)
+    finally:
+        prompts.unregister_prompt_set(prompt_set_name(candidate))
+    assert first.outputs[0].error and first.scores == [0.0]
+    assert second.num_metric_calls == 1 and second.scores == [0.5]
+
+
+def test_the_run_log_is_utf8_and_gepa_is_given_it(tmp_path, offline_credentials, monkeypatch) -> None:
+    """GEPA's default logger opened run_log.txt as cp1252 on Windows and crashed on the first
+    non-ASCII character of a proposed prompt (the first live run, docs/11)."""
+    log = run_gepa.Utf8Logger(tmp_path / "gepa" / "run_log.txt")
+    log.log("Proposed new text for plan: non\u2011insulin")
+    assert "non\u2011insulin" in (tmp_path / "gepa" / "run_log.txt").read_text(encoding="utf-8")
+
+    seen: dict = {}
+
+    def capture(**kwargs):  # noqa: ANN003, ANN202
+        seen.update(kwargs)
+        raise RuntimeError("stop after capturing the arguments")
+
+    monkeypatch.setattr(run_gepa.gepa, "optimize", capture)
+    monkeypatch.setattr(run_gepa, "reflection_lm", lambda: (lambda prompt: ""))
+    with pytest.raises(RuntimeError, match="stop after"):
+        run_gepa.main(["--run-dir", str(tmp_path / "run")])
+    assert isinstance(seen["logger"], run_gepa.Utf8Logger)
+    assert seen["logger"].path == tmp_path / "run" / "run_log.txt"
 
 
 def test_the_runner_refuses_holdout_and_any_split_but_train(capsys) -> None:

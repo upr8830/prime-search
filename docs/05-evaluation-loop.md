@@ -214,6 +214,10 @@ Guardrails:
 - **GEPA settings:** `reflection_minibatch_size=3`, Pareto candidate selection, round-robin components,
   `cache_evaluation=True`, `raise_on_exception=False`, checkpoints in `runs/gepa/<timestamp>`
   (`--run-dir` resumes). The adapter sets `propose_new_texts = None`, which GEPA 0.1.4 reads directly.
+  The runner passes its own UTF-8 `logger` (`Utf8Logger`, writing `run_log.txt`), because GEPA's default
+  logger opens that file in the platform encoding and tees stdout into it. On Windows that crashed the first
+  live run. `set_adapter_state` ignores the empty state GEPA passes after the seed's dev evaluation on a
+  fresh run and merges a restored one, and a rollout that raised is not reused.
   GEPA caches only dev evaluations and re-evaluates a parent on each new minibatch, so the adapter also
   reuses a rollout it already paid for (same prompt set, same record). A minibatch reports only its paid
   runs as `num_metric_calls`; GEPA counts a dev evaluation per record sent, reused or not, so the cap bounds

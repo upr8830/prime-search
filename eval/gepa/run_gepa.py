@@ -16,6 +16,7 @@ import argparse
 import difflib
 import json
 import sys
+import threading
 from collections.abc import Callable, Mapping, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
@@ -24,6 +25,7 @@ from typing import Any
 import gepa
 
 from eval.gepa.adapter import COMPONENTS, GEPA_PROJECT, PrimeAdapter, prompt_set_name
+from eval.run_eval import _lenient_stdout
 from eval.searchbench.schema import load_records
 from eval.searchbench.sync import check
 from prime_search import prompts
@@ -43,6 +45,28 @@ ACCEPTANCE = (
     "pending (task 3.2): docs/05 §5 accepts the optimized prompts only if holdout answer_correctness "
     "improves and citation_correctness does not drop by more than 0.03; otherwise base ships"
 )
+
+
+class Utf8Logger:
+    """GEPA's progress log, written as UTF-8.
+
+    Given a run_dir and no logger, GEPA 0.1.4 opens `run_log.txt` in the platform's default
+    encoding and tees `sys.stdout` into it. On Windows (cp1252) the first non-ASCII character
+    in a proposed prompt or a structlog line raised UnicodeEncodeError: the first live run
+    lost both proposals and two train runs to it (docs/11).
+    """
+
+    def __init__(self, path: Path) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        self.path = path
+        self._lock = threading.Lock()
+
+    def log(self, *args: Any, **kwargs: Any) -> None:
+        message = " ".join(str(arg) for arg in args)
+        with self._lock:
+            print(message, flush=True)
+            with self.path.open("a", encoding="utf-8") as handle:
+                handle.write(message + "\n")
 
 
 def gepa_budget(settings: Any) -> Budget:
@@ -203,6 +227,7 @@ def parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    _lenient_stdout()
     args = parse_args(argv)
     if args.split != "train":
         reason = "holdout is never used for optimization (docs/05 §5)" if args.split == "holdout" else "GEPA trains on train and selects on dev"
@@ -269,6 +294,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         module_selector="round_robin",
         max_metric_calls=args.max_metric_calls,
         cache_evaluation=True,
+        logger=Utf8Logger(run_dir / "run_log.txt"),
         run_dir=str(run_dir),
         seed=args.seed,
         raise_on_exception=False,
