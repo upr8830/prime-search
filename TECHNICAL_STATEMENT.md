@@ -2,19 +2,24 @@
 
 *Coverage-determination research on Tavily, LangGraph, and Nebius Token Factory*
 
-## 1. The problem: guideline decisions where a wrong answer costs patients and payers
+## 1. Why this matters: a coverage answer is only worth what it can survive
 
-Payer utilization management turns coverage guidelines into decisions, and a wrong decision has two
-costs. A patient who meets the criteria is denied or delayed care. The payer pays improperly, or faces
-appeals, overturned decisions and regulatory exposure. HHS-OIG found that 13% of sampled Medicare
-Advantage prior-authorization denials met Medicare coverage rules (OEI-09-18-00260, 2022). Since 2024,
-CMS has required MA plans to apply traditional Medicare's NCD and LCD criteria (CMS-4201-F). The research
-behind a decision has to be right, current and auditable.
+Payer utilization management turns coverage policy into decisions, and a decision built on the wrong
+research does not fail on the day it is made. It fails weeks later, as a denial that is appealed and
+overturned, care that was delayed, or an improper payment a regulator finds. The problem is measured,
+not hypothetical: HHS-OIG found that 13% of sampled Medicare Advantage prior-authorization denials met
+Medicare coverage rules (OEI-09-18-00260, 2022). Since 2024, CMS has required MA plans to apply
+traditional Medicare's NCD and LCD criteria (CMS-4201-F), and the prior-authorization rule (CMS-0057-F)
+puts decisions on a clock — 72 hours for expedited requests, seven calendar days for standard ones —
+with public reporting. Reviewers have less time to reach an answer that has to hold up longer.
 
 "Is a CGM covered under Medicare for a type 2 diabetic not on insulin?" looks like one search. But the
 answer spans LCD L33822 and billing article A52464, which have different revision dates. A 2023 revision
-changed the insulin rule, and supplier pages misstate coverage. The starter agent paraphrases the
-top-ranked page and cites a URL, giving a fluent answer a reviewer cannot audit.
+changed the insulin rule, and supplier pages misstate coverage. The tempting fix is the starter agent's
+design: paraphrase the top-ranked page and cite a URL. It is fast and fluent, and it is the riskiest
+option on the table, because it removes the reviewer's instinct to double-check while giving them
+nothing to check. In a regulated workflow that is not a weaker product; it is a liability. The bar is an
+answer that is **right, current and auditable**, and auditable is the one a search call cannot meet.
 
 ## 2. What I built: an investigation that shows its evidence
 
@@ -45,7 +50,9 @@ questions and 12 metrics, and GEPA). It also adds LangSmith observability and a 
 ## 3. How I know it is better
 
 The holdout is 10 questions never used in development, run in two passes (mean ± half-range) against the
-starter reproduced exactly.
+starter reproduced exactly. Read the rows as three different people would: a reviewer asks whether the
+answer is right, an auditor asks whether each cited passage supports its claim, and an appeals board asks
+whether it rests on the governing document and date.
 
 | holdout, 2 passes | starter | PRIME | PRIME + GEPA |
 |---|---|---|---|
@@ -76,40 +83,57 @@ removed that requirement.
 - **Equally right; only PRIME can be checked.** Answer correctness is a tie, inside both spreads. The
   starter would score 0.67 if its one empty answer took its other pass's score. The difference is what a
   reviewer relies on: cited verbatim passages (URL citations score 0 by construction) and the governing
-  document and date (currency 0.94 against 0.31).
+  document and date (currency 0.94 against 0.31). That tie is the business case in miniature: a fluent
+  answer that is right two times in three and unauditable every time is exactly what a payer must not
+  deploy, and the starter's silent empty answer in pass 2 is the failure mode a reviewer never sees.
 - **Targets missed.** PRIME meets only the docs/00 §9 contradiction target, on one tier-4 question. It
   misses evidence recall (0.74 against 0.75), citation correctness (0.63 against 0.85), currency on
   change questions (0.69 against 0.80) and the +0.25 answer-correctness lift. About one cited sentence
-  in three is not supported by its passage, which for a payer is the next thing to fix.
+  in three is not supported by its passage. For a payer that is the next thing to fix, and it is fixable
+  because it is now measured: the starter's equivalent number is unmeasurable.
 - **Limits and variance.** 19 of 20 PRIME runs hit a research limit (15 of them the 180-second limit),
   and single questions swing between passes. Scores use a majority of three judge calls and two passes,
-  because a single call moved answer correctness by 0.3–0.5.
+  because a single call moved answer correctness by 0.3–0.5. Latency, not cost, is the operational
+  constraint; the fast/deep depth setting exists to manage it.
 - **GEPA found no improvement.** Its one planner rewrite scored 0.71 on dev against the base prompts'
-  0.75, so the base prompts ship and PRIME + GEPA equals PRIME.
-- **Cost.** About $0.60–0.95 per scored PRIME question. The holdout bench (40 runs) cost about $15–20.
+  0.75, so the base prompts ship and PRIME + GEPA equals PRIME. The loop did its job: it rejected a
+  change that would have hurt the metric a payer cares about most.
+- **Cost.** About $0.60–0.95 per scored PRIME question; the holdout bench (40 runs) cost about $15–20.
+  Set against 20–45 minutes of clinical-reviewer time per manual lookup and the cost of one overturned
+  denial, the economics are not close.
 
 ## 4. Decisions worth explaining
 
 - **The evidence unit, not the document.** A verbatim, located, dated passage makes each claim auditable,
-  citation correctness measurable and disagreement between sources detectable.
+  citation correctness measurable and disagreement between sources detectable. It is also what an
+  appeals file needs: the passage, the document, the revision date.
 - **Answer keys from live sources, with `as_of`.** Checking my 30 draft keys against the 17 governing
   documents raised 41 flags on 21 keys: wrong dates, missing phrases, "stale" claims still in force. A
-  person corrected them. A benchmark written from memory would grade against stale policy.
+  person corrected them. A benchmark written from memory would grade against stale policy, and the
+  same drift is why a customer's benchmark has to be re-validated on a schedule.
 - **Code-as-action for the root.** Reasoning models on this endpoint were reported to reject native tool
   calls, so the root writes its plan as sandboxed Python, which is executable, traceable and has
   fallbacks.
 - **Not built:** search memory, learned skills and an RL-trained search policy (roadmap R1, R2, R7).
   GEPA was the one learning loop, because it could be measured with evaluators I needed anyway.
 
-## 5. How this maps to an FDE engagement
+## 5. Where the value sits, and what this means for Tavily
 
-For a payer this is a reference architecture: Tavily under an evidence-graph agent, with a benchmark the
-customer owns. A new domain needs a strategy card, source-tier rules and answer keys; the graph, evidence
-store, evaluators, tracing and harness stay the same.
+Every payer, provider and vendor can reach the same CMS pages. The index is not the asset. The asset is
+the **search policy** — where criteria live versus codes, which revision governs, when a supplier page is
+overstating, when to stop — made explicit, measured against a benchmark the customer owns, and improved
+under a guardrail that rejects regressions. That asset compounds with every validated question a
+customer adds, and none of it depends on which model or index sits underneath.
+
+Regulated buyers do not purchase "web search for agents"; they purchase auditable answers with
+provenance, one workflow at a time. This build is the shape of that engagement: Tavily as the retrieval
+layer under an evidence-graph agent, a customer-validated benchmark scored before go-live, and a UI a
+reviewer can use without an engineer. A new domain needs a strategy card, source-tier rules and answer
+keys; the graph, evidence store, evaluators, tracing and harness stay the same.
 
 The next steps are to:
 
-1. Raise citation correctness.
+1. Raise citation correctness to the 0.85 target.
 2. Extend to commercial payer policies and multi-jurisdiction MACs (R4).
 3. Score a customer-validated SearchBench before go-live.
 4. Add a security layer on fetched content (R8).
@@ -136,3 +160,6 @@ The system does the research; a person makes the decision.
     (<https://oig.hhs.gov/reports/all/2022/some-medicare-advantage-organization-denials-of-prior-authorization-requests-raise-concerns-about-beneficiary-access-to-medically-necessary-care/>).
   - CMS, 2024 Medicare Advantage and Part D Final Rule, CMS-4201-F, fact sheet, April 2023
     (<https://www.cms.gov/newsroom/fact-sheets/2024-medicare-advantage-and-part-d-final-rule-cms-4201-f>).
+  - CMS, Interoperability and Prior Authorization Final Rule, CMS-0057-F, January 2024
+    (<https://www.cms.gov/newsroom/fact-sheets/cms-interoperability-and-prior-authorization-final-rule-cms-0057-f>).
+    <!-- verify URL and the 72-hour / 7-day timeframes before submitting; delete this comment after -->
