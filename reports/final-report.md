@@ -1,6 +1,6 @@
 # SearchBench holdout report
 
-Generated 2026-09-14 03:09 UTC by `uv run python -m eval.report --split holdout --passes 2` from the local bench files listed below.
+Generated 2026-09-14 03:19 UTC by `uv run python -m eval.report --split holdout --passes 2` from the local bench files listed below.
 
 ## Configurations
 
@@ -19,8 +19,10 @@ All 12 metric keys populated: yes — baseline-none-deep ✓; prime-base-deep �
 
 | config | n | answer_correctness | evidence_recall | citation_correctness | citation_completeness | currency | contradiction_handling | scope_handling | primary_source_ratio | search_cost | latency_s | tokens | search_efficiency | composite | judge errors | failed runs |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| baseline-none-deep | 10 | 0.64 ± 0.05 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.18 ± 0.02 | 0.31 ± 0.04 | 0.25 ± 0.25 | 0.50 ± 0.25 | 0.35 ± 0.07 | 1 ± 0.15 | 17.1 ± 3.31 | 11,632 ± 1367.75 | 5.54 ± 0.87 | 0.36 ± 0.03 | 0 | 0 |
+| baseline-none-deep | 10 | 0.64 ± 0.05 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.18 ± 0.02 | 0.31 ± 0.04 | 0.25 ± 0.25 | 0.50 ± 0.25 | 0.35 ± 0.07 | 1 ± 0.15 | 17.1 ± 3.31 | 11,632 ± 1367.75 | 5.54 ± 0.87 | 0.36 ± 0.03 | 0 | 1 |
 | prime-base-deep | 10 | 0.66 ± 0.09 | 0.74 ± 0.11 | 0.63 ± 0.09 | 0.95 ± 0.01 | 0.94 ± 0.01 | 1.00 ± 0.00 | 0.88 ± 0.12 | 0.82 ± 0.01 | 25 ± 1.10 | 194.0 ± 1.21 | 455,410 ± 669.95 | 0.29 ± 0.06 | 0.69 ± 0.08 | 0 | 0 |
+
+_Metric columns average 2 passes; `n` is questions per pass; judge errors and failed runs are totals over all passes. A failed run includes a completed run that returned no answer._
 
 ## PRIME + GEPA
 
@@ -161,7 +163,7 @@ _From the latest pass of each configuration; the headline and PRD targets averag
 
 **baseline-none-deep** ([trace](https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09dbd-ebdb-7993-801f-991ce12c68f2/run/01a09dbd-ebdb-7993-801f-991ce12c68f2?start_time=2026-09-14T02%3A27%3A44.731588%2B00%3A00))
 
-> (no answer)
+> (no answer: the run completed without answer text, and it is scored as a failed run)
 
 **prime-base-deep** ([trace](https://smith.langchain.com/o/86cf0bc5-3739-42dc-995c-3d23f39fde62/projects/p/01af4853-3039-4f3d-a21e-76ab951f0fbb/trace/01a09dd2-854d-78d1-8ab6-3c07fa59aceb/run/01a09dd2-854d-78d1-8ab6-3c07fa59aceb?start_time=2026-09-14T02%3A50%3A14.733692%2B00%3A00))
 
@@ -231,6 +233,8 @@ _From the latest pass of each configuration; the headline and PRD targets averag
 | prime-base-deep | 26 | 27 | 195.2 | 191.6 | 456,080 | 453,286 | 0.23 | 0.20 | 4,560,795 | 712,900 |
 
 ## Evaluator comments
+
+_From the latest pass of each configuration; the headline and PRD targets average all 2 passes._
 
 ### `adv-cgm-002`
 

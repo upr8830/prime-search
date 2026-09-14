@@ -59,8 +59,8 @@ export function BenchTable({ report }: { report: BenchReport }) {
                 </th>
               ))}
               <th className="px-2 py-1.5 font-medium">composite</th>
-              <th className="px-2 py-1.5 font-medium">judge errors</th>
-              <th className="px-2 py-1.5 font-medium">failed runs</th>
+              <th className="px-2 py-1.5 font-medium">judge errors{report.passes > 1 ? " (all passes)" : ""}</th>
+              <th className="px-2 py-1.5 font-medium">failed runs{report.passes > 1 ? " (all passes)" : ""}</th>
             </tr>
           </thead>
           <tbody>
@@ -89,8 +89,9 @@ export function BenchTable({ report }: { report: BenchReport }) {
         </table>
       </div>
 
-      <Breakdown title="Per tier" configs={report.configs} pick={(config) => config.per_tier} />
-      <Breakdown title="Per domain" configs={report.configs} pick={(config) => config.per_domain} />
+      {/* per_tier and per_domain come from the latest pass only (eval/report.py). */}
+      <Breakdown title={`Per tier${report.passes > 1 ? " (latest pass)" : ""}`} configs={report.configs} pick={(config) => config.per_tier} />
+      <Breakdown title={`Per domain${report.passes > 1 ? " (latest pass)" : ""}`} configs={report.configs} pick={(config) => config.per_domain} />
 
       <section>
         <h2 className="mb-2 text-sm font-medium">PRD targets (docs/00 §9)</h2>

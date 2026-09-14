@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-14 03:09 UTC",
+ "generated_at": "2026-09-14 03:19 UTC",
  "split": "holdout",
  "passes": 2,
  "sources": [
@@ -175,7 +175,12 @@
     }
    },
    "judge_errors": 0,
-   "failed_runs": 0,
+   "failed_runs": 1,
+   "latest_pass_only": [
+    "per_tier",
+    "per_domain",
+    "judge_tokens"
+   ],
    "judge_tokens": 340919,
    "missing_keys": []
   },
@@ -346,6 +351,11 @@
    },
    "judge_errors": 0,
    "failed_runs": 0,
+   "latest_pass_only": [
+    "per_tier",
+    "per_domain",
+    "judge_tokens"
+   ],
    "judge_tokens": 712900,
    "missing_keys": []
   }
@@ -455,6 +465,7 @@
   "run_dir": "runs/gepa/20260914-0128",
   "git_sha": "e1174f7",
   "proposals": 1,
-  "best_proposal_dev_score": 0.70686
+  "best_proposal_dev_score": 0.70686,
+  "diffs": {}
  }
 }

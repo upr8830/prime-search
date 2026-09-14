@@ -149,7 +149,7 @@ GEPA_NO_WIN = {
 def test_gepa_outcome_reads_the_run_report_and_tolerates_its_absence(tmp_path) -> None:
     path = tmp_path / "gepa-run.json"
     path.write_text(json.dumps({**GEPA_NO_WIN, "candidates": [], "rollouts": []}), encoding="utf-8")
-    assert report.gepa_outcome(path) == {**GEPA_NO_WIN, "proposals": 0, "best_proposal_dev_score": None}
+    assert report.gepa_outcome(path) == {**GEPA_NO_WIN, "proposals": 0, "best_proposal_dev_score": None, "diffs": {}}
     assert report.gepa_outcome(tmp_path / "missing.json") is None
 
 
@@ -245,3 +245,66 @@ def test_sections_drawn_from_one_pass_say_so_when_there_are_two() -> None:
         assert text.split(heading, 1)[1].lstrip().startswith(note), heading
     single = report.render_markdown("holdout", _summaries(_payload("p", split="holdout")), [], [], generated_at="now", passes=1)
     assert "From the latest pass" not in single
+
+
+# --- spec review of the holdout gate ----------------------------------------------------------
+
+
+def test_failed_runs_include_an_empty_answer_and_count_every_pass() -> None:
+    """The holdout baseline had a completed run with no answer, scored as failed, while the
+    headline said 0 failed runs; and the counts read only the latest pass."""
+    older = _payload("b1", mode="baseline", split="holdout", started="2026-09-13T10:00:00",
+                     rows=[_row("q1", body=""), _row("q2", error=True)])
+    newer = _payload("b2", mode="baseline", split="holdout", started="2026-09-13T11:00:00", rows=[_row("q1"), _row("q2")])
+    (summary,) = _summaries(older, newer, passes=2)
+    assert (summary["failed_runs"], summary["judge_errors"]) == (1, 1)
+    assert summary["latest_pass_only"] == ["per_tier", "per_domain", "judge_tokens"]
+    text = report.render_markdown("holdout", [summary], [], [], generated_at="now", passes=2)
+    assert "judge errors and failed runs are totals over all passes" in text
+
+
+def test_an_empty_answer_excerpt_says_it_was_scored_as_failed() -> None:
+    assert report._excerpt(_row("q1", body="")) == [
+        "> (no answer: the run completed without answer text, and it is scored as a failed run)"
+    ]
+
+
+def test_tier_4_contradiction_target_averages_passes() -> None:
+    older = _payload("p1", split="holdout", started="2026-09-13T10:00:00",
+                     rows=[_row("adv", tier=4, question_type="contradiction", scores={"contradiction_handling": 1.0})])
+    newer = _payload("p2", split="holdout", started="2026-09-13T11:00:00",
+                     rows=[_row("adv", tier=4, question_type="contradiction", scores={"contradiction_handling": 0.0})])
+    (target,) = [t for t in report.prd_targets(_summaries(older, newer, passes=2)) if t["metric"] == "contradiction_handling"]
+    assert target["value"] == pytest.approx(0.5)
+
+
+def test_an_improvement_on_dev_without_an_optimized_experiment_has_no_lift_row() -> None:
+    improved = {**GEPA_NO_WIN, "improved_on_dev": True, "optimized_prompts_written": ["prime_search/prompts/optimized/plan.md"]}
+    summaries = _summaries(_payload("b", mode="baseline", split="holdout"), _payload("p", split="holdout"))
+    assert not [t for t in report.prd_targets(summaries, improved) if t["metric"] == "gepa_lift"]
+    text = report.render_markdown("holdout", summaries, [], [], generated_at="now", passes=1, gepa=improved)
+    assert "There is no `prime-optimized` experiment on this split." in text
+
+
+def test_gepa_lift_is_not_met_when_citation_correctness_regresses() -> None:
+    base = _payload("p", split="holdout", rows=[_row("q1", scores={"answer_correctness": 0.60, "citation_correctness": 0.80})])
+    optimized = _payload("o", split="holdout", rows=[_row("q1", scores={"answer_correctness": 0.70, "citation_correctness": 0.70})])
+    optimized["config"]["prompt_set"] = "optimized"
+    improved = {**GEPA_NO_WIN, "improved_on_dev": True, "optimized_prompts_written": ["x"]}
+    (row,) = [t for t in report.prd_targets(_summaries(base, optimized), improved) if t["metric"] == "gepa_lift"]
+    assert row["value"] == pytest.approx(0.10) and row["met"] is False
+
+
+def test_the_optimized_path_shows_each_prompt_diff(tmp_path) -> None:
+    path = tmp_path / "gepa-run.json"
+    candidates = [{"idx": 0, "dev_score": 0.70}, {"idx": 1, "dev_score": 0.78, "diff": {"plan": "--- base/plan.md\n+++ optimized/plan.md\n+New rule.\n"}}]
+    path.write_text(json.dumps({**GEPA_NO_WIN, "improved_on_dev": True, "best_idx": 1, "best_dev_score": 0.78,
+                                "optimized_prompts_written": ["prime_search/prompts/optimized/plan.md"], "candidates": candidates}),
+                    encoding="utf-8")
+    outcome = report.gepa_outcome(path)
+    assert set(outcome["diffs"]) == {"plan"}
+    base = _payload("p", split="holdout")
+    optimized = _payload("o", split="holdout")
+    optimized["config"]["prompt_set"] = "optimized"
+    text = report.render_markdown("holdout", _summaries(base, optimized), [], [], generated_at="now", passes=1, gepa=outcome)
+    assert "Diff of `plan.md` (base → optimized):" in text and "```diff" in text and "+New rule." in text

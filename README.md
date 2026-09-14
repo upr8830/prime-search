@@ -12,8 +12,8 @@ can be compared side by side on the same question. The case for the design is in
 [`TECHNICAL_STATEMENT.md`](TECHNICAL_STATEMENT.md).
 
 > **Status: Day 3.** The investigation pipeline, CLI, API, UI harness, SearchBench evaluators and GEPA
-> runner are built. GEPA found no prompt that beat the base prompts on dev (`reports/gepa-run.json`).
-> The final holdout bench (`reports/final-report.md`) is task 3.2. `docs/09-implementation-plan.md` and
+> runner are built. GEPA found no prompt that beat the base prompts on dev (`reports/gepa-run.json`). The
+> final holdout bench has run, with results in `reports/final-report.md`. `docs/09-implementation-plan.md` and
 > `build-log/` record what is done.
 
 ---
@@ -28,9 +28,8 @@ the repo root.
 1. [`TECHNICAL_STATEMENT.md`](TECHNICAL_STATEMENT.md) — the problem, what was built, how we know it is
    better, and the decisions behind it. Two pages.
 2. [`reports/final-report.md`](reports/final-report.md) — the holdout results behind the statement: the
-   headline table, PRD targets, per-question scores and three worked examples. It comes from task 3.2.
-   Until that finishes, [`reports/dev-report.md`](reports/dev-report.md) shows the same layout on the
-   5-question dev check.
+   headline table, PRD targets, per-question scores and three worked examples, from task 3.2's two holdout
+   passes. [`reports/dev-report.md`](reports/dev-report.md) shows the same layout for the 5-question dev check.
 
 **Stage 2: the problem and the approach**
 
@@ -245,7 +244,8 @@ Each `make bench` is one LangSmith experiment (project `prime-search-bench`), wr
 only.
 
 **Cost guide**, from measured runs: a PRIME deep question is about $0.60–0.95 including scoring (answer
-correctness uses three judge calls) and about 5 minutes. A baseline question is about $0.10. A holdout pass
+correctness uses three judge calls). The run itself takes about 3–4 minutes (194 s mean on holdout) and
+scoring adds 1–2 minutes. A baseline question is about $0.10. A holdout pass
 of PRIME is therefore about $8–10. The Tavily cache (`PRIME_TAVILY_CACHE`, on by default) makes reruns
 cheaper and comparable.
 

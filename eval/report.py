@@ -111,6 +111,15 @@ def _across_passes(passes: Sequence[dict[str, Any]], pick) -> dict[str, Any]:  #
     return {"mean": _round(sum(means) / len(means)), "spread": _round(spread), "n": count}
 
 
+def _failed(row: dict[str, Any]) -> bool:
+    """A failed run as the evaluators score it: status failed, no record, or no answer text.
+    A completed run that returned no answer is scored as failed (eval/evaluators.py), so it
+    counts here too."""
+    if row.get("status") == "failed" or not row.get("record"):
+        return True
+    return not (((row.get("record") or {}).get("answer") or {}).get("body_markdown") or "").strip()
+
+
 def _breakdown(rows: Sequence[dict[str, Any]], field: str) -> dict[str, dict[str, Any]]:
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
@@ -159,8 +168,14 @@ def summarize(label: str, passes: Sequence[dict[str, Any]]) -> dict[str, Any]:
         "composite": _across_passes(passes, lambda items: _mean(row.get("composite") for row in items)),
         "per_tier": _breakdown(rows, "tier"),
         "per_domain": _breakdown(rows, "domain"),
-        "judge_errors": sum(1 for score in scores if (score.get("metadata") or {}).get("error")),
-        "failed_runs": sum(1 for row in rows if row.get("status") == "failed" or not row.get("record")),
+        # Totals over every pass, so a failure in an earlier pass is not hidden by a clean latest one.
+        "judge_errors": sum(
+            1 for payload in passes for row in payload["rows"]
+            for score in (row.get("scores") or {}).values() if (score.get("metadata") or {}).get("error")
+        ),
+        "failed_runs": sum(1 for payload in passes for row in payload["rows"] if _failed(row)),
+        # Computed from the latest pass only; /bench and readers of latest.json label them so.
+        "latest_pass_only": ["per_tier", "per_domain", "judge_tokens"],
         "judge_tokens": sum(int((score.get("metadata") or {}).get("judge_tokens") or 0) for score in scores),
         "missing_keys": [key for key in METRIC_KEYS if metrics[key]["n"] == 0],
         "_rows": rows,
@@ -200,7 +215,12 @@ def prd_targets(summaries: Sequence[dict[str, Any]], gepa: dict[str, Any] | None
     # docs/00 §9: "GEPA lift on held-out split: >= +0.05 answer correctness".
     lift = gepa_lift(summaries, gepa)
     if lift is not None:
-        targets.append(_target(lift["config"], "gepa_lift", lift["subset"], lift["lift"], lift["n"], 0.05))
+        row = _target(lift["config"], "gepa_lift", lift["subset"], lift["lift"], lift["n"], 0.05)
+        # docs/00 §9 adds "no regression on citation correctness"; docs/05 §5's tolerance defines it.
+        citation = lift["citation_delta"]
+        if row["met"] and citation is not None and citation < -ACCEPT_CITATION_DROP:
+            row["met"] = False
+        targets.append(row)
     return targets
 
 
@@ -227,6 +247,11 @@ def gepa_outcome(path: Path | str = GEPA_REPORT) -> dict[str, Any] | None:
     proposals = [c.get("dev_score") for c in (data.get("candidates") or [])[1:] if c.get("dev_score") is not None]
     outcome["proposals"] = len((data.get("candidates") or [])[1:])
     outcome["best_proposal_dev_score"] = max(proposals) if proposals else None
+    # docs/05 §5: the report shows the diff of each optimized prompt.
+    best = data.get("best_idx")
+    candidates = data.get("candidates") or []
+    chosen = candidates[best] if isinstance(best, int) and 0 < best < len(candidates) else {}
+    outcome["diffs"] = dict(chosen.get("diff") or {}) if data.get("improved_on_dev") else {}
     return outcome
 
 
@@ -259,7 +284,8 @@ def gepa_lift(summaries: Sequence[dict[str, Any]], gepa: dict[str, Any] | None) 
     lift, citation = delta("answer_correctness"), delta("citation_correctness")
     accepted = None if lift is None or citation is None else lift > 0 and citation >= -ACCEPT_CITATION_DROP
     return {
-        "config": optimized["config"], "subset": "optimized vs base", "lift": lift, "citation_delta": citation,
+        "config": optimized["config"], "subset": f"optimized vs base; citation drop <= {ACCEPT_CITATION_DROP:.2f}",
+        "lift": lift, "citation_delta": citation,
         "accepted": accepted, "equals_base": False, "n": optimized["metrics"]["answer_correctness"]["n"],
     }
 
@@ -313,6 +339,8 @@ def gepa_lines(summaries: Sequence[dict[str, Any]], gepa: dict[str, Any] | None)
         "docs/05 §5 acceptance (answer correctness improves and citation correctness drops at most "
         f"{ACCEPT_CITATION_DROP:.2f}): {verdict}."
     )
+    for name, diff in ((gepa or {}).get("diffs") or {}).items():
+        lines += ["", f"Diff of `{name}.md` (base → optimized):", "", "```diff", *diff.rstrip("\n").splitlines(), "```"]
     return lines
 
 
@@ -368,7 +396,7 @@ def _excerpt(row: dict[str, Any] | None) -> list[str]:
     record = (row or {}).get("record") or {}
     body = (record.get("answer") or {}).get("body_markdown") or ""
     if not body:
-        return ["> (no answer)"]
+        return ["> (no answer: the run completed without answer text, and it is scored as a failed run)"]
     lines = body.splitlines()
     kept: list[str] = []
     keep = not any(line.startswith("## ") for line in lines)
@@ -446,6 +474,9 @@ def render_markdown(
                   str(summary["judge_errors"]), str(summary["failed_runs"])]
         body_rows.append(cells)
     lines += _table(header, body_rows) + [""]
+    if passes > 1:
+        lines += [f"_Metric columns average {passes} passes; `n` is questions per pass; judge errors and failed runs "
+                  "are totals over all passes. A failed run includes a completed run that returned no answer._", ""]
 
     if gepa is not None or _prime(summaries, "optimized") is not None:
         lines += ["## PRIME + GEPA", "", *gepa_lines(summaries, gepa), ""]
@@ -513,7 +544,7 @@ def render_markdown(
         cost_rows,
     ) + [""]
 
-    lines += ["## Evaluator comments", ""]
+    lines += ["## Evaluator comments", "", *latest_note]
     for question_id in question_ids:
         lines += [f"### `{question_id}`", ""]
         for summary in summaries:

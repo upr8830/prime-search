@@ -146,7 +146,13 @@ optimized minus base, target 0.05; 0 by construction without optimized prompts).
 The section reports the proposals' best dev score next to the base prompts' score, because `best_dev_score`
 is the seed's own when no proposal wins. PRD targets on a subset (tier 4, change detection) average passes
 the way the headline does. The per-tier, per-domain, per-question, worked-example and cost sections come from
-the latest pass, and say so when more than one pass is reported.
+the latest pass, and say so when more than one pass is reported; so does the evaluator comments section. The
+headline's judge errors and failed runs are totals over all passes. A failed run includes a completed run that
+returned no answer, as the evaluators score it, and its worked-example excerpt says so. `latest.json` marks
+`latest_pass_only` (per tier, per domain, judge tokens), and `/bench` labels those tables. `gepa_lift` is met
+only if answer correctness gains at least 0.05 and citation correctness drops at most 0.03: docs/00 §9's "no
+regression", read with §5's tolerance. With an optimized experiment, the section also shows each optimized
+prompt's diff from `reports/gepa-run.json`.
 
 ## 4. Human feedback loop
 
