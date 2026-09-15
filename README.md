@@ -110,8 +110,9 @@ the repo root.
 
 13. [`docs/09-implementation-plan.md`](docs/09-implementation-plan.md) — the three-day plan, its gates and
     the cut list.
-14. [`build-log/`](build-log/) — `day1.md`, `day2.md`, … record each session: gates passed, what live runs
-    found that tests did not, and open issues. The `*-transcript.md` files are the raw sessions.
+14. [`build-log/`](build-log/README.md) — start at the index. `day1.md`, `day2.md`, … record each session:
+    gates passed, what live runs found that tests did not, and open issues. The `*-transcript.md` files are
+    the raw sessions.
 15. [`docs/13-claude-code-practices.md`](docs/13-claude-code-practices.md) and
     [`CLAUDE.md`](CLAUDE.md) — how the build was run with Claude Code: conventions, hooks, spec reviews.
 16. [`docs/10-roadmap.md`](docs/10-roadmap.md) — what was designed but deliberately not built: memory,
@@ -471,7 +472,7 @@ Model routing (defaults in `prime_search/config.py`):
 | `docs/12-technical-statement-outline.md` | Outline for the technical statement |
 | `docs/13-claude-code-practices.md` | How Claude Code best practices are applied (skills, hooks, review) |
 | `.claude/` | Settings, guard hooks, `/gate` `/spec-review` `/session-end` `/validate-bench` skills, spec-reviewer subagent |
-| `build-log/` | One file per build session, plus session transcripts |
+| `build-log/` | Index (`README.md`), one file per build session, plus session transcripts |
 | `data/searchbench/` | 30 questions with validated answer keys, plus the validation README |
 | `reports/` | Bench files, dev and final reports, GEPA run, model selection |
 
